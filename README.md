@@ -1,5 +1,5 @@
 # AdminToolbox
-This is a plugin for SCL:SL servers. It offers multiple admin tools, that do not exist in the base game.
+This is a plugin for SCL:SL servers. It offers multiple admin tools, like logging friendly fire, godmode & heal commands, and other features that do not exist in the base game (yet).
 
 ## Plugin Installation:
 To install:
