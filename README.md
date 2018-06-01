@@ -3,13 +3,13 @@ This is a plugin for SCL:SL servers. It offers multiple admin tools, that do not
 
 ## Plugin Installation:
 To install:
-1. Grab newest version of AdminToolbox: [Release link](https://github.com/Rnen/AdminToolbox/releases/latest
+1. Grab newest version of AdminToolbox: (https://github.com/Rnen/AdminToolbox/releases/latest
 2. Navigate to your SCP Secret Lab folder.
 3. Drag AdminToolbox.dll into the sm_plugins folder
 
 ## ServerMod
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
-SMOD can be found here: [Release link](https://github.com/Grover-c13/Smod2)
+SMOD can be found here: (https://github.com/Grover-c13/Smod2)
 SMOD Discord: https://discord.gg/8nvmMTr
 
 
