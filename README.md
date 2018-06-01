@@ -42,7 +42,7 @@ admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes
 ### Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
-PLAYERS |   |   | Lists all players + IP's + SteamID's
+PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
 HP | Player | Integer | Sets player HP to Integer.
