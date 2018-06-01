@@ -60,6 +60,7 @@ TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 
+## ^Theese commands work in both server console and remote admin!^
 
 Place any suggestions/problems in issues!
 
