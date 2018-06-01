@@ -33,6 +33,7 @@ Type Info:
 
 Crossed out config options are removed, unless otherwise specified in the description
 
+## If you do not intend to change the default values, theres no need to include any of theese config settings
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
