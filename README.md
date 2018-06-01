@@ -1,10 +1,12 @@
 # AdminToolbox
 This is a plugin for SCL:Secret Llab servers. 
 It offers multiple admin tools like 
-* logging friendly fire
-* godmode 
-* heal 
+* Friendly fire logs in server console
+* Godmode, ability to turn off damage for players
+* Heal & SetHP
+
 and more commands, and other features that do not exist in the base game (yet).
+There is also more to come!
 
 ## Plugin Installation:
 To install:
