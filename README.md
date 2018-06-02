@@ -27,7 +27,7 @@ GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool 
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
 HP/SETHP | Player | Integer | Sets player HP to Integer.
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
-TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players that has the string you entered, like TP does)
+TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
