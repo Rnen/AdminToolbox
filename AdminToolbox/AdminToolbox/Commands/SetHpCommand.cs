@@ -36,7 +36,7 @@ namespace AdminToolbox.Command
                     int j;
                     if (Int32.TryParse(args[1], out j))
                     {
-                        plugin.Info("Added " + j + " HP " + " to " + myPlayer.Name);
+                        plugin.Info("Set " + myPlayer.Name+"'s HP to "+ j+"HP");
                         myPlayer.SetHealth(j);
                     }
                     else
