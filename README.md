@@ -19,6 +19,23 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
  * SMOD can be found here: (https://github.com/Grover-c13/Smod2)
  * SMOD Discord: https://discord.gg/8nvmMTr
 
+## Administration COMMANDS / Gameplay COMMANDS
+Command | Value Type | Value Type | Description
+--- | :---: | :---: | ---
+PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
+GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
+NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
+HP/SETHP | Player | Integer | Sets player HP to Integer.
+HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
+TPX | Player1 | Player2 | Teleports player1 to player2. (Will not grab all players with same name like TP)
+TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
+CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
+
+Important: Player input dont need the full name, only a few chronological characters from the name, it will grab the closest looking name to what you entered
+## ^Theese commands work in both server console and remote admin!^
+(Because of how the game works, messages/feedback will only show in server console, Remote Admins will only get "Command Executed", even if the command didnt work)
+
 
 ## Config Additions
 Type Info:
@@ -47,24 +64,8 @@ admintoolbox_debug_player_damage | Boolean | False | Displays non-friendly damag
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes to detect.
 
 
-Important: Player input dont need the full name, only a few chronological characters from the name, it will grab the closest looking name to what you entered
-## Administration COMMANDS / Gameplay COMMANDS
-Command | Value Type | Value Type | Description
---- | :---: | :---: | ---
-PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
-GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
-NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
-HP/SETHP | Player | Integer | Sets player HP to Integer.
-HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
-TPX | Player1 | Player2 | Teleports player1 to player2. (Will not grab all players with same name like TP)
-TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
-CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
-KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 
-## ^Theese commands work in both server console and remote admin!^
-(Because of how the game works, messages/feedback will only show in server console, Remote Admins will only get "Command Executed", even if the command didnt work)
+### Place any suggestions/problems in issues!
 
-Place any suggestions/problems in issues!
-
-Thanks & Enjoy.
+# Thanks & Enjoy.
 
