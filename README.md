@@ -54,7 +54,7 @@ Command | Value Type | Value Type | Description
 PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
-HP | Player | Integer | Sets player HP to Integer.
+HP/SETHP | Player | Integer | Sets player HP to Integer.
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports player1 to player2. (Will not grab all players with same name like TP)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
