@@ -1,5 +1,12 @@
 # AdminToolbox
-This is a plugin for SCL:SL servers. It offers multiple admin tools, that do not exist in the base game.
+This is a plugin for SCL:Secret Lab servers. 
+It offers multiple admin tools like 
+* Friendly fire logs in server console
+* Godmode, ability to turn off damage for players
+* Heal & SetHP
+
+and more commands, and other features that do not exist in the base game (yet).
+There is also more to come!
 
 ## Plugin Installation:
 To install:
@@ -26,6 +33,7 @@ Type Info:
 
 Crossed out config options are removed, unless otherwise specified in the description
 
+## If you do not intend to change the default values, theres no need to include any of theese config settings
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
@@ -38,6 +46,7 @@ admintoolbox_debug_friendly_damage | Boolean | False | Displays friendly damage 
 admintoolbox_debug_player_damage | Boolean | False | Displays non-friendly damage in server colsole.
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes to detect.
 
+## Important: Commands that use (player) dont need the full name, only a few chronological characters from the name, it will grab the closest looking name
 
 ### Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
@@ -45,13 +54,15 @@ Command | Value Type | Value Type | Description
 PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
-HP | Player | Integer | Sets player HP to Integer.
+HP/SETHP | Player | Integer | Sets player HP to Integer.
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports player1 to player2. (Will not grab all players with same name like TP)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 
+## ^Theese commands work in both server console and remote admin!^
+(Because of how the game works, messages/feedback will only show in server console, Remote Admins will only get "Command Executed", even if the command didnt work)
 
 Place any suggestions/problems in issues!
 
