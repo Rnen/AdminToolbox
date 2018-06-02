@@ -46,8 +46,8 @@ admintoolbox_debug_friendly_damage | Boolean | False | Displays friendly damage 
 admintoolbox_debug_player_damage | Boolean | False | Displays non-friendly damage in server colsole.
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes to detect.
 
-## Important: Commands that use (player) dont need the full name, only a few chronological characters from the name, it will grab the closest looking name
 
+## Important: Player input dont need the full name, only a few chronological characters from the name, it will grab the closest looking name to what you entered
 ### Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
