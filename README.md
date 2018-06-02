@@ -62,7 +62,7 @@ CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 
 ## ^Theese commands work in both server console and remote admin!^
-(Because of how the game works, messages/feedback will only show in server console)
+(Because of how the game works, messages/feedback will only show in server console, Remote Admins will only get "Command Executed", even if the command didnt work)
 
 Place any suggestions/problems in issues!
 
