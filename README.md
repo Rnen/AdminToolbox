@@ -16,7 +16,7 @@ To install:
 
 ## ServerMod
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
- * SMOD can be found here: (https://github.com/Grover-c13/Smod2)
+ * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
  * SMOD Discord: https://discord.gg/8nvmMTr
 
 ## Administration COMMANDS / Gameplay COMMANDS
