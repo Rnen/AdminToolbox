@@ -65,7 +65,7 @@ admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes
 
 
 
-### Place any suggestions/problems in issues!
+### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
 
 # Thanks & Enjoy.
 
