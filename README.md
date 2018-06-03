@@ -40,10 +40,10 @@ Important: Player input dont need the full name, only a few chronological charac
 ## Config Additions
 Type Info:
 - Boolean: True or False value
-- Integer: A number without decimals
-- Float: A number with decimals (Formatting like "1.0" and "1,0" both work and are the same value)
-- List: A list with items separated by ",", for example: `list: 1,2,3,4,5`
-- Dictionary: A dictionary with items separated by ":", and each entry separated by ",", for example: `dictionary: 1:2,2:3,3:4`
+- Integer: Any whole number
+- Float: A number with decimals (Formatting like "1.5" and "1,5" both work and are the same value)
+- List: A list of items separated by ",", for example: `list: 1,2,3,4,5`
+- Dictionary: A dictionary of items separated by ":", and each entry separated by ",", for example: `dictionary: 1:2,2:3,3:4`
 - Seconds: Time in seconds, usually a value of -1 disables the feature
 - Minutes: Time in minutes, usually a value of -1 disables the feature
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
@@ -54,14 +54,14 @@ Crossed out config options are removed, unless otherwise specified in the descri
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-admintoolbox_tutorial_dmg_allowed | List | -1 | Wich damagetypes the TUTORIAL Role is allowed to take. -1 equals basicly godmode
-admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiples all damage by this number after round ends. For maximum chaos.
-admintoolbox_debug_friendly_kill | Boolean | True | Displays friendly kills in server console.
-admintoolbox_debug_player_kill | Boolean | False | Displays all not-friendly kills in server console.
+admintoolbox_tutorial_dmg_allowed | List | -1 | Wich damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
+admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos.
+admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
+admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
 admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and SCP kills in server console.
-admintoolbox_debug_friendly_damage | Boolean | False | Displays friendly damage in server console.
-admintoolbox_debug_player_damage | Boolean | False | Displays non-friendly damage in server colsole.
-admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damagetypes to detect.
+admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
+admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
+admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
 
 
 
