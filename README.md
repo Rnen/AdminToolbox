@@ -23,9 +23,9 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
 PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
-GOD | Player | Boolean | Turns on/off godmode for that player. Use without bool to toggle.
-NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without bool to toggle.
-HP/SETHP | Player | Integer | Sets player HP to Integer.
+GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle.
+NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
+HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
