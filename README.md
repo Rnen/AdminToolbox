@@ -54,7 +54,7 @@ Crossed out config options are removed, unless otherwise specified in the descri
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-admintoolbox_tutorial_dmg_allowed | List | -1 | Wich damagetypes the TUTORIAL Role is allowed to take
+admintoolbox_tutorial_dmg_allowed | List | -1 | Wich damagetypes the TUTORIAL Role is allowed to take. -1 equals basicly godmode
 admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiples all damage by this number after round ends. For maximum chaos.
 admintoolbox_debug_friendly_kill | Boolean | True | Displays friendly kills in server console.
 admintoolbox_debug_player_kill | Boolean | False | Displays all not-friendly kills in server console.
