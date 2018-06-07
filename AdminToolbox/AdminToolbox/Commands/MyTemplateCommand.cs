@@ -2,7 +2,7 @@
 using Smod2;
 using Smod2.API;
 
-namespace AdminToolbox
+namespace AdminToolbox.Command
 {
 	class MyTemplateCommand : ICommandHandler
 	{
@@ -23,14 +23,15 @@ namespace AdminToolbox
 			return "";
 		}
 
-        public void OnCall(ICommandManager manger, string[] args)
+        public string[] OnCall(ICommandSender manger, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) { plugin.Info("Couldn't get player: " + args[0]); return; }
+                if (myPlayer == null) {  return new string[] { "Couldn't get player: " + args[0] };; }
             }
+            return new string[] { GetUsage() };
         }
 	}
 }

@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\</OutputPath>
+    <OutputPath>..\Builds\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -46,9 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminStuff.cs" />
+    <Compile Include="Commands\RoundLock.cs" />
+    <Compile Include="Commands\WarpCommand.cs" />
+    <Compile Include="Commands\PosCommand.cs" />
+    <Compile Include="Commands\PlayerCommand.cs" />
     <Compile Include="Commands\SetHpCommand.cs" />
-    <Compile Include="Commands\SetPlayerClass.cs" />
+    <Compile Include="Commands\SetPlayerRole.cs" />
     <Compile Include="Commands\SetTutorial.cs" />
     <Compile Include="Commands\KeepSettings.cs" />
     <Compile Include="Commands\NoDmgCommand.cs" />
@@ -59,7 +62,7 @@
     <Compile Include="Commands\MyTemplateCommand.cs" />
     <Compile Include="Commands\PlayerList.cs" />
     <Compile Include="PlayerDamg.cs" />
-    <Compile Include="RoundsEventHandler.cs" />
+    <Compile Include="RoundEventHandler.cs" />
     <Compile Include="AdminToolbox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

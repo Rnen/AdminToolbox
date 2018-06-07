@@ -24,33 +24,70 @@ namespace AdminToolbox.Command
 			return "HEAL [PLAYER] (AMOUNT)";
 		}
 
-        public void OnCall(ICommandManager manager, string[] args)
+        public string[] OnCall(ICommandSender manager, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
+                if(args[0].ToLower() == "all"||args[0].ToLower() == "*")
+                {
+                    if (args.Length > 1)
+                    {
+                        int j;
+                        if (Int32.TryParse(args[1], out j))
+                        {
+                            int playerNum = 0;
+                            foreach (Player pl in server.GetPlayers())
+                            {
+                                pl.AddHealth(j);
+                                playerNum++;
+                            }
+                            if (playerNum > 1)
+                                return new string[] { "Added " + j + " HP to " + playerNum + " player(s)" };
+                            //plugin.Info("Added " + j + " HP to " + playerNum + " player(s)");
+                            else
+                                return new string[] { "Added " + j + " HP to " + playerNum + " player" };
+                            //plugin.Info("Added " + j + " HP to " + playerNum + " player");
+                        }
+                        else
+                        {
+                            //plugin.Info("Not a valid number!");
+                            return new string[] { "Not a valid number!" };
+                        }
+                    }
+                    else
+                    {
+                        foreach (Player pl in server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
+                        plugin.Info("Set all players to their default max HP");
+                        return new string[] { "Set all players to their default max HP" };
+                    }
+                }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) { plugin.Info("Couldn't find player: " + args[0]); return; }
+                if (myPlayer == null) { /*plugin.Info("Couldn't find player: " + args[0]);*/ return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
                     int j;
                     if (Int32.TryParse(args[1], out j))
                     {
-                        plugin.Info("Added " + j + " HP " + " to " + myPlayer.Name);
+                        //plugin.Info("Added " + j + " HP " + " to " + myPlayer.Name);
                         myPlayer.AddHealth(j);
+                        return new string[] { "Added " + j + " HP " + " to " + myPlayer.Name };
                     }
                     else
-                        plugin.Info("Not a valid number!");
+                        return new string[] { "Not a valid number!" };
+                        //plugin.Info("Not a valid number!");
                 }
                 else
                 {
-                    plugin.Info("Set " + myPlayer.Name + " to full HP");
-                    myPlayer.SetHealth(myPlayer.Class.MaxHP);
+                    //plugin.Info("Set " + myPlayer.Name + " to full HP");
+                    myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
+                    return new string[] { "Set " + myPlayer.Name + " to full HP" };
                 }
             }
             else
             {
-                plugin.Info(GetUsage());
+                return new string[] { GetUsage() };
+                //plugin.Info(GetUsage());
             }
         }
 	}
