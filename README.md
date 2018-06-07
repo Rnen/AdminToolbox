@@ -34,7 +34,7 @@ NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use withou
 NODMG | LIST |  | List all players with NoDmg enabled
 HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
-TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
+TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items. (Previously **CLASS** Command)
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
