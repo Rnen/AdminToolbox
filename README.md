@@ -40,14 +40,6 @@ WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
 WARP | LIST |   |   |  Lists current warp points
 WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
-
-Examples: 
-`warp add Pablo NameOfWarp` Will add a warp point called NameOfWarp on Pablo's position
-`warp evan NameOfWarp` Will warp player evan to NameOfWarp
-`warp remove NameOfWarp` Removes spesified WarpPoint
-`warp list` Lists all existing WarpPoints
-
-Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
 POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
