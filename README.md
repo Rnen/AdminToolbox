@@ -45,7 +45,7 @@ WARP | LIST |   |   |  Lists current warp points
 WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
 POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
-POS | GET | Player | |  Gets XYZ position of `Player`
+POS | Player | GET | |  Gets XYZ position of `Player`
 POS | HELP | | | Displays (a rather confusing) helptext
 
 Important: Player input dont need the full name, it will grab the closest looking name to what you entered
