@@ -7,7 +7,6 @@
 [Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#team-ids)
 
 #
-
 ## RoleID's with default HP's
 | RoleID | Role Name | Default HP |
 | :--- | :--- | ---: |
@@ -29,7 +28,6 @@
 |#15 | Facility Guard | HP: 100 |
 
 #
-
 ## Item ID's
 | ItemID | Item Name |
 | :--- | :--- | 
@@ -65,7 +63,6 @@
 |#29| PAT ammo (Com15, P90 ammo)
 
 #
-
 ## Team ID's
 | TeamID | Team Name |
 | :--- | :--- | 
