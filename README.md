@@ -36,14 +36,20 @@ ROUNDLOCK | Boolean |   | Turns on/off round ending
 
 Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
-WARP | Player/List/Remove | ADD/REMOVE/(Your
+WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
+WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
+WARP | LIST |   |   |  Lists current warp points
+WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
+
 Examples: 
 `warp add Pablo NameOfWarp` Will add a warp point called NameOfWarp on Pablo's position
 `warp evan NameOfWarp` Will warp player evan to NameOfWarp
 `warp remove NameOfWarp` Removes spesified WarpPoint
 `warp list` Lists all existing WarpPoints
+Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
 POS | Player | ADD/GET/SET/HELP | X=(Integer) Y=(Integer) Z=(Integer) | Adds (Integer to player pos/Sets player pos to specified cordinates.
+
 Example: `pos evan add Y=10` will teleport the players up 10 units.
 This command is higly experimental and i will not help if this isnt working. Note: ADD will not work with numbers less than 7 (IDK why)
 
