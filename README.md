@@ -34,19 +34,17 @@ KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables kee
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
 
+### Advanced Commands (Theese are more experiemental and might not always work)
 Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
 WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
 WARP | LIST |   |   |  Lists current warp points
 WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
-POS Command
 POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | GET | Player | |  Gets XYZ position of `Player`
 POS | HELP | | | Displays (a rather confusing) helptext
-
-### This command is higly experimental and i will not help if this isnt working. Note: ADD will not work with numbers less than 7 (IDK why)
 
 Important: Player input dont need the full name, it will grab the closest looking name to what you entered
 ## ^Theese commands work in both server console and remote admin!^
