@@ -4,6 +4,8 @@ It offers multiple admin tools like
 * Friendly fire logs in server console
 * Godmode, ability to turn off damage for players
 * Heal & SetHP
+* Warp Points
+* Teleport to cordinates
 
 and more commands, and other features that do not exist in the base game (yet).
 There is also more to come!
