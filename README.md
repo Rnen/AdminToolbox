@@ -29,7 +29,9 @@ Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
 PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
+GOD | LIST |   | List all players with GODMODE enabled
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
+NODMG | LIST |  | List all players with NoDmg enabled
 HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
