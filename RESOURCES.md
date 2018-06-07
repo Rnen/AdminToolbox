@@ -1,7 +1,9 @@
 
 # Index
-[Role ID's]()
+[Role ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#roleids-with-default-hps)
+
 [Item ID's]()
+
 [Team ID's]()
 
 
