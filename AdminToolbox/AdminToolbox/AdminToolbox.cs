@@ -1,49 +1,45 @@
 ﻿using Smod2;
 using Smod2.Attributes;
 using Smod2.Events;
+using Smod2.EventHandlers;
 using Smod2.API;
+using ServerMod2.API;
 using System;
+using System.IO;
 using System.Collections.Generic;
+using Unity;
+using UnityEngine;
 
 namespace AdminToolbox
 {
-	[PluginDetails(
-		author = "Evan (AKA Rnen)",
-		name = "Admin Toolbox",
-		description = "Plugin for advanced admin tools",
-		id = "rnen.admin.toolbox",
-		version = "1.0",
-		SmodMajor = 2,
-		SmodMinor = 0,
-		SmodRevision = 0
-		)]
-	class AdminToolbox : Plugin
-	{
+    [PluginDetails(
+        author = "Evan (AKA Rnen)",
+        name = "Admin Toolbox",
+        description = "Plugin for advanced admin tools",
+        id = "rnen.admin.toolbox",
+        version = "1.1",
+        SmodMajor = 3,
+        SmodMinor = 0,
+        SmodRevision = 0
+        )]
+    class AdminToolbox : Plugin
+    {
         public static bool isRoundFinished = false;
         public static bool evanSpectator_onRespawn = false;
         public static bool adminMode = false;
-
-        public static bool debugFriendlyKill;
-        public static bool debugPlayerKill;
+        public static bool lockRound = false;
 
         public static int[] nineTailsTeam = { 1, 3 };
         public static int[] chaosTeam = { 2, 4 };
 
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
-
-
-        //public static Vector[] positionVector = { ) };
-
+        public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
+        public static List<string> logText = new List<string>();
         public static int roundCount = 0;
 
-        public static string[] adminSteamID = { "76561198019213377", "76561198038462200" };
-
-        //private float playedTime;
-
-		public override void OnDisable()
-		{
-            
-		}
+        public override void OnDisable()
+        {
+        }
         public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff)
         {
             playerdict[player.SteamId][0] = keepSettings;
@@ -51,47 +47,41 @@ namespace AdminToolbox
             playerdict[player.SteamId][2] = dmgOff;
         }
 
-		public override void OnEnable()
-		{
-			this.Info(this.Details.name + " loaded sucessfully");
-
-            debugFriendlyKill = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_kill", true);
-            debugPlayerKill = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_kill", true);
-
-        }
-        void Update()
+        public override void OnEnable()
         {
+            this.Info(this.Details.name + " loaded sucessfully");
         }
 
         public override void Register()
-		{
+        {
             // Register Events
-            this.AddEventHandler(typeof(IEventRoundStart), new RoundHandler(this), Priority.High);
-            this.AddEventHandler(typeof(IEventRoundEnd), new RoundHandler(this), Priority.High);
-            this.AddEventHandler(typeof(IEventPlayerHurt), new DamageDetect(this), Priority.High);
-            this.AddEventHandler(typeof(IEventPlayerDie), new DieDetect(this), Priority.High);
-            this.AddEventHandler(typeof(IEventAdminQuery), new AdminQuery(this), Priority.High);
-            this.AddEventHandler(typeof(IEventAuthCheck), new AuthCheck(this), Priority.High);
-            this.AddEventHandler(typeof(IEventPlayerJoin), new PlayerJoinHandler(), Priority.Highest);
-            this.AddEventHandler(typeof(IEventPlayerLeave), new PlayerLeaveHandler(), Priority.Highest);
-            //this.AddEventHandler(typeof(IEventAssignTeam), new TeamAssignHandler(this), Priority.High);
-            //this.AddEventHandler(typeof(IEventTeamRespawn), new TeamRespawnHandler(this), Priority.High);
+            this.AddEventHandlers(new RoundEventHandler(this), Priority.High);
+            this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.High);
+            this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.High);
+            this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(this), Priority.Highest);
+
+            //this.AddEventHandler(typeof(), new PlayerLeaveHandler(), Priority.Highest);
 
             // Register Commands
-            //this.AddCommand("evan079", new MyCustomCommand(this));
             //this.AddCommand("spectator", new Command.SetToSpectatorCommand(this));
             this.AddCommand("players", new Command.PlayerList(this));
             this.AddCommand("tpx", new Command.TeleportCommand(this));
             this.AddCommand("heal", new Command.HealCommand(this));
             this.AddCommand("god", new Command.GodModeCommand(this));
+            this.AddCommand("godmode", new Command.GodModeCommand(this));
             this.AddCommand("nodmg", new Command.NoDmgCommand(this));
             this.AddCommand("tut", new Command.SetTutorial(this));
             this.AddCommand("tutorial", new Command.SetTutorial(this));
-            this.AddCommand("class", new Command.SetPlayerClass(this));
+            this.AddCommand("role", new Command.SetPlayerRole(this));
             this.AddCommand("keep", new Command.KeepSettings(this));
             this.AddCommand("keepsettings", new Command.KeepSettings(this));
             this.AddCommand("hp", new Command.SetHpCommand(this));
             this.AddCommand("sethp", new Command.SetHpCommand(this));
+            this.AddCommand("player", new Command.PlayerCommand(this));
+            this.AddCommand("pos", new Command.PosCommand(this));
+            this.AddCommand("warp", new Command.WarpCommmand(this));
+            this.AddCommand("roundlock", new Command.RoundLock(this));
+            //this.AddCommand("test", new Command.Test(this));
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes to debug"));
@@ -104,11 +94,13 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_friendly_kill", true, Smod2.Config.SettingType.BOOL, true, "true/false"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_scp_and_self_killed", false, Smod2.Config.SettingType.BOOL, true, "true/false"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier after end of round"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_writeTkToFile", false, Smod2.Config.SettingType.BOOL, true, "true/false"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "true/false"));
         }
     }
+
     public static class LevenshteinDistance
     {
-        public static int intDifferenceTolerance = 2;
         /// <summary>
         /// Compute the distance between two strings.
         /// </summary>
@@ -192,6 +184,22 @@ namespace AdminToolbox
             }
             playerOut = plyer;
             return playerOut;
+        }
+    }
+    public class LogHandler
+    {
+        public static void WriteToLog(string str)
+        {
+            if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false)) return;
+            AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
+            string myLog = null;
+            foreach (var item in AdminToolbox.logText)
+            {
+                myLog += item + Environment.NewLine;
+            }
+            Server server = PluginManager.Manager.Server;
+            string fileName = server.Name.ToString() + "_AdminToolbox_TKLog.txt";
+            File.WriteAllText(fileName, myLog);
         }
     }
 }

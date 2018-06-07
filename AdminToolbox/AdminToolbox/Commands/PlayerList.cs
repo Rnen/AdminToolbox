@@ -23,16 +23,17 @@ namespace AdminToolbox.Command
             return "PLAYERS";
         }
 
-        public void OnCall(ICommandManager manager, string[] args)
+        public string[] OnCall(ICommandSender manager, string[] args)
         {
             Server server = PluginManager.Manager.Server;
-            if (server.NumPlayers - 1 < 1) { plugin.Info("No players"); return; }
+            if (server.NumPlayers - 1 < 1) { return new string[] { "No players" }; }
             string input = server.NumPlayers - 1 + " - Players in server: \n";
             foreach (Player pl in server.GetPlayers())
             {
                 input += pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n";
             }
-            plugin.Info(input);
+            return new string[] { input };
+            //plugin.Info(input);
         }
     }
 }
