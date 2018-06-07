@@ -40,7 +40,7 @@ WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
 WARP | LIST |   |   |  Lists current warp points
 WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
---- | :---: | :---: | :---: | ---
+POS Command
 POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | GET | Player | |  Gets XYZ position of `Player`
