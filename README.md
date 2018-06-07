@@ -15,9 +15,9 @@ There is also more to come!
 ## Plugin Installation:
 To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
-2. If you're using **Smod 2.2.1**, use this instead: [For Smod-2.2.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
-3. Navigate to your SCP Secret Lab folder.
-4. Drag AdminToolbox.dll into the sm_plugins folder
+> If you're using **Smod 2.2.1**, use this instead: [For Smod-2.2.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
+2. Navigate to your SCP Secret Lab folder.
+2. Drag AdminToolbox.dll into the sm_plugins folder
 
 ## ServerMod
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
@@ -56,7 +56,7 @@ POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | Player | GET | |  Gets XYZ position of `Player`
 
-Important: Player input dont need the full name, it will grab the closest looking name to what you entered
+> Player input dont need the full name, it will grab the closest looking name to what you entered
 ## ^Theese commands work in both server console and remote admin!^
 
 ## Config Additions
@@ -70,7 +70,7 @@ Type Info:
 - Minutes: Time in minutes, usually a value of -1 disables the feature
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
 
-Crossed out config options are removed, unless otherwise specified in the description
+>Crossed out config options are removed, unless otherwise specified in the description
 
 ## If you do not intend to change the default values, theres no need to include any of theese config settings
 ### General Settings
