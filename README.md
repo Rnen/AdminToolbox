@@ -15,7 +15,7 @@ There is also more to come!
 ## Plugin Installation:
 To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
-2. If you're using **Smod 2.1.1**, use this instead: [For Smod2.1.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
+2. If you're using **Smod 2.2.1**, use this instead: [For Smod-2.2.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
 3. Navigate to your SCP Secret Lab folder.
 4. Drag AdminToolbox.dll into the sm_plugins folder
 
