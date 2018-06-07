@@ -4,7 +4,7 @@
 
 [Item ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#item-ids)
 
-[Team ID's]()
+[Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#team-ids)
 
 
 ## RoleID's with default HP's
