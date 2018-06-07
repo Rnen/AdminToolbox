@@ -2,7 +2,7 @@
 # Index
 [Role ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#roleids-with-default-hps)
 
-[Item ID's]()
+[Item ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#item-ids)
 
 [Team ID's]()
 
