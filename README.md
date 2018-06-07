@@ -27,7 +27,7 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 ## Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
-PLAYERS |   |   | Lists all players + IP's + SteamID's in server console.
+PLAYERS |   |   | Lists all players + IP's + SteamID's.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
 GOD | LIST |   | List all players with GODMODE enabled
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
