@@ -76,7 +76,7 @@ admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and
 admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
 admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
-~~admintoolbox_writeTkToFile | Boolean | False | When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~ This isnt actually working yet
+~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~ This isnt actually working yet
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
 
 
