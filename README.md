@@ -32,6 +32,7 @@ TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 PLAYER | Player |   | Lists all values for the specified Player
+ROUNDLOCK | Boolean |   | Turns on/off round ending
 
 --- | :---: | :---: | :---: | ---
 WARP | Player/List/Remove | ADD/REMOVE/(Your
