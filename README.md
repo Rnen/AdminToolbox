@@ -34,6 +34,7 @@ KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables kee
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
 
+Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
 WARP | Player/List/Remove | ADD/REMOVE/(Your
 Examples: 
