@@ -4,6 +4,8 @@
 
 [Item ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#item-ids)
 
+[DamageType ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#damagetype-ids)
+
 [Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#team-ids)
 
 #
@@ -65,7 +67,7 @@
 #
 ## DamageType ID's
 | TeamID | Team Name | Description|
-| :--- | :--- | ---:|
+| :--- | :---: | :---|
 #0| NONE | 
 #1| LURE | Stepping into the Femur Breaker
 #2| SCP_049_2 | Zombie attack
