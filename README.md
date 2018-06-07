@@ -35,7 +35,7 @@ PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
 
 ### Advanced Commands (Theese are more experiemental and might not always work)
-Command | Value Type | Value Type | ----Value_Type---- | Description
+Command | Value Type | Value Type | ____Value_Type____ | Description
 --- | :---: | :---: | :---: | ---
 WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
