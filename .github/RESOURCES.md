@@ -67,7 +67,7 @@
 #
 ## DamageType ID's
 | TeamID | Team Name | Description|
-| :--- | :---: | :---|
+| :--- | :--- | ---: |
 #0| NONE | 
 #1| LURE | Stepping into the Femur Breaker
 #2| SCP_049_2 | Zombie attack
