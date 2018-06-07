@@ -1,12 +1,12 @@
 
 # Content:
-[Role ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#roleids-with-default-hps)
+[Role ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#roleids-with-default-hps)
 
-[Item ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#item-ids)
+[Item ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#item-ids)
 
-[DamageType ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#damagetype-ids)
+[DamageType ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#damagetype-ids)
 
-[Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#team-ids)
+[Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#team-ids)
 
 #
 ## RoleID's with default HP's
