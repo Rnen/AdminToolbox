@@ -37,7 +37,7 @@ HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Intege
 TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items. (Previously **CLASS** Command)
-KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
+~~KEEP/KEEPSETTINGS~~ ~~ayer~~ ~~olean~~ UNFINISHED, DOES NOTHING ATM; ~~ables keeping player settings on round restart.~~
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
 
