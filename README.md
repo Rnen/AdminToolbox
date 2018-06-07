@@ -29,13 +29,24 @@ HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
-CLASS  | Player | CLASSID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
+PLAYER | Player |   | Lists all values for the specified Player
 
-Important: Player input dont need the full name, only a few chronological characters from the name, it will grab the closest looking name to what you entered
+--- | :---: | :---: | :---: | ---
+WARP | Player/List/Remove | ADD/REMOVE/(Your
+Examples: 
+`warp add Pablo NameOfWarp` Will add a warp point called NameOfWarp on Pablo's position
+`warp evan NameOfWarp` Will warp player evan to NameOfWarp
+`warp remove NameOfWarp` Removes spesified WarpPoint
+`warp list` Lists all existing WarpPoints
+--- | :---: | :---: | :---: | ---
+POS | Player | ADD/GET/SET/HELP | X=(Integer) Y=(Integer) Z=(Integer) | Adds (Integer to player pos/Sets player pos to specified cordinates.
+Example: `pos evan add Y=10` will teleport the players up 10 units.
+This command is higly experimental and i will not help if this isnt working. Note: ADD will not work with numbers less than 7 (IDK why)
+
+Important: Player input dont need the full name, it will grab the closest looking name to what you entered
 ## ^Theese commands work in both server console and remote admin!^
-(Because of how the game works, messages/feedback will only show in server console, Remote Admins will only get "Command Executed", even if the command didnt work)
-
 
 ## Config Additions
 Type Info:
@@ -62,6 +73,8 @@ admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and
 admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
 admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
+admintoolbox_writeTkToFile | Boolean | False | When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)
+admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
 
 
 
