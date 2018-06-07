@@ -46,12 +46,15 @@ Examples:
 `warp evan NameOfWarp` Will warp player evan to NameOfWarp
 `warp remove NameOfWarp` Removes spesified WarpPoint
 `warp list` Lists all existing WarpPoints
+
 Command | Value Type | Value Type | Value Type | Description
 --- | :---: | :---: | :---: | ---
-POS | Player | ADD/GET/SET/HELP | X=(Integer) Y=(Integer) Z=(Integer) | Adds (Integer to player pos/Sets player pos to specified cordinates.
+POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
+POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
+POS | GET | Player | |  Gets XYZ position of `Player`
+POS | HELP | | | Displays (a rather confusing) helptext
 
-Example: `pos evan add Y=10` will teleport the players up 10 units.
-This command is higly experimental and i will not help if this isnt working. Note: ADD will not work with numbers less than 7 (IDK why)
+### This command is higly experimental and i will not help if this isnt working. Note: ADD will not work with numbers less than 7 (IDK why)
 
 Important: Player input dont need the full name, it will grab the closest looking name to what you entered
 ## ^Theese commands work in both server console and remote admin!^
