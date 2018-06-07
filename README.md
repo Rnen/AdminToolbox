@@ -36,7 +36,7 @@ KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables kee
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
 
-### Advanced Commands (Theese are more experiemental and might not always work)
+### Advanced Commands (Theese are more experiemental and is hard to use)
 Command | Value Type | Value Type |  Value_Type | Description
 --- | :---: | :---: | :---: | ---
 WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
