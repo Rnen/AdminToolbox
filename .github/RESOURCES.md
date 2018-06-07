@@ -63,6 +63,29 @@
 |#29| PAT ammo (Com15, P90 ammo)
 
 #
+## DamageType ID's
+| TeamID | Team Name | Description|
+| :--- | :--- | ---:|
+#0| NONE | 
+#1| LURE | Stepping into the Femur Breaker
+#2| SCP_049_2 | Zombie attack
+#3| NUKE | Nuke explosion
+#4| WALL | Crush damage
+#5| TESLA | Granade (& previously tesla gate) damage
+#6| SCP_173 | Peanut neck snap
+#7| SCP_106 | The damage dealt when 106 attacks players
+#8| CONTAIN | Decontamination? (Not sure about this one)
+#9| SCP_096 | Shy Guy
+#10| SCP_049 | Plague Doctor
+#11| POCKET | The damage you take each second in the pocked dimention
+#12| FALLDOWN | Falldamage
+#13| COM15 | 
+#14| E11_STANDARD_RIFLE | 
+#15| P90 | 
+#16| MP7 | 
+#17| LOGICER | Chaos Weapon
+
+#
 ## Team ID's
 | TeamID | Team Name |
 | :--- | :--- | 
