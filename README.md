@@ -6,6 +6,8 @@ It offers multiple admin tools like
 * Heal & SetHP
 * Warp Points
 * Teleport to cordinates
+* Prevent the round from ending
+* Player Joined messages in server log
 
 and more commands, and other features that do not exist in the base game (yet).
 There is also more to come!
