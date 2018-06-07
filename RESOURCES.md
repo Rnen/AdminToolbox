@@ -6,6 +6,7 @@
 
 [Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md#team-ids)
 
+#
 
 ## RoleID's with default HP's
 | RoleID | Role Name | Default HP |
@@ -26,6 +27,8 @@
 |#13 | Nine-Tailed Fox Cadet | HP: 100 |
 |#14 | TUTORIAL | HP: 100 |
 |#15 | Facility Guard | HP: 100 |
+
+#
 
 ## Item ID's
 | ItemID | Item Name |
@@ -60,6 +63,8 @@
 |#27| Disarmer
 |#28| RAT Ammo (MP7, Logicer ammo)
 |#29| PAT ammo (Com15, P90 ammo)
+
+#
 
 ## Team ID's
 | TeamID | Team Name |
