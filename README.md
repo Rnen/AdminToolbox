@@ -13,9 +13,9 @@ There is also more to come!
 ## Plugin Installation:
 To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
-1.5 If you're using Smod 2.1.1, use this instead [AdminToolbox For Smod2.1.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
-2. Navigate to your SCP Secret Lab folder.
-3. Drag AdminToolbox.dll into the sm_plugins folder
+2. If you're using **Smod 2.1.1**, use this instead [AdminToolbox For Smod2.1.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
+3. Navigate to your SCP Secret Lab folder.
+4. Drag AdminToolbox.dll into the sm_plugins folder
 
 ## ServerMod
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
