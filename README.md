@@ -29,7 +29,7 @@ HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Payer2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
-ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items. (Previously **CLASS** Command)
 KEEP/KEEPSETTINGS | Player | Boolean | UNFINISHED, DOES NOTHING ATM; Enables keeping player settings on round restart.
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK | Boolean |   | Turns on/off round ending
@@ -74,7 +74,7 @@ admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and
 admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
 admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
-admintoolbox_writeTkToFile | Boolean | False | When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)
+~~admintoolbox_writeTkToFile | Boolean | False | When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~ This isnt actually working yet
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
 
 
