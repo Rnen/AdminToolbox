@@ -43,7 +43,7 @@ ROUNDLOCK | Boolean |   | Turns on/off round ending
 
 >`*` can be used instead of `Player` to target **all** players on the server
 
->Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/RESOURCES.md)
+>Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 
 ### Advanced Commands (Theese are more experiemental and is hard to use)
 Command | Value Type | Value Type |  Value_Type | Description
