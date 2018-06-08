@@ -42,6 +42,7 @@ PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
 BREAKDOORS / BD | Player | Boolean | Turns on/off breaking doors for that player.
 LOCKDOWN | Boolean |  | Locks all doors for all players
+SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally. Handy for admins spectating suspicious activity
 
 >`*` can be used instead of `Player` to target **all** players on the server
 
