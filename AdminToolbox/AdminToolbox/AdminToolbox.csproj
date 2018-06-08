@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BreakDoorsCommand.cs" />
+    <Compile Include="Commands\LockdownCommand.cs" />
     <Compile Include="Commands\RoundLock.cs" />
     <Compile Include="Commands\WarpCommand.cs" />
     <Compile Include="Commands\PosCommand.cs" />
@@ -51,10 +53,11 @@
     <Compile Include="Commands\SetHpCommand.cs" />
     <Compile Include="Commands\SetPlayerRole.cs" />
     <Compile Include="Commands\SetTutorial.cs" />
-    <Compile Include="Commands\KeepSettings.cs" />
+    <Compile Include="Commands\SpectatorCommand.cs" />
     <Compile Include="Commands\NoDmgCommand.cs" />
     <Compile Include="Commands\HealCommand.cs" />
     <Compile Include="Commands\GodModeCommand.cs" />
+    <Compile Include="MyMiscEvents.cs" />
     <Compile Include="PlayerJoinLeaveHandler.cs" />
     <Compile Include="Commands\TeleportCommand.cs" />
     <Compile Include="Commands\MyTemplateCommand.cs" />

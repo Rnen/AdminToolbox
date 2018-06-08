@@ -4,26 +4,26 @@ using Smod2.API;
 
 namespace AdminToolbox.Command
 {
-	class KeepSettings : ICommandHandler
+	class SpectatorCommand : ICommandHandler
 	{
 		private AdminToolbox plugin;
         
-		public KeepSettings(AdminToolbox plugin)
+		public SpectatorCommand(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
 		}
 
 		public string GetCommandDescription()
 		{
-			return "Switch on/off keep settings for player";
+			return "Switch on/off always spectator for player";
 		}
 
 		public string GetUsage()
 		{
-			return "KEEPSETTINGS [PLAYER] (BOOL)";
+			return "SPECTATOR [PLAYER] (BOOL)";
 		}
 
-        public string[] OnCall(ICommandSender manager, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
@@ -35,13 +35,13 @@ namespace AdminToolbox.Command
                     if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId][0] = true; }
                     else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId][0] = false; }
                     //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0]);
-                    return new string[] { myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
+                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
                 }
                 else
                 {
                     AdminToolbox.playerdict[myPlayer.SteamId][0] = !AdminToolbox.playerdict[myPlayer.SteamId][0];
                     //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0]);
-                    return new string[] { myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
+                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
                 }
 
             }

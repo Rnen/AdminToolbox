@@ -23,7 +23,7 @@ namespace AdminToolbox.Command
             return "PLAYERS";
         }
 
-        public string[] OnCall(ICommandSender manager, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (server.NumPlayers - 1 < 1) { return new string[] { "No players" }; }

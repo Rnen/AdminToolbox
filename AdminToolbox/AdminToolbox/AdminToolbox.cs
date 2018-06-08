@@ -17,9 +17,9 @@ namespace AdminToolbox
         name = "Admin Toolbox",
         description = "Plugin for advanced admin tools",
         id = "rnen.admin.toolbox",
-        version = "1.1",
+        version = "1.2",
         SmodMajor = 3,
-        SmodMinor = 0,
+        SmodMinor = 3,
         SmodRevision = 0
         )]
     class AdminToolbox : Plugin
@@ -28,6 +28,7 @@ namespace AdminToolbox
         public static bool evanSpectator_onRespawn = false;
         public static bool adminMode = false;
         public static bool lockRound = false;
+        public static bool lockDown = false;
 
         public static int[] nineTailsTeam = { 1, 3 };
         public static int[] chaosTeam = { 2, 4 };
@@ -40,11 +41,12 @@ namespace AdminToolbox
         public override void OnDisable()
         {
         }
-        public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff)
+        public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff, bool destroyDoor)
         {
             playerdict[player.SteamId][0] = keepSettings;
             playerdict[player.SteamId][1] = godMode;
             playerdict[player.SteamId][2] = dmgOff;
+            playerdict[player.SteamId][3] = destroyDoor;
         }
 
         public override void OnEnable()
@@ -59,11 +61,12 @@ namespace AdminToolbox
             this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.High);
             this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.High);
             this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(this), Priority.Highest);
+            this.AddEventHandlers(new MyMiscEvents(this));
 
             //this.AddEventHandler(typeof(), new PlayerLeaveHandler(), Priority.Highest);
 
             // Register Commands
-            //this.AddCommand("spectator", new Command.SetToSpectatorCommand(this));
+            this.AddCommand("spectator", new Command.SpectatorCommand(this));
             this.AddCommand("players", new Command.PlayerList(this));
             this.AddCommand("tpx", new Command.TeleportCommand(this));
             this.AddCommand("heal", new Command.HealCommand(this));
@@ -73,14 +76,18 @@ namespace AdminToolbox
             this.AddCommand("tut", new Command.SetTutorial(this));
             this.AddCommand("tutorial", new Command.SetTutorial(this));
             this.AddCommand("role", new Command.SetPlayerRole(this));
-            this.AddCommand("keep", new Command.KeepSettings(this));
-            this.AddCommand("keepsettings", new Command.KeepSettings(this));
+            //this.AddCommand("keep", new Command.KeepSettings(this));
+            //this.AddCommand("keepsettings", new Command.KeepSettings(this));
             this.AddCommand("hp", new Command.SetHpCommand(this));
             this.AddCommand("sethp", new Command.SetHpCommand(this));
             this.AddCommand("player", new Command.PlayerCommand(this));
             this.AddCommand("pos", new Command.PosCommand(this));
             this.AddCommand("warp", new Command.WarpCommmand(this));
             this.AddCommand("roundlock", new Command.RoundLock(this));
+            this.AddCommand("rlock", new Command.RoundLock(this));
+            this.AddCommand("lockdown", new Command.LockdownCommand(this));
+            this.AddCommand("breakdoors", new Command.BreakDoorsCommand(this));
+            this.AddCommand("bd", new Command.BreakDoorsCommand(this));
             //this.AddCommand("test", new Command.Test(this));
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed"));
@@ -96,6 +103,9 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier after end of round"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_writeTkToFile", false, Smod2.Config.SettingType.BOOL, true, "true/false"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "true/false"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] {  }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
         }
     }
 

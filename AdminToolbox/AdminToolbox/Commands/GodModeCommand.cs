@@ -25,7 +25,7 @@ namespace AdminToolbox.Command
 			return "GOD [PLAYER] (BOOL)";
 		}
 
-        public string[] OnCall(ICommandSender manager, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)

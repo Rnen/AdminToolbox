@@ -24,7 +24,7 @@ namespace AdminToolbox.Command
 			return "HEAL [PLAYER] (AMOUNT)";
 		}
 
-        public string[] OnCall(ICommandSender manager, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
