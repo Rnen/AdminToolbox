@@ -30,7 +30,7 @@ namespace AdminToolbox.Command
             {
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-                string x = "Player info: \n \n Player: "+myPlayer.Name+"\n - SteamID: "+myPlayer.SteamId+"\n - Health: "+myPlayer.GetHealth()+"\n - Role: "+myPlayer.GetUserGroup().Name+"\n - KeepInfo: "+ AdminToolbox.playerdict[myPlayer.SteamId][0]+"\n - Godmode: "+ AdminToolbox.playerdict[myPlayer.SteamId][1]+"\n - NoDmg: "+ AdminToolbox.playerdict[myPlayer.SteamId][2]+"\n - Position: X:"+myPlayer.GetPosition().x+" Y:"+ myPlayer.GetPosition().y+" Z:"+ myPlayer.GetPosition().z;
+                string x = "Player info: \n \n Player: " + myPlayer.Name + "\n - SteamID: " + myPlayer.SteamId + "\n - Health: " + myPlayer.GetHealth() + "\n - Role: " + myPlayer.GetUserGroup().Name + "\n - SpectatorOnly: " + AdminToolbox.playerdict[myPlayer.SteamId][0] + "\n - Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId][1] + "\n - NoDmg: " + AdminToolbox.playerdict[myPlayer.SteamId][2] + "\n - BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId][3] + "+n - Position: X:" + myPlayer.GetPosition().x + " Y:" + myPlayer.GetPosition().y + " Z:" + myPlayer.GetPosition().z;
                 //plugin.Info(x);
                 return new string[] { x };
             }
