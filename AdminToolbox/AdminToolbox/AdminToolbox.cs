@@ -67,6 +67,7 @@ namespace AdminToolbox
 
             // Register Commands
             this.AddCommand("spectator", new Command.SpectatorCommand(this));
+            this.AddCommand("spec", new Command.SpectatorCommand(this));
             this.AddCommand("players", new Command.PlayerList(this));
             this.AddCommand("tpx", new Command.TeleportCommand(this));
             this.AddCommand("heal", new Command.HealCommand(this));

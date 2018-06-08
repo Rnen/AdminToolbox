@@ -5,7 +5,7 @@ using Smod2.EventHandlers;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSetRole
+    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn
     {
         private Plugin plugin;
 
@@ -39,7 +39,7 @@ namespace AdminToolbox
                 ev.Allow = false;
         }
 
-        public void OnSetRole(PlayerSetRoleEvent ev)
+        public void OnSpawn(PlayerSpawnEvent ev)
         {
             if (AdminToolbox.playerdict[ev.Player.SteamId][0])
                 ev.Player.ChangeRole(Role.SPECTATOR);
