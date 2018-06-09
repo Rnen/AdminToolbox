@@ -91,8 +91,8 @@ admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage type
 ~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
 admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges in `config_remoteadmin.txt`, not sure how it performs with other global badges (patreon supporter etc). See example below
-admintoolbox_intercom_extended_duration | Seconds | 1000 | How long whitelisted people can talk. 
-admintoolbox_intercom_extended_cooldown | Seconds | 0 | Cooldown after talking. 
+admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
+admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
 
 Whitelist example:
 ```yaml
