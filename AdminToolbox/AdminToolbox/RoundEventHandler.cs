@@ -21,23 +21,29 @@ namespace AdminToolbox
 
         public void OnRoundStart(RoundStartEvent ev)
         {
-            AdminToolbox.roundCount++;
             AdminToolbox.isRoundFinished = false;
-            plugin.Info("Round: " + AdminToolbox.roundCount + " started.");
-            plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
+            AdminToolbox.roundCount++;
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+            {
+                plugin.Info("Round: " + AdminToolbox.roundCount + " started.");
+                plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
+            }
         }
 
         public void OnRoundEnd(RoundEndEvent ev)
         {
             AdminToolbox.isRoundFinished = true;
-            //int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
-            //if (duration < 60)
-            //    plugin.Info("Round lasted for: " + duration + " sec");
-            //else
-            //    plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
-            if (AdminToolbox.warpVectors.Count > 0)
-                AdminToolbox.warpVectors.Clear();
-            plugin.Info("Round: "+AdminToolbox.roundCount+" has ended.");
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+            {
+                int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
+                if (duration < 60)
+                    plugin.Info("Round lasted for: " + duration + " sec");
+                else
+                    plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
+                if (AdminToolbox.warpVectors.Count > 0)
+                    AdminToolbox.warpVectors.Clear();
+                plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+            }
         }
 
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)

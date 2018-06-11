@@ -63,17 +63,20 @@ namespace AdminToolbox.Command
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-                if (myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR) { return new string[]{ "Dont use ROLE command on spectators!" }; };
+                //if (myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR) { return new string[]{ "ROLE command doesn't work on spectators! (yet)" }; };
                 if (args.Length > 1)
                 {
                     int j;
                     if (Int32.TryParse(args[1], out j))
                     {
                         TeamRole myRole = myPlayer.TeamRole;
-                        Vector originalPos = myPlayer.GetPosition();
+                        //Vector originalPos = myPlayer.GetPosition();
                         //plugin.Info("Changed " + myPlayer.Name + " from " + myPlayer.TeamRole + " to " + (Role)j);
-                        myPlayer.ChangeRole((Role)j, false, false);
-                        myPlayer.Teleport(originalPos);
+                        if (myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR)
+                            myPlayer.ChangeRole((Role)j, false, true);
+                        else
+                            myPlayer.ChangeRole((Role)j, false, false);
+                        //myPlayer.Teleport(originalPos);
                         myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
                         return new string[] { "Changed " + myPlayer.Name + " from " + myRole.Name + " to " + (Role)j };
                     }
