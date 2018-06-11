@@ -31,7 +31,7 @@ namespace AdminToolbox.Command
 		}
 
 
-        public string[] OnCall(ICommandSender manger, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
@@ -68,12 +68,12 @@ namespace AdminToolbox.Command
                                     if (!myPos.ContainsKey(cordinates[0]))
                                     {
                                         //myPos.Remove(cordinates[0]);
-                                        plugin.Info("Added " + cordinates[0] + " value: " + xyz + " to cord dict");
+                                        //plugin.Info("Added " + cordinates[0] + " value: " + xyz + " to cord dict");
                                         myPos.Add(cordinates[0], xyz);
                                     }
                                     else
                                     {
-                                        plugin.Info("Set " + cordinates[0] + " value: " + xyz);
+                                        //plugin.Info("Set " + cordinates[0] + " value: " + xyz);
                                         myPos[cordinates[0]] = xyz;
                                     }
                                 }

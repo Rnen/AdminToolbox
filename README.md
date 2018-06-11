@@ -37,9 +37,12 @@ HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Intege
 TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items. (Previously **CLASS** Command)
-~~KEEP/KEEPSETTINGS~~| ~~Player~~| ~~Boolean~~ |UNFINISHED, DOES NOTHING ATM ~~Enables keeping player settings on round restart.~~
+~~KEEP/KEEPSETTINGS~~| ~~Player~~| ~~Boolean~~ |Temporarily removed ~~Enables keeping player settings on round restart.~~
 PLAYER | Player |   | Lists all values for the specified Player
-ROUNDLOCK | Boolean |   | Turns on/off round ending
+ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
+BREAKDOORS / BD | Player | Boolean | Turns on/off breaking doors for that player.
+LOCKDOWN | Boolean |  | Locks all doors for all players
+SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally. Handy for admins spectating suspicious activity
 
 >`*` can be used instead of `Player` to target **all** players on the server
 
@@ -69,6 +72,7 @@ Type Info:
 - Seconds: Time in seconds, usually a value of -1 disables the feature
 - Minutes: Time in minutes, usually a value of -1 disables the feature
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
+- STEAMID64: [Find yours here!](https://steamid.io/lookup)
 
 >Crossed out config options are removed, unless otherwise specified in the description
 
@@ -86,7 +90,15 @@ admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
 ~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
+admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges in `config_remoteadmin.txt`, not sure how it performs with other global badges (patreon supporter etc). See example below
+admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
+admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
 
+Whitelist example:
+```yaml
+admintoolbox_intercom_extended_IDs_whitelist: Server Owner,Admin,Moderator
+```
+>Find a complete list of DamageID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#damagetype-ids)
 #
 
 ### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!

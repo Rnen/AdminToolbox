@@ -49,7 +49,7 @@ namespace AdminToolbox.Command
                 if (args[1] != null)
                 {
                     myPlayer.Teleport(myPlayer2.GetPosition());
-                    plugin.Info("Teleported: " + myPlayer.Name + " to " + myPlayer2.Name /*+ " at " + System.DateTime.Now.ToString()*/);
+                    //plugin.Info("Teleported: " + myPlayer.Name + " to " + myPlayer2.Name /*+ " at " + System.DateTime.Now.ToString()*/);
                     return new string[] { "Teleported: " + myPlayer.Name + " to " + myPlayer2.Name };
                 }
                 else

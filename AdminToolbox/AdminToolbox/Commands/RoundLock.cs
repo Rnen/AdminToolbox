@@ -35,6 +35,7 @@ namespace AdminToolbox.Command
                 if (bool.TryParse(args[0], out k))
                 {
                     AdminToolbox.lockRound = k;
+                    plugin.Info("Round lock: " + k);
                     return new string[] { "Round lock: " + k };
                 }
                 else if (Int32.TryParse(args[0], out l))
@@ -42,12 +43,14 @@ namespace AdminToolbox.Command
                     if (l < 1)
                     {
                         AdminToolbox.lockRound = false;
-                        return new string[] { "Round lock: False" };
+                        plugin.Info("Round lock: " + AdminToolbox.lockRound);
+                        return new string[] { "Round lock: " + AdminToolbox.lockRound };
                     }
                     else
                     {
                         AdminToolbox.lockRound = true;
-                        return new string[] { "Round lock: True" };
+                        plugin.Info("Round lock: " + AdminToolbox.lockRound);
+                        return new string[] { "Round lock: "+AdminToolbox.lockRound };
                     }
                 }
                 else
@@ -56,6 +59,7 @@ namespace AdminToolbox.Command
             else
             {
                 AdminToolbox.lockRound = !AdminToolbox.lockRound;
+                plugin.Info("Round lock: " + AdminToolbox.lockRound);
                 return new string[] { "Round lock: "+AdminToolbox.lockRound };
             }
         }

@@ -23,7 +23,7 @@ namespace AdminToolbox.Command
 			return "";
 		}
 
-        public string[] OnCall(ICommandSender manger, string[] args)
+        public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)

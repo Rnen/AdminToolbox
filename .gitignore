@@ -322,3 +322,9 @@ ASALocalRun/
 # MSBuild Binary and Structured Log
 *.binlog
 
+# Smod & Stuff
+Smod2.dll
+Assembly-CSharp.dll
+sourcecode.zip
+Builds/
+obj/
