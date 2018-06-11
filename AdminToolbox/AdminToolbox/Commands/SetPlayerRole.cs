@@ -39,7 +39,7 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                pl.ChangeRole((Role)j);
+                                pl.ChangeRole((Role)j,false,false);
                                 playerNum++;
                             }
                             if (playerNum > 1)
@@ -72,7 +72,7 @@ namespace AdminToolbox.Command
                         TeamRole myRole = myPlayer.TeamRole;
                         Vector originalPos = myPlayer.GetPosition();
                         //plugin.Info("Changed " + myPlayer.Name + " from " + myPlayer.TeamRole + " to " + (Role)j);
-                        myPlayer.ChangeRole((Role)j, false, true);
+                        myPlayer.ChangeRole((Role)j, false, false);
                         myPlayer.Teleport(originalPos);
                         myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
                         return new string[] { "Changed " + myPlayer.Name + " from " + myRole.Name + " to " + (Role)j };
