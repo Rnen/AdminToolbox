@@ -12,7 +12,7 @@
 ## RoleID's with default HP's
 | RoleID | Role Name | Default HP |
 | :--- | :--- | ---: |
-|#0| SCP-173 | HP: 2000 |
+|#0| SCP-173 | HP: 3200 |
 |#1 | Class-D Personnel | HP: 100 |
 |#2 | Spectator | HP: 100 |
 |#3 | SCP-106 | HP:700 |
