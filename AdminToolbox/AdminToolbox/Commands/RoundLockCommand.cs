@@ -6,11 +6,11 @@ using System.IO;
 
 namespace AdminToolbox.Command
 {
-	class RoundLock : ICommandHandler
+	class RoundLockCommand : ICommandHandler
 	{
 		private AdminToolbox plugin;
         
-		public RoundLock(AdminToolbox plugin)
+		public RoundLockCommand(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
 		}

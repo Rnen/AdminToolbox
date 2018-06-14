@@ -4,11 +4,11 @@ using Smod2.API;
 
 namespace AdminToolbox.Command
 {
-    class PlayerList : ICommandHandler
+    class PlayerListCommand : ICommandHandler
     {
         private AdminToolbox plugin;
 
-        public PlayerList(AdminToolbox plugin)
+        public PlayerListCommand(AdminToolbox plugin)
         {
             this.plugin = plugin;
         }

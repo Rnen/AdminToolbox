@@ -5,11 +5,11 @@ using System;
 
 namespace AdminToolbox.Command
 {
-    class SetTutorial : ICommandHandler
+    class TutorialCommand : ICommandHandler
     {
         private AdminToolbox plugin;
 
-        public SetTutorial(AdminToolbox plugin)
+        public TutorialCommand(AdminToolbox plugin)
         {
             this.plugin = plugin;
         }

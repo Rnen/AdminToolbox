@@ -17,25 +17,22 @@ namespace AdminToolbox
         name = "Admin Toolbox",
         description = "Plugin for advanced admin tools",
         id = "rnen.admin.toolbox",
-        version = "1.2",
+        version = "1.3",
         SmodMajor = 3,
         SmodMinor = 3,
         SmodRevision = 0
         )]
     class AdminToolbox : Plugin
     {
-        public static bool isRoundFinished = false;
-        public static bool evanSpectator_onRespawn = false;
-        public static bool adminMode = false;
-        public static bool lockRound = false;
-        public static bool lockDown = false;
+        public static bool isRoundFinished = false, adminMode = false, lockRound = false, lockDown = false;
 
-        public static int[] nineTailsTeam = { 1, 3 };
-        public static int[] chaosTeam = { 2, 4 };
+        public static int[] nineTailsTeam = { 1, 3 }, chaosTeam = { 2, 4 };
+
+        public static string fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
 
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
         public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
-        public static List<string> logText = new List<string>();
+        public static List<string> logText = new List<string>(), myRooms = new List<string>();
         public static int roundCount = 0;
 
         public override void OnDisable()
@@ -43,6 +40,7 @@ namespace AdminToolbox
         }
         public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff, bool destroyDoor)
         {
+            //This is actually never used, its just for keeping track, might become an all on/off switch at some point
             playerdict[player.SteamId][0] = keepSettings;
             playerdict[player.SteamId][1] = godMode;
             playerdict[player.SteamId][2] = dmgOff;
@@ -62,21 +60,18 @@ namespace AdminToolbox
             this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.High);
             this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(this), Priority.Highest);
             this.AddEventHandlers(new MyMiscEvents(this));
-
-            //this.AddEventHandler(typeof(), new PlayerLeaveHandler(), Priority.Highest);
-
             // Register Commands
             this.AddCommand("spectator", new Command.SpectatorCommand(this));
             this.AddCommand("spec", new Command.SpectatorCommand(this));
-            this.AddCommand("players", new Command.PlayerList(this));
+            this.AddCommand("players", new Command.PlayerListCommand(this));
             this.AddCommand("tpx", new Command.TeleportCommand(this));
             this.AddCommand("heal", new Command.HealCommand(this));
             this.AddCommand("god", new Command.GodModeCommand(this));
             this.AddCommand("godmode", new Command.GodModeCommand(this));
             this.AddCommand("nodmg", new Command.NoDmgCommand(this));
-            this.AddCommand("tut", new Command.SetTutorial(this));
-            this.AddCommand("tutorial", new Command.SetTutorial(this));
-            this.AddCommand("role", new Command.SetPlayerRole(this));
+            this.AddCommand("tut", new Command.TutorialCommand(this));
+            this.AddCommand("tutorial", new Command.TutorialCommand(this));
+            this.AddCommand("role", new Command.RoleCommand(this));
             //this.AddCommand("keep", new Command.KeepSettings(this));
             //this.AddCommand("keepsettings", new Command.KeepSettings(this));
             this.AddCommand("hp", new Command.SetHpCommand(this));
@@ -84,12 +79,12 @@ namespace AdminToolbox
             this.AddCommand("player", new Command.PlayerCommand(this));
             this.AddCommand("pos", new Command.PosCommand(this));
             this.AddCommand("warp", new Command.WarpCommmand(this));
-            this.AddCommand("roundlock", new Command.RoundLock(this));
-            this.AddCommand("rlock", new Command.RoundLock(this));
+            this.AddCommand("roundlock", new Command.RoundLockCommand(this));
+            this.AddCommand("rlock", new Command.RoundLockCommand(this));
             this.AddCommand("lockdown", new Command.LockdownCommand(this));
             this.AddCommand("breakdoors", new Command.BreakDoorsCommand(this));
             this.AddCommand("bd", new Command.BreakDoorsCommand(this));
-            //this.AddCommand("test", new Command.Test(this));
+            this.AddCommand("door", new Command.DoorCommand(this));
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes to debug"));
@@ -105,9 +100,10 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_writeTkToFile", false, Smod2.Config.SettingType.BOOL, true, "Unfinished"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_info", true, Smod2.Config.SettingType.BOOL, true, "Prints round count and player number on round start & end"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "Writes player name in console on players joining"));
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] {  }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", null, Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
         }
     }
 
@@ -165,6 +161,7 @@ namespace AdminToolbox
     {
         public static Player GetPlayer(string args, out Player playerOut)
         {
+            //Takes a string and finds the closest player from the playerlist
             int maxNameLength = 31;
             int LastnameDifference = 31;
             Player plyer = null;
@@ -202,7 +199,7 @@ namespace AdminToolbox
     {
         public static void WriteToLog(string str)
         {
-            if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false)) return;
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
             AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
             string myLog = null;
             foreach (var item in AdminToolbox.logText)
@@ -210,8 +207,7 @@ namespace AdminToolbox
                 myLog += item + Environment.NewLine;
             }
             Server server = PluginManager.Manager.Server;
-            string fileName = server.Name.ToString() + "_AdminToolbox_TKLog.txt";
-            File.WriteAllText(fileName, myLog);
+            File.WriteAllText(AdminToolbox.fileName, myLog);
         }
     }
 }
