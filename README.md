@@ -94,6 +94,7 @@ admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of 
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
 
+### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 Whitelist example:
 ```yaml
 admintoolbox_intercom_extended_IDs_whitelist: Server Owner,Admin,Moderator
