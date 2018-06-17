@@ -24,6 +24,7 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
  * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
  * SMOD Discord: https://discord.gg/8nvmMTr
 
+### Note that all commands below requires you to have `enable_ra_server_commands:` set to true, and your steamID64 added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
