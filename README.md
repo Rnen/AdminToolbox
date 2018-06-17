@@ -91,7 +91,7 @@ admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kil
 admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
 admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and SCP kills in server console.
 ~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder~~
-admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges in `config_remoteadmin.txt`, not sure how it performs with other global badges (patreon supporter etc). See example below
+admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges you assign in `config_remoteadmin.txt`. If you have another badge (global badge like patreon supporter), you need to use `showtag` for it to work.
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
 
