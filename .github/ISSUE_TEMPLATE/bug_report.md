@@ -22,6 +22,7 @@ If applicable, add screenshots to help explain your problem.
 
 ### Desktop (please complete the following information):
  - Smod Version:
+ - AdminToolbox Version: 
 
 ### Additional context
 Add any other context about the problem here.
