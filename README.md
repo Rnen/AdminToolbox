@@ -77,20 +77,20 @@ Type Info:
 
 >Crossed out config options are removed, unless otherwise specified in the description
 
-## If you do not intend to change the default values, theres no need to include any of theese config settings
+## If you do not intend to change the default values, theres no need to include any of theese in your config
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
 admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round ended, enter `0`.
-admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
-admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
-admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and SCP kills in server console.
-admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
-admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
-admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
-~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder (Not sure how this performs with multiple servers running)~~
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
+admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
+admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
+admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
+admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
+admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
+admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and SCP kills in server console.
+~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder~~
 admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges in `config_remoteadmin.txt`, not sure how it performs with other global badges (patreon supporter etc). See example below
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
