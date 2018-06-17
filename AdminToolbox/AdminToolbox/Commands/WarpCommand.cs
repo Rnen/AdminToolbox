@@ -33,19 +33,24 @@ namespace AdminToolbox.Command
         public string[] OnCall(ICommandSender sender, string[] args)
         {
             Server server = PluginManager.Manager.Server;
+
             if (args.Length > 0)
             {
                 if (args[0].ToLower() == "list")
                 {
                     if(AdminToolbox.warpVectors.Count<1) { return new string[] { "No warp points created yet!" }; }
                     string str = "\nWarp Points:";
-                    //AdminToolbox.warpVectors.
                     var list = AdminToolbox.warpVectors.Keys.ToList();
                     list.Sort();
                     foreach (var i in list)
                     {
-                        str += "\n - "+i;
+                        str += "\n - " + i;
                     }
+                    //str += "\n Room Teleports:";
+                    //foreach (var i in RoomManager.)
+                    //{
+                    //    str += "\n - " + i.label;
+                    //}
                     //plugin.Info(str);
                     return new string[] { str };
                 }

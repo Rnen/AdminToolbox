@@ -28,15 +28,17 @@ namespace AdminToolbox
 
         public static int[] nineTailsTeam = { 1, 3 }, chaosTeam = { 2, 4 };
 
-        public static string fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
+        public static string fileName;
 
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
+        public static Dictionary<string, List<int>> playerStats = new Dictionary<string, List<int>>();
         public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
         public static List<string> logText = new List<string>(), myRooms = new List<string>();
         public static int roundCount = 0;
 
         public override void OnDisable()
         {
+            this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
         public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff, bool destroyDoor)
         {
@@ -46,10 +48,19 @@ namespace AdminToolbox
             playerdict[player.SteamId][2] = dmgOff;
             playerdict[player.SteamId][3] = destroyDoor;
         }
+        public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int Something)
+        {
+            playerStats[player.SteamId][0] = Kills;
+            playerStats[player.SteamId][1] = TeamKills;
+            playerStats[player.SteamId][2] = Deaths;
+            playerStats[player.SteamId][3] = Something;
+        }
 
         public override void OnEnable()
         {
-            this.Info(this.Details.name + " loaded sucessfully");
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { pluginManager.DisablePlugin(this.Details.id); return; }
+            this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
+            fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
         }
 
         public override void Register()
@@ -86,6 +97,7 @@ namespace AdminToolbox
             this.AddCommand("bd", new Command.BreakDoorsCommand(this));
             this.AddCommand("door", new Command.DoorCommand(this));
             // Register config settings
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes to debug"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_server", false, Smod2.Config.SettingType.BOOL, true, "Debugs damage dealt by server"));
