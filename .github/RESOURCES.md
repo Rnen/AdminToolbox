@@ -102,42 +102,45 @@
 #6| Tutorial
 
 #
+>Room ID's is not finished beeing documented
 ## Room ID's
-topsite
-LC_CAFE
-LC-HC_B
-LC-HC_B
-CROSSING
-LC-HC_A
-LC-HC_A
-LC_914_CR
-HC_106_CR
-HC_106_CR
-HC_106_CR
-HC_TESLA_B
-nukesite
-HC_TESLA_B
-HC_SERVERS
-HC_SERVERS
-HC_SERVERS
-HC_SERVERS
-HC_TESLA_B
-HC_TESLA_B
-HC_457_CR
-HC_096_CR
-HC_079_HALL
-HC_079_HALL
-HC_079_MON
-HC_079_CR
-LC_ARMORY
-Offices_PCs
-Offices_PCs 
-Offices_upstair
-Smallrooms2
-Straight_4
-Straight_4
-Straight_4
-LC_ARMORY
-Shelter
-intercom
-pocket
+| Room ID | Description |
+| :--- | :--- | 
+topsite |
+LC_CAFE |
+LC-HC_B |
+LC-HC_B |
+CROSSING |
+LC-HC_A |
+LC-HC_A |
+LC_914_CR | SCP-914
+HC_106_CR |
+HC_106_CR |
+HC_106_CR |
+HC_TESLA_B |
+nukesite | Nuke room downstairs
+HC_TESLA_B | Tesla Gate
+HC_SERVERS | Server Room
+HC_SERVERS | ^
+HC_SERVERS | ^
+HC_SERVERS | ^
+HC_TESLA_B | Tesla Gate
+HC_TESLA_B | Tesla Gate
+HC_457_CR | Micro HID Room
+HC_096_CR |
+HC_079_HALL |
+HC_079_HALL |
+HC_079_MON |
+HC_079_CR |
+LC_ARMORY |
+Offices_PCs |
+Offices_PCs |
+Offices_upstair |
+Smallrooms2 |
+Straight_4 |
+Straight_4 |
+Straight_4 |
+LC_ARMORY |
+Shelter | Containment Shelter (entrance)
+intercom | Intercom Room
+pocket | Pocked Dimention
