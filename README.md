@@ -81,7 +81,7 @@ Type Info:
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-~~admintoolbox_enable~~ | ~~Boolean~~ | ~~true~~ | ~~`Enable / Disable` AdminToolbox from loading on server start~~ This is an upcoming feature, not implemented yet
+admintoolbox_enable | Boolean | true | `Enable / Disable` AdminToolbox from loading on server start
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
 admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round ended, enter `0`.
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
