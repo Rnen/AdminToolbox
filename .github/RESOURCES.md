@@ -8,6 +8,8 @@
 
 [Team ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#team-ids)
 
+[Room ID's](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#room-ids)
+
 #
 ## RoleID's with default HP's
 | RoleID | Role Name | Default HP |
@@ -98,3 +100,44 @@
 #4| Class-D
 #5| Spectator
 #6| Tutorial
+
+#
+## Room ID's
+topsite
+LC_CAFE
+LC-HC_B
+LC-HC_B
+CROSSING
+LC-HC_A
+LC-HC_A
+LC_914_CR
+HC_106_CR
+HC_106_CR
+HC_106_CR
+HC_TESLA_B
+nukesite
+HC_TESLA_B
+HC_SERVERS
+HC_SERVERS
+HC_SERVERS
+HC_SERVERS
+HC_TESLA_B
+HC_TESLA_B
+HC_457_CR
+HC_096_CR
+HC_079_HALL
+HC_079_HALL
+HC_079_MON
+HC_079_CR
+LC_ARMORY
+Offices_PCs
+Offices_PCs 
+Offices_upstair
+Smallrooms2
+Straight_4
+Straight_4
+Straight_4
+LC_ARMORY
+Shelter
+intercom
+pocket
