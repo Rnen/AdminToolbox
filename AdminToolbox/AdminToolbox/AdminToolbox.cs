@@ -115,7 +115,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", null, Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
+            //this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", null, Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
         }
     }
 
