@@ -39,13 +39,13 @@ HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
-ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items. (Previously **CLASS** Command)
-~~KEEP/KEEPSETTINGS~~| ~~Player~~| ~~Boolean~~ |Temporarily removed ~~Enables keeping player settings on round restart.~~
+ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+KEEP/KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
 PLAYER | Player |   | Lists all values for the specified Player
 ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
 BREAKDOORS / BD | Player | Boolean | Turns on/off breaking doors for that player.
 LOCKDOWN | Boolean |  | Locks all doors for all players. Will give "access denied" on any door.
-SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally. Handy for admins spectating suspicious activity
+SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally.
 
 >`*` can be used instead of `Player` to target **all** players on the server
 
