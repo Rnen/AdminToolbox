@@ -12,6 +12,8 @@ It offers multiple admin tools like
 and more commands, and other features that do not exist in the base game (yet).
 There is also more to come!
 
+If you want to follow the development, take a look at the [AdminToolbox Trello Board](https://trello.com/b/NnNBzSX2/scpsl-admintoolbox-plugin)
+
 ## Plugin Installation:
 To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
