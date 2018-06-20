@@ -40,13 +40,14 @@ namespace AdminToolbox
         {
             this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
-        public static void SetPlayerBools(Player player, bool keepSettings, bool godMode, bool dmgOff, bool destroyDoor)
+        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor)
         {
             //This is actually never used, its just for keeping track, might become an all on/off switch at some point
-            playerdict[player.SteamId][0] = keepSettings;
+            playerdict[player.SteamId][0] = spectatorOnly;
             playerdict[player.SteamId][1] = godMode;
             playerdict[player.SteamId][2] = dmgOff;
             playerdict[player.SteamId][3] = destroyDoor;
+            //playerdict[player.SteamId[4] = keepSettings;
         }
         public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int Something)
         {
@@ -83,8 +84,8 @@ namespace AdminToolbox
             this.AddCommand("tut", new Command.TutorialCommand(this));
             this.AddCommand("tutorial", new Command.TutorialCommand(this));
             this.AddCommand("role", new Command.RoleCommand(this));
-            //this.AddCommand("keep", new Command.KeepSettings(this));
-            //this.AddCommand("keepsettings", new Command.KeepSettings(this));
+            this.AddCommand("keep", new Command.KeepSettingsCommand(this));
+            this.AddCommand("keepsettings", new Command.KeepSettingsCommand(this));
             this.AddCommand("hp", new Command.SetHpCommand(this));
             this.AddCommand("sethp", new Command.SetHpCommand(this));
             this.AddCommand("player", new Command.PlayerCommand(this));

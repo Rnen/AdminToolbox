@@ -44,6 +44,11 @@ namespace AdminToolbox
                     AdminToolbox.warpVectors.Clear();
                 plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
             }
+            foreach(Player pl in this.plugin.pluginManager.Server.GetPlayers())
+            {
+                if (AdminToolbox.playerdict[pl.SteamId][4])
+                    AdminToolbox.SetPlayerBools(pl, false, false, false, false);
+            }
         }
 
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)
