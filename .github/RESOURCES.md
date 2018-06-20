@@ -68,7 +68,7 @@
 
 #
 ## DamageType ID's
-| TeamID | Team Name | Description|
+| DamageTypeID | DamageType Name | Description|
 | :--- | :--- | ---: |
 #0| NONE | 
 #1| LURE | Stepping into the Femur Breaker
