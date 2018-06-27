@@ -5,7 +5,7 @@ using Smod2.EventHandlers;
 
 namespace AdminToolbox
 {
-    class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerCheckRoundEnd
+    class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
     {
         private Plugin plugin;
 
@@ -30,6 +30,14 @@ namespace AdminToolbox
             }
         }
 
+        public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+        {
+            if (AdminToolbox.lockRound)
+            {
+                ev.Status = ROUND_END_STATUS.ON_GOING;
+            }
+        }
+
         public void OnRoundEnd(RoundEndEvent ev)
         {
             AdminToolbox.isRoundFinished = true;
@@ -44,18 +52,18 @@ namespace AdminToolbox
                     AdminToolbox.warpVectors.Clear();
                 plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
             }
-            foreach(Player pl in this.plugin.pluginManager.Server.GetPlayers())
-            {
-                if (AdminToolbox.playerdict[pl.SteamId][4])
-                    AdminToolbox.SetPlayerBools(pl, false, false, false, false);
-            }
         }
 
-        public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+        public void OnRoundRestart(RoundRestartEvent ev)
         {
-            if (AdminToolbox.lockRound)
+            //foreach (Player pl in this.plugin.pluginManager.Server.GetPlayers())
+            //{
+            //    if (AdminToolbox.playerdict[pl.SteamId][4])
+            //        AdminToolbox.SetPlayerBools(pl, false, false, false, false);
+            //}
+            foreach (var item in AdminToolbox.playerdict)
             {
-                ev.Status = ROUND_END_STATUS.ON_GOING;
+                if (!item.Value[4]) AdminToolbox.playerdict.Remove(item.Key);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace AdminToolbox
         version = "1.3",
         SmodMajor = 3,
         SmodMinor = 3,
-        SmodRevision = 0
+        SmodRevision = 5
         )]
     class AdminToolbox : Plugin
     {
@@ -59,9 +59,19 @@ namespace AdminToolbox
 
         public override void OnEnable()
         {
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { pluginManager.DisablePlugin(this.Details.id); return; }
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { pluginManager.DisablePlugin(this); pluginManager.Plugins.Remove(this); return; }
             this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
             fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
+            //Dictionary<int, int> roleDamagesNotAllowed = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", false);
+            //string debugString = "\n\nRoleDamages Not Allowed";
+            //if (roleDamagesNotAllowed.Count > 0)
+            //{
+            //    foreach(var item in roleDamagesNotAllowed.Keys)
+            //    {
+            //        debugString += item + " " + roleDamagesNotAllowed[item];
+            //    }
+            //    this.Info(debugString);
+            //}
         }
 
         public override void Register()
