@@ -20,7 +20,7 @@ namespace AdminToolbox
         version = "1.3",
         SmodMajor = 3,
         SmodMinor = 3,
-        SmodRevision = 5
+        SmodRevision = 6
         )]
     class AdminToolbox : Plugin
     {

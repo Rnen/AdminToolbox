@@ -25,6 +25,7 @@ namespace AdminToolbox
         }
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) return;
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             roleDamages = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", false);
@@ -36,8 +37,7 @@ namespace AdminToolbox
             {
                 foreach (int x in roleDamages.Keys)
                 {
-                    int b;
-                    roleDamages.TryGetValue(x, out b);
+                    roleDamages.TryGetValue(x, out int b);
                     if (x == (int)ev.Attacker.TeamRole.Role && b == (int)ev.Player.TeamRole.Role)
                     {
                         ev.Damage = 0f;
@@ -126,6 +126,7 @@ namespace AdminToolbox
         }
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) return;
             AdminToolbox.playerStats[ev.Player.SteamId][2]++;
             ev.SpawnRagdoll = true;
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
@@ -141,7 +142,6 @@ namespace AdminToolbox
                     goto default;
                 default:
                     if (AdminToolbox.isRoundFinished) return;
-                    AdminToolbox.playerStats[ev.Player.SteamId][2]++;
                     //plugin.Info("OnPlayerDie: \n" + LastAttacked.lastAttacker.Name + " " + LastAttacked.lastVictim.Name + " " + LastAttacked.lastDamageType);
 
                     if (!(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_scp_and_self_killed",false, false)) && ev.Player.Name == ev.Killer.Name) return;
