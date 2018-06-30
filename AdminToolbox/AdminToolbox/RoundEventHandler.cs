@@ -2,6 +2,7 @@
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
+using System.Collections.Generic;
 
 namespace AdminToolbox
 {
@@ -61,9 +62,18 @@ namespace AdminToolbox
             //    if (AdminToolbox.playerdict[pl.SteamId][4])
             //        AdminToolbox.SetPlayerBools(pl, false, false, false, false);
             //}
-            foreach (var item in AdminToolbox.playerdict)
+            List<string> playersToRemove = new List<string>();
+            foreach (var item in AdminToolbox.playerdict.Keys)
             {
-                if (!item.Value[4]) AdminToolbox.playerdict.Remove(item.Key);
+                if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
+            }
+            if (playersToRemove != null)
+            {
+                foreach (var item in playersToRemove)
+                {
+                    AdminToolbox.playerdict.Remove(item);
+                }
+                playersToRemove = null;
             }
         }
     }

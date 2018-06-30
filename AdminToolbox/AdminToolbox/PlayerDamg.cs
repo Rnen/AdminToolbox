@@ -25,25 +25,22 @@ namespace AdminToolbox
         }
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) return;
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
-            roleDamages = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", false);
+            roleDamages = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } }, false);
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed",new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 },false);
             int[] scpDamagesTypes = { 2, 6, 7, 9, 10 };
 
             if (roleDamages.Keys.Count > 0 && roleDamages.ContainsKey((int)ev.Attacker.TeamRole.Role))
             {
-                foreach (int x in roleDamages.Keys)
+                roleDamages.TryGetValue((int)ev.Attacker.TeamRole.Role, out int b);
+                if (b == (int)ev.Player.TeamRole.Role)
                 {
-                    roleDamages.TryGetValue(x, out int b);
-                    if (x == (int)ev.Attacker.TeamRole.Role && b == (int)ev.Player.TeamRole.Role)
-                    {
-                        ev.Damage = 0f;
-                        ev.DamageType = DamageType.NONE;
-                        return;
-                    }
+                    ev.Damage = 0f;
+                    ev.DamageType = DamageType.NONE;
+                    //this.plugin.Info("Damage blocked");
+                    return;
                 }
             }
 

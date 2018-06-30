@@ -5,7 +5,7 @@ using Smod2.EventHandlers;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn
+    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers
     {
         private Plugin plugin;
 
@@ -35,14 +35,21 @@ namespace AdminToolbox
         { 
             if (AdminToolbox.playerdict[ev.Player.SteamId][3])
                 ev.Destroy = true;
-            if (AdminToolbox.lockDown)
+            if (AdminToolbox.playerdict[ev.Player.SteamId][5] && !AdminToolbox.playerdict[ev.Player.SteamId][6])
                 ev.Allow = false;
+            if (AdminToolbox.playerdict[ev.Player.SteamId][6])
+                ev.Allow = true;
         }
 
         public void OnSpawn(PlayerSpawnEvent ev)
         {
             if (AdminToolbox.playerdict[ev.Player.SteamId][0])
                 ev.Player.ChangeRole(Role.SPECTATOR);
+        }
+
+        public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
+        {
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.plugin.pluginManager.DisablePlugin(this.plugin);
         }
     }
 }

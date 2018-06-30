@@ -24,7 +24,7 @@ namespace AdminToolbox
         )]
     class AdminToolbox : Plugin
     {
-        public static bool isRoundFinished = false, adminMode = false, lockRound = false, lockDown = false;
+        public static bool isRoundFinished = false, adminMode = false, lockRound = false;
 
         public static int[] nineTailsTeam = { 1, 3 }, chaosTeam = { 2, 4 };
 
@@ -40,7 +40,7 @@ namespace AdminToolbox
         {
             this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
-        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor)
+        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor, bool lockDown, bool fullAccess)
         {
             //This is actually never used, its just for keeping track, might become an all on/off switch at some point
             playerdict[player.SteamId][0] = spectatorOnly;
@@ -48,6 +48,8 @@ namespace AdminToolbox
             playerdict[player.SteamId][2] = dmgOff;
             playerdict[player.SteamId][3] = destroyDoor;
             //playerdict[player.SteamId[4] = keepSettings;
+            playerdict[player.SteamId][5] = lockDown;
+            playerdict[player.SteamId][6] = fullAccess;
         }
         public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int Something)
         {
@@ -99,14 +101,20 @@ namespace AdminToolbox
             this.AddCommand("hp", new Command.SetHpCommand(this));
             this.AddCommand("sethp", new Command.SetHpCommand(this));
             this.AddCommand("player", new Command.PlayerCommand(this));
+            this.AddCommand("p", new Command.PlayerCommand(this));
             this.AddCommand("pos", new Command.PosCommand(this));
             this.AddCommand("warp", new Command.WarpCommmand(this));
             this.AddCommand("roundlock", new Command.RoundLockCommand(this));
+            this.AddCommand("lockround", new Command.RoundLockCommand(this));
             this.AddCommand("rlock", new Command.RoundLockCommand(this));
+            this.AddCommand("lockr", new Command.RoundLockCommand(this));
             this.AddCommand("lockdown", new Command.LockdownCommand(this));
             this.AddCommand("breakdoors", new Command.BreakDoorsCommand(this));
+            this.AddCommand("breakdoor", new Command.BreakDoorsCommand(this));
             this.AddCommand("bd", new Command.BreakDoorsCommand(this));
-            this.AddCommand("door", new Command.DoorCommand(this));
+            //this.AddCommand("door", new Command.DoorCommand(this));
+            this.AddCommand("fullaccess", new Command.FullAccessCommand(this));
+            this.AddCommand("access", new Command.FullAccessCommand(this));
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
@@ -126,7 +134,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
-            //this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", null, Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } } , Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
         }
     }
 
@@ -185,8 +193,7 @@ namespace AdminToolbox
         public static Player GetPlayer(string args, out Player playerOut)
         {
             //Takes a string and finds the closest player from the playerlist
-            int maxNameLength = 31;
-            int LastnameDifference = 31;
+            int maxNameLength = 31, LastnameDifference =31/*, lastNameLength = 31*/;
             Player plyer = null;
             string str1 = args.ToLower();
             foreach (Player pl in PluginManager.Manager.Server.GetPlayers())

@@ -5,23 +5,23 @@ using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
-    class LockdownCommand : ICommandHandler
+    class FullAccessCommand : ICommandHandler
     {
         private AdminToolbox plugin;
 
-        public LockdownCommand(AdminToolbox plugin)
+        public FullAccessCommand(AdminToolbox plugin)
         {
             this.plugin = plugin;
         }
 
         public string GetCommandDescription()
         {
-            return "Locks all the doors for specified players";
+            return "Lets specified players open all doors";
         }
 
         public string GetUsage()
         {
-            return "LOCKDOWN [PLAYER] [BOOLEAN]";
+            return "FULLACCESS [PLAYER] [BOOLEAN]";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -39,11 +39,10 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                AdminToolbox.playerdict[pl.SteamId][5] = j;
+                                AdminToolbox.playerdict[pl.SteamId][6] = j;
                                 playerNum++;
                             }
-                            outPut += "\nSet " + playerNum + " player's Lockdown to " + j;
-                            //plugin.Info("Set " + playerNum + " player's Godmode to " + j);
+                            outPut += "\nSet " + playerNum + " player's FullAccess to " + j;
                             return new string[] { outPut };
                         }
                         else
@@ -54,18 +53,17 @@ namespace AdminToolbox.Command
                     }
                     else
                     {
-                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][5] = !AdminToolbox.playerdict[pl.SteamId][5]; }
-                        //plugin.Info("Toggled all players godmodes");
-                        return new string[] { "Toggled all players Lockdown" };
+                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][6] = !AdminToolbox.playerdict[pl.SteamId][6]; }
+                        return new string[] { "Toggled all players FullAccess" };
                     }
                 }
                 else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
                 {
-                    string str = "\nPlayers with Lockdown enabled: \n";
+                    string str = "\nPlayers with FullAccess enabled: \n";
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
-                        if (AdminToolbox.playerdict[pl.SteamId][5])
+                        if (AdminToolbox.playerdict[pl.SteamId][6])
                         {
                             myPlayerList.Add(pl.Name);
                             //str += " - " +pl.Name + "\n";
@@ -79,23 +77,23 @@ namespace AdminToolbox.Command
                             str += "\n - " + item;
                         }
                     }
-                    else str = "\nNo players with \"LockDown\" enabled!";
+                    else str = "\nNo players with \"FullAccess\" enabled!";
                     return new string[] { str };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    if (bool.TryParse(args[1], out bool g)) AdminToolbox.playerdict[myPlayer.SteamId][5] = g;
-                    else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId][5] = true; }
-                    else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId][5] = false; }
+                    if (bool.TryParse(args[1], out bool g)) AdminToolbox.playerdict[myPlayer.SteamId][6] = g;
+                    else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId][6] = true; }
+                    else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId][6] = false; }
                     else return new string[] { GetUsage() };
-                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] };
+                    return new string[] { myPlayer.Name + " FullAccess: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
                 }
                 else
                 {
-                    AdminToolbox.playerdict[myPlayer.SteamId][5] = !AdminToolbox.playerdict[myPlayer.SteamId][5];
-                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] };
+                    AdminToolbox.playerdict[myPlayer.SteamId][6] = !AdminToolbox.playerdict[myPlayer.SteamId][6];
+                    return new string[] { myPlayer.Name + " FullAccess: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
                 }
 
             }

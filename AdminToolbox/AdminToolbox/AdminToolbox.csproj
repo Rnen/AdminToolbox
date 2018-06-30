@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AdminToolbox</RootNamespace>
     <AssemblyName>AdminToolbox</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Commands\KeepSettingsCommand.cs" />
     <Compile Include="Commands\BreakDoorsCommand.cs" />
+    <Compile Include="Commands\FullAccessCommand.cs" />
     <Compile Include="Commands\LockdownCommand.cs" />
     <Compile Include="Commands\DoorCommand.cs" />
     <Compile Include="Commands\RoundLockCommand.cs" />
