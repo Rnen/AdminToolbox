@@ -7,6 +7,8 @@ It offers multiple admin tools like
 * Warp Points
 * Teleport to cordinates
 * Prevent the round from ending
+* Per-player stats
+* Player door permissions
 * Player Joined messages in server log
 
 and more commands, and other features that do not exist in the base game (yet).
@@ -41,11 +43,13 @@ TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all playe
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
-PLAYER | Player |   | Lists all values for the specified Player
+PLAYER / P | Player |   | Lists all values for the specified Player
 ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
-BREAKDOORS / BD | Player | Boolean | Turns on/off breaking doors for that player.
-LOCKDOWN | Boolean |  | Locks all doors for all players. Will give "access denied" on any door.
+BREAKDOORS / BD  | Player | Boolean | Turns on/off breaking doors for that player.
+LOCKDOWN | Player | Boolean | Locks all doors for all players. Will give "access denied" on any door.
+FULLACCESS / ACCESS | Player | Boolean | Lets the specified player open any door.
 SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally.
+
 
 >`*` can be used instead of `Player` to target **all** players on the server
 
@@ -97,13 +101,17 @@ admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and
 admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges you assign in `config_remoteadmin.txt`. If you have another badge (global badge like patreon supporter), you need to use `showtag` for it to work.
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
+admintoolbox_block_role_damage | IntDictionary | 2:2 | What roles cannot damage other roles
 
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
-Whitelist example:
+Examples:
 ```yaml
 admintoolbox_intercom_extended_IDs_whitelist: Server Owner,Admin,Moderator
+
+#The example under will make scientists and Chaos unable to damage Dboys.
+admintoolbox_block_role_damage: 6:1,8:1
 ```
->Find a complete list of DamageID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#damagetype-ids)
+>Find a complete list of DamageID's, RoleID's and more [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#damagetype-ids)
 #
 
 ### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
