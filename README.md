@@ -111,7 +111,7 @@ admintoolbox_intercom_extended_IDs_whitelist: Server Owner,Admin,Moderator
 #The example under will make scientists and Chaos unable to damage Dboys.
 admintoolbox_block_role_damage: 6:1,8:1
 ```
->Find a complete list of DamageID's, RoleID's and more [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md#damagetype-ids)
+>Find a complete list of DamageID's, RoleID's and more [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 #
 
 ### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
