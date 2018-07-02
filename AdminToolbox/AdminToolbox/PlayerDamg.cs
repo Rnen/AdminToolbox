@@ -3,18 +3,21 @@ using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace AdminToolbox
 {
+    #region PlayerDamage
+
     class LastAttacked
     {
-        public static Player lastAttacker = null;
-        public static Player lastVictim = null;
-        public static DamageType lastDamageType = DamageType.NONE;
-        public static DamageType last106Damage;
+        //Just a place to store the last attacked player 
+        public static Player lastAttacker = null, lastVictim = null;
+        public static DamageType lastDamageType = DamageType.NONE, last106Damage;
     }
     class DamageDetect : IEventHandlerPlayerHurt
     {
+        public static Dictionary<int, int> roleDamages = new Dictionary<int, int>();
         private Plugin plugin;
         public DamageDetect(Plugin plugin)
         {
@@ -24,11 +27,22 @@ namespace AdminToolbox
         {
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
-            ev.Damage = ev.Damage;
-            ev.DamageType = ev.DamageType;
+            roleDamages = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } }, false);
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed",new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 },false);
             int[] scpDamagesTypes = { 2, 6, 7, 9, 10 };
+
+            if (roleDamages.Keys.Count > 0 && roleDamages.ContainsKey((int)ev.Attacker.TeamRole.Role))
+            {
+                roleDamages.TryGetValue((int)ev.Attacker.TeamRole.Role, out int b);
+                if (b == (int)ev.Player.TeamRole.Role)
+                {
+                    ev.Damage = 0f;
+                    ev.DamageType = DamageType.NONE;
+                    //this.plugin.Info("Damage blocked");
+                    return;
+                }
+            }
 
             if (AdminToolbox.isRoundFinished)
             {
@@ -69,8 +83,8 @@ namespace AdminToolbox
                         }
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage",false, false))
                         {
-                            if (!DebugDmg.Contains((int)ev.DamageType)) return;
-                            plugin.Warn(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
+                            if (DebugDmg.Contains((int)ev.DamageType))
+                                plugin.Warn(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
                         }
                     }
                     else if(AdminToolbox.chaosTeam.Contains((int)ev.Player.TeamRole.Team) && AdminToolbox.chaosTeam.Contains((int)ev.Attacker.TeamRole.Team))
@@ -83,19 +97,23 @@ namespace AdminToolbox
                         }
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage",false, false))
                         {
-                            if (!DebugDmg.Contains((int)ev.DamageType)) return;
-                            plugin.Warn(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
+                            if (DebugDmg.Contains((int)ev.DamageType))
+                                plugin.Warn(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
                         }
                     }
                     else if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_damage",false, false))
                     {
-                        if (!DebugDmg.Contains((int)ev.DamageType)) return;
-                        plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType);
+                        if (DebugDmg.Contains((int)ev.DamageType))
+                            plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + ev.Damage + " damage" +*/ " with: " + ev.DamageType);
                     }
                     break;
             }
         }
     }
+
+    #endregion
+    #region PlayerDeath
+
     class DieDetect : IEventHandlerPlayerDie
     {
         private Plugin plugin;
@@ -105,8 +123,9 @@ namespace AdminToolbox
         }
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) return;
+            AdminToolbox.playerStats[ev.Player.SteamId][2]++;
             ev.SpawnRagdoll = true;
-            if (AdminToolbox.isRoundFinished) return;
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
             switch ((int)ev.Player.TeamRole.Role)
             {
@@ -119,11 +138,13 @@ namespace AdminToolbox
                         ev.SpawnRagdoll = false;
                     goto default;
                 default:
+                    if (AdminToolbox.isRoundFinished) return;
                     //plugin.Info("OnPlayerDie: \n" + LastAttacked.lastAttacker.Name + " " + LastAttacked.lastVictim.Name + " " + LastAttacked.lastDamageType);
 
                     if (!(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_scp_and_self_killed",false, false)) && ev.Player.Name == ev.Killer.Name) return;
                     if (AdminToolbox.nineTailsTeam.Contains((int)ev.Player.TeamRole.Team) && AdminToolbox.nineTailsTeam.Contains((int)ev.Killer.TeamRole.Team))
                     {
+                        AdminToolbox.playerStats[ev.Killer.SteamId][1]++;
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
                             if ((LastAttacked.lastDamageType == DamageType.TESLA) && (ev.Player.SteamId == LastAttacked.lastVictim.SteamId && ev.Killer.SteamId == LastAttacked.lastAttacker.SteamId))
                             {
@@ -141,6 +162,7 @@ namespace AdminToolbox
                     }
                     else if (AdminToolbox.chaosTeam.Contains((int)ev.Player.TeamRole.Team) && AdminToolbox.chaosTeam.Contains((int)ev.Killer.TeamRole.Team))
                     {
+                        AdminToolbox.playerStats[ev.Killer.SteamId][1]++;
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
                             if ((LastAttacked.lastDamageType == DamageType.TESLA) && (ev.Player.SteamId == LastAttacked.lastVictim.SteamId && ev.Killer.SteamId == LastAttacked.lastAttacker.SteamId))
                             {
@@ -159,9 +181,13 @@ namespace AdminToolbox
                     else if ((ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_kill",false, false)))
                     {
                         plugin.Info(ev.Killer.Name + " killed: " + ev.Player.Name);
+                        AdminToolbox.playerStats[ev.Killer.SteamId][0]++;
                     }
+                    else
+                        AdminToolbox.playerStats[ev.Killer.SteamId][0]++;
                     break;
             }
         }
     }
+    #endregion
 }

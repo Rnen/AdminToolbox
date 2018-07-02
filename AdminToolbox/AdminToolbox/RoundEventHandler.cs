@@ -2,10 +2,11 @@
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
+using System.Collections.Generic;
 
 namespace AdminToolbox
 {
-    class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerCheckRoundEnd
+    class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
     {
         private Plugin plugin;
 
@@ -30,6 +31,14 @@ namespace AdminToolbox
             }
         }
 
+        public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+        {
+            if (AdminToolbox.lockRound)
+            {
+                ev.Status = ROUND_END_STATUS.ON_GOING;
+            }
+        }
+
         public void OnRoundEnd(RoundEndEvent ev)
         {
             AdminToolbox.isRoundFinished = true;
@@ -46,11 +55,25 @@ namespace AdminToolbox
             }
         }
 
-        public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+        public void OnRoundRestart(RoundRestartEvent ev)
         {
-            if (AdminToolbox.lockRound)
+            //foreach (Player pl in this.plugin.pluginManager.Server.GetPlayers())
+            //{
+            //    if (AdminToolbox.playerdict[pl.SteamId][4])
+            //        AdminToolbox.SetPlayerBools(pl, false, false, false, false);
+            //}
+            List<string> playersToRemove = new List<string>();
+            foreach (var item in AdminToolbox.playerdict.Keys)
             {
-                ev.Status = ROUND_END_STATUS.ON_GOING;
+                if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
+            }
+            if (playersToRemove != null)
+            {
+                foreach (var item in playersToRemove)
+                {
+                    AdminToolbox.playerdict.Remove(item);
+                }
+                playersToRemove = null;
             }
         }
     }

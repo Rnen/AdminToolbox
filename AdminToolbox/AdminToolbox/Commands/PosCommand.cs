@@ -62,8 +62,7 @@ namespace AdminToolbox.Command
                                     //plugin.Info(cordinates[0] + " is not a valid axis, use X, Y or Z");
                                     return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
                                 }
-                                int xyz = 0;
-                                if (Int32.TryParse(cordinates[1], out xyz))
+                                if (Int32.TryParse(cordinates[1], out int xyz))
                                 {
                                     if (!myPos.ContainsKey(cordinates[0]))
                                     {
@@ -114,8 +113,7 @@ namespace AdminToolbox.Command
                                     //plugin.Info(cordinates[0] + " is not a valid axis, use X, Y or Z");
                                     return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
                                 }
-                                int xyz = 0;
-                                if (Int32.TryParse(cordinates[1], out xyz))
+                                if (Int32.TryParse(cordinates[1], out int xyz))
                                 {
                                     if (!myPos.ContainsKey(cordinates[0].ToLower()))
                                     {
