@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("AdminToolbox")]
-[assembly: AssemblyDescription("Advanced Admintools")]
+[assembly: AssemblyDescription("Advanced Admin tools")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tam's Pizzaria")]
 [assembly: AssemblyProduct("AdminToolbox")]
-[assembly: AssemblyCopyright("Copyright Rnen ©  2018")]
+[assembly: AssemblyCopyright("Copyright Rnen ©  2018 (CC BY)")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
