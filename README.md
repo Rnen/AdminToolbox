@@ -32,18 +32,16 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 ## Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
+PLAYER / P | Player |   | Lists all values for the specified Player
 PLAYERS |   |   | Lists all players + IP's + SteamID's.
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
-GOD | LIST |   | List all players with GODMODE enabled
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
-NODMG | LIST |  | List all players with NoDmg enabled
 HP/SETHP | Player | Integer | Sets player HP to (Integer).
 HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT/TUTORIAL | Player |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
 KEEP/KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
-PLAYER / P | Player |   | Lists all values for the specified Player
 ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
 BREAKDOORS / BD  | Player | Boolean | Turns on/off breaking doors for that player.
 LOCKDOWN | Player | Boolean | Locks all doors for all players. Will give "access denied" on any door.
@@ -52,6 +50,7 @@ SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally.
 
 
 >`*` can be used instead of `Player` to target **all** players on the server
+>Using `(command) list` will list all players with the currently enabled command. (Like godmode for example)
 
 >Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 
@@ -101,7 +100,7 @@ admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and
 admintoolbox_intercom_extended_IDs_whitelist | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges you assign in `config_remoteadmin.txt`. If you have another badge (global badge like patreon supporter), you need to use `showtag` for it to work.
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
-admintoolbox_block_role_damage | IntDictionary | 2:2 | What roles cannot damage other roles
+admintoolbox_block_role_damage | IntDictionary | 2:2 | What roles cannot damage other roles. See example under
 
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 Examples:
