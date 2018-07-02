@@ -81,7 +81,7 @@
 #8| CONTAIN | Decontamination? (Not sure about this one)
 #9| SCP_096 | Shy Guy
 #10| SCP_049 | Plague Doctor
-#11| POCKET | The damage you take each second in the pocked dimention
+#11| POCKET | The damage you take each second in the pocket dimension
 #12| FALLDOWN | Falldamage
 #13| COM15 | 
 #14| E11_STANDARD_RIFLE | 
