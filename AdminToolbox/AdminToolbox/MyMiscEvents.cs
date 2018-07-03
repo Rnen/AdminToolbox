@@ -5,11 +5,11 @@ using Smod2.EventHandlers;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers
+    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerIntercomCooldownCheck, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers
     {
         private Plugin plugin;
 
-        public static float defaultIntercomDuration, defaultIntercomCooldown;
+        public static float defaultIntercomDuration, defaultIntercomCooldown, defaultIntercomCurrentCooldown;
 
         public MyMiscEvents(Plugin plugin)
         {
@@ -28,6 +28,19 @@ namespace AdminToolbox
                 {
                     ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
                     ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);
+                }
+            }
+        }
+        public void OnIntercomCooldownCheck(PlayerIntercomCooldownCheckEvent ev)
+        {
+            defaultIntercomCurrentCooldown = ev.CurrentCooldown;
+            string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
+            if (playersAllowed.Length < 1) return;
+            foreach (string x in playersAllowed)
+            {
+                if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", "") && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercom_extended_forcereset", true, false))
+                {
+                    ev.CurrentCooldown = 1f;
                 }
             }
         }

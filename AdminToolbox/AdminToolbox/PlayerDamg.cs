@@ -4,6 +4,7 @@ using Smod2.Events;
 using Smod2.EventHandlers;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace AdminToolbox
 {
@@ -17,7 +18,7 @@ namespace AdminToolbox
     }
     class DamageDetect : IEventHandlerPlayerHurt
     {
-        public static Dictionary<int, int> roleDamages = new Dictionary<int, int>();
+        string[] roleDamages;
         private Plugin plugin;
         public DamageDetect(Plugin plugin)
         {
@@ -27,23 +28,38 @@ namespace AdminToolbox
         {
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
-
-            roleDamages = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } }, false);
-
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, false);
+
             int[] scpDamagesTypes = { 2, 6, 7, 9, 10 };
 
-            if (roleDamages.Keys.Count > 0 && roleDamages.ContainsKey((int)ev.Attacker.TeamRole.Role))
+            roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "2:2" }, false);
+            if (roleDamages.Length > 0)
             {
-                roleDamages.TryGetValue((int)ev.Attacker.TeamRole.Role, out int b);
-                if (b == (int)ev.Player.TeamRole.Role)
+                bool foundPlayer = false;
+                foreach (var item in roleDamages)
                 {
-                    ev.Damage = 0f;
-                    ev.DamageType = DamageType.NONE;
-                    //this.plugin.Info("Damage blocked");
-                    return;
+                    string[] myString = item.Replace(" ","").Split(':');
+                    if (myString.Length >= 2)
+                    {
+                        plugin.Info(myString[0] + " + " + myString[1]);
+                        if (Int32.TryParse(myString[0], out int x) && Int32.TryParse(myString[1], out int y))
+                        {
+                            if (x == (int)ev.Attacker.TeamRole.Role && y == (int)ev.Player.TeamRole.Role)
+                            {
+                                ev.Damage = 0f;
+                                ev.DamageType = DamageType.NONE;
+                                foundPlayer = true;
+                                break;
+                            }
+                        }
+                        else
+                            plugin.Info("Invalid config value at \"admintoolbox_block_role_damage\"  Value: " + myString[0] + ":" + myString[1]);
+                    }
+                    else if (myString.Length == 1)
+                        plugin.Info(myString[0] + " is not a valid config option for \"admintoolbox_block_role_damage\"");
                 }
+                if (foundPlayer) return;
             }
 
             if (AdminToolbox.isRoundFinished)

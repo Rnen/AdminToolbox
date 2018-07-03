@@ -140,6 +140,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { }, Smod2.Config.SettingType.LIST, true, "What ROLE BADGE can use the Intercom to your specified settings"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_forcereset", true, Smod2.Config.SettingType.BOOL, true, "People in the whitelist can forcefully reset the intercom"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } } , Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
         }
