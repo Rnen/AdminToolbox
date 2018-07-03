@@ -20,11 +20,11 @@ namespace AdminToolbox
         {
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
-            string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_allow_extended_Intercom", new string[] { "" }, false);
+            string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
             if (playersAllowed.Length < 1) return;
             foreach (string x in playersAllowed)
             {
-                if (ev.Player.GetUserGroup().Name.ToLower() == x.ToLower())
+                if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", ""))
                 {
                     ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
                     ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);

@@ -117,7 +117,9 @@ namespace AdminToolbox
             this.AddCommand("access", new Command.FullAccessCommand(this));
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes to debug"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_server", false, Smod2.Config.SettingType.BOOL, true, "Debugs damage dealt by server"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_spectator", false, Smod2.Config.SettingType.BOOL, true, "Debugs damage done to/by spectators"));
@@ -127,13 +129,18 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_kill", false, Smod2.Config.SettingType.BOOL, true, "Debugs player kills except teamkills"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_friendly_kill", true, Smod2.Config.SettingType.BOOL, true, "Debugs team-kills"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_scp_and_self_killed", false, Smod2.Config.SettingType.BOOL, true, "Debug suicides and SCP kills"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier after end of round"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_writeTkToFile", false, Smod2.Config.SettingType.BOOL, true, "Unfinished"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_info", true, Smod2.Config.SettingType.BOOL, true, "Prints round count and player number on round start & end"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "Writes player name in console on players joining"));
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_IDs_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What STEAMID's can use the Intercom freely"));
+
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { }, Smod2.Config.SettingType.LIST, true, "What ROLE BADGE can use the Intercom to your specified settings"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_duration", 1000f, Smod2.Config.SettingType.FLOAT, true, "How long people in the extended ID's list can talk"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
+
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } } , Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
         }
     }
