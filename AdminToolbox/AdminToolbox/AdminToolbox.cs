@@ -17,10 +17,10 @@ namespace AdminToolbox
         name = "Admin Toolbox",
         description = "Plugin for advanced admin tools",
         id = "rnen.admin.toolbox",
-        version = "1.3",
+        version = "1.3.2",
         SmodMajor = 3,
         SmodMinor = 3,
-        SmodRevision = 6
+        SmodRevision = 7
         )]
     class AdminToolbox : Plugin
     {
@@ -61,19 +61,9 @@ namespace AdminToolbox
 
         public override void OnEnable()
         {
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { pluginManager.DisablePlugin(this); pluginManager.Plugins.Remove(this); return; }
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { this.pluginManager.DisablePlugin(this); return; }
             this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
             fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
-            //Dictionary<int, int> roleDamagesNotAllowed = ConfigManager.Manager.Config.GetIntDictValue("admintoolbox_block_role_damage", false);
-            //string debugString = "\n\nRoleDamages Not Allowed";
-            //if (roleDamagesNotAllowed.Count > 0)
-            //{
-            //    foreach(var item in roleDamagesNotAllowed.Keys)
-            //    {
-            //        debugString += item + " " + roleDamagesNotAllowed[item];
-            //    }
-            //    this.Info(debugString);
-            //}
         }
 
         public override void Register()
@@ -142,7 +132,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_cooldown", 0f, Smod2.Config.SettingType.FLOAT, true, "How long cooldown after whitelisted people have used it"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_forcereset", true, Smod2.Config.SettingType.BOOL, true, "People in the whitelist can forcefully reset the intercom"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<int, int> { { 2, 2 } } , Smod2.Config.SettingType.NUMERIC_DICTIONARY, true, "What roles cannot attack other roles"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<string, string> { { "2", "2" } }, Smod2.Config.SettingType.DICTIONARY, true, "What roles cannot attack other roles"));
         }
     }
 

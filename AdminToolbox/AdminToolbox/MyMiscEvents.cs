@@ -21,19 +21,32 @@ namespace AdminToolbox
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
             string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
-            if (playersAllowed.Length < 1) return;
-            foreach (string x in playersAllowed)
+            if (playersAllowed.Length > 0)
             {
-                if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", ""))
+                foreach (string x in playersAllowed)
                 {
-                    ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
-                    ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);
+                    if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", ""))
+                    {
+                        ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
+                        ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);
+                    }
                 }
             }
         }
         public void OnIntercomCooldownCheck(PlayerIntercomCooldownCheckEvent ev)
         {
             defaultIntercomCurrentCooldown = ev.CurrentCooldown;
+            string[] blackListedPlayers = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", false);
+            if (blackListedPlayers.Length > 0)
+            {
+                foreach (string x in blackListedPlayers)
+                {
+                    if (ev.Player.SteamId == x)
+                    {
+                        ev.CurrentCooldown = 0.1f;
+                    }
+                }
+            }
             string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
             if (playersAllowed.Length < 1) return;
             foreach (string x in playersAllowed)
