@@ -29,6 +29,7 @@ namespace AdminToolbox
                 plugin.Info("Round: " + AdminToolbox.roundCount + " started.");
                 plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
             }
+            AdminToolbox.AddMissingPlayerVariables();
         }
 
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)
@@ -57,23 +58,22 @@ namespace AdminToolbox
 
         public void OnRoundRestart(RoundRestartEvent ev)
         {
-            //foreach (Player pl in this.plugin.pluginManager.Server.GetPlayers())
-            //{
-            //    if (AdminToolbox.playerdict[pl.SteamId][4])
-            //        AdminToolbox.SetPlayerBools(pl, false, false, false, false);
-            //}
-            List<string> playersToRemove = new List<string>();
-            foreach (var item in AdminToolbox.playerdict.Keys)
+            if (AdminToolbox.playerdict.Count > 0)
             {
-                if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
-            }
-            if (playersToRemove != null)
-            {
-                foreach (var item in playersToRemove)
+                List<string> steamIDsToRemove = new List<string>();
+                foreach (KeyValuePair<string, List<bool>> item in AdminToolbox.playerdict)
                 {
-                    AdminToolbox.playerdict.Remove(item);
+                    if (!item.Value[4]) steamIDsToRemove.Add(item.Key);
+                    //if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
                 }
-                playersToRemove = null;
+                if (steamIDsToRemove != null)
+                {
+                    foreach (var item in steamIDsToRemove)
+                    {
+                        AdminToolbox.playerdict.Remove(item);
+                    }
+                    steamIDsToRemove = null;
+                }
             }
         }
     }

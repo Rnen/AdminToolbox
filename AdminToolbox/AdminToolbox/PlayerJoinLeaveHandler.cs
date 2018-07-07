@@ -17,11 +17,9 @@ namespace AdminToolbox
 
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            if (!AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
-                AdminToolbox.playerdict.Add(ev.Player.SteamId,new List<bool>(new bool[] { false, false, false, false, false, false, false}));
-            if (!AdminToolbox.playerStats.ContainsKey(ev.Player.SteamId))
-                AdminToolbox.playerStats.Add(ev.Player.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
-            if(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_joinANDleave", false, false))
+            AdminToolbox.AddSpesificPlayer(ev.Player);
+
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_joinANDleave", false, false))
             {
                 plugin.Info(ev.Player.Name + " just joined the server!");
             }

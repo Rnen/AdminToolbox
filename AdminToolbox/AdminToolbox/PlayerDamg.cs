@@ -26,12 +26,14 @@ namespace AdminToolbox
         }
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
+            AdminToolbox.AddSpesificPlayer(ev.Attacker);
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", new int[] { 7, 16, 17, 18, 19, 20 }, false);
 
-            int[] scpDamagesTypes = { 2, 8, 9, 10,12,13 };
+            int[] scpDamagesTypes = { 2, 8, 9, 10, 12, 13 };
 
             roleDamages = ConfigManager.Manager.Config.GetDictValue("admintoolbox_block_role_damage", new Dictionary<string, string> { { "2","2" } }, false);
             if (roleDamages.Count > 0)
@@ -143,6 +145,8 @@ namespace AdminToolbox
         }
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
+            AdminToolbox.AddSpesificPlayer(ev.Killer);
             ev.SpawnRagdoll = true;
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
             if (AdminToolbox.playerStats.ContainsKey(ev.Player.SteamId)) AdminToolbox.playerStats[ev.Player.SteamId][2]++;

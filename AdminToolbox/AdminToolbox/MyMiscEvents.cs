@@ -2,6 +2,9 @@
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace AdminToolbox
 {
@@ -18,35 +21,71 @@ namespace AdminToolbox
 
         public void OnIntercom(PlayerIntercomEvent ev)
         {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
-            string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
-            if (playersAllowed.Length > 0)
+            Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist", new Dictionary<string, string> { { "", defaultIntercomDuration+"-"+defaultIntercomCooldown } }, false);
+            if (whitelistRanks.Count > 0)
             {
-                foreach (string x in playersAllowed)
+                foreach (KeyValuePair<string, string> item in whitelistRanks)
                 {
-                    if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", ""))
+                    if (item.Key.ToLower().Replace(" ", "") == ev.Player.GetRankName().ToLower().Replace(" ", ""))
                     {
-                        ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
-                        ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);
+                        string[] myString = item.Value.Split('.', '-', '#', '_',' ');
+                        if (myString.Length == 1)
+                        {
+                            if (Int32.TryParse(myString[0], out int x))
+                            {
+                                ev.SpeechTime = x;
+                            }
+                        }
+                        else if (myString.Length == 2)
+                        {
+                            if (Int32.TryParse(myString[0], out int x))
+                            {
+                                ev.SpeechTime = x;
+                            }
+                            if (Int32.TryParse(myString[1], out int z))
+                            {
+                                ev.CooldownTime = z;
+                            }
+                        }
                     }
                 }
             }
+            //string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
+            //if (playersAllowed.Length > 0)
+            //{
+            //    foreach (string x in playersAllowed)
+            //    {
+            //        if (ev.Player.GetRankName().ToLower().Replace(" ", "") == x.ToLower().Replace(" ", ""))
+            //        {
+            //            ev.SpeechTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_duration", defaultIntercomDuration);
+            //            ev.CooldownTime = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_intercom_extended_cooldown", defaultIntercomCooldown);
+            //        }
+            //    }
+            //}
         }
+
         public void OnIntercomCooldownCheck(PlayerIntercomCooldownCheckEvent ev)
         {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
             defaultIntercomCurrentCooldown = ev.CurrentCooldown;
             string[] blackListedPlayers = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", false);
+            List<string> blacklistedIDs = new List<string>();
             if (blackListedPlayers.Length > 0)
             {
-                foreach (string x in blackListedPlayers)
+                foreach(var item in blackListedPlayers)
                 {
-                    if (ev.Player.SteamId == x)
-                    {
-                        ev.CurrentCooldown = 0.1f;
-                    }
+                    blacklistedIDs.Add(item);
+                }
+                if (blacklistedIDs.Contains(ev.Player.SteamId))
+                {
+                    ev.CurrentCooldown = 0.1f;
+                    return;
                 }
             }
+
             string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
             if (playersAllowed.Length < 1) return;
             foreach (string x in playersAllowed)
@@ -57,20 +96,26 @@ namespace AdminToolbox
                 }
             }
         }
+
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
-        { 
-            if (AdminToolbox.playerdict[ev.Player.SteamId][3])
-                ev.Destroy = true;
-            if (AdminToolbox.playerdict[ev.Player.SteamId][5] && !AdminToolbox.playerdict[ev.Player.SteamId][6])
-                ev.Allow = false;
-            if (AdminToolbox.playerdict[ev.Player.SteamId][6])
-                ev.Allow = true;
+        {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
+            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+            {
+                if (AdminToolbox.playerdict[ev.Player.SteamId][3])
+                    ev.Destroy = true;
+                if (AdminToolbox.playerdict[ev.Player.SteamId][5] && !AdminToolbox.playerdict[ev.Player.SteamId][6])
+                    ev.Allow = false;
+                if (AdminToolbox.playerdict[ev.Player.SteamId][6])
+                    ev.Allow = true;
+            }
         }
 
         public void OnSpawn(PlayerSpawnEvent ev)
         {
+            AdminToolbox.AddSpesificPlayer(ev.Player);
             if (AdminToolbox.playerdict[ev.Player.SteamId][0])
-                ev.Player.ChangeRole(Role.SPECTATOR);
+                    ev.Player.ChangeRole(Role.SPECTATOR);
         }
 
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
