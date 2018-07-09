@@ -36,44 +36,44 @@ namespace AdminToolbox
             int[] scpDamagesTypes = { 2, 8, 9, 10, 12, 13 };
 
             roleDamages = ConfigManager.Manager.Config.GetDictValue("admintoolbox_block_role_damage", new Dictionary<string, string> { { "2","2" } }, false);
-            if (roleDamages.Count > 0)
-            {
-                bool foundPlayer = false;
-                foreach (KeyValuePair<string,string> item in roleDamages)
-                {
-                    if (!Int32.TryParse(item.Key, out int z)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: "+item.Key+":"+item.Value); break; }
-                    string[] myString = item.Value.Replace(" ","").Split('.','-','#','_');
-                    if (myString.Length >= 1)
-                    {
-                        foreach (var item2 in myString)
-                        {
-                            if (Int32.TryParse(item2, out int x))
-                            {
-                                if (z == (int)ev.Attacker.TeamRole.Role && x == (int)ev.Player.TeamRole.Role)
-                                {
-                                    ev.Damage = 0f;
-                                    ev.DamageType = DamageType.NONE;
-                                    foundPlayer = true;
-                                    break;
-                                }
-                            }
-                            else
-                                plugin.Info("Invalid config value at \"admintoolbox_block_role_damage\"  Value: " + item.Key + ":" + item.Value);
-                        }
-                        if (foundPlayer) break;
-                    }
-                }
-                if (foundPlayer) return;
-            }
+            //if (roleDamages.Count > 0)
+            //{
+            //    bool foundPlayer = false;
+            //    foreach (KeyValuePair<string,string> item in roleDamages)
+            //    {
+            //        if (!Int32.TryParse(item.Key, out int z)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: "+item.Key+":"+item.Value); break; }
+            //        string[] myString = item.Value.Replace(" ","").Split('.','-','#','_');
+            //        if (myString.Length >= 1)
+            //        {
+            //            foreach (var item2 in myString)
+            //            {
+            //                if (Int32.TryParse(item2, out int x))
+            //                {
+            //                    if (z == (int)ev.Attacker.TeamRole.Role && x == (int)ev.Player.TeamRole.Role)
+            //                    {
+            //                        ev.Damage = 0f;
+            //                        ev.DamageType = DamageType.NONE;
+            //                        foundPlayer = true;
+            //                        break;
+            //                    }
+            //                }
+            //                else
+            //                    plugin.Info("Invalid config value at \"admintoolbox_block_role_damage\"  Value: " + item.Key + ":" + item.Value);
+            //            }
+            //            if (foundPlayer) break;
+            //        }
+            //    }
+            //    if (foundPlayer) return;
+            //}
 
-            if (AdminToolbox.isRoundFinished)
-            {
-                int damageMultiplier = ConfigManager.Manager.Config.GetIntValue("admintoolbox_endedRound_damageMultiplier", 1, true);
-                ev.Damage = ev.Damage * damageMultiplier;
-                ev.DamageType = ev.DamageType;
-                if ((int)ev.Player.TeamRole.Role != 14)
-                    return;
-            }
+            //if (AdminToolbox.isRoundFinished)
+            //{
+            //    int damageMultiplier = ConfigManager.Manager.Config.GetIntValue("admintoolbox_endedRound_damageMultiplier", 1, true);
+            //    ev.Damage = ev.Damage * damageMultiplier;
+            //    ev.DamageType = ev.DamageType;
+            //    if ((int)ev.Player.TeamRole.Role != 14)
+            //        return;
+            //}
             switch ((int)ev.Player.TeamRole.Role)
             {
                 case -1:

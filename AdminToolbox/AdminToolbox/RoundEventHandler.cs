@@ -42,17 +42,21 @@ namespace AdminToolbox
 
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            AdminToolbox.isRoundFinished = true;
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+            if (ev.Round.Duration >= 5)
             {
-                int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
-                if (duration < 60)
-                    plugin.Info("Round lasted for: " + duration + " sec");
-                else
-                    plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
-                if (AdminToolbox.warpVectors.Count > 0)
-                    AdminToolbox.warpVectors.Clear();
-                plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+                AdminToolbox.isRoundFinished = true;
+                AdminToolbox.lockRound = false;
+                if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+                {
+                    int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
+                    if (duration < 60)
+                        plugin.Info("Round lasted for: " + duration + " sec");
+                    else
+                        plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
+                    if (AdminToolbox.warpVectors.Count > 0)
+                        AdminToolbox.warpVectors.Clear();
+                    plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+                }
             }
         }
 

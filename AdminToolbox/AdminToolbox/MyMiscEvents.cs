@@ -24,35 +24,39 @@ namespace AdminToolbox
             AdminToolbox.AddSpesificPlayer(ev.Player);
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
-            Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist", new Dictionary<string, string> { { "", defaultIntercomDuration+"-"+defaultIntercomCooldown } }, false);
-            if (whitelistRanks.Count > 0)
-            {
-                foreach (KeyValuePair<string, string> item in whitelistRanks)
-                {
-                    if (item.Key.ToLower().Replace(" ", "") == ev.Player.GetRankName().ToLower().Replace(" ", ""))
-                    {
-                        string[] myString = item.Value.Split('.', '-', '#', '_',' ');
-                        if (myString.Length == 1)
-                        {
-                            if (Int32.TryParse(myString[0], out int x))
-                            {
-                                ev.SpeechTime = x;
-                            }
-                        }
-                        else if (myString.Length == 2)
-                        {
-                            if (Int32.TryParse(myString[0], out int x))
-                            {
-                                ev.SpeechTime = x;
-                            }
-                            if (Int32.TryParse(myString[1], out int z))
-                            {
-                                ev.CooldownTime = z;
-                            }
-                        }
-                    }
-                }
-            }
+            //Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist", new Dictionary<string, string> { { "", defaultIntercomDuration+"-"+defaultIntercomCooldown } }, false);
+            //if (whitelistRanks.Count > 0)
+            //{
+            //    string mytest = "Whitelist:\n";
+            //    foreach (KeyValuePair<string, string> item in whitelistRanks)
+            //    {
+            //        mytest += item.Key.ToLower() + ":" + item.Value.ToLower() + "\n";
+            //        if (item.Key.ToLower().Replace(" ", "") == ev.Player.GetRankName().ToLower().Replace(" ", ""))
+            //        {
+            //            string[] myString = item.Value.Split('.', '-', '#', '_',' ');
+            //            if (myString.Length == 1)
+            //            {
+            //                if (Int32.TryParse(myString[0], out int x))
+            //                {
+            //                    ev.SpeechTime = x;
+            //                }
+            //            }
+            //            else if (myString.Length == 2)
+            //            {
+            //                if (Int32.TryParse(myString[0], out int x))
+            //                {
+            //                    ev.SpeechTime = x;
+            //                }
+            //                if (Int32.TryParse(myString[1], out int z))
+            //                {
+            //                    ev.CooldownTime = z;
+            //                }
+            //            }
+            //        }
+            //    }
+            //    plugin.Info(mytest);
+            //}
+
             //string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
             //if (playersAllowed.Length > 0)
             //{
@@ -69,32 +73,32 @@ namespace AdminToolbox
 
         public void OnIntercomCooldownCheck(PlayerIntercomCooldownCheckEvent ev)
         {
-            AdminToolbox.AddSpesificPlayer(ev.Player);
-            defaultIntercomCurrentCooldown = ev.CurrentCooldown;
-            string[] blackListedPlayers = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", false);
-            List<string> blacklistedIDs = new List<string>();
-            if (blackListedPlayers.Length > 0)
-            {
-                foreach(var item in blackListedPlayers)
-                {
-                    blacklistedIDs.Add(item);
-                }
-                if (blacklistedIDs.Contains(ev.Player.SteamId))
-                {
-                    ev.CurrentCooldown = 0.1f;
-                    return;
-                }
-            }
+            //AdminToolbox.AddSpesificPlayer(ev.Player);
+            //defaultIntercomCurrentCooldown = ev.CurrentCooldown;
+            //string[] blackListedPlayers = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", false);
+            //List<string> blacklistedIDs = new List<string>();
+            //if (blackListedPlayers.Length > 0)
+            //{
+            //    foreach(var item in blackListedPlayers)
+            //    {
+            //        blacklistedIDs.Add(item);
+            //    }
+            //    if (blacklistedIDs.Contains(ev.Player.SteamId))
+            //    {
+            //        ev.CurrentCooldown = 0.1f;
+            //        return;
+            //    }
+            //}
 
-            string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
-            if (playersAllowed.Length < 1) return;
-            foreach (string x in playersAllowed)
-            {
-                if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", "") && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercom_extended_forcereset", true, false))
-                {
-                    ev.CurrentCooldown = 1f;
-                }
-            }
+            //string[] playersAllowed = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_extended_whitelist_rolebadges", new string[] { "" }, false);
+            //if (playersAllowed.Length < 1) return;
+            //foreach (string x in playersAllowed)
+            //{
+            //    if (ev.Player.GetUserGroup().Name.ToLower().Replace(" ", "") == x.ToLower().Replace(" ", "") && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercom_extended_forcereset", true, false))
+            //    {
+            //        ev.CurrentCooldown = 1f;
+            //    }
+            //}
         }
 
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
@@ -120,6 +124,7 @@ namespace AdminToolbox
 
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
         {
+            AdminToolbox.lockRound = false;
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.plugin.pluginManager.DisablePlugin(this.plugin);
         }
     }

@@ -61,9 +61,8 @@ namespace AdminToolbox
 
         public override void OnEnable()
         {
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) { this.pluginManager.DisablePlugin(this); return; }
             this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
-            fileName = DateTime.Today.Date + PluginManager.Manager.Server.Name + "_AdminToolbox_TKLog.txt";
+            fileName = DateTime.Today.Date + PluginManager.Manager.Server.IpAddress+":"+PluginManager.Manager.Server.Port + "_AdminToolbox_TKLog.txt";
         }
 
         public override void Register()
@@ -238,6 +237,7 @@ namespace AdminToolbox
         public static void WriteToLog(string str)
         {
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
+            return;
             AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
             string myLog = null;
             foreach (var item in AdminToolbox.logText)
