@@ -8,7 +8,7 @@ It offers multiple admin tools like
 * Teleport to cordinates
 * Prevent the round from ending
 * Per-player stats
-* Player door permissions
+* Breaking doors interacted with
 * Player Joined messages in server log
 
 and more commands, and other features that do not exist in the base game (yet).
