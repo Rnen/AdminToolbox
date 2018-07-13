@@ -44,9 +44,11 @@ ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE S
 KEEP/KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
 ROUNDLOCK / RLOCK | Boolean |   | Turns on/off round ending
 BREAKDOORS / BD  | Player | Boolean | Turns on/off breaking doors for that player.
-LOCKDOWN | Player | Boolean | Locks all doors for all players. Will give "access denied" on any door.
-FULLACCESS / ACCESS | Player | Boolean | Lets the specified player open any door.
+PLAYERLOCKDOWN / PLAYERLOCK / PLOCK / PL | Player | Boolean | Locks all doors for the spesified player.
 SPECTATOR / SPEC | Player | Boolean | Player will never spawn naturally.
+INSTANTKILL / INSTAKILL / IK | Player | Boolean | Turns on/off instant kills for that player.
+ATDISABLE | | | **Disables the Admintoolbox plugin.** Server will need restart to enable it again
+ATCOLOR | Boolean | | `Enable/Disable` admintoolbox colors in server console (currently bugged)
 
 
 >`*` can be used instead of `Player` to target **all** players on the server
@@ -72,7 +74,7 @@ POS | Player | GET | |  Gets XYZ position of `Player`
 Type Info:
 - Boolean: True or False value
 - Integer: Any whole number
-- Float: A number with decimals (Formatting like "1.5" and "1,5" both work and are the same value)
+- Float: A number with decimals (Formatting like "1.5")
 - List: A list of items separated by ",", for example: `list: 1,2,3,4,5`
 - Dictionary: A dictionary of items separated by ":", and each entry separated by ",", for example: `dictionary: 1:2,2:3,3:4`
 - Seconds: Time in seconds, usually a value of -1 disables the feature
@@ -86,30 +88,31 @@ Type Info:
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-admintoolbox_enable | Boolean | true | `Enable / Disable` AdminToolbox from loading on server start
+admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from loading on server start
+admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
-admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round ended, enter `0`.
-admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
-admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
-admintoolbox_debug_player_damage
-admintoolbox_debug_friendly_damage
-admintoolbox_debug_player_kill
-admintoolbox_debug_scp_and_self_killed | Boolean | False | Enables/disables showing damage in the server log
-admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
-admintoolbox_intercom_extended_whitelist_rolebadges | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges you assign in `config_remoteadmin.txt`. If you have another badge (global badge like patreon supporter), you need to use `showtag` for it to work.
-admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
-admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
+admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
+admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
+admintoolbox_intercom_whitelist | (serverRole:SpeakTime-CooldownTime) | | Whitelist of server roles (roles from `config_remoteadmin.txt` with spesific time settings 
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 
+### Debug Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
+Config Option | Value Type | Default Value | Description
+--- | :---: | :---: | ---
+admintoolbox_debug_damagetypes | List | All human player damage ID's | What damage types to detect. 
+admintoolbox_debug_player_damage | Boolean | False | Displays all non-friendly kills in server console.
+admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
+admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
+admintoolbox_debug_scp_and_self_killed  | Boolean | False | Displays suicides, granade kills and SCP kills in server console.
+admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 Examples:
 ```yaml
-admintoolbox_intercom_extended_whitelist_rolebadges: Server Owner, Admin, Moderator
+admintoolbox_intercom_extended_whitelist_rolebadges: owner, admin, moderator
 
-#The example under will make scientists and Chaos unable to damage Dboys. The second example is how you add several roleID's for one role. (The example would make scientists not able to damage any class, dboys not able to attack chaos or other dboys)
-admintoolbox_block_role_damage: 6:1,8:1
-admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15,1:1-8
+#The example under will make scientists and Chaos unable to damage Dboys. The second example is how you add several roleID's for one role. (The example would make scientists (6) not able to damage any class, dboys (1) not able to attack other dboys (1))
+admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17,1:1
 
 ```
 >Find a complete list of DamageID's, RoleID's and more [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
