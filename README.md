@@ -91,12 +91,11 @@ admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL r
 admintoolbox_endedRound_damageMultiplier | Integer | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round ended, enter `0`.
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins & leaves (Currently only works for players joining)
 admintoolbox_debug_damagetypes | List | 5, 13, 14, 15, 16, 17 | What damage types to detect.
-admintoolbox_debug_player_damage | Boolean | False | Displays non-team damage in server colsole.
-admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in server console.
-admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
+admintoolbox_debug_player_damage
+admintoolbox_debug_friendly_damage
+admintoolbox_debug_player_kill
+admintoolbox_debug_scp_and_self_killed | Boolean | False | Enables/disables showing damage in the server log
 admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
-admintoolbox_debug_scp_and_self_killed | Boolean | False | Displays suicides and SCP kills in server console.
-~~admintoolbox_writeTkToFile~~ | ~~Boolean~~ | ~~False~~ | This isnt actually working yet ~~When enabled it creates a "AdminToolbox_TKLog.txt" in your server folder~~
 admintoolbox_intercom_extended_whitelist_rolebadges | ROLE BADGE List | | Whitelist of people who use admintoolbox's intercom duration settings. Uses the role badges you assign in `config_remoteadmin.txt`. If you have another badge (global badge like patreon supporter), you need to use `showtag` for it to work.
 admintoolbox_intercom_extended_duration | Seconds | Default Intercom settings | How long whitelisted people can talk. 
 admintoolbox_intercom_extended_cooldown | Seconds | Default Intercom settings | Cooldown after talking. 
