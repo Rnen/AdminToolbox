@@ -30,6 +30,8 @@
 |#13 | Nine-Tailed Fox Cadet | HP: 100 |
 |#14 | TUTORIAL | HP: 100 |
 |#15 | Facility Guard | HP: 100 |
+|#16 | SCP-939-53 | HP: 2300 |
+|#17 | SCP-939-89 | HP: 2300 | 
 
 #
 ## Item ID's
@@ -60,8 +62,8 @@
 |#22| SFA Ammo (E- 11 Rifle Ammo)
 |#23| MP4
 |#24| Logicer (Chaos Weapon)
-|#25| Postitron Granade
-|#26| Smoke Granade
+|#25| Frag Granade
+|#26| Flash Granade
 |#27| Disarmer
 |#28| RAT Ammo (MP7, Logicer ammo)
 |#29| PAT ammo (Com15, P90 ammo)
@@ -75,19 +77,22 @@
 #2| SCP_049_2 | Zombie attack
 #3| NUKE | Nuke explosion
 #4| WALL | Crush damage
-#5| TESLA | Granade (& previously tesla gate) damage
-#6| SCP_173 | Peanut neck snap
-#7| SCP_106 | The damage dealt when 106 attacks players
-#8| CONTAIN | Decontamination? (Not sure about this one)
-#9| SCP_096 | Shy Guy
-#10| SCP_049 | Plague Doctor
-#11| POCKET | The damage you take each second in the pocket dimension
-#12| FALLDOWN | Falldamage
-#13| COM15 | 
-#14| E11_STANDARD_RIFLE | 
-#15| P90 | 
-#16| MP7 | 
-#17| LOGICER | Chaos Weapon
+#5| DECONT | Decontamination
+#6| TESLA | Tesla gates
+#7| FRAG | Boom boom
+#8| SCP_939 | Doggo
+#9| SCP_173 | Peanut
+#10| SCP_106 | Larry / Old man
+#11| CONTAIN | What kills Larry when the button is pressed
+#12| SCP_096 | Shy Guy
+#13| SCP_049 | Plague doctor
+#14| POCKET | Per-second damage in the pocket dim
+#15| FALLDOWN | Fall damage
+#16| COM15 | Pistol
+#17| E11_STANDARD_RIFLE | NTF Rifle
+#18| P90 | 
+#19| MP7 |
+#20| LOGICER | Chaos weapon
 
 #
 ## Team ID's
