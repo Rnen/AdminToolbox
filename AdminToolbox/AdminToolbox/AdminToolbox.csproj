@@ -36,10 +36,12 @@
     <Reference Include="Assembly-CSharp, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SCPSL\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SCPSL\Smod2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,11 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ATDisableCommand.cs" />
     <Compile Include="Commands\KeepSettingsCommand.cs" />
     <Compile Include="Commands\BreakDoorsCommand.cs" />
-    <Compile Include="Commands\FullAccessCommand.cs" />
+    <Compile Include="Commands\InstantKillCommand.cs" />
     <Compile Include="Commands\LockdownCommand.cs" />
     <Compile Include="Commands\DoorCommand.cs" />
+    <Compile Include="Commands\ATColorCommand.cs" />
     <Compile Include="Commands\RoundLockCommand.cs" />
     <Compile Include="Commands\WarpCommand.cs" />
     <Compile Include="Commands\PosCommand.cs" />

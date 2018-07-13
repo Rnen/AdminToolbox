@@ -42,6 +42,8 @@ namespace AdminToolbox.Command
                     "\n - NoDmg: " + AdminToolbox.playerdict[myPlayer.SteamId][2] +
                     "\n - BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId][3] +
                     "\n - KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId][4] +
+                    "\n - PlayerLockDown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] +
+                    "\n - InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId][6] +
                     "\n - Stats:" +
                         "\n   - Kills: " + AdminToolbox.playerStats[myPlayer.SteamId][0] +
                         "\n   - TeamKills: " + AdminToolbox.playerStats[myPlayer.SteamId][1] +

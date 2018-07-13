@@ -34,8 +34,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        int j;
-                        if (Int32.TryParse(args[1], out j))
+                        if (Int32.TryParse(args[1], out int j))
                         {
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
@@ -45,14 +44,11 @@ namespace AdminToolbox.Command
                             }
                             if (playerNum > 1)
                                 return new string[] { "Added " + j + " HP to " + playerNum + " player(s)" };
-                            //plugin.Info("Added " + j + " HP to " + playerNum + " player(s)");
                             else
                                 return new string[] { "Added " + j + " HP to " + playerNum + " player" };
-                            //plugin.Info("Added " + j + " HP to " + playerNum + " player");
                         }
                         else
                         {
-                            //plugin.Info("Not a valid number!");
                             return new string[] { "Not a valid number!" };
                         }
                     }
@@ -67,20 +63,16 @@ namespace AdminToolbox.Command
                 if (myPlayer == null) { /*plugin.Info("Couldn't find player: " + args[0]);*/ return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    int j;
-                    if (Int32.TryParse(args[1], out j))
+                    if (Int32.TryParse(args[1], out int j))
                     {
-                        //plugin.Info("Added " + j + " HP " + " to " + myPlayer.Name);
                         myPlayer.AddHealth(j);
                         return new string[] { "Added " + j + " HP " + " to " + myPlayer.Name };
                     }
                     else
                         return new string[] { "Not a valid number!" };
-                        //plugin.Info("Not a valid number!");
                 }
                 else
                 {
-                    //plugin.Info("Set " + myPlayer.Name + " to full HP");
                     myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
                     return new string[] { "Set " + myPlayer.Name + " to full HP" };
                 }
@@ -88,7 +80,6 @@ namespace AdminToolbox.Command
             else
             {
                 return new string[] { GetUsage() };
-                //plugin.Info(GetUsage());
             }
         }
 	}

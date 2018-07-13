@@ -42,21 +42,21 @@ namespace AdminToolbox
 
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            if (ev.Round.Duration >= 5)
+            if (ev.Round.Duration >= 3)
             {
                 AdminToolbox.isRoundFinished = true;
                 AdminToolbox.lockRound = false;
                 if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
                 {
+                    plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
                     int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
                     if (duration < 60)
                         plugin.Info("Round lasted for: " + duration + " sec");
                     else
                         plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
-                    if (AdminToolbox.warpVectors.Count > 0)
-                        AdminToolbox.warpVectors.Clear();
-                    plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
                 }
+                if (AdminToolbox.warpVectors.Count > 0)
+                    AdminToolbox.warpVectors.Clear();
             }
         }
 
@@ -68,15 +68,14 @@ namespace AdminToolbox
                 foreach (KeyValuePair<string, List<bool>> item in AdminToolbox.playerdict)
                 {
                     if (!item.Value[4]) steamIDsToRemove.Add(item.Key);
-                    //if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
                 }
-                if (steamIDsToRemove != null)
+                if (steamIDsToRemove.Count > 0)
                 {
                     foreach (var item in steamIDsToRemove)
                     {
                         AdminToolbox.playerdict.Remove(item);
                     }
-                    steamIDsToRemove = null;
+                    steamIDsToRemove.Clear();
                 }
             }
         }

@@ -5,23 +5,23 @@ using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
-    class FullAccessCommand : ICommandHandler
+    class InstantKillCommand : ICommandHandler
     {
         private AdminToolbox plugin;
 
-        public FullAccessCommand(AdminToolbox plugin)
+        public InstantKillCommand(AdminToolbox plugin)
         {
             this.plugin = plugin;
         }
 
         public string GetCommandDescription()
         {
-            return "Lets specified players open all doors";
+            return "Lets specified players instantly kill targets";
         }
 
         public string GetUsage()
         {
-            return "FULLACCESS [PLAYER] [BOOLEAN]";
+            return "INSTANTKILL [PLAYER] [BOOLEAN]";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -43,7 +43,7 @@ namespace AdminToolbox.Command
                                 AdminToolbox.playerdict[pl.SteamId][6] = j;
                                 playerNum++;
                             }
-                            outPut += "\nSet " + playerNum + " player's FullAccess to " + j;
+                            outPut += "\nSet " + playerNum + " player's InstantKill to " + j;
                             return new string[] { outPut };
                         }
                         else
@@ -55,12 +55,12 @@ namespace AdminToolbox.Command
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][6] = !AdminToolbox.playerdict[pl.SteamId][6]; }
-                        return new string[] { "Toggled all players FullAccess" };
+                        return new string[] { "Toggled all players InstantKill" };
                     }
                 }
                 else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
                 {
-                    string str = "\nPlayers with FullAccess enabled: \n";
+                    string str = "\nPlayers with InstantKill enabled: \n";
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
@@ -78,7 +78,7 @@ namespace AdminToolbox.Command
                             str += "\n - " + item;
                         }
                     }
-                    else str = "\nNo players with \"FullAccess\" enabled!";
+                    else str = "\nNo players with \"InstantKill\" enabled!";
                     return new string[] { str };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
@@ -89,12 +89,12 @@ namespace AdminToolbox.Command
                     else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId][6] = true; }
                     else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId][6] = false; }
                     else return new string[] { GetUsage() };
-                    return new string[] { myPlayer.Name + " FullAccess: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
+                    return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
                 }
                 else
                 {
                     AdminToolbox.playerdict[myPlayer.SteamId][6] = !AdminToolbox.playerdict[myPlayer.SteamId][6];
-                    return new string[] { myPlayer.Name + " FullAccess: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
+                    return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId][6] };
                 }
 
             }

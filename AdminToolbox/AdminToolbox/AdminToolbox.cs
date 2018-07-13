@@ -24,23 +24,25 @@ namespace AdminToolbox
         )]
     class AdminToolbox : Plugin
     {
-        public static bool isRoundFinished = false, adminMode = false, lockRound = false;
-
-        public static int[] nineTailsTeam = { 1, 3 }, chaosTeam = { 2, 4 };
+        public static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false;
 
         public static string fileName;
+        public static List<string> logText = new List<string>();
 
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
         public static Dictionary<string, List<int>> playerStats = new Dictionary<string, List<int>>();
         public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
-        public static List<string> logText = new List<string>(), myRooms = new List<string>();
+
         public static int roundCount = 0;
 
         public override void OnDisable()
         {
-            this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
+            if(isColored)
+                this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Red;Disabled@#fg=Default;");
+            else
+                this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
-        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor, bool lockDown, bool fullAccess)
+        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor, bool lockDown, bool instantKill)
         {
             //This is actually never used, its just for keeping track, might become an all on/off switch at some point
             playerdict[player.SteamId][0] = spectatorOnly;
@@ -49,7 +51,7 @@ namespace AdminToolbox
             playerdict[player.SteamId][3] = destroyDoor;
             //playerdict[player.SteamId[4] = keepSettings;
             playerdict[player.SteamId][5] = lockDown;
-            playerdict[player.SteamId][6] = fullAccess;
+            playerdict[player.SteamId][6] = instantKill;
         }
         public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int Something)
         {
@@ -61,7 +63,10 @@ namespace AdminToolbox
 
         public override void OnEnable()
         {
-            this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
+            if(isColored)
+                this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
+            else
+                this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
             fileName = DateTime.Today.Date + PluginManager.Manager.Server.IpAddress+":"+PluginManager.Manager.Server.Port + "_AdminToolbox_TKLog.txt";
         }
 
@@ -76,33 +81,61 @@ namespace AdminToolbox
             // Register Commands
             this.AddCommand("spectator", new Command.SpectatorCommand(this));
             this.AddCommand("spec", new Command.SpectatorCommand(this));
-            this.AddCommand("players", new Command.PlayerListCommand(this));
-            this.AddCommand("tpx", new Command.TeleportCommand(this));
-            this.AddCommand("heal", new Command.HealCommand(this));
-            this.AddCommand("god", new Command.GodModeCommand(this));
-            this.AddCommand("godmode", new Command.GodModeCommand(this));
-            this.AddCommand("nodmg", new Command.NoDmgCommand(this));
-            this.AddCommand("tut", new Command.TutorialCommand(this));
-            this.AddCommand("tutorial", new Command.TutorialCommand(this));
-            this.AddCommand("role", new Command.RoleCommand(this));
-            this.AddCommand("keep", new Command.KeepSettingsCommand(this));
-            this.AddCommand("keepsettings", new Command.KeepSettingsCommand(this));
-            this.AddCommand("hp", new Command.SetHpCommand(this));
-            this.AddCommand("sethp", new Command.SetHpCommand(this));
+
             this.AddCommand("player", new Command.PlayerCommand(this));
             this.AddCommand("p", new Command.PlayerCommand(this));
+
+            this.AddCommand("players", new Command.PlayerListCommand(this));
+            
+            this.AddCommand("heal", new Command.HealCommand(this));
+
+            this.AddCommand("god", new Command.GodModeCommand(this));
+            this.AddCommand("godmode", new Command.GodModeCommand(this));
+
+            this.AddCommand("nodmg", new Command.NoDmgCommand(this));
+
+            this.AddCommand("tut", new Command.TutorialCommand(this));
+            this.AddCommand("tutorial", new Command.TutorialCommand(this));
+
+            this.AddCommand("role", new Command.RoleCommand(this));
+
+            this.AddCommand("keep", new Command.KeepSettingsCommand(this));
+            this.AddCommand("keepsettings", new Command.KeepSettingsCommand(this));
+
+            this.AddCommand("hp", new Command.SetHpCommand(this));
+            this.AddCommand("sethp", new Command.SetHpCommand(this));
+
+
             this.AddCommand("pos", new Command.PosCommand(this));
+            this.AddCommand("tpx", new Command.TeleportCommand(this));
+
             this.AddCommand("warp", new Command.WarpCommmand(this));
+
             this.AddCommand("roundlock", new Command.RoundLockCommand(this));
             this.AddCommand("lockround", new Command.RoundLockCommand(this));
             this.AddCommand("rlock", new Command.RoundLockCommand(this));
             this.AddCommand("lockr", new Command.RoundLockCommand(this));
+
             this.AddCommand("breakdoors", new Command.BreakDoorsCommand(this));
             this.AddCommand("breakdoor", new Command.BreakDoorsCommand(this));
             this.AddCommand("bd", new Command.BreakDoorsCommand(this));
-            //this.AddCommand("door", new Command.DoorCommand(this));
+
+            this.AddCommand("playerlockdown", new Command.LockdownCommand(this));
+            this.AddCommand("pl", new Command.LockdownCommand(this));
+            this.AddCommand("playerlock", new Command.LockdownCommand(this));
+            this.AddCommand("plock", new Command.LockdownCommand(this));
+
+            this.AddCommand("atcolor", new Command.ATColorCommand(this));
+            this.AddCommand("atdisable", new Command.ATDisableCommand(this));
+
+            this.AddCommand("instantkill", new Command.InstantKillCommand(this));
+            this.AddCommand("instakill", new Command.InstantKillCommand(this));
+            this.AddCommand("ik", new Command.InstantKillCommand(this));
+
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_colors", false, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox colors in server window"));
+
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
 
@@ -126,7 +159,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What ROLE BADGE can use the Intercom to your specified settings"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_forcereset", true, Smod2.Config.SettingType.BOOL, true, "People in the whitelist can forcefully reset the intercom"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new Dictionary<string, string> { { "2", "2" } }, Smod2.Config.SettingType.DICTIONARY, true, "What roles cannot attack other roles"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] {  "2:2"  }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
         }
         public static void AddMissingPlayerVariables()
         {
@@ -138,10 +171,13 @@ namespace AdminToolbox
         }
         public static void AddSpesificPlayer(Player playerToAdd)
         {
-            if (!playerdict.ContainsKey(playerToAdd.SteamId))
-                playerdict.Add(playerToAdd.SteamId, new List<bool>(new bool[] { false, false, false, false, false, false, false }));
-            if (!playerStats.ContainsKey(playerToAdd.SteamId))
-                playerStats.Add(playerToAdd.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
+            if (playerToAdd.SteamId != null || playerToAdd.SteamId != "")
+            {
+                if (!playerdict.ContainsKey(playerToAdd.SteamId))
+                    playerdict.Add(playerToAdd.SteamId, new List<bool>(new bool[] { false, false, false, false, false, false, false }));
+                if (!playerStats.ContainsKey(playerToAdd.SteamId))
+                    playerStats.Add(playerToAdd.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
+            }
         }
     }
 
@@ -238,14 +274,23 @@ namespace AdminToolbox
         {
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
             return;
-            AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
-            string myLog = null;
-            foreach (var item in AdminToolbox.logText)
-            {
-                myLog += item + Environment.NewLine;
-            }
-            Server server = PluginManager.Manager.Server;
-            File.WriteAllText(AdminToolbox.fileName, myLog);
+            //AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
+            //string myLog = null;
+            //foreach (var item in AdminToolbox.logText)
+            //{
+            //    myLog += item + Environment.NewLine;
+            //}
+            //Server server = PluginManager.Manager.Server;
+            //File.WriteAllText(AdminToolbox.fileName, myLog);
+
+            //AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
+            //string myLog = null;
+            //foreach (var item in AdminToolbox.logText)
+            //{
+            //    myLog += item + Environment.NewLine;
+            //}
+            //Server server = PluginManager.Manager.Server;
+            //File.WriteAllText(AdminToolbox.fileName, myLog);
         }
     }
 }
