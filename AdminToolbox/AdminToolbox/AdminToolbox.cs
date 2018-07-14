@@ -273,7 +273,6 @@ namespace AdminToolbox
         public static void WriteToLog(string str)
         {
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
-            return;
             //AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
             //string myLog = null;
             //foreach (var item in AdminToolbox.logText)
@@ -283,14 +282,7 @@ namespace AdminToolbox
             //Server server = PluginManager.Manager.Server;
             //File.WriteAllText(AdminToolbox.fileName, myLog);
 
-            //AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
-            //string myLog = null;
-            //foreach (var item in AdminToolbox.logText)
-            //{
-            //    myLog += item + Environment.NewLine;
-            //}
-            //Server server = PluginManager.Manager.Server;
-            //File.WriteAllText(AdminToolbox.fileName, myLog);
+            File.AppendAllText(AdminToolbox.fileName, System.DateTime.Now.ToString() + ": " + str + "\n");
         }
     }
 }

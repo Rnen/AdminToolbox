@@ -1,5 +1,0 @@
-Things to test before release:
-
-- Intercom setting
-- Role damages setting
-- Granade TK server log
