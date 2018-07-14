@@ -1,6 +1,7 @@
 ﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
+using System.IO;
 
 namespace AdminToolbox.Command
 {
@@ -25,7 +26,7 @@ namespace AdminToolbox.Command
 
         public string[] OnCall(ICommandSender sender, string[] args)
         {
-            plugin.Info(sender + " ran the" + GetUsage() + " command!");
+            plugin.Info(sender + " ran the " + GetUsage() + " command!");
             this.plugin.pluginManager.DisablePlugin(this.plugin);
             return new string[] { "AdminToolbox Disabled" };
         }

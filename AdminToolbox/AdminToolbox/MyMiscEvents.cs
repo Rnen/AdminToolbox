@@ -8,7 +8,7 @@ using System;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers
+    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery
     {
         private Plugin plugin;
 
@@ -24,39 +24,40 @@ namespace AdminToolbox
             AdminToolbox.AddSpesificPlayer(ev.Player);
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
-            //Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist", new Dictionary<string, string> { {  "test:", defaultIntercomDuration + "-" + defaultIntercomCooldown } }, false);
-            //if (whitelistRanks.Count > 0)
-            //{
-            //    if (whitelistRanks.ContainsKey(ev.Player.GetRankName()))
-            //    {
-            //        if (whitelistRanks.TryGetValue(ev.Player.GetRankName(), out string y))
-            //        {
-            //            string[] myString = y.Split('.', '-', '#', '_', ' ');
-            //            if (myString.Length >= 1)
-            //            {
-            //                if (Int32.TryParse(myString[0], out int x))
-            //                    ev.SpeechTime = x;
-            //                if (myString.Length == 2)
-            //                    if (Int32.TryParse(myString[1], out int z))
-            //                        ev.CooldownTime = z;
-            //                if (myString.Length > 2)
-            //                    plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + y+"\", skipping...");
-            //            }
 
-            //        }
-            //        else
-            //            plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
-            //    }
-            //}
+            Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist");
+            if (whitelistRanks.Count > 0)
+            {
+                if (whitelistRanks.ContainsKey(ev.Player.GetRankName()))
+                {
+                    if (whitelistRanks.TryGetValue(ev.Player.GetRankName(), out string y))
+                    {
+                        string[] myString = y.Split('.', '-', '#', '_', ' ');
+                        if (myString.Length >= 1)
+                        {
+                            if (Int32.TryParse(myString[0], out int x))
+                                ev.SpeechTime = x;
+                            if (myString.Length == 2)
+                                if (Int32.TryParse(myString[1], out int z))
+                                    ev.CooldownTime = z;
+                            if (myString.Length > 2)
+                                plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + y + "\", skipping...");
+                        }
+
+                    }
+                    else
+                        plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
+                }
+            }
 
             //Blacklist
-            string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", false);
+            string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
             if (blackListedSTEAMIDS.Length > 0)
-                foreach(var item in blackListedSTEAMIDS)
-                    if(item == ev.Player.SteamId)
+                foreach (string item in blackListedSTEAMIDS)
+                    if (item == ev.Player.SteamId)
                     {
-                        plugin.Info("Blocked player");
                         ev.AllowSpeech = false;
+                        break;
                     }
         }
 
@@ -84,6 +85,13 @@ namespace AdminToolbox
             AdminToolbox.lockRound = false;
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.plugin.pluginManager.DisablePlugin(this.plugin);
             if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_colors", false);
+        }
+
+        public void OnAdminQuery(AdminQueryEvent ev)
+        {
+            //if (ev.Successful
+            if(ev.Query!= "REQUEST_DATA PLAYER_LIST SILENT")
+                AdminToolbox.WriteToLog(new string[] { ev.Admin.Name + " used the command:  \"" + ev.Query + "\"" }, LogHandlers.ServerLogType.RemoteAdminActivity);
         }
     }
 }

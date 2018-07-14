@@ -35,8 +35,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        bool j;
-                        if (bool.TryParse(args[1], out j))
+                        if (bool.TryParse(args[1], out bool j))
                         {
                             string outPut = null;
                             bool changedState = false;

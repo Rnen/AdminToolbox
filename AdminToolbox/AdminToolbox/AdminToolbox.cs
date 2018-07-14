@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Unity;
 using UnityEngine;
+using System.Linq;
 
 namespace AdminToolbox
 {
@@ -26,14 +27,13 @@ namespace AdminToolbox
     {
         public static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false;
 
-        public static string fileName;
-        public static List<string> logText = new List<string>();
-
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
         public static Dictionary<string, List<int>> playerStats = new Dictionary<string, List<int>>();
         public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
 
         public static int roundCount = 0;
+        public static LogHandlers AdminToolboxLogger = new LogHandlers();
+        public static string _roundStartTime;
 
         public override void OnDisable()
         {
@@ -53,12 +53,12 @@ namespace AdminToolbox
             playerdict[player.SteamId][5] = lockDown;
             playerdict[player.SteamId][6] = instantKill;
         }
-        public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int Something)
+        public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int RoundsPlayed)
         {
             playerStats[player.SteamId][0] = Kills;
             playerStats[player.SteamId][1] = TeamKills;
             playerStats[player.SteamId][2] = Deaths;
-            playerStats[player.SteamId][3] = Something;
+            playerStats[player.SteamId][3] = RoundsPlayed;
         }
 
         public override void OnEnable()
@@ -67,7 +67,7 @@ namespace AdminToolbox
                 this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
             else
                 this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
-            fileName = DateTime.Today.Date + PluginManager.Manager.Server.IpAddress+":"+PluginManager.Manager.Server.Port + "_AdminToolbox_TKLog.txt";
+            _roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
         }
 
         public override void Register()
@@ -151,15 +151,17 @@ namespace AdminToolbox
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier after end of round"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_writeTkToFile", false, Smod2.Config.SettingType.BOOL, true, "Unfinished"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_teamkills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for teamkills"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_kills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for regular kills"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_commands", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for all AT command usage"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_info", true, Smod2.Config.SettingType.BOOL, true, "Prints round count and player number on round start & end"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "Writes player name in console on players joining"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { }, Smod2.Config.SettingType.LIST, true, "What ROLE BADGE can use the Intercom to your specified settings"));
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_extended_forcereset", true, Smod2.Config.SettingType.BOOL, true, "People in the whitelist can forcefully reset the intercom"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.DICTIONARY, true, "What ServerRank can use the Intercom to your specified settings"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "Blacklist of steamID's that cannot use the intercom"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] {  "2:2"  }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] {  string.Empty }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
         }
         public static void AddMissingPlayerVariables()
         {
@@ -177,6 +179,32 @@ namespace AdminToolbox
                     playerdict.Add(playerToAdd.SteamId, new List<bool>(new bool[] { false, false, false, false, false, false, false }));
                 if (!playerStats.ContainsKey(playerToAdd.SteamId))
                     playerStats.Add(playerToAdd.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
+            }
+        }
+        public static void WriteToLog(string[] str, LogHandlers.ServerLogType logType)
+        {
+            //if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
+            string str2 = string.Empty;
+            if (str.Length != 0)
+                foreach (string st in str)
+                    str2 += st;
+            switch (logType)
+            {
+                case LogHandlers.ServerLogType.TeamKill:
+                    if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_teamkills", false, false))
+                        goto default;
+                    break;
+                case LogHandlers.ServerLogType.KillLog:
+                    if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_kills", false, false))
+                        goto default;
+                    break;
+                case LogHandlers.ServerLogType.RemoteAdminActivity:
+                    if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_commands", false, false))
+                        goto default;
+                    break;
+                default:
+                    AdminToolboxLogger.AddLog(str2, logType);
+                    break;
             }
         }
     }
@@ -268,21 +296,101 @@ namespace AdminToolbox
             return playerOut;
         }
     }
-    public class LogHandler
+    public class LogHandlers
     {
-        public static void WriteToLog(string str)
+        public class LogHandler
         {
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
-            //AdminToolbox.logText.Add(System.DateTime.Now.ToString() + ": " + str + "\n");
-            //string myLog = null;
-            //foreach (var item in AdminToolbox.logText)
-            //{
-            //    myLog += item + Environment.NewLine;
-            //}
-            //Server server = PluginManager.Manager.Server;
-            //File.WriteAllText(AdminToolbox.fileName, myLog);
+            public string Content;
 
-            File.AppendAllText(AdminToolbox.fileName, System.DateTime.Now.ToString() + ": " + str + "\n");
+            public string Type;
+
+            public string Time;
+
+            public bool Saved;
+        }
+        private readonly List<LogHandler> logs = new List<LogHandler>();
+
+        public static LogHandlers singleton;
+
+        private int _port;
+
+        private int _ready;
+
+        private int _maxlen;
+
+        public enum ServerLogType
+        {
+            RemoteAdminActivity,
+            KillLog,
+            TeamKill,
+            GameEvent,
+            Misc
+        }
+        public static readonly string[] Txt = new string[]
+        {
+        "Remote Admin",
+        "Kill",
+        "TeamKill",
+        "Game Event",
+        "Misc"
+        };
+        private void Awake()
+        {
+            Txt.ToList().ForEach(delegate (string txt)
+            {
+                _maxlen = Math.Max(_maxlen, txt.Length);
+            });
+            _ready++;
+            AddLog("Started logging.", ServerLogType.Misc);
+        }
+        void Start()
+        {
+            //AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+            _port = PluginManager.Manager.Server.Port;
+        }
+
+        public void AddLog(string msg, ServerLogType type)
+        {
+            _port = PluginManager.Manager.Server.Port;
+            string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff zzz");
+            logs.Add(new LogHandler
+            {
+                Content = msg,
+                Type = Txt[(int)type],
+                Time = time
+            });
+            if (Directory.Exists(FileManager.AppFolder))
+            {
+                if (!Directory.Exists(FileManager.AppFolder + "ATServerLogs"))
+                {
+                    Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs");
+                }
+                if (!Directory.Exists(FileManager.AppFolder + "ATServerLogs/" + _port))
+                {
+                    Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs/" + _port);
+                }
+                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "ATServerLogs/" + _port + "/Round " + AdminToolbox.roundCount + " " + AdminToolbox._roundStartTime + ".txt", true);
+                string text = string.Empty;
+                foreach (LogHandler log in logs)
+                {
+                    if (!log.Saved)
+                    {
+                        log.Saved = true;
+                        string text2 = text;
+                        text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
+                    }
+                }
+                streamWriter.Write(text);
+                streamWriter.Close();
+            }
+        }
+        private static string ToMax(string text, int max)
+        {
+            while (text.Length < max)
+            {
+                text += " ";
+            }
+            return text;
         }
     }
 }

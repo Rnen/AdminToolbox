@@ -34,8 +34,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        int j;
-                        if (Int32.TryParse(args[1], out j))
+                        if (Int32.TryParse(args[1], out int j))
                         {
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())

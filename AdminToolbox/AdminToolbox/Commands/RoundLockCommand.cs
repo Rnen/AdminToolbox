@@ -31,15 +31,13 @@ namespace AdminToolbox.Command
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
-                bool k;
-                int l;
-                if (bool.TryParse(args[0], out k))
+                if (bool.TryParse(args[0], out bool k))
                 {
                     AdminToolbox.lockRound = k;
                     plugin.Info("Round lock: " + k);
                     return new string[] { "Round lock: " + k };
                 }
-                else if (Int32.TryParse(args[0], out l))
+                else if (Int32.TryParse(args[0], out int l))
                 {
                     if (l < 1)
                     {

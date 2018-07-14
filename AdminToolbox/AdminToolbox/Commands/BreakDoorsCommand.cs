@@ -33,8 +33,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        bool j;
-                        if (bool.TryParse(args[1], out j))
+                        if (bool.TryParse(args[1], out bool j))
                         {
                             string outPut = null;
                             int playerNum = 0;
@@ -44,7 +43,6 @@ namespace AdminToolbox.Command
                                 playerNum++;
                             }
                             outPut += "\nSet " + playerNum + " player's BreakDoors to " + j;
-                            //plugin.Info("Set " + playerNum + " player's Godmode to " + j);
                             return new string[] { "\nSet " + playerNum + " player's BreakDoors to " + j };
                         }
                         else

@@ -3,6 +3,7 @@ using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
 using System.Collections.Generic;
+using System;
 
 namespace AdminToolbox
 {
@@ -30,6 +31,8 @@ namespace AdminToolbox
                 plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
             }
             AdminToolbox.AddMissingPlayerVariables();
+            AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+
         }
 
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)
@@ -57,6 +60,13 @@ namespace AdminToolbox
                 }
                 if (AdminToolbox.warpVectors.Count > 0)
                     AdminToolbox.warpVectors.Clear();
+            }
+            foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+            {
+                AdminToolbox.AddSpesificPlayer(pl);
+                if(AdminToolbox.playerStats.ContainsKey(pl.SteamId))
+                    AdminToolbox.playerStats[pl.SteamId][3]++;
+
             }
         }
 

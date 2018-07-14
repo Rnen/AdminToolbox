@@ -33,7 +33,6 @@ namespace AdminToolbox.Command
                 input += pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n";
             }
             return new string[] { input };
-            //plugin.Info(input);
         }
     }
 }
