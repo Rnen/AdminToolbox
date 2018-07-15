@@ -29,7 +29,7 @@ namespace AdminToolbox
 
         public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
         public static Dictionary<string, List<int>> playerStats = new Dictionary<string, List<int>>();
-        public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
+        public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(), playerDeathPos = new Dictionary<string, Vector>();
 
         public static int roundCount = 0;
         public static LogHandlers AdminToolboxLogger = new LogHandlers();
@@ -63,6 +63,8 @@ namespace AdminToolbox
 
         public override void OnEnable()
         {
+            WriteVersionToFile(this.Details.version);
+            CheckCurrVersion(this, this.Details.version);
             if(isColored)
                 this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
             else
@@ -181,6 +183,8 @@ namespace AdminToolbox
                     playerdict.Add(playerToAdd.SteamId, new List<bool>(new bool[] { false, false, false, false, false, false, false }));
                 if (!playerStats.ContainsKey(playerToAdd.SteamId))
                     playerStats.Add(playerToAdd.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
+                if (!playerDeathPos.ContainsKey(playerToAdd.SteamId))
+                    playerDeathPos.Add(playerToAdd.SteamId, new Vector(0, 0, 0));
             }
         }
         public static void WriteToLog(string[] str, LogHandlers.ServerLogType logType)
@@ -206,6 +210,33 @@ namespace AdminToolbox
                 default:
                     break;
             }
+        }
+        public static void WriteVersionToFile(string currVersion)
+        {
+            if (Directory.Exists(FileManager.AppFolder))
+            {
+                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "at_version.md", false);
+                string text = "at_version=" + currVersion;
+                streamWriter.Write(text);
+                streamWriter.Close();
+            }
+        }
+        public static void CheckCurrVersion(AdminToolbox plugin,string currVersion)
+        {
+            //try
+            //{
+            //    string host = "https://raw.githubusercontent.com/Rnen/AdminToolbox/master/version.md";
+            //    Int16 version = Int16.Parse(currVersion.Replace(".", string.Empty));
+            //    Int16 fileContentV = Int16.Parse(new System.Net.WebClient().DownloadString(host).Replace(".",string.Empty).Replace("at_version=",string.Empty));
+            //    if (fileContentV > version)
+            //    {
+            //        plugin.Info("Your version is out of date, please run the \"AT_AutoUpdate.bat\" or visit the AdminToolbox GitHub");
+            //    }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    plugin.Error("Could not fetch latest version: " + e.Message);
+            //}
         }
     }
 
@@ -352,7 +383,7 @@ namespace AdminToolbox
         public void AddLog(string msg, ServerLogType type)
         {
             _port = PluginManager.Manager.Server.Port;
-            string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff zzz");
+            string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss zzz");
             logs.Add(new LogHandler
             {
                 Content = msg,

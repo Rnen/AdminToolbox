@@ -182,6 +182,10 @@ namespace AdminToolbox
 
             AdminToolbox.AddSpesificPlayer(ev.Player);
             AdminToolbox.AddSpesificPlayer(ev.Killer);
+
+            if (AdminToolbox.playerDeathPos.ContainsKey(ev.Player.SteamId))
+                AdminToolbox.playerDeathPos[ev.Player.SteamId] = ev.Player.GetPosition();
+
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
             if (AdminToolbox.playerStats.ContainsKey(ev.Player.SteamId)) AdminToolbox.playerStats[ev.Player.SteamId][2]++;
             switch ((int)ev.Player.TeamRole.Role)
