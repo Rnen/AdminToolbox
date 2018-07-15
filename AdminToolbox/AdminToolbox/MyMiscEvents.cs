@@ -25,30 +25,34 @@ namespace AdminToolbox
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
 
-            Dictionary<string, string> whitelistRanks = ConfigManager.Manager.Config.GetDictValue("admintoolbox_intercom_whitelist");
-            if (whitelistRanks.Count > 0)
-            {
-                if (whitelistRanks.ContainsKey(ev.Player.GetRankName()))
-                {
-                    if (whitelistRanks.TryGetValue(ev.Player.GetRankName(), out string y))
-                    {
-                        string[] myString = y.Split('.', '-', '#', '_', ' ');
-                        if (myString.Length >= 1)
-                        {
-                            if (Int32.TryParse(myString[0], out int x))
-                                ev.SpeechTime = x;
-                            if (myString.Length == 2)
-                                if (Int32.TryParse(myString[1], out int z))
-                                    ev.CooldownTime = z;
-                            if (myString.Length > 2)
-                                plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + y + "\", skipping...");
-                        }
+            //string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist");
+            //if (whitelistRanks.Length > 0)
+            //{
+            //    foreach (var item in whitelistRanks)
+            //    {
+            //        string[] myKeyString = item.Split(':');
+            //        if (myKeyString[0] == ev.Player.GetRankName())
+            //        {
+            //            if (myKeyString.Length == 2)
+            //            {
+            //                string[] myString = myKeyString[1].Split('.', '-', '#', '_', ' ');
+            //                if (myString.Length >= 1)
+            //                {
+            //                    if (Int32.TryParse(myString[0], out int x))
+            //                        ev.SpeechTime = x;
+            //                    if (myString.Length == 2)
+            //                        if (Int32.TryParse(myString[1], out int z))
+            //                            ev.CooldownTime = z;
+            //                    if (myString.Length > 2)
+            //                        plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + myKeyString[1] + "\", skipping...");
+            //                }
 
-                    }
-                    else
-                        plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
-                }
-            }
+            //            }
+            //            else
+            //                plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
+            //        }
+            //    }
+            //}
 
             //Blacklist
             string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);

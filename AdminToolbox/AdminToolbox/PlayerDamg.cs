@@ -53,12 +53,18 @@ namespace AdminToolbox
             AdminToolbox.AddSpesificPlayer(ev.Player);
             AdminToolbox.AddSpesificPlayer(ev.Attacker);
 
+            float originalDamage = ev.Damage;
+            DamageType originalType = ev.DamageType;
+
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", humanDamageTypes, false);
 
-            if(AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+            float damageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_round_damageMultiplier", 1, true);
+            ev.Damage = ev.Damage * damageMultiplier;
+
+            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
                 if (AdminToolbox.playerdict[ev.Attacker.SteamId][6])
                     if (ev.DamageType != DamageType.FRAG)
                         ev.Damage = ev.Player.GetHealth() + 1;
@@ -100,9 +106,8 @@ namespace AdminToolbox
 
             if (AdminToolbox.isRoundFinished)
             {
-                int damageMultiplier = ConfigManager.Manager.Config.GetIntValue("admintoolbox_endedRound_damageMultiplier", 1, true);
-                ev.Damage = ev.Damage * damageMultiplier;
-                ev.DamageType = ev.DamageType;
+                float enddamageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1, true);
+                ev.Damage = originalDamage * enddamageMultiplier;
                 if ((int)ev.Player.TeamRole.Role != 14)
                     return;
             }
@@ -231,7 +236,7 @@ namespace AdminToolbox
                             else
                             {
                                 if (AdminToolbox.isColored)
-                                    plugin.Info(ev.Killer.TeamRole.Name + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=Red; killed fellow @#fg=Green;|" + ev.Player.TeamRole.Name + " @#fg=Yellow;" + ev.Player.Name+ "@#fg=Default;");
+                                    plugin.Info(ev.Killer.TeamRole.Name + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=Red; killed fellow @#fg=Green;" + ev.Player.TeamRole.Name + " @#fg=Yellow;" + ev.Player.Name+ "@#fg=Default;");
                                 else
                                     plugin.Info(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name);
                                 AdminToolbox.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name}, LogHandlers.ServerLogType.TeamKill);

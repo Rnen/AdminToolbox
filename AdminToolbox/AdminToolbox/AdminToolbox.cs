@@ -21,7 +21,7 @@ namespace AdminToolbox
         version = "1.3.2",
         SmodMajor = 3,
         SmodMinor = 3,
-        SmodRevision = 7
+        SmodRevision = 8
         )]
     class AdminToolbox : Plugin
     {
@@ -150,6 +150,8 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_scp_and_self_killed", false, Smod2.Config.SettingType.BOOL, true, "Debug suicides and SCP kills"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier after end of round"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_damageMultiplier", 1, Smod2.Config.SettingType.NUMERIC, true, "Damage multiplier"));
+
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_teamkills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for teamkills"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_kills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for regular kills"));
@@ -158,7 +160,7 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_info", true, Smod2.Config.SettingType.BOOL, true, "Prints round count and player number on round start & end"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_debug_player_joinANDleave", false, Smod2.Config.SettingType.BOOL, true, "Writes player name in console on players joining"));
 
-            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.DICTIONARY, true, "What ServerRank can use the Intercom to your specified settings"));
+            //this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What ServerRank can use the Intercom to your specified settings"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "Blacklist of steamID's that cannot use the intercom"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] {  string.Empty }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
@@ -183,7 +185,6 @@ namespace AdminToolbox
         }
         public static void WriteToLog(string[] str, LogHandlers.ServerLogType logType)
         {
-            //if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_writeTkToFile", false, false) == false) return;
             string str2 = string.Empty;
             if (str.Length != 0)
                 foreach (string st in str)
@@ -192,18 +193,17 @@ namespace AdminToolbox
             {
                 case LogHandlers.ServerLogType.TeamKill:
                     if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_teamkills", false, false))
-                        goto default;
+                        AdminToolboxLogger.AddLog(str2, logType);
                     break;
                 case LogHandlers.ServerLogType.KillLog:
                     if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_kills", false, false))
-                        goto default;
+                        AdminToolboxLogger.AddLog(str2, logType);
                     break;
                 case LogHandlers.ServerLogType.RemoteAdminActivity:
                     if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_commands", false, false))
-                        goto default;
-                    break;
+                        AdminToolboxLogger.AddLog(str2, logType);
+                        break;
                 default:
-                    AdminToolboxLogger.AddLog(str2, logType);
                     break;
             }
         }
@@ -369,7 +369,7 @@ namespace AdminToolbox
                 {
                     Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs/" + _port);
                 }
-                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "ATServerLogs/" + _port + "/Round " + AdminToolbox.roundCount + " " + AdminToolbox._roundStartTime + ".txt", true);
+                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "ATServerLogs" + "/" + _port  + "/" + AdminToolbox._roundStartTime + " Round " + AdminToolbox.roundCount + ".txt", true);
                 string text = string.Empty;
                 foreach (LogHandler log in logs)
                 {
