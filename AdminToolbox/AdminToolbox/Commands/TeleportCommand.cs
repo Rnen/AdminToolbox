@@ -25,8 +25,8 @@ namespace AdminToolbox.Command
 
         public string[] OnCall(ICommandSender sender, string[] args)
         {
+            AdminToolbox.AddMissingPlayerVariables();
             Server server = PluginManager.Manager.Server;
-            //if(args.Length < 1) return new string[] { GetUsage() };
             if (args.Length > 1)
             {
                 if (args[0].ToLower() == "all" || args[0].ToLower() == "*")

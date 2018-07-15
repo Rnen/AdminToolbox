@@ -26,6 +26,7 @@ namespace AdminToolbox.Command
 
         public string[] OnCall(ICommandSender sender, string[] args)
         {
+            AdminToolbox.AddMissingPlayerVariables();
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
@@ -33,8 +34,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        int j;
-                        if (Int32.TryParse(args[1], out j))
+                        if (Int32.TryParse(args[1], out int j))
                         {
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())

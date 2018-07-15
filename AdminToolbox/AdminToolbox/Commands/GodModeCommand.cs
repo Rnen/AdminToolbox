@@ -27,6 +27,7 @@ namespace AdminToolbox.Command
 
         public string[] OnCall(ICommandSender sender, string[] args)
         {
+            AdminToolbox.AddMissingPlayerVariables();
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
@@ -34,8 +35,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        bool j;
-                        if (bool.TryParse(args[1], out j))
+                        if (bool.TryParse(args[1], out bool j))
                         {
                             string outPut = null;
                             bool changedState = false;

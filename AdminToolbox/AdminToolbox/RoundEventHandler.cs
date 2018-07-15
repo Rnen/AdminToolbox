@@ -3,6 +3,7 @@ using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
 using System.Collections.Generic;
+using System;
 
 namespace AdminToolbox
 {
@@ -29,6 +30,9 @@ namespace AdminToolbox
                 plugin.Info("Round: " + AdminToolbox.roundCount + " started.");
                 plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
             }
+            AdminToolbox.AddMissingPlayerVariables();
+            AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+
         }
 
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)
@@ -41,39 +45,48 @@ namespace AdminToolbox
 
         public void OnRoundEnd(RoundEndEvent ev)
         {
-            AdminToolbox.isRoundFinished = true;
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+            if (ev.Round.Duration >= 3)
             {
-                int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
-                if (duration < 60)
-                    plugin.Info("Round lasted for: " + duration + " sec");
-                else
-                    plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
+                AdminToolbox.isRoundFinished = true;
+                AdminToolbox.lockRound = false;
+                if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+                {
+                    plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+                    int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
+                    if (duration < 60)
+                        plugin.Info("Round lasted for: " + duration + " sec");
+                    else
+                        plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
+                }
                 if (AdminToolbox.warpVectors.Count > 0)
                     AdminToolbox.warpVectors.Clear();
-                plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+            }
+            foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+            {
+                AdminToolbox.AddSpesificPlayer(pl);
+                if(AdminToolbox.playerStats.ContainsKey(pl.SteamId))
+                    AdminToolbox.playerStats[pl.SteamId][3]++;
+
             }
         }
 
         public void OnRoundRestart(RoundRestartEvent ev)
         {
-            //foreach (Player pl in this.plugin.pluginManager.Server.GetPlayers())
-            //{
-            //    if (AdminToolbox.playerdict[pl.SteamId][4])
-            //        AdminToolbox.SetPlayerBools(pl, false, false, false, false);
-            //}
-            List<string> playersToRemove = new List<string>();
-            foreach (var item in AdminToolbox.playerdict.Keys)
+            if (AdminToolbox.playerdict.Count > 0)
             {
-                if (!AdminToolbox.playerdict[item][4]) playersToRemove.Add(item);
-            }
-            if (playersToRemove != null)
-            {
-                foreach (var item in playersToRemove)
+                List<string> steamIDsToRemove = new List<string>();
+                foreach (KeyValuePair<string, List<bool>> item in AdminToolbox.playerdict)
                 {
-                    AdminToolbox.playerdict.Remove(item);
+                    if (!item.Value[4]) steamIDsToRemove.Add(item.Key);
                 }
-                playersToRemove = null;
+                if (steamIDsToRemove.Count > 0)
+                {
+                    foreach (var item in steamIDsToRemove)
+                    {
+                        AdminToolbox.playerdict.Remove(item);
+                    }
+                    steamIDsToRemove.Clear();
+                }
             }
         }
     }
