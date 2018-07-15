@@ -80,10 +80,10 @@ namespace AdminToolbox
         public void OnSpawn(PlayerSpawnEvent ev)
         {
             AdminToolbox.AddSpesificPlayer(ev.Player);
+            if (AdminToolbox.playerDeathPos.ContainsKey(ev.Player.SteamId))
+                AdminToolbox.playerDeathPos[ev.Player.SteamId] = ev.SpawnPos;
             if (AdminToolbox.playerdict[ev.Player.SteamId][0])
                     ev.Player.ChangeRole(Role.SPECTATOR);
-            if (AdminToolbox.playerDeathPos.ContainsKey(ev.Player.SteamId))
-                AdminToolbox.playerDeathPos[ev.Player.SteamId] = ev.Player.GetPosition();
         }
 
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
