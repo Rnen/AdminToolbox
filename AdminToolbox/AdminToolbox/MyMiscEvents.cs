@@ -95,7 +95,7 @@ namespace AdminToolbox
         {
             //if (ev.Successful
             if(ev.Query!= "REQUEST_DATA PLAYER_LIST SILENT")
-                AdminToolbox.WriteToLog(new string[] { ev.Admin.Name + " used the command:  \"" + ev.Query + "\"" }, LogHandlers.ServerLogType.RemoteAdminActivity);
+                AdminToolbox.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, LogHandlers.ServerLogType.RemoteAdminActivity);
         }
     }
 }
