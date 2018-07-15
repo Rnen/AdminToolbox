@@ -97,6 +97,14 @@ admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playern
 ~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with spesific time settings~~ **Temporarily removed**
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
+admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
+
+### Logfile settings (file will be created in the AppData/SCP Secret Lab/ATServerLogs folder
+Config Option | Value Type | Default Value | Description
+--- | :---: | :---: | ---
+admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfile
+admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfile
+admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
 
 ### Debug Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
 Config Option | Value Type | Default Value | Description
