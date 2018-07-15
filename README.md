@@ -110,8 +110,6 @@ admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 Examples:
 ```yaml
-admintoolbox_intercom_extended_whitelist_rolebadges: owner, admin, moderator
-
 #The example under will make scientists and Chaos unable to damage Dboys. The second example is how you add several roleID's for one role. (The example would make scientists (6) not able to damage any class, dboys (1) not able to attack other dboys (1))
 admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17,1:1
 
