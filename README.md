@@ -99,7 +99,7 @@ admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cann
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 
-### Logfile settings (file will be created in the AppData/SCP Secret Lab/ATServerLogs folder
+### Logfile settings (file will be created in the `AppData\Roaming\SCP Secret Laboratory\ATServerLogs` folder
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfile
