@@ -22,7 +22,7 @@ To install:
 2. Navigate to your SCP Secret Lab folder.
 3. Drag AdminToolbox.dll into the sm_plugins folder
 
-## ServerMod
+## ServerMod - (This is required for any plugin)
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
  * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
  * SMOD Discord: https://discord.gg/8nvmMTr
