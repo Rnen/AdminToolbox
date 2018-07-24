@@ -19,9 +19,8 @@ If you want to follow the development, take a look at the [AdminToolbox Trello B
 ## Plugin Installation:
 To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
-> If you're using **Smod 2.2.1**, use this instead: [For Smod-2.2.1](https://github.com/Rnen/AdminToolbox/releases/tag/1.0)
 2. Navigate to your SCP Secret Lab folder.
-2. Drag AdminToolbox.dll into the sm_plugins folder
+3. Drag AdminToolbox.dll into the sm_plugins folder
 
 ## ServerMod
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
