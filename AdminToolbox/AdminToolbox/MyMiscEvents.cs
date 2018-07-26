@@ -25,34 +25,33 @@ namespace AdminToolbox
             defaultIntercomDuration = ev.SpeechTime;
             defaultIntercomCooldown = ev.CooldownTime;
 
-            //string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist");
-            //if (whitelistRanks.Length > 0)
-            //{
-            //    foreach (var item in whitelistRanks)
-            //    {
-            //        string[] myKeyString = item.Split(':');
-            //        if (myKeyString[0] == ev.Player.GetRankName())
-            //        {
-            //            if (myKeyString.Length == 2)
-            //            {
-            //                string[] myString = myKeyString[1].Split('.', '-', '#', '_', ' ');
-            //                if (myString.Length >= 1)
-            //                {
-            //                    if (Int32.TryParse(myString[0], out int x))
-            //                        ev.SpeechTime = x;
-            //                    if (myString.Length == 2)
-            //                        if (Int32.TryParse(myString[1], out int z))
-            //                            ev.CooldownTime = z;
-            //                    if (myString.Length > 2)
-            //                        plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + myKeyString[1] + "\", skipping...");
-            //                }
-
-            //            }
-            //            else
-            //                plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
-            //        }
-            //    }
-            //}
+            string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
+            if (whitelistRanks.Length > 0)
+            {
+                foreach (var item in whitelistRanks)
+                {
+                    string[] myKeyString = item.Split(':');
+                    if (myKeyString[0] == ev.Player.GetRankName())
+                    {
+                        if (myKeyString.Length == 2)
+                        {
+                            string[] myString = myKeyString[1].Split('.', '-', '#', '_', ' ');
+                            if (myString.Length >= 1)
+                            {
+                                if (Int32.TryParse(myString[0], out int x))
+                                    ev.SpeechTime = x;
+                                if (myString.Length == 2)
+                                    if (Int32.TryParse(myString[1], out int z))
+                                        ev.CooldownTime = z;
+                                if (myString.Length > 2)
+                                    plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + ev.Player.GetRankName() + ":" + myKeyString[1] + "\", skipping...");
+                            }
+                        }
+                        else
+                            plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
+                    }
+                }
+            }
 
             //Blacklist
             string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
@@ -61,6 +60,7 @@ namespace AdminToolbox
                     if (item == ev.Player.SteamId)
                     {
                         ev.AllowSpeech = false;
+                        ev.CooldownTime = 5f;
                         break;
                     }
         }
@@ -70,9 +70,9 @@ namespace AdminToolbox
             AdminToolbox.AddSpesificPlayer(ev.Player);
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
             {
-                if (AdminToolbox.playerdict[ev.Player.SteamId][3])
+                if (AdminToolbox.playerdict[ev.Player.SteamId].destroyDoor)
                     ev.Destroy = true;
-                if (AdminToolbox.playerdict[ev.Player.SteamId][5])
+                if (AdminToolbox.playerdict[ev.Player.SteamId].lockDown)
                     ev.Allow = false;
             }
         }
@@ -80,10 +80,13 @@ namespace AdminToolbox
         public void OnSpawn(PlayerSpawnEvent ev)
         {
             AdminToolbox.AddSpesificPlayer(ev.Player);
-            if (AdminToolbox.playerDeathPos.ContainsKey(ev.Player.SteamId))
-                AdminToolbox.playerDeathPos[ev.Player.SteamId] = ev.SpawnPos;
-            if (AdminToolbox.playerdict[ev.Player.SteamId][0])
+            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+            {
+                if (AdminToolbox.playerdict[ev.Player.SteamId].isJailed) ev.Player.Teleport(AdminToolbox.warpVectors["jail"]);
+                AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.SpawnPos;
+                if (AdminToolbox.playerdict[ev.Player.SteamId].spectatorOnly)
                     ev.Player.ChangeRole(Role.SPECTATOR);
+            }
         }
 
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)

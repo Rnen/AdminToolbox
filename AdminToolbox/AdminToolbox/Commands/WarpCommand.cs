@@ -27,7 +27,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "WARP [LIST]\nWARP [ADD/+] [PlayerName] [YourWarpPointName]\nWARP [REMOVE/-] [YourWarpPointName]\nWARP [PlayerName] [WarpPointName]";
+			return "WARP [PlayerName] [WarpPointName]\nWARP LIST\nWARP [ADD/+] [PlayerName] [YourWarpPointName]\nWARP [REMOVE/-] [YourWarpPointName]";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -44,15 +44,7 @@ namespace AdminToolbox.Command
                     var list = AdminToolbox.warpVectors.Keys.ToList();
                     list.Sort();
                     foreach (var i in list)
-                    {
                         str += "\n - " + i;
-                    }
-                    //str += "\n Room Teleports:";
-                    //foreach (var i in RoomManager.)
-                    //{
-                    //    str += "\n - " + i.label;
-                    //}
-                    //plugin.Info(str);
                     return new string[] { str };
                 }
                 else if (args[0].ToLower() == "remove" || args[0].ToLower() == "-")
@@ -61,11 +53,9 @@ namespace AdminToolbox.Command
                     {
                         AdminToolbox.warpVectors.Remove(args[1].ToLower());
                         return new string[] { "Warp point: " + args[1].ToLower() + " removed." };
-                        //plugin.Info("Warp point: " + args[2].ToLower() + " removed.");
                     }
                     else
                         return new string[] { "Warp point " + args[1].ToLower() + " does not exist!" };
-                    //plugin.Info("Warp point " + args[2].ToLower() + " does not exist!");
                 }
                 else if (args[0].ToLower() == "add" || args[0].ToLower() == "+")
                 {
@@ -77,12 +67,10 @@ namespace AdminToolbox.Command
                             if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[1] }; ; }
                             Vector myvector = myPlayer.GetPosition();
                             AdminToolbox.warpVectors.Add(args[2].ToLower(), myvector);
-                            //plugin.Info("Warp point: " + args[2].ToLower() + " added.");
                             return new string[] { "Warp point: " + args[2].ToLower() + " added." };
                         }
                         else
                             return new string[] { "A warp point named: " + args[2].ToLower() + " already exists!" };
-                        //plugin.Info("A warp point named: " + args[2].ToLower() + " already exists!");
                     }
                     else
                         return new string[] { GetUsage() };
@@ -104,7 +92,6 @@ namespace AdminToolbox.Command
             }
             else
                 return new string[] { GetUsage() };
-            //plugin.Info(GetUsage());
         }
 	}
 }

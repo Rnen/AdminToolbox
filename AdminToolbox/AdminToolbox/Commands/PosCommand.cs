@@ -27,7 +27,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "pos (player) [add/set/get/help] [x=][y=][z=]\nVisit the \"github.com/Rnen/AdminToolbox\" for more info";
+			return "pos (player) [add/set/get] [x=][y=][z=]\nVisit the \"github.com/Rnen/AdminToolbox\" for more info";
 		}
 
 
@@ -52,47 +52,28 @@ namespace AdminToolbox.Command
                                 {"z",0 }
                             };
                             int xInput = 0, yInput = 0, zInput = 0;
-                            char[] delimiterChars = { '.', ',', '=', '_', ':', ';', ' ' };
+                            char[] delimiterChars = { '.', ',', '=', '_', ':', ';', ' ', '-' };
                             string[] charsAllowed = { "x", "y", "z" };
                             for (int i = 2; i < args.Length; i++)
                             {
                                 string[] cordinates = args[i].ToLower().Split(delimiterChars);
                                 if (cordinates.Length < 2) { return new string[] { GetUsage() }; }
                                 if (!charsAllowed.Any(cordinates[0].Contains))
-                                {
-                                    //plugin.Info(cordinates[0] + " is not a valid axis, use X, Y or Z");
                                     return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
-                                }
                                 if (Int32.TryParse(cordinates[1], out int xyz))
-                                {
                                     if (!myPos.ContainsKey(cordinates[0]))
-                                    {
-                                        //myPos.Remove(cordinates[0]);
-                                        //plugin.Info("Added " + cordinates[0] + " value: " + xyz + " to cord dict");
                                         myPos.Add(cordinates[0], xyz);
-                                    }
                                     else
-                                    {
-                                        //plugin.Info("Set " + cordinates[0] + " value: " + xyz);
                                         myPos[cordinates[0]] = xyz;
-                                    }
-                                }
                                 else
-                                {
-                                    //plugin.Info(cordinates[1] + " is not a valid number");
                                     return new string[] { cordinates[1] + " is not a valid number" };
-                                }
-
                             }
                             xInput = myPos["x"];
                             yInput = myPos["y"];
                             zInput = myPos["z"];
-                            //plugin.Info("MyPos: \n xInput: " + xInput + "\n yInput: " + yInput + "\n zInput: " + zInput);
                             Vector myvector = new Vector(myPlayer.GetPosition().x + xInput, myPlayer.GetPosition().y + yInput, myPlayer.GetPosition().z + zInput);
-
                             myPlayer.Teleport(myvector);
                             return new string[] { "Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z };
-                            //plugin.Info("Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z);
                         }
                         else if (args[1].ToLower() == "set")
                         {
@@ -111,26 +92,21 @@ namespace AdminToolbox.Command
                                 if (cordinates.Length < 2) { return new string[] { GetUsage() }; }
                                 if (!charsAllowed.Any(cordinates[0].Contains))
                                 {
-                                    //plugin.Info(cordinates[0] + " is not a valid axis, use X, Y or Z");
                                     return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
                                 }
                                 if (Int32.TryParse(cordinates[1], out int xyz))
                                 {
                                     if (!myPos.ContainsKey(cordinates[0].ToLower()))
                                     {
-                                        //myPos.Remove(cordinates[0]);
-                                        //plugin.Info("Added " + cordinates[0] + " value: " + xyz + " to cord dict");
                                         myPos.Add(cordinates[0].ToLower(), xyz);
                                     }
                                     else
                                     {
-                                        //plugin.Info("Set " + cordinates[0] + " value: " + xyz);
                                         myPos[cordinates[0]] = xyz;
                                     }
                                 }
                                 else
                                 {
-                                    //plugin.Info(cordinates[1] + " is not a valid number");
                                     return new string[] { cordinates[1] + " is not a valid number" };
                                 }
 
@@ -138,35 +114,24 @@ namespace AdminToolbox.Command
                             xInput = myPos["x"];
                             yInput = myPos["y"];
                             zInput = myPos["z"];
-                            //plugin.Info("MyPos: \n xInput: " + xInput + "\n yInput: " + yInput + "\n zInput: " + zInput);
                             Vector myvector = new Vector(xInput, yInput, zInput);
 
                             myPlayer.Teleport(myvector);
-                            //plugin.Info("Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z);
                             return new string[] { "Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z };
                         }
                         else
                             return new string[] { GetUsage() };
-                        //plugin.Info("Not valid type, use [add/set/get]");
                     }
                     else if (args[1].ToLower() == "get")
                     {
-                        //plugin.Info(myPlayer.Name + " Pos[x:" + myPlayer.GetPosition().x + " y:" + myPlayer.GetPosition().y + " z:" + myPlayer.GetPosition().z);
                         return new string[] { myPlayer.Name + " Pos x:" + myPlayer.GetPosition().x + " y:" + myPlayer.GetPosition().y + " z:" + myPlayer.GetPosition().z };
                     }
                     else
                         return new string[] { GetUsage() };
-                    //plugin.Info(GetUsage());
                 }
                 else
                     return new string[] { GetUsage() };
-                //plugin.Info(GetUsage());
             }
-            //else if (args[0].ToLower() == "help")
-            //{
-            //    //plugin.Info("\n General info: You dont need to use all X Y Z, you can use only one if you wish\n This command might trigger the anti-cheat if you have it enabled \n Teleporing less than 7 units might not work \n \n Position command examples: \n  pos (player) set x:80 y:-1000 z:95  -Sets the player pos to x y z \n pos (player) add y:10   -Adds to the player's chosen axis pos \n pos (player) get  -Gets the player's current pos \n Write ROOMPOS to see room positions");
-            //    return new string[] { "\nGeneral info: You dont need to use all X Y Z, you can use only one if you wish\n This command might trigger the anti-cheat if you have it enabled \n Teleporing less than 7 units might not work \n \n Position command examples: \n  pos (player) set x:80 y:-1000 z:95  -Sets the player pos to x y z \n pos (player) add y:10   -Adds to the player's chosen axis pos \n pos (player) get  -Gets the player's current pos \n Write ROOMPOS to see room positions" };
-            //}
             else
                 return new string[] { GetUsage() };
         }

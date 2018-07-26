@@ -39,23 +39,20 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                AdminToolbox.playerdict[pl.SteamId][4] = j;
+                                AdminToolbox.playerdict[pl.SteamId].keepSettings = j;
                                 playerNum++;
                             }
                             outPut += "\nSet " + playerNum + " player's KeepSettings to " + j;
-                            //plugin.Info("Set " + playerNum + " player's Godmode to " + j);
                             return new string[] { outPut };
                         }
                         else
                         {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
                         }
                     }
                     else
                     {
-                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][3] = !AdminToolbox.playerdict[pl.SteamId][3]; }
-                        //plugin.Info("Toggled all players godmodes");
+                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].keepSettings = !AdminToolbox.playerdict[pl.SteamId].keepSettings; }
                         return new string[] { "Toggled all players KeepSettings" };
                     }
                 }
@@ -65,10 +62,9 @@ namespace AdminToolbox.Command
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
-                        if (AdminToolbox.playerdict[pl.SteamId][4])
+                        if (AdminToolbox.playerdict[pl.SteamId].keepSettings)
                         {
                             myPlayerList.Add(pl.Name);
-                            //str += " - " +pl.Name + "\n";
                         }
                     }
                     if (myPlayerList.Count > 0)
@@ -86,14 +82,14 @@ namespace AdminToolbox.Command
                 if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId][4] = true; }
-                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId][4] = false; }
-                    return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId][4] };
+                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = true; }
+                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = false; }
+                    return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId].keepSettings };
                 }
                 else
                 {
-                    AdminToolbox.playerdict[myPlayer.SteamId][4] = !AdminToolbox.playerdict[myPlayer.SteamId][4];
-                    return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId][4] };
+                    AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = !AdminToolbox.playerdict[myPlayer.SteamId].keepSettings;
+                    return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId].keepSettings };
                 }
 
             }

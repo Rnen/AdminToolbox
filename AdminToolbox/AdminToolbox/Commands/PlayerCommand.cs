@@ -20,7 +20,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "PLAYER [PLAYERNAME]";
+			return "(P / PLAYER) [PLAYERNAME]";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -38,22 +38,22 @@ namespace AdminToolbox.Command
                     "\n - Role: " + myPlayer.TeamRole.Role +
                     "\n - Server Rank: " + myPlayer.GetRankName() +
                     "\n - AdminToolbox Toggables: " +
-                    "\n     - SpectatorOnly: " + AdminToolbox.playerdict[myPlayer.SteamId][0] +
-                    "\n     - Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId][1] +
-                    "\n     - NoDmg: " + AdminToolbox.playerdict[myPlayer.SteamId][2] +
-                    "\n     - BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId][3] +
-                    "\n     - KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId][4] +
-                    "\n     - PlayerLockDown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] +
-                    "\n     - InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId][6] +
+                    "\n     - SpectatorOnly: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly +
+                    "\n     - Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode +
+                    "\n     - NoDmg: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode +
+                    "\n     - BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor +
+                    "\n     - KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId].keepSettings +
+                    "\n     - PlayerLockDown: " + AdminToolbox.playerdict[myPlayer.SteamId].lockDown +
+                    "\n     - InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId].instantKill +
                     "\n - Stats:" +
-                    "\n     - Kills: " + AdminToolbox.playerStats[myPlayer.SteamId][0] +
-                    "\n     - TeamKills: " + AdminToolbox.playerStats[myPlayer.SteamId][1] +
-                    "\n     - Deaths: " + AdminToolbox.playerStats[myPlayer.SteamId][2] +
-                    "\n     - Rounds Played: " + AdminToolbox.playerStats[myPlayer.SteamId][3] +
+                    "\n     - Kills: " + AdminToolbox.playerdict[myPlayer.SteamId].Kills +
+                    "\n     - TeamKills: " + AdminToolbox.playerdict[myPlayer.SteamId].TeamKills +
+                    "\n     - Deaths: " + AdminToolbox.playerdict[myPlayer.SteamId].Deaths +
+                    "\n     - Rounds Played: " + AdminToolbox.playerdict[myPlayer.SteamId].RoundsPlayed +
                     "\n - Position:" +
                         " - X:" + (int)myPlayer.GetPosition().x +
-                        " - Y:" + (int)myPlayer.GetPosition().y +
-                        " - Z:" + (int)myPlayer.GetPosition().z;
+                        "   Y:" + (int)myPlayer.GetPosition().y +
+                        "   Z:" + (int)myPlayer.GetPosition().z;
                 //plugin.Info(x);
                 return new string[] { x };
             }

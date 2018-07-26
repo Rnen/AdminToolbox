@@ -9,6 +9,7 @@ using System.IO;
 using System.Collections.Generic;
 using Unity;
 using UnityEngine;
+using System.Timers;
 using System.Linq;
 
 namespace AdminToolbox
@@ -18,7 +19,7 @@ namespace AdminToolbox
         name = "Admin Toolbox",
         description = "Plugin for advanced admin tools",
         id = "rnen.admin.toolbox",
-        version = "1.3.2",
+        version = "1.3.3",
         SmodMajor = 3,
         SmodMinor = 3,
         SmodRevision = 8
@@ -26,14 +27,33 @@ namespace AdminToolbox
     class AdminToolbox : Plugin
     {
         public static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false;
-
-        public static Dictionary<string, List<bool>> playerdict = new Dictionary<string, List<bool>>();
-        public static Dictionary<string, List<int>> playerStats = new Dictionary<string, List<int>>();
-        public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(), playerDeathPos = new Dictionary<string, Vector>();
+        public static Dictionary<string, AdminToolboxPlayerSettings> playerdict = new Dictionary<string, AdminToolboxPlayerSettings>();
+        internal static Dictionary<string, Timer> jailTimer = new Dictionary<string, Timer>();
+        public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(), 
+            presetWarps = new Dictionary<string, Vector>()
+            {
+                { "mtf",new Vector(181,994,-61) },
+                { "grass",new Vector(237,999,17) },
+                { "ci",new Vector(10,989,-60) },
+                { "jail",new Vector(53,1020,-44) },
+                { "flat",new Vector(250,980,110) },
+                { "heli",new Vector(293,977,-62) },
+                { "car",new Vector(-96,987,-59) },
+                { "escape", new Vector(179,996,27) }
+            };
 
         public static int roundCount = 0;
         public static LogHandlers AdminToolboxLogger = new LogHandlers();
         public static string _roundStartTime;
+
+        public class AdminToolboxPlayerSettings
+        {
+            public bool spectatorOnly = false, godMode = false, dmgOff = false, destroyDoor = false, keepSettings = false, lockDown = false, instantKill = false, isJailed = false, isInJail = false;
+            public int Kills = 0, TeamKills = 0, Deaths = 0, RoundsPlayed = 0;
+            public Vector DeathPos = new Vector(0,0,0), originalPos = new Vector(0,0,0);
+            public Role previousRole;
+            public List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
+        }
 
         public override void OnDisable()
         {
@@ -42,34 +62,34 @@ namespace AdminToolbox
             else
                 this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
-        public static void SetPlayerBools(Player player, bool spectatorOnly, bool godMode, bool dmgOff, bool destroyDoor, bool lockDown, bool instantKill)
+        public static void SetPlayerBools(string steamID, bool spectatorOnly = false, bool godMode = false, bool dmgOff = false, bool destroyDoor = false, bool keepSettings = false, bool lockDown = false, bool instantKill = false, bool isJailed = false)
         {
-            //This is actually never used, its just for keeping track, might become an all on/off switch at some point
-            playerdict[player.SteamId][0] = spectatorOnly;
-            playerdict[player.SteamId][1] = godMode;
-            playerdict[player.SteamId][2] = dmgOff;
-            playerdict[player.SteamId][3] = destroyDoor;
-            //playerdict[player.SteamId[4] = keepSettings;
-            playerdict[player.SteamId][5] = lockDown;
-            playerdict[player.SteamId][6] = instantKill;
+            if (!playerdict.ContainsKey(steamID)) return;
+            playerdict[steamID].spectatorOnly = spectatorOnly;
+            playerdict[steamID].godMode = godMode;
+            playerdict[steamID].dmgOff = dmgOff;
+            playerdict[steamID].destroyDoor = destroyDoor;
+            playerdict[steamID].lockDown = lockDown;
+            playerdict[steamID].instantKill = instantKill;
         }
-        public static void SetPlayerStats(Player player, int Kills, int TeamKills, int Deaths, int RoundsPlayed)
+        public static void SetPlayerStats(string steamID, int Kills = 0, int TeamKills = 0, int Deaths = 0, int RoundsPlayed = 0)
         {
-            playerStats[player.SteamId][0] = Kills;
-            playerStats[player.SteamId][1] = TeamKills;
-            playerStats[player.SteamId][2] = Deaths;
-            playerStats[player.SteamId][3] = RoundsPlayed;
+            playerdict[steamID].Kills = Kills;
+            playerdict[steamID].TeamKills = TeamKills;
+            playerdict[steamID].Deaths = Deaths;
+            playerdict[steamID].RoundsPlayed = RoundsPlayed;
         }
 
         public override void OnEnable()
         {
             WriteVersionToFile(this.Details.version);
-            CheckCurrVersion(this, this.Details.version);
+            //CheckCurrVersion(this, this.Details.version);
             if(isColored)
                 this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
             else
                 this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
             _roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+            warpVectors = presetWarps;
         }
 
         public override void Register()
@@ -112,6 +132,7 @@ namespace AdminToolbox
             this.AddCommand("tpx", new Command.TeleportCommand(this));
 
             this.AddCommand("warp", new Command.WarpCommmand(this));
+            this.AddCommand("warps", new Command.WarpsCommmand(this));
 
             this.AddCommand("roundlock", new Command.RoundLockCommand(this));
             this.AddCommand("lockround", new Command.RoundLockCommand(this));
@@ -171,21 +192,19 @@ namespace AdminToolbox
         {
             if (PluginManager.Manager.Server.GetPlayers().Count > 0)
                 foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-                {
                     AddSpesificPlayer(pl);
-                }
         }
         public static void AddSpesificPlayer(Player playerToAdd)
         {
-            if (playerToAdd.SteamId != null || playerToAdd.SteamId != "")
+            if (playerToAdd.SteamId != null && playerToAdd.SteamId != "")
             {
                 if (!playerdict.ContainsKey(playerToAdd.SteamId))
-                    playerdict.Add(playerToAdd.SteamId, new List<bool>(new bool[] { false, false, false, false, false, false, false }));
-                if (!playerStats.ContainsKey(playerToAdd.SteamId))
-                    playerStats.Add(playerToAdd.SteamId, new List<int>(new int[] { 0, 0, 0, 0 }));
-                if (!playerDeathPos.ContainsKey(playerToAdd.SteamId))
-                    playerDeathPos.Add(playerToAdd.SteamId, new Vector(0, 0, 0));
+                    playerdict.Add(playerToAdd.SteamId, new AdminToolboxPlayerSettings());
             }
+        }
+        public static string WriteParseableLogKills(Player attacker, Player victim, DamageType dmgType)
+        {
+            return " ";
         }
         public static void WriteToLog(string[] str, LogHandlers.ServerLogType logType)
         {
@@ -206,7 +225,7 @@ namespace AdminToolbox
                 case LogHandlers.ServerLogType.RemoteAdminActivity:
                     if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_commands", false, false))
                         AdminToolboxLogger.AddLog(str2, logType);
-                        break;
+                    break;
                 default:
                     break;
             }
@@ -221,22 +240,32 @@ namespace AdminToolbox
                 streamWriter.Close();
             }
         }
-        public static void CheckCurrVersion(AdminToolbox plugin,string currVersion)
+        public static void CheckCurrVersion(AdminToolbox plugin,string version)
         {
-            //try
-            //{
-            //    string host = "https://raw.githubusercontent.com/Rnen/AdminToolbox/master/version.md";
-            //    Int16 version = Int16.Parse(currVersion.Replace(".", string.Empty));
-            //    Int16 fileContentV = Int16.Parse(new System.Net.WebClient().DownloadString(host).Replace(".",string.Empty).Replace("at_version=",string.Empty));
-            //    if (fileContentV > version)
-            //    {
-            //        plugin.Info("Your version is out of date, please run the \"AT_AutoUpdate.bat\" or visit the AdminToolbox GitHub");
-            //    }
-            //}
-            //catch (System.Exception e)
-            //{
-            //    plugin.Error("Could not fetch latest version: " + e.Message);
-            //}
+            try
+            {
+                string host = "http://raw.githubusercontent.com/Rnen/AdminToolbox/master/version.md";
+                if (!Int16.TryParse(version.Replace(".", string.Empty), out Int16 currentVersion))
+                    plugin.Info("Coult not get Int16 from currentVersion");
+
+                if (Int16.TryParse(new System.Net.WebClient().DownloadString(host).Replace(".", string.Empty).Replace("at_version=", string.Empty), out Int16 onlineVersion))
+                {
+                    
+                    if (onlineVersion > currentVersion)
+                    {
+                        
+                        plugin.Info("Your version is out of date, please run the \"AT_AutoUpdate.bat\" or visit the AdminToolbox GitHub");
+                    }
+                }
+                else
+                    plugin.Info("Could not get Int16 from onlineVersion");
+
+            }
+            catch (System.Exception e)
+            {
+                
+                plugin.Error("Could not fetch latest version: " + e.Message);
+            }
         }
     }
 
@@ -354,6 +383,7 @@ namespace AdminToolbox
             RemoteAdminActivity,
             KillLog,
             TeamKill,
+            Suicice,
             GameEvent,
             Misc
         }
@@ -362,6 +392,7 @@ namespace AdminToolbox
         "Remote Admin",
         "Kill",
         "TeamKill",
+        "Suicide",
         "Game Event",
         "Misc"
         };
@@ -376,7 +407,6 @@ namespace AdminToolbox
         }
         void Start()
         {
-            //AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
             _port = PluginManager.Manager.Server.Port;
         }
 
@@ -390,6 +420,7 @@ namespace AdminToolbox
                 Type = Txt[(int)type],
                 Time = time
             });
+            string mystring = System.Reflection.Assembly.GetAssembly(this.GetType()).Location;
             if (Directory.Exists(FileManager.AppFolder))
             {
                 if (!Directory.Exists(FileManager.AppFolder + "ATServerLogs"))
@@ -413,6 +444,15 @@ namespace AdminToolbox
                 }
                 streamWriter.Write(text);
                 streamWriter.Close();
+                string[] lines = File.ReadAllLines(FileManager.AppFolder + "ATServerLogs" + "/" + _port + "/" + AdminToolbox._roundStartTime + " Round " + AdminToolbox.roundCount + ".txt");
+                foreach(var item in lines)
+                {
+                    string[] myStrings = item.Split('|');
+                    DateTime logfileDate = DateTime.Parse(myStrings[0]);
+                    DateTime.Now.Subtract(logfileDate);
+                    
+                }
+
             }
         }
         private static string ToMax(string text, int max)

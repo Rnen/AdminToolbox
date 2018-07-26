@@ -23,15 +23,6 @@ namespace AdminToolbox
             {
                 plugin.Info(ev.Player.Name + " just joined the server!");
             }
-            //AdminToolbox.godMode[player.SteamId][0] = false;
         }
     }
-    //class PlayerLeaveHandler : IEventHandlerPlayerLeave
-    //{
-    //    public void OnPlayerLeave(Player player)
-    //    {
-    //        if(!AdminToolbox.playerdict[player.SteamId][0])
-    //            AdminToolbox.playerdict.Remove(player.SteamId);
-    //    }
-    //}
 }

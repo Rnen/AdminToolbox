@@ -39,7 +39,6 @@ namespace AdminToolbox.Command
                         pl.Teleport(myTpPlayer.GetPosition());
                         playerNum++;
                     }
-                    //plugin.Info("Teleported " + playerNum + " players to " + myTpPlayer.Name);
                     return new string[] { "Teleported " + playerNum + " players to " + myTpPlayer.Name };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
@@ -49,18 +48,15 @@ namespace AdminToolbox.Command
                 if (args[1] != null)
                 {
                     myPlayer.Teleport(myPlayer2.GetPosition());
-                    //plugin.Info("Teleported: " + myPlayer.Name + " to " + myPlayer2.Name /*+ " at " + System.DateTime.Now.ToString()*/);
                     return new string[] { "Teleported: " + myPlayer.Name + " to " + myPlayer2.Name };
                 }
                 else
                     return new string[] { GetUsage() };
-                    //plugin.Info(GetUsage());
 
             }
             else
             {
                 return new string[] { GetUsage() };
-                //plugin.Info(GetUsage());
             }
         }
     }

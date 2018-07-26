@@ -40,7 +40,7 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                AdminToolbox.playerdict[pl.SteamId][5] = j;
+                                AdminToolbox.playerdict[pl.SteamId].lockDown = j;
                                 playerNum++;
                             }
                             outPut += "\nSet " + playerNum + " player's Lockdown to " + j;
@@ -55,7 +55,7 @@ namespace AdminToolbox.Command
                     }
                     else
                     {
-                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][5] = !AdminToolbox.playerdict[pl.SteamId][5]; }
+                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].lockDown = !AdminToolbox.playerdict[pl.SteamId].lockDown; }
                         //plugin.Info("Toggled all players godmodes");
                         return new string[] { "Toggled all players Lockdown" };
                     }
@@ -66,7 +66,7 @@ namespace AdminToolbox.Command
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
-                        if (AdminToolbox.playerdict[pl.SteamId][5])
+                        if (AdminToolbox.playerdict[pl.SteamId].lockDown)
                         {
                             myPlayerList.Add(pl.Name);
                             //str += " - " +pl.Name + "\n";
@@ -87,16 +87,16 @@ namespace AdminToolbox.Command
                 if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    if (bool.TryParse(args[1], out bool g)) AdminToolbox.playerdict[myPlayer.SteamId][5] = g;
-                    else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId][5] = true; }
-                    else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId][5] = false; }
+                    if (bool.TryParse(args[1], out bool g)) AdminToolbox.playerdict[myPlayer.SteamId].lockDown = g;
+                    else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId].lockDown = true; }
+                    else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId].lockDown = false; }
                     else return new string[] { GetUsage() };
-                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] };
+                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId].lockDown };
                 }
                 else
                 {
-                    AdminToolbox.playerdict[myPlayer.SteamId][5] = !AdminToolbox.playerdict[myPlayer.SteamId][5];
-                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId][5] };
+                    AdminToolbox.playerdict[myPlayer.SteamId].lockDown = !AdminToolbox.playerdict[myPlayer.SteamId].lockDown;
+                    return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.playerdict[myPlayer.SteamId].lockDown };
                 }
 
             }

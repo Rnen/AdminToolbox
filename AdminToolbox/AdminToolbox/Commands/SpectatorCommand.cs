@@ -41,7 +41,7 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                AdminToolbox.playerdict[pl.SteamId][0] = j;
+                                AdminToolbox.playerdict[pl.SteamId].spectatorOnly = j;
                                 playerNum++;
                             }
                             if (playerNum > 1)
@@ -60,7 +60,7 @@ namespace AdminToolbox.Command
                     else
                     {
                         int playerNum = 0;
-                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][0] = !AdminToolbox.playerdict[pl.SteamId][0]; playerNum++; }
+                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].spectatorOnly = !AdminToolbox.playerdict[pl.SteamId].spectatorOnly; playerNum++; }
                         //plugin.Info("Toggled all player's \"No Dmg\"");
                         return new string[] { "Toggled " + playerNum + " player's \"AlwaysSpectator\"" };
                     }
@@ -71,7 +71,7 @@ namespace AdminToolbox.Command
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
-                        if (AdminToolbox.playerdict[pl.SteamId][0])
+                        if (AdminToolbox.playerdict[pl.SteamId].spectatorOnly)
                         {
                             myPlayerList.Add(pl.Name);
                             //str += " - " +pl.Name + "\n";
@@ -93,16 +93,16 @@ namespace AdminToolbox.Command
                 if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId][0] = true; }
-                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId][0] = false; }
-                    //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0]);
-                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
+                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = true; }
+                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = false; }
+                    //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly);
+                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly };
                 }
                 else
                 {
-                    AdminToolbox.playerdict[myPlayer.SteamId][0] = !AdminToolbox.playerdict[myPlayer.SteamId][0];
-                    //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId][0]);
-                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId][0] };
+                    AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = !AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly;
+                    //plugin.Info(myPlayer.Name + " Keep settings: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly);
+                    return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly };
                 }
 
             }

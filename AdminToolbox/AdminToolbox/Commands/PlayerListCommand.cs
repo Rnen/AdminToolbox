@@ -1,6 +1,7 @@
 ﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
+using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
@@ -27,12 +28,18 @@ namespace AdminToolbox.Command
         {
             Server server = PluginManager.Manager.Server;
             if (server.NumPlayers - 1 < 1) { return new string[] { "No players" }; }
-            string input = server.NumPlayers - 1 + " - Players in server: \n";
+            string str = server.NumPlayers - 1 + " - Players in server: \n";
+            List<string> myPlayerList = new List<string>();
             foreach (Player pl in server.GetPlayers())
             {
-                input += pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n";
+                myPlayerList.Add(pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n");
             }
-            return new string[] { input };
+            myPlayerList.Sort();
+            foreach (var item in myPlayerList)
+            {
+                str += "\n - " + item;
+            }
+            return new string[] { str };
         }
     }
 }
