@@ -92,9 +92,11 @@ admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in 
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
 admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
+admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
 ~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with spesific time settings~~ **Temporarily removed**
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
+admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 
