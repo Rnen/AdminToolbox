@@ -60,7 +60,7 @@ namespace AdminToolbox
                 foreach (string item in blackListedSTEAMIDS)
                     if (item == ev.Player.SteamId)
                     {
-                        ev.AllowSpeech = false;
+                        ev.SpeechTime = 0;
                         break;
                     }
         }
