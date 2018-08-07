@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
 	class HealCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public HealCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Heals player. Use int for spesific amount (optional)";
@@ -55,12 +48,11 @@ namespace AdminToolbox.Command
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
-                        plugin.Info("Set all players to their default max HP");
                         return new string[] { "Set all players to their default max HP" };
                     }
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) { /*plugin.Info("Couldn't find player: " + args[0]);*/ return new string[] { "Couldn't find player: " + args[0] }; }
+                if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
                 if (args.Length > 1)
                 {
                     if (Int32.TryParse(args[1], out int j))

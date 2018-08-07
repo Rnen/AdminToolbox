@@ -12,7 +12,6 @@ namespace AdminToolbox.Command
         {
             this.plugin = plugin;
         }
-
         public string GetCommandDescription()
         {
             return "Enables/Disables the intercom for non-whitelisted players";
@@ -32,6 +31,7 @@ namespace AdminToolbox.Command
                 {
                     AdminToolbox.isColored = x;
                     if(!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLockChanged = true;
+                    plugin.Info("IntercomLock set to: " + AdminToolbox.intercomLock);
                     return new string[] { "IntercomLock set to: " + AdminToolbox.intercomLock };
                 }
                 else
@@ -41,6 +41,7 @@ namespace AdminToolbox.Command
             {
                 AdminToolbox.intercomLock = !AdminToolbox.intercomLock;
                 if (!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLockChanged = true;
+                plugin.Info("IntercomLock set to: " + AdminToolbox.intercomLock);
                 return new string[] { "IntercomLock set to: " + AdminToolbox.intercomLock };
             }
             else

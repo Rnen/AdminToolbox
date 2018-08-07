@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
 	class PlayerCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public PlayerCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Gets toolbox info about spesific player";

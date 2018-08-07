@@ -6,13 +6,6 @@ namespace AdminToolbox.Command
 {
 	class ServerCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public ServerCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Gets toolbox info about the server";

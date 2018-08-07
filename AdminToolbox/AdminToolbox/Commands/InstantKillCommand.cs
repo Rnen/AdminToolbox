@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class InstantKillCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public InstantKillCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Lets specified players instantly kill targets";
@@ -48,7 +41,6 @@ namespace AdminToolbox.Command
                         }
                         else
                         {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
                         }
                     }

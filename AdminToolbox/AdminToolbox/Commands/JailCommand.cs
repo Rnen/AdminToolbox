@@ -10,13 +10,6 @@ namespace AdminToolbox.Command
 {
     class JailCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public JailCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Jails player for a (optional) specified time";

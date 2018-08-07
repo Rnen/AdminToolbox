@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class LockdownCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public LockdownCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Locks all the doors for specified players";
@@ -44,19 +37,14 @@ namespace AdminToolbox.Command
                                 playerNum++;
                             }
                             outPut += "\nSet " + playerNum + " player's Lockdown to " + j;
-                            //plugin.Info("Set " + playerNum + " player's Godmode to " + j);
                             return new string[] { outPut };
                         }
                         else
-                        {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
-                        }
                     }
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].lockDown = !AdminToolbox.playerdict[pl.SteamId].lockDown; }
-                        //plugin.Info("Toggled all players godmodes");
                         return new string[] { "Toggled all players Lockdown" };
                     }
                 }

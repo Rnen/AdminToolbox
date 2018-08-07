@@ -6,13 +6,6 @@ namespace AdminToolbox.Command
 {
     class TeleportCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public TeleportCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Teleports player to player2";
@@ -52,12 +45,9 @@ namespace AdminToolbox.Command
                 }
                 else
                     return new string[] { GetUsage() };
-
             }
             else
-            {
                 return new string[] { GetUsage() };
-            }
         }
     }
 }

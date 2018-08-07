@@ -13,13 +13,6 @@ namespace AdminToolbox.Command
 {
 	class PosCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public PosCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Alters the player position";

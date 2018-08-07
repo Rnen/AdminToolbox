@@ -38,7 +38,7 @@ namespace AdminToolbox
                 if (lastChecked <= DateTime.Now)
                 {
                     lastChecked = DateTime.Now.AddSeconds(5);
-                    plugin.Info("Checked Jailed Players");
+                    //plugin.Info("Checked Jailed Players");
                     return true;
                 }
                 else

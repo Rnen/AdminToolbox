@@ -7,12 +7,6 @@ namespace AdminToolbox.Command
 {
 	class BreakDoorsCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;        
-		public BreakDoorsCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Toggles that players break doors when interacting with them";
@@ -46,15 +40,11 @@ namespace AdminToolbox.Command
                             return new string[] { "\nSet " + playerNum + " player's BreakDoors to " + j };
                         }
                         else
-                        {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
-                        }
                     }
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].destroyDoor = !AdminToolbox.playerdict[pl.SteamId].destroyDoor; }
-                        //plugin.Info("Toggled all players godmodes");
                         return new string[] { "Toggled all players BreakDoors" };
                     }
                 }
@@ -65,18 +55,13 @@ namespace AdminToolbox.Command
                     foreach (Player pl in server.GetPlayers())
                     {
                         if (AdminToolbox.playerdict[pl.SteamId].destroyDoor)
-                        {
                             myPlayerList.Add(pl.Name);
-                            //str += " - " +pl.Name + "\n";
-                        }
                     }
                     if (myPlayerList.Count > 0)
                     {
                         myPlayerList.Sort();
                         foreach (var item in myPlayerList)
-                        {
                             str += "\n - " + item;
-                        }
                     }
                     else str = "\nNo players with \"BreakDoors\" enabled!";
                     return new string[] { str };

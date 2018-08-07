@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class PlayerListCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public PlayerListCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Lists current players to server console";

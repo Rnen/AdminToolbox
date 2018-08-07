@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
 	class NoDmgCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public NoDmgCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Switch on/off damageOutput for player";
@@ -42,19 +35,14 @@ namespace AdminToolbox.Command
                                 AdminToolbox.playerdict[pl.SteamId].dmgOff = j;
                                 playerNum++;
                             }
-                            //plugin.Info("Set " + playerNum + " player's \"No Dmg\" to " + j);
                             return new string[] { "Set " + playerNum + " player's \"No Dmg\" to " + j };
                         }
                         else
-                        {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
-                        }
                     }
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].dmgOff = !AdminToolbox.playerdict[pl.SteamId].dmgOff; }
-                        //plugin.Info("Toggled all player's \"No Dmg\"");
                         return new string[] { "Toggled all player's \"No Dmg\"" };
                     }
                 }
@@ -65,10 +53,7 @@ namespace AdminToolbox.Command
                     foreach (Player pl in server.GetPlayers())
                     {
                         if (AdminToolbox.playerdict[pl.SteamId].dmgOff)
-                        {
                             myPlayerList.Add(pl.Name);
-                            //str += " - " +pl.Name + "\n";
-                        }
                     }
                     if (myPlayerList.Count > 0)
                     {
@@ -79,7 +64,6 @@ namespace AdminToolbox.Command
                         }
                     }
                     else str = "\nNo players with \"No Dmg\" enabled!";
-                    //plugin.Info(str);
                     return new string[] { str };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
@@ -90,12 +74,10 @@ namespace AdminToolbox.Command
                     if (args.Length > 2) { if (args[2].ToLower() == "godmode") { changedValue = true; } }
                     if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = true; }
                     else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = false; }
-                    //plugin.Info(myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff);
                     if (changedValue)
                     {
                         AdminToolbox.playerdict[myPlayer.SteamId].godMode = AdminToolbox.playerdict[myPlayer.SteamId].dmgOff;
                         return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff, myPlayer.Name + " Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
-                        //plugin.Info(myPlayer.Name + " Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId][1]);
                     }
                     return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
                 }
@@ -103,13 +85,10 @@ namespace AdminToolbox.Command
                 {
                     AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = !AdminToolbox.playerdict[myPlayer.SteamId].dmgOff;
                     return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
-                    //plugin.Info(myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff);
                 }
             }
             else
-            {
                 return new string[] { GetUsage() };
-            }
         }
 	}
 }

@@ -7,12 +7,6 @@ namespace AdminToolbox.Command
 {
 	class KeepSettingsCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;        
-		public KeepSettingsCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Toggles that players keeping settings on round restart";

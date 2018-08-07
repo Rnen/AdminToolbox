@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
 	class SetHpCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public SetHpCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Sets player HP. Use int for amount";

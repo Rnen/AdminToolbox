@@ -13,13 +13,6 @@ namespace AdminToolbox.Command
 {
 	class WarpsCommmand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public WarpsCommmand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "";
@@ -27,7 +20,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "WARP [PlayerName] [WarpPointName]\nWARP LIST\nWARP [ADD/+] [PlayerName] [YourWarpPointName]\nWARP [REMOVE/-] [YourWarpPointName]";
+			return "WARP [PlayerName] [WarpPointName]" + "\n" + "WARP LIST" + "\n" + "WARP [ADD/+] [PlayerName] [YourWarpPointName]" + "\n" + "WARP [REMOVE/-] [YourWarpPointName]";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -36,10 +29,10 @@ namespace AdminToolbox.Command
             Server server = PluginManager.Manager.Server;
 
             if (AdminToolbox.warpVectors.Count < 1) { return new string[] { "No warp points created yet!" }; }
-            string str = "\nWarp Points:";
-            var list = AdminToolbox.warpVectors.Keys.ToList();
+            string str = "\n" + "Warp Points:";
+            List<string> list = AdminToolbox.warpVectors.Keys.ToList();
             list.Sort();
-            foreach (var i in list)
+            foreach (string i in list)
                 str += "\n - " + i;
             return new string[] { str };
         }

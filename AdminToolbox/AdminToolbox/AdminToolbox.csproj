@@ -58,6 +58,7 @@
     <Compile Include="Commands\DoorCommand.cs" />
     <Compile Include="Commands\ATColorCommand.cs" />
     <Compile Include="Commands\JailCommand.cs" />
+    <Compile Include="Commands\EmptyCommand.cs" />
     <Compile Include="Commands\ServerCommand.cs" />
     <Compile Include="Commands\RoundLockCommand.cs" />
     <Compile Include="Commands\WarpsCommand.cs" />

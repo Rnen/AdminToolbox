@@ -13,13 +13,6 @@ namespace AdminToolbox.Command
 {
 	class WarpCommmand : ICommandHandler
 	{
-		private AdminToolbox plugin;
-        
-		public WarpCommmand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "";
@@ -27,7 +20,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "WARP [PlayerName] [WarpPointName]\nWARP LIST\nWARP [ADD/+] [PlayerName] [YourWarpPointName]\nWARP [REMOVE/-] [YourWarpPointName]";
+			return "WARP [PlayerName] [WarpPointName]" + "\n" + "WARP LIST" + "\n" + "WARP [ADD/+] [PlayerName] [YourWarpPointName]" + "\n" + "WARP [REMOVE/-] [YourWarpPointName]";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -40,10 +33,10 @@ namespace AdminToolbox.Command
                 if (args[0].ToLower() == "list")
                 {
                     if(AdminToolbox.warpVectors.Count<1) { return new string[] { "No warp points created yet!" }; }
-                    string str = "\nWarp Points:";
-                    var list = AdminToolbox.warpVectors.Keys.ToList();
+                    string str = "\n" + "Warp Points:";
+                    List<string> list = AdminToolbox.warpVectors.Keys.ToList();
                     list.Sort();
-                    foreach (var i in list)
+                    foreach (string i in list)
                         str += "\n - " + i;
                     return new string[] { str };
                 }
@@ -79,6 +72,20 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
+                        if (args[0] == "*")
+                        {
+                            if(server.GetPlayers().Count == 0)
+                                return new string[] { "No players to teleport!" };
+                            else if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
+                                return new string[] { "No warp point called: " + args[1] };
+                            byte playerNum = 0;
+                            foreach (Player pl in server.GetPlayers())
+                            {
+                                pl.Teleport(AdminToolbox.warpVectors[args[1].ToLower()]);
+                                playerNum++;
+                            }
+                            return new string[] { "Teleported " + playerNum + " players to warp point: " + args[1] };
+                        }
                         Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                         if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
                         if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))

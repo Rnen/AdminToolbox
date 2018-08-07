@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class RoleCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public RoleCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Sets player to (ROLEID)";

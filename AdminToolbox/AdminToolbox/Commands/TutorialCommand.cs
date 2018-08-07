@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class TutorialCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public TutorialCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Sets player to TUTORIAL";
@@ -34,8 +27,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        int j;
-                        if (Int32.TryParse(args[1], out j))
+                        if (Int32.TryParse(args[1], out int j))
                         {
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
@@ -49,9 +41,7 @@ namespace AdminToolbox.Command
                                 return new string[] { playerNum + " role set to " + Role.TUTORIAL };
                         }
                         else
-                        {
                             return new string[] { "Not a valid number!" };
-                        }
                     }
                     else
                     {

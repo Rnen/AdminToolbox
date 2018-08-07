@@ -45,7 +45,7 @@ namespace AdminToolbox
         public static LogHandlers AdminToolboxLogger = new LogHandlers();
         public static string _roundStartTime;
 
-        public static Plugin ATPlugin;
+        public static AdminToolbox plugin;
 
         public class AdminToolboxPlayerSettings
         {
@@ -98,14 +98,10 @@ namespace AdminToolbox
             playerdict[steamID].Deaths = Deaths;
             playerdict[steamID].RoundsPlayed = RoundsPlayed;
         }
-        public void Info(string info)
-        {
-            AdminToolbox.ATPlugin.Info(info);
-        }
         public override void OnEnable()
         {
-            ATPlugin = this;
-            WriteVersionToFile(this.Details.version);
+            plugin = this;
+            WriteVersionToFile();
             //CheckCurrVersion(this, this.Details.version);
             if (isColored)
                 this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
@@ -119,79 +115,34 @@ namespace AdminToolbox
         {
             // Register Events
             this.AddEventHandlers(new RoundEventHandler(this), Priority.Normal);
-            this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.High);
-            this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.High);
-            this.AddEventHandlers(new MyMiscEvents(this), Priority.Highest);
+            this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.Normal);
+            this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
+            this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
             // Register Commands
-            this.AddCommands(new string[] { "spec", "spectator" }, new Command.SpectatorCommand(this));
-            //this.AddCommand("spectator", new Command.SpectatorCommand(this));
-            //this.AddCommand("spec", new Command.SpectatorCommand(this));
-
-            this.AddCommands(new string[] { "p", "player" }, new Command.PlayerCommand(this));
-            //this.AddCommand("player", new Command.PlayerCommand(this));
-            //this.AddCommand("p", new Command.PlayerCommand(this));
-
-            this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand(this));
-
-            this.AddCommand("heal", new Command.HealCommand(this));
-
-            this.AddCommands(new string[] { "god", "godmode" }, new Command.GodModeCommand(this));
-            //this.AddCommand("god", new Command.GodModeCommand(this));
-            //this.AddCommand("godmode", new Command.GodModeCommand(this));
-
-            this.AddCommand("nodmg", new Command.NoDmgCommand(this));
-
-            this.AddCommands(new string[] { "tut", "tutorial" }, new Command.TutorialCommand(this));
-            //this.AddCommand("tut", new Command.TutorialCommand(this));
-            //this.AddCommand("tutorial", new Command.TutorialCommand(this));
-
-            this.AddCommand("role", new Command.RoleCommand(this));
-
-            this.AddCommands(new string[] { "keep", "keepsettings" }, new Command.KeepSettingsCommand(this));
-            //this.AddCommand("keep", new Command.KeepSettingsCommand(this));
-            //this.AddCommand("keepsettings", new Command.KeepSettingsCommand(this));
-
-            this.AddCommands(new string[] { "hp", "sethp" }, new Command.SetHpCommand(this));
-            //this.AddCommand("sethp", new Command.SetHpCommand(this));
-
-
-            this.AddCommand("pos", new Command.PosCommand(this));
-            this.AddCommand("tpx", new Command.TeleportCommand(this));
-
-            this.AddCommand("warp", new Command.WarpCommmand(this));
-            this.AddCommand("warps", new Command.WarpsCommmand(this));
-
-            //this.AddCommand("roundlock", new Command.RoundLockCommand(this));
-            //this.AddCommand("lockround", new Command.RoundLockCommand(this));
-            //this.AddCommand("rlock", new Command.RoundLockCommand(this));
-            //this.AddCommand("lockr", new Command.RoundLockCommand(this));
-
+            this.AddCommands(new string[] { "spec", "spectator" }, new Command.SpectatorCommand());
+            this.AddCommands(new string[] { "p", "player" }, new Command.PlayerCommand());
+            this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
+            this.AddCommand("heal", new Command.HealCommand());
+            this.AddCommands(new string[] { "god", "godmode" }, new Command.GodModeCommand());
+            this.AddCommand("nodmg", new Command.NoDmgCommand());
+            this.AddCommands(new string[] { "tut", "tutorial" }, new Command.TutorialCommand());
+            this.AddCommand("role", new Command.RoleCommand());
+            this.AddCommands(new string[] { "keep", "keepsettings" }, new Command.KeepSettingsCommand());
+            this.AddCommands(new string[] { "hp", "sethp" }, new Command.SetHpCommand());
+            this.AddCommand("pos", new Command.PosCommand());
+            this.AddCommand("tpx", new Command.TeleportCommand());
+            this.AddCommand("warp", new Command.WarpCommmand());
+            this.AddCommand("warps", new Command.WarpsCommmand());
             this.AddCommands(new string[] { "roundlock", "lockround", "rlock", "lockr" }, new Command.RoundLockCommand(this));
-
-            this.AddCommands(new string[] { "breakdoor", "bd", "breakdoors" }, new Command.BreakDoorsCommand(this));
-            //this.AddCommand("breakdoors", new Command.BreakDoorsCommand(this));
-            //this.AddCommand("breakdoor", new Command.BreakDoorsCommand(this));
-            //this.AddCommand("bd", new Command.BreakDoorsCommand(this));
-
-            this.AddCommands(new string[] { "pl", "playerlockdown", "plock", "playerlock" }, new Command.LockdownCommand(this));
-            //this.AddCommand("playerlockdown", new Command.LockdownCommand(this));
-            //this.AddCommand("pl", new Command.LockdownCommand(this));
-            //this.AddCommand("playerlock", new Command.LockdownCommand(this));
-            //this.AddCommand("plock", new Command.LockdownCommand(this));
-
+            this.AddCommands(new string[] { "breakdoor", "bd", "breakdoors" }, new Command.BreakDoorsCommand());
+            this.AddCommands(new string[] { "pl", "playerlockdown", "plock", "playerlock" }, new Command.LockdownCommand());
             this.AddCommand("atcolor", new Command.ATColorCommand(this));
             this.AddCommand("atdisable", new Command.ATDisableCommand(this));
-
-            this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand(this));
-            //this.AddCommand("instantkill", new Command.InstantKillCommand(this));
-            //this.AddCommand("instakill", new Command.InstantKillCommand(this));
-            //this.AddCommand("ik", new Command.InstantKillCommand(this));
-
-            this.AddCommands(new string[] { "jail" }, new Command.JailCommand(this));
-
+            this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand());
+            this.AddCommands(new string[] { "j","jail" }, new Command.JailCommand());
             this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
-
-            this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand(this));
+            this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand());
+            this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
 
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
@@ -247,10 +198,8 @@ namespace AdminToolbox
             List<Player> myPlayers = new List<Player>();
             if (PluginManager.Manager.Server.GetPlayers().Count > 0)
                 foreach (Player pl in PluginManager.Manager.Server.GetPlayers(filter))
-                {
                     if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
                         myPlayers.Add(pl);
-                }
             return myPlayers;
         }
         public static void CheckJailedPlayers(Player myPlayer = null)
@@ -278,39 +227,49 @@ namespace AdminToolbox
 
         public static void SendToJail(Player ply)
         {
-            //Saves original variables
-            AdminToolbox.playerdict[ply.SteamId].originalPos = ply.GetPosition();
-            if (!AdminToolbox.playerdict[ply.SteamId].isJailed)
+            if (AdminToolbox.playerdict.ContainsKey(ply.SteamId))
             {
-                AdminToolbox.playerdict[ply.SteamId].previousRole = ply.TeamRole.Role;
-                AdminToolbox.playerdict[ply.SteamId].playerPrevInv = ply.GetInventory();
-                AdminToolbox.playerdict[ply.SteamId].previousHealth = ply.GetHealth();
-                AdminToolbox.playerdict[ply.SteamId].prevAmmo5 = ply.GetAmmo(AmmoType.DROPPED_5);
-                AdminToolbox.playerdict[ply.SteamId].prevAmmo7 = ply.GetAmmo(AmmoType.DROPPED_7);
-                AdminToolbox.playerdict[ply.SteamId].prevAmmo9 = ply.GetAmmo(AmmoType.DROPPED_9);
+                //Saves original variables
+                AdminToolbox.playerdict[ply.SteamId].originalPos = ply.GetPosition();
+                if (!AdminToolbox.playerdict[ply.SteamId].isJailed)
+                {
+                    AdminToolbox.playerdict[ply.SteamId].previousRole = ply.TeamRole.Role;
+                    AdminToolbox.playerdict[ply.SteamId].playerPrevInv = ply.GetInventory();
+                    AdminToolbox.playerdict[ply.SteamId].previousHealth = ply.GetHealth();
+                    AdminToolbox.playerdict[ply.SteamId].prevAmmo5 = ply.GetAmmo(AmmoType.DROPPED_5);
+                    AdminToolbox.playerdict[ply.SteamId].prevAmmo7 = ply.GetAmmo(AmmoType.DROPPED_7);
+                    AdminToolbox.playerdict[ply.SteamId].prevAmmo9 = ply.GetAmmo(AmmoType.DROPPED_9);
+                }
+                //Changes role to Tutorial, teleports to jail, removes inv.
+                ply.ChangeRole(Role.TUTORIAL, true, false);
+                ply.Teleport(AdminToolbox.warpVectors["jail"]);
+                foreach (Smod2.API.Item item in ply.GetInventory())
+                    item.Remove();
+                AdminToolbox.playerdict[ply.SteamId].isJailed = true;
             }
-            //Changes role to Tutorial, teleports to jail, removes inv.
-            ply.ChangeRole(Role.TUTORIAL, true, false);
-            ply.Teleport(AdminToolbox.warpVectors["jail"]);
-            foreach (Smod2.API.Item item in ply.GetInventory())
-                item.Remove();
-            AdminToolbox.playerdict[ply.SteamId].isJailed = true;
+            else
+                plugin.Info("Player not in PlayerDict!");
         }
         public static void ReturnFromJail(Player ply)
         {
-            AdminToolbox.playerdict[ply.SteamId].isJailed = false;
-            ply.ChangeRole(AdminToolbox.playerdict[ply.SteamId].previousRole, true, false);
-            ply.Teleport(AdminToolbox.playerdict[ply.SteamId].originalPos);
-            AdminToolbox.playerdict[ply.SteamId].isInJail = false;
-            ply.SetHealth(AdminToolbox.playerdict[ply.SteamId].previousHealth);
-            foreach (Smod2.API.Item item in ply.GetInventory())
-                item.Remove();
-            foreach (Smod2.API.Item item in AdminToolbox.playerdict[ply.SteamId].playerPrevInv)
-                ply.GiveItem(item.ItemType);
-            ply.SetAmmo(AmmoType.DROPPED_5, AdminToolbox.playerdict[ply.SteamId].prevAmmo5);
-            ply.SetAmmo(AmmoType.DROPPED_7, AdminToolbox.playerdict[ply.SteamId].prevAmmo7);
-            ply.SetAmmo(AmmoType.DROPPED_9, AdminToolbox.playerdict[ply.SteamId].prevAmmo9);
-            AdminToolbox.playerdict[ply.SteamId].playerPrevInv = null;
+            if (AdminToolbox.playerdict.ContainsKey(ply.SteamId))
+            {
+                AdminToolbox.playerdict[ply.SteamId].isJailed = false;
+                ply.ChangeRole(AdminToolbox.playerdict[ply.SteamId].previousRole, true, false);
+                ply.Teleport(AdminToolbox.playerdict[ply.SteamId].originalPos);
+                AdminToolbox.playerdict[ply.SteamId].isInJail = false;
+                ply.SetHealth(AdminToolbox.playerdict[ply.SteamId].previousHealth);
+                foreach (Smod2.API.Item item in ply.GetInventory())
+                    item.Remove();
+                foreach (Smod2.API.Item item in AdminToolbox.playerdict[ply.SteamId].playerPrevInv)
+                    ply.GiveItem(item.ItemType);
+                ply.SetAmmo(AmmoType.DROPPED_5, AdminToolbox.playerdict[ply.SteamId].prevAmmo5);
+                ply.SetAmmo(AmmoType.DROPPED_7, AdminToolbox.playerdict[ply.SteamId].prevAmmo7);
+                ply.SetAmmo(AmmoType.DROPPED_9, AdminToolbox.playerdict[ply.SteamId].prevAmmo9);
+                AdminToolbox.playerdict[ply.SteamId].playerPrevInv = null;
+            }
+            else
+                plugin.Info("Player not in PlayerDict!");
         }
         
         public static string WriteParseableLogKills(Player attacker, Player victim, DamageType dmgType)
@@ -341,19 +300,19 @@ namespace AdminToolbox
                     break;
             }
         }
-        public static void WriteVersionToFile(string currVersion)
+        public static void WriteVersionToFile()
         {
             if (Directory.Exists(FileManager.AppFolder))
             {
                 StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "at_version.md", false);
-                string text = "at_version=" + currVersion;
+                string text = "at_version=" + plugin.Details.version;
                 streamWriter.Write(text);
                 streamWriter.Close();
                 if (File.Exists(FileManager.AppFolder + "n_at_version.md"))
                     File.Delete(FileManager.AppFolder + "n_at_version.md");
             }
             else
-                AdminToolbox.ATPlugin.Info("Could not find SCP Secret Lab folder!");
+                plugin.Info("Could not find SCP Secret Lab folder!");
         }
         public static void CheckCurrVersion(AdminToolbox plugin,string version)
         {

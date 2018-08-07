@@ -86,7 +86,7 @@ namespace AdminToolbox
                             {
                                 if (z == (int)ev.Attacker.TeamRole.Role && x == (int)ev.Player.TeamRole.Role)
                                 {
-                                    if (!AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) || AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) break;
+                                    if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) return;
                                     ev.Damage = 0f;
                                     ev.DamageType = DamageType.NONE;
                                     foundPlayer = true;
@@ -106,11 +106,14 @@ namespace AdminToolbox
             }
             if (AdminToolbox.isRoundFinished)
             {
-                if (!AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) || !AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
+                if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
+                    goto SkipMultiplier;
+                else
                 {
                     float enddamageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1f, true);
                     ev.Damage = originalDamage * enddamageMultiplier;
                 }
+                SkipMultiplier:;
             }
             switch ((int)ev.Player.TeamRole.Role)
             {
@@ -118,7 +121,7 @@ namespace AdminToolbox
                     if (!allowedDmg.Contains((int)ev.DamageType))
                     {
                         if (DebugDmg.Contains((int)ev.DamageType) && (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))) plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
-                        if (!AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) || AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) goto default;
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) goto default;
                         ev.DamageType = DamageType.NONE;
                         ev.Damage = 0f;
                     }
@@ -183,7 +186,6 @@ namespace AdminToolbox
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
             int[] nineTailsTeam = { (int)Team.MTF, (int)Team.RSC }, chaosTeam = { (int)Team.CHI, (int)Team.CDP };
-
             AdminToolbox.AddSpesificPlayer(ev.Player);
             AdminToolbox.AddSpesificPlayer(ev.Killer);
 
