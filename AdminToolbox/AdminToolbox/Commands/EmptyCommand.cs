@@ -15,7 +15,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "EMPTY [Player] (ItemType INT / Delete) (Delete)";
+			return "E / EMPTY [Player] (ItemType INT / Delete) (Delete)";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)

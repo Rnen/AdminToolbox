@@ -22,7 +22,7 @@ namespace AdminToolbox
         version = "1.3.2",
         SmodMajor = 3,
         SmodMinor = 1,
-        SmodRevision = 10
+        SmodRevision = 11
         )]
     class AdminToolbox : Plugin
     {
@@ -80,24 +80,7 @@ namespace AdminToolbox
             else
                 this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
         }
-        public static void SetPlayerBools(string steamID, bool spectatorOnly = false, bool godMode = false, bool dmgOff = false, bool destroyDoor = false, bool keepSettings = false, bool lockDown = false, bool instantKill = false, bool isJailed = false)
-        {
-            if (!playerdict.ContainsKey(steamID)) return;
-            playerdict[steamID].spectatorOnly = spectatorOnly;
-            playerdict[steamID].godMode = godMode;
-            playerdict[steamID].dmgOff = dmgOff;
-            playerdict[steamID].destroyDoor = destroyDoor;
-            playerdict[steamID].lockDown = lockDown;
-            playerdict[steamID].instantKill = instantKill;
-        }
-        public static void SetPlayerStats(string steamID, int Kills = 0, int TeamKills = 0, int Deaths = 0, int RoundsPlayed = 0)
-        {
-            if (!playerdict.ContainsKey(steamID)) return;
-            playerdict[steamID].Kills = Kills;
-            playerdict[steamID].TeamKills = TeamKills;
-            playerdict[steamID].Deaths = Deaths;
-            playerdict[steamID].RoundsPlayed = RoundsPlayed;
-        }
+
         public override void OnEnable()
         {
             plugin = this;
@@ -113,11 +96,14 @@ namespace AdminToolbox
 
         public override void Register()
         {
+            #region EventHandlers Registering Eventhandlers
             // Register Events
             this.AddEventHandlers(new RoundEventHandler(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
             this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
+            #endregion
+            #region Commands Registering Commands
             // Register Commands
             this.AddCommands(new string[] { "spec", "spectator" }, new Command.SpectatorCommand());
             this.AddCommands(new string[] { "p", "player" }, new Command.PlayerCommand());
@@ -139,15 +125,15 @@ namespace AdminToolbox
             this.AddCommand("atcolor", new Command.ATColorCommand(this));
             this.AddCommand("atdisable", new Command.ATDisableCommand(this));
             this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand());
-            this.AddCommands(new string[] { "j","jail" }, new Command.JailCommand());
+            this.AddCommands(new string[] { "j", "jail" }, new Command.JailCommand());
             this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
             this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand());
             this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
-
+            #endregion
+            #region Config Registering Config Entries
             // Register config settings
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_colors", false, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox colors in server window"));
-
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "What (int)damagetypes TUTORIAL is allowed to take"));
 
@@ -178,28 +164,40 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercomlock", false, Smod2.Config.SettingType.BOOL, true, "If set to true, locks the command for all non-whitelist players"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
+            #endregion
         }
-        public static void AddMissingPlayerVariables()
+
+        public static void AddMissingPlayerVariables(Player[] players = null)
         {
-            if (PluginManager.Manager.Server.GetPlayers().Count > 0)
-                foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-                    AddSpesificPlayer(pl);
+            if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
+            if (players.Length > 0 && players != null)
+                foreach (Player player in players)
+                    AddSpesificPlayer(player);
+            else
+                foreach (Player player in PluginManager.Manager.Server.GetPlayers())
+                    AddSpesificPlayer(player);
         }
-        public static void AddSpesificPlayer(Player playerToAdd)
+        public static void AddSpesificPlayer(Player player)
         {
-            if (playerToAdd.SteamId != null && playerToAdd.SteamId != string.Empty)
-            {
-                if (!playerdict.ContainsKey(playerToAdd.SteamId))
-                    playerdict.Add(playerToAdd.SteamId, new AdminToolboxPlayerSettings());
-            }
+            if (player.SteamId != null && player.SteamId != string.Empty)
+                if (!playerdict.ContainsKey(player.SteamId))
+                    playerdict.Add(player.SteamId, new AdminToolboxPlayerSettings());
         }
+
         public static List<Player> GetJailedPlayers(string filter = "")
         {
             List<Player> myPlayers = new List<Player>();
             if (PluginManager.Manager.Server.GetPlayers().Count > 0)
-                foreach (Player pl in PluginManager.Manager.Server.GetPlayers(filter))
-                    if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
-                        myPlayers.Add(pl);
+                if (filter != string.Empty)
+                    foreach (Player pl in PluginManager.Manager.Server.GetPlayers(filter))
+                    {
+                        if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
+                            myPlayers.Add(pl);
+                    }
+                else
+                    foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+                        if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
+                            myPlayers.Add(pl);
             return myPlayers;
         }
         public static void CheckJailedPlayers(Player myPlayer = null)
@@ -501,11 +499,11 @@ namespace AdminToolbox
                 {
                     Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs");
                 }
-                if (!Directory.Exists(FileManager.AppFolder + "ATServerLogs/" + _port))
+                if (!Directory.Exists(FileManager.AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar + _port))
                 {
-                    Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs/" + _port);
+                    Directory.CreateDirectory(FileManager.AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar + _port);
                 }
-                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "ATServerLogs" + "/" + _port  + "/" + AdminToolbox._roundStartTime + " Round " + AdminToolbox.roundCount + ".txt", true);
+                StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar + _port  + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + " Round " + AdminToolbox.roundCount + ".txt", true);
                 string text = string.Empty;
                 foreach (LogHandler log in logs)
                 {
@@ -534,6 +532,35 @@ namespace AdminToolbox
                 text += " ";
             }
             return text;
+        }
+    }
+    class SetPlayerVariables : AdminToolbox
+    {
+        private bool spectatorOnly;
+
+
+        public SetPlayerVariables()
+        {
+
+        }
+        
+        public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
+        {
+            if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
+            AdminToolbox.playerdict[steamID].spectatorOnly = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.playerdict[steamID].spectatorOnly;
+            AdminToolbox.playerdict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.playerdict[steamID].godMode;
+            AdminToolbox.playerdict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.playerdict[steamID].dmgOff;
+            AdminToolbox.playerdict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.playerdict[steamID].destroyDoor;
+            AdminToolbox.playerdict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.playerdict[steamID].lockDown;
+            AdminToolbox.playerdict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.playerdict[steamID].instantKill;
+        }
+        public static void SetPlayerStats(string steamID, int? Kills = 0, int? TeamKills = 0, int? Deaths = 0, int? RoundsPlayed = 0)
+        {
+            if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
+            AdminToolbox.playerdict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.playerdict[steamID].Kills;
+            AdminToolbox.playerdict[steamID].TeamKills = (TeamKills.HasValue) ? (int)TeamKills : AdminToolbox.playerdict[steamID].TeamKills; ;
+            AdminToolbox.playerdict[steamID].Deaths = (Deaths.HasValue) ? (int)Deaths : AdminToolbox.playerdict[steamID].Deaths;
+            AdminToolbox.playerdict[steamID].RoundsPlayed = (RoundsPlayed.HasValue) ? (int)RoundsPlayed : AdminToolbox.playerdict[steamID].RoundsPlayed;
         }
     }
 }

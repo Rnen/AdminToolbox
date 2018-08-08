@@ -38,7 +38,6 @@ namespace AdminToolbox
                 if (lastChecked <= DateTime.Now)
                 {
                     lastChecked = DateTime.Now.AddSeconds(5);
-                    //plugin.Info("Checked Jailed Players");
                     return true;
                 }
                 else
@@ -77,7 +76,7 @@ namespace AdminToolbox
                 }
                 foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
                 {
-                    AdminToolbox.AddSpesificPlayer(pl);
+                    AdminToolbox.AddMissingPlayerVariables(new Player[] { pl });
                     if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
                         AdminToolbox.playerdict[pl.SteamId].RoundsPlayed++;
                 }
@@ -90,7 +89,7 @@ namespace AdminToolbox
             AdminToolbox.lockRound = false;
             if (AdminToolbox.playerdict.Count > 0)
                 foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.playerdict)
-                    if (!item.Value.keepSettings && !item.Value.isJailed) AdminToolbox.SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+                    if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
         }
     }
 }

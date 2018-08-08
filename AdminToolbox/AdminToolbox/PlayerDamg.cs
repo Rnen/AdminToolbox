@@ -51,8 +51,7 @@ namespace AdminToolbox
                 (int)Team.CDP
             };
 
-            AdminToolbox.AddSpesificPlayer(ev.Player);
-            AdminToolbox.AddSpesificPlayer(ev.Attacker);
+            AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Attacker, ev.Player });
 
             float originalDamage = ev.Damage;
             DamageType originalType = ev.DamageType;
@@ -186,8 +185,8 @@ namespace AdminToolbox
         public void OnPlayerDie(PlayerDeathEvent ev)
         {
             int[] nineTailsTeam = { (int)Team.MTF, (int)Team.RSC }, chaosTeam = { (int)Team.CHI, (int)Team.CDP };
-            AdminToolbox.AddSpesificPlayer(ev.Player);
-            AdminToolbox.AddSpesificPlayer(ev.Killer);
+
+            AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Player, ev.Killer });
 
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
             switch ((int)ev.Player.TeamRole.Role)

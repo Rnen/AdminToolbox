@@ -21,49 +21,45 @@ namespace AdminToolbox
 
         public void OnIntercom(PlayerIntercomEvent ev)
         {
-            #region IntercomWhitelist
-            //AdminToolbox.AddSpesificPlayer(ev.Player);
-            //defaultIntercomDuration = ev.SpeechTime;
-            //defaultIntercomCooldown = ev.CooldownTime;
-            //if (AdminToolbox.intercomLock) { ev.AllowSpeech = false; return; }
-            //string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
-            //if (whitelistRanks.Length > 0)
-            //{
-            //    foreach (var item in whitelistRanks)
-            //    {
-            //        string[] myKeyString = item.Split(':','-','_','#');
-            //        plugin.Info(item.Replace(" ", string.Empty) + Environment.NewLine + ev.Player.GetRankName().Replace(" ", string.Empty));
-            //        if (myKeyString[0].ToLower().Replace(" ",string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) && myKeyString.Length > 1)
-            //        {
-            //            if (myKeyString.Length >= 2)
-            //            {
-            //                if (float.TryParse(myKeyString[1], out float x))
-            //                    ev.SpeechTime = x;
-            //                else plugin.Info(myKeyString[1] + " is not a valid speakTime number in: " + myKeyString[0]);
-            //                if (myKeyString.Length == 3)
-            //                    if (float.TryParse(myKeyString[2], out float z))
-            //                        ev.CooldownTime = z;
-            //                    else plugin.Info(myKeyString[2] + " is not a cooldown number in: " + myKeyString[0]);
-            //                else if (myKeyString.Length > 3)
-            //                    plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: "+ item + "\", skipping...");
-            //            }
-            //        }
-            //        else
-            //            plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
-            //    }
-
-            //}
-            #endregion
-
+            AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Player });
             //Blacklist
             string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
             if (blackListedSTEAMIDS.Length > 0)
                 foreach (string item in blackListedSTEAMIDS)
                     if (item == ev.Player.SteamId)
                     {
-                        ev.AllowSpeech = false;
+                        ev.SpeechTime = 0f;
                         break;
                     }
+            #region IntercomWhitelist
+            string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
+            if (whitelistRanks.Length > 0)
+            {
+                foreach (var item in whitelistRanks)
+                {
+                    string[] myKeyString = item.Split(':', '-', '_', '#');
+                    plugin.Info(item.Replace(" ", string.Empty) + Environment.NewLine + ev.Player.GetRankName().Replace(" ", string.Empty));
+                    if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) && myKeyString.Length > 1)
+                    {
+                        if (myKeyString.Length >= 2)
+                        {
+                            if (float.TryParse(myKeyString[1], out float x))
+                                ev.SpeechTime = x;
+                            else plugin.Info(myKeyString[1] + " is not a valid speakTime number in: " + myKeyString[0]);
+                            if (myKeyString.Length == 3)
+                                if (float.TryParse(myKeyString[2], out float z))
+                                    ev.CooldownTime = z;
+                                else plugin.Info(myKeyString[2] + " is not a cooldown number in: " + myKeyString[0]);
+                            else if (myKeyString.Length > 3)
+                                plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + item + "\", skipping...");
+                        }
+                    }
+                    else
+                        plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
+                }
+
+            }
+            #endregion
         }
 
         public void OnDoorAccess(PlayerDoorAccessEvent ev)
@@ -143,7 +139,6 @@ namespace AdminToolbox
                 if (lastChecked <= DateTime.Now)
                 {
                     lastChecked = DateTime.Now.AddSeconds(5);
-                    //plugin.Info("Update Checked Jailed Players");
                     return true;
                 }
                 else

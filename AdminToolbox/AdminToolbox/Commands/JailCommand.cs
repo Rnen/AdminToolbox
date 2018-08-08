@@ -36,13 +36,13 @@ namespace AdminToolbox.Command
                         {
                             AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddSeconds(x);
                             AdminToolbox.SendToJail(myPlayer);
-                            return new string[] { "\"" + myPlayer.Name + "\" sendt to jail for: " + x + " seconds." };
+                            return new string[] { "\"" + myPlayer.Name + "\" sent to jail for: " + x + " seconds." };
                         }
                         else
                         {
                             AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
                             AdminToolbox.SendToJail(myPlayer);
-                            return new string[] { "\"" + myPlayer.Name + "\" sendt to jail for 1 year" };
+                            return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
                         }
                     }
                     else
@@ -59,7 +59,7 @@ namespace AdminToolbox.Command
                     {
                         AdminToolbox.SendToJail(myPlayer);
                         AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
-                        return new string[] { "\"" + myPlayer.Name + "\" sendt to jail for 1 year" };
+                        return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
                     }
                 }
                 else
