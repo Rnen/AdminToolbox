@@ -21,18 +21,36 @@ To install:
 1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
 2. Navigate to your SCP Secret Lab folder.
 3. Drag AdminToolbox.dll into the sm_plugins folder
+4. If your server is running, restart it
 
 ## ServerMod - (This is required for any plugin)
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
  * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
+ * SMOD can also be downloaded along with your server from a steam repo 
+	* URI method: [Smod Steam](steam://install/786290)
+	* Script method: To install via [SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD) (includes the base game and ServerMod):
+1. Download SteamCMD, and extract it to a new folder. Be aware that it will fill the folder with its own files.
+2. Create a text file to be used as the install script (uncomment one of the "app_update" lines):
+```
+@ShutdownOnFailedCommand 1
+@NoPromptForPassword 1
+login anonymous
+force_install_dir "your/desired/install location/here"
+//app_update 786920 validate //uncomment this line if you want the stable branch
+//app_update 786920 -beta beta validate //uncomment this line if you want the beta branch
+quit
+```
+3. Create a batch file or shortcut to run SteamCMD: `steamcmd +runscript "path/to/install script.txt"`
+4. Run the batch file or shortcut. If SteamCMD reports that " @ShutdownOnFailedCommand" is an unknown command, make sure that the text file is not saved with UTF-8 Signature / Unicode BOM (Byte-Order Mark). A batch file likewise won't work if saved that way.
  * SMOD Discord: https://discord.gg/8nvmMTr
 
-### Note that all commands below requires you to have `enable_ra_server_commands:` set to true, and your steamID64 added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
+### Note that all commands below requires you to have `enable_ra_server_commands:` set to true in your `config_gameplay.txt`, and your steamID64 added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
 P / PLAYER | Player |   | Lists all values for the specified Player
 PLAYERS |   |   | Lists all players + IP's + SteamID's.
+S / SERVERINFO |    | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
 GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
 HP / SETHP | Player | Integer | Sets player HP to (Integer).
@@ -51,23 +69,24 @@ ATCOLOR | Boolean | | `Enable/Disable` admintoolbox colors in server console (cu
 
 
 >`*` can be used instead of `Player` to target **all** players on the server
+>Using a boolean command without a boolean acts a toggle, switching it from true to false and vice versa.
 >Using `(command) list` will list all players with the currently enabled command. (Like godmode for example)
 
 >Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 
-### Advanced Commands (Theese are more experiemental and is hard to use)
+### Advanced Commands (These are more experiemental and is hard to use)
 Command | Value Type | Value Type |  Value_Type | Description
 --- | :---: | :---: | :---: | ---
 WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
 WARP | LIST |   |   |  Lists current warp points
 WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
-POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Dont need to use all X Y Z)
+POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (Don't need to use all X Y Z)
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | Player | GET | |  Gets XYZ position of `Player`
 
-> Player input dont need the full name, it will grab the closest looking name to what you entered
-## ^Theese commands work in both server console and remote admin!^
+> Player input doesn't need the full name, it will grab the name closest in spelling to your entry
+## ^These commands work in both server console and text-based remote admin!^
 
 ## Config Additions
 Type Info:
@@ -79,22 +98,24 @@ Type Info:
 - Seconds: Time in seconds, usually a value of -1 disables the feature
 - Minutes: Time in minutes, usually a value of -1 disables the feature
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
-- STEAMID64: [Find yours here!](https://steamid.io/lookup)
+- STEAMID64: [Find yours here!](https://steamid.xyz/)
 
 >Crossed out config options are removed, unless otherwise specified in the description
 
-## If you do not intend to change the default values, theres no need to include any of theese in your config
+## If you do not intend to change the default values, there's no need to include any of theese in your config
 ### General Settings
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from loading on server start
 admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
-admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 equals basically godmode
+admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 basically means godmode
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
 admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
+admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
-~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with spesific time settings~~ **Temporarily removed**
+~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings~~ **Temporarily removed**
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
+admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 
@@ -127,4 +148,3 @@ admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17,1:
 ### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
 
 # Thanks & Enjoy.
-
