@@ -29,25 +29,27 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 
 ### Note that all commands below requires you to have `enable_ra_server_commands:` set to true, and your steamID64 added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
-Command | Value Type | Value Type | Description
---- | :---: | :---: | ---
-P / PLAYER | Player |   | Lists all values for the specified Player
-PLAYERS |   |   | Lists all players + IP's + SteamID's.
-GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
-NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
-HP / SETHP | Player | Integer | Sets player HP to (Integer).
-HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
-TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
-TUT / TUTORIAL | Player |  | Sets player role to TUTORIAL.
-ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
-KEEP / KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
-RLOCK / ROUNDLOCK | Boolean |   | Turns on/off round ending
-BD / BREAKDOORS | Player | Boolean | Turns on/off breaking doors for that player.
-PL / PLOCK / PLAYERLOCK / PLAYERLOCKDOWN | Player | Boolean | Locks all doors for the spesified player.
-SPEC / SPECTATOR | Player | Boolean | Player will never spawn naturally.
-IK / INSTAKILL / INSTANTKILL | Player | Boolean | Turns on/off instant kills for that player.
-ATDISABLE | | | **Disables the Admintoolbox plugin.** Server will need restart to enable it again
-ATCOLOR | Boolean | | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+Command | Value Type | Value Type | Value Type | Description
+--- | :---: | :---: | :---: | ---
+P / PLAYER | Player |  |  | Lists all values for the specified Player
+PLAYERS |   |  |  | Lists all players + IP's + SteamID's.
+GOD | Player | Boolean | | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
+NODMG | Player | Boolean || Turns on/off damageOutput for that player. Use without (bool) to toggle.
+HP / SETHP | Player | Integer | | Sets player HP to (Integer).
+HEAL | Player | Integer | | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
+TPX | Player1 | Player2 | | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
+TUT / TUTORIAL | Player | |  | Sets player role to TUTORIAL.
+ROLE  | Player | ROLEID ||  Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+KEEP / KEEPSETTINGS | Player| Boolean | | Enables keeping player settings on round restart.
+RLOCK / ROUNDLOCK | Boolean | |   | Turns on/off round ending
+BD / BREAKDOORS | Player | Boolean | | Turns on/off breaking doors for that player.
+PL / PLOCK / PLAYERLOCK / PLAYERLOCKDOWN | Player | Boolean | | Locks all doors for the spesified player.
+SPEC / SPECTATOR | Player | Boolean | | Player will never spawn naturally.
+IK / INSTAKILL / INSTANTKILL | Player | Boolean | | Turns on/off instant kills for that player.
+ATDISABLE | | | | **Disables the Admintoolbox plugin.** Server will need restart to enable it again
+ATCOLOR | Boolean | | | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping.
+JAIL | Player | seconds | | Jails the player for the specified (if not specified, defaults to 1 year) time. Re-use to unjail.
 
 
 >`*` can be used instead of `Player` to target **all** players on the server
