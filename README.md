@@ -96,11 +96,13 @@ admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this 
 +admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
-~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings~~ **Temporarily removed**
+admintoolbox_intercom_whitelist | ServerRole:SpeakTime:CooldownTime | | Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
+admintoolbox_block_role_damage | see example below | | Specifies what roles (AttackerRole) cannot damage.
+
 
 ### Logfile settings (file will be created in the `AppData\Roaming\SCP Secret Laboratory\ATServerLogs` folder
 Config Option | Value Type | Default Value | Description
@@ -123,7 +125,6 @@ Examples:
 ```yaml
 #The example under will make scientists and Chaos unable to damage Dboys. The second example is how you add several roleID's for one role. (The example would make scientists (6) not able to damage any class, dboys (1) not able to attack other dboys (1))
 admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17,1:1
-
 ```
 >Find a complete list of DamageID's, RoleID's and more [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 #
