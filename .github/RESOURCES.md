@@ -59,14 +59,14 @@
 |#19| Weapon Manager Tablet
 |#20| E-11 Standard Rifle
 |#21| P90
-|#22| SFA Ammo (E- 11 Rifle Ammo)
+|#22| 5.56mm Ammo (E- 11 Rifle Ammo)
 |#23| MP4
 |#24| Logicer (Chaos Weapon)
 |#25| Frag Granade
 |#26| Flash Granade
 |#27| Disarmer
-|#28| RAT Ammo (MP7, Logicer ammo)
-|#29| PAT ammo (Com15, P90 ammo)
+|#28| 7.62mm Ammo (MP4, Logicer ammo)
+|#29| 9mm ammo (Com15, P90 ammo)
 
 #
 ## DamageType ID's
@@ -91,7 +91,7 @@
 #16| COM15 | Pistol
 #17| E11_STANDARD_RIFLE | NTF Rifle
 #18| P90 | 
-#19| MP7 |
+#19| MP4 |
 #20| LOGICER | Chaos weapon
 
 #
@@ -107,7 +107,7 @@
 #6| Tutorial
 
 #
->Room ID's is not finished beeing documented
+>Room ID's are not yet finished being documented
 ## Room ID's
 | Room ID | Description |
 | :--- | :--- | 
@@ -131,8 +131,8 @@ HC_SERVERS | ^
 HC_SERVERS | ^
 HC_TESLA_B | Tesla Gate
 HC_TESLA_B | Tesla Gate
-HC_457_CR | Micro HID Room
-HC_096_CR |
+HC_457_CR | 096's containment
+HC_096_CR | Micro HID Room
 HC_079_HALL |
 HC_079_HALL |
 HC_079_MON |
@@ -148,4 +148,4 @@ Straight_4 |
 LC_ARMORY |
 Shelter | Containment Shelter (entrance)
 intercom | Intercom Room
-pocket | Pocked Dimention
+pocket | Pocket Dimention
