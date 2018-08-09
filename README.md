@@ -49,7 +49,7 @@ IK / INSTAKILL / INSTANTKILL | Player | Boolean |  Turns on/off instant kills fo
 ATDISABLE | | |  **Disables the Admintoolbox plugin.** Server will need restart to enable it again
 ATCOLOR | Boolean | |  `Enable/Disable` admintoolbox colors in server console (currently bugged)
 JAIL | Player | seconds |  Jails the player for the specified (if not specified, defaults to 1 year) time. Re-use to unjail.
-S / SERVERINFO |  Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
+S / SERVERINFO |  | | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
 >Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
