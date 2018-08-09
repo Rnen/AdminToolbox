@@ -95,7 +95,6 @@ admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL r
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
 +admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
-admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
@@ -113,7 +112,7 @@ admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfil
 admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfile
 admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
 
-### Debug Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
+### Debug/INFO Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_debug_damagetypes | List | All human player damage ID's | What damage types to detect. 
@@ -122,6 +121,8 @@ admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in s
 admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
 admintoolbox_debug_scp_and_self_killed  | Boolean | False | Displays suicides, granade kills and SCP kills in server console.
 admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
+admintoolbox_player_join_info | Boolean | True | Displays joining player's name upon joining.
+
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 
 ### Examples:
