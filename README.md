@@ -104,7 +104,7 @@ admintoolbox_block_role_damage | Example[Here](https://github.com/Rnen/AdminTool
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-admintoolbox_intercom_whitelist | ServerRole:SpeakTime:CooldownTime | | Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings
+~~admintoolbox_intercom_whitelist~~ | ~~ServerRole:SpeakTime:CooldownTime~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings~~ **Temporarily removed in test-release**
 
 ### Logfile settings (file will be created in the `AppData\Roaming\SCP Secret Laboratory\ATServerLogs` folder
 Config Option | Value Type | Default Value | Description
