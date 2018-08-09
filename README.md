@@ -29,7 +29,7 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 
 ### Note that all commands below requires you to have `enable_ra_server_commands:` set to true in your `config_gameplay.txt`, and your steamID64/SERVER-ROLE added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
-Command | Value Type | Value Type | Value Type | Description
+Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
 P / PLAYER | Player |    | Lists all values for the specified Player
 PLAYERS |   |    | Lists all players + IP's + SteamID's.
