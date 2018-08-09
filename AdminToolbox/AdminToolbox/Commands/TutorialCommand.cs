@@ -7,13 +7,6 @@ namespace AdminToolbox.Command
 {
     class TutorialCommand : ICommandHandler
     {
-        private AdminToolbox plugin;
-
-        public TutorialCommand(AdminToolbox plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public string GetCommandDescription()
         {
             return "Sets player to TUTORIAL";
@@ -21,7 +14,7 @@ namespace AdminToolbox.Command
 
         public string GetUsage()
         {
-            return "TUT/TUTORIAL [PLAYER]";
+            return "(TUT / TUTORIAL) [PLAYER / *]";
         }
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -34,8 +27,7 @@ namespace AdminToolbox.Command
                 {
                     if (args.Length > 1)
                     {
-                        int j;
-                        if (Int32.TryParse(args[1], out j))
+                        if (Int32.TryParse(args[1], out int j))
                         {
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
@@ -44,36 +36,28 @@ namespace AdminToolbox.Command
                                 playerNum++;
                             }
                             if (playerNum > 1)
-                                return new string[] { playerNum + " roles set to " + (Role)14 };
-                              //plugin.Info(playerNum + " roles set to " + (Role)14);
+                                return new string[] { playerNum + " roles set to " + Role.TUTORIAL };
                             else
-                                return new string[] { playerNum + " role set to " + (Role)14 };
-                              //plugin.Info(playerNum + " role set to " + (Role)14);
+                                return new string[] { playerNum + " role set to " + Role.TUTORIAL };
                         }
                         else
-                        {
-                            //plugin.Info("Not a valid number!");
                             return new string[] { "Not a valid number!" };
-                        }
                     }
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { pl.ChangeRole(Role.TUTORIAL); }
-                        //plugin.Info("Changed all players to " + Role.TUTORIAL);
                         return new string[] { "Changed all players to " + Role.TUTORIAL };
                     }
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0],out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
                 Vector originalPos = myPlayer.GetPosition();
-                //plugin.Info("Set " + myPlayer.Name + " to TUTORIAL");
                 myPlayer.ChangeRole(Role.TUTORIAL);
                 myPlayer.Teleport(originalPos);
-                return new string[] { "Set " + myPlayer.Name + " to TUTORIAL" };
+                return new string[] { "Set " + myPlayer.Name + " to " + Role.TUTORIAL };
             }
             else
                 return new string[] { GetUsage() };
-            //plugin.Info(GetUsage());
         }
     }
 }

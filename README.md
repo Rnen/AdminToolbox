@@ -29,25 +29,26 @@ ServerMod is a server side plugin system with a bunch of additional configuratio
 
 ### Note that all commands below requires you to have `enable_ra_server_commands:` set to true in your `config_gameplay.txt`, and your steamID64/SERVER-ROLE added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
-Command | Value Type | Value Type | Description
---- | :---: | :---: | ---
-P / PLAYER | Player |   | Lists all values for the specified Player
-PLAYERS |   |   | Lists all players + IP's + SteamID's.
-GOD | Player | Boolean | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
-NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
-HP / SETHP | Player | Integer | Sets player HP to (Integer).
-HEAL | Player | Integer | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
-TPX | Player1 | Player2 | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
-TUT / TUTORIAL | Player |  | Sets player role to TUTORIAL.
-ROLE  | Player | ROLEID | Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
-KEEP / KEEPSETTINGS| Player| Boolean | Enables keeping player settings on round restart.
-RLOCK / ROUNDLOCK | Boolean |   | Turns on/off round ending
-BD / BREAKDOORS | Player | Boolean | Turns on/off breaking doors for that player.
-PL / PLOCK / PLAYERLOCK / PLAYERLOCKDOWN | Player | Boolean | Locks all doors for the spesified player.
-SPEC / SPECTATOR | Player | Boolean | Player will never spawn naturally.
-IK / INSTAKILL / INSTANTKILL | Player | Boolean | Turns on/off instant kills for that player.
-ATDISABLE | | | **Disables the Admintoolbox plugin.** Server will need restart to enable it again
-ATCOLOR | Boolean | | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+Command | Value Type | Value Type | Value Type | Description
+--- | :---: | :---: | :---: | ---
+P / PLAYER | Player |  |  | Lists all values for the specified Player
+PLAYERS |   |  |  | Lists all players + IP's + SteamID's.
+GOD | Player | Boolean | | Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
+NODMG | Player | Boolean || Turns on/off damageOutput for that player. Use without (bool) to toggle.
+HP / SETHP | Player | Integer | | Sets player HP to (Integer).
+HEAL | Player | Integer | | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
+TPX | Player1 | Player2 | | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
+TUT / TUTORIAL | Player | |  | Sets player role to TUTORIAL.
+ROLE  | Player | ROLEID ||  Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
+KEEP / KEEPSETTINGS | Player| Boolean | | Enables keeping player settings on round restart.
+RLOCK / ROUNDLOCK | Boolean | |   | Turns on/off round ending
+BD / BREAKDOORS | Player | Boolean | | Turns on/off breaking doors for that player.
+PL / PLOCK / PLAYERLOCK / PLAYERLOCKDOWN | Player | Boolean | | Locks all doors for the spesified player.
+SPEC / SPECTATOR | Player | Boolean | | Player will never spawn naturally.
+IK / INSTAKILL / INSTANTKILL | Player | Boolean | | Turns on/off instant kills for that player.
+ATDISABLE | | | | **Disables the Admintoolbox plugin.** Server will need restart to enable it again
+ATCOLOR | Boolean | | | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+JAIL | Player | seconds | | Jails the player for the specified (if not specified, defaults to 1 year) time. Re-use to unjail.
 S / SERVERINFO |    | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
@@ -92,7 +93,7 @@ admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from load
 admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
-admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`
++admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
 admintoolbox_debug_player_player_joinANDleave | Boolean | False | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
 ~~admintoolbox_intercom_whitelist~~ | ~~(serverRole:SpeakTime-CooldownTime)~~ | | ~~Whitelist of server roles (roles from `config_remoteadmin.txt` with specific time settings~~ **Temporarily removed**
