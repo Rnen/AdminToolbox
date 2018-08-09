@@ -100,7 +100,7 @@ admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cann
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
-admintoolbox_block_role_damage | Example[Here]() | | Specifies what roles (AttackerRole) cannot damage.
+admintoolbox_block_role_damage | Example[Here](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
