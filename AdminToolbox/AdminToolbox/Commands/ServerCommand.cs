@@ -30,7 +30,7 @@ namespace AdminToolbox.Command
                 if (sender.GetType() == typeof(Player))
                     return true;
                 else
-                    return true; //temp fix for broken sender
+                    return false;
             }
             string ColoredBools(bool input)
             {
@@ -58,8 +58,6 @@ namespace AdminToolbox.Command
                     "\n - Stats:" +
                     "\n     - Round Number: " + AdminToolbox.roundCount +
                     "\n     - Round Duration: " + timeString;
-            x.Replace("False", "<color=red>False</color>");
-            x.Replace("True", "<color=green>True</color>");
             return new string[] { x };
         }
 	}

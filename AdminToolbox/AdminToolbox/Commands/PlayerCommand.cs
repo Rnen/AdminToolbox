@@ -24,7 +24,7 @@ namespace AdminToolbox.Command
                 if (sender.GetType() == typeof(Player))
                     return true;
                 else
-                    return true; //temp fix for broken sender
+                    return false; 
             }
 
             AdminToolbox.AddMissingPlayerVariables();

@@ -14,7 +14,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "HEAL [PLAYER] (AMOUNT)";
+			return "(ATHEAL / AT-HEAL) [PLAYER] (AMOUNT)";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)

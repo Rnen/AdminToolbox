@@ -19,7 +19,6 @@ namespace AdminToolbox.Command
 
         public string[] OnCall(ICommandSender sender, string[] args)
         {
-            AdminToolbox.AddMissingPlayerVariables();
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {

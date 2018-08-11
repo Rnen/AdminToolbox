@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace AdminToolbox
 {
-    class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
+    class RoundEventHandler : SetPlayerVariables, IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
     {
         private Plugin plugin;
 
@@ -74,9 +74,9 @@ namespace AdminToolbox
                     else
                         plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
                 }
+                AdminToolbox.AddMissingPlayerVariables();
                 foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
                 {
-                    AdminToolbox.AddMissingPlayerVariables(new Player[] { pl });
                     if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
                         AdminToolbox.playerdict[pl.SteamId].RoundsPlayed++;
                 }
@@ -89,7 +89,7 @@ namespace AdminToolbox
             AdminToolbox.lockRound = false;
             if (AdminToolbox.playerdict.Count > 0)
                 foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.playerdict)
-                    if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+                    if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
         }
     }
 }

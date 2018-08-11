@@ -14,7 +14,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "HP [PLAYER] (AMOUNT)";
+			return "(ATHP / ATSETHP / AT-HP / AT-SETHP) [PLAYER] (AMOUNT)";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)

@@ -108,13 +108,13 @@ namespace AdminToolbox
             this.AddCommands(new string[] { "spec", "spectator" }, new Command.SpectatorCommand());
             this.AddCommands(new string[] { "p", "player" }, new Command.PlayerCommand());
             this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
-            this.AddCommand("heal", new Command.HealCommand());
-            this.AddCommands(new string[] { "god", "godmode" }, new Command.GodModeCommand());
+            this.AddCommands(new string[] { "atheal", "at-heal" }, new Command.HealCommand());
+            this.AddCommands(new string[] { "atgod", "atgodmode", "at-god", "at-godmode" }, new Command.GodModeCommand());
             this.AddCommand("nodmg", new Command.NoDmgCommand());
             this.AddCommands(new string[] { "tut", "tutorial" }, new Command.TutorialCommand());
             this.AddCommand("role", new Command.RoleCommand());
             this.AddCommands(new string[] { "keep", "keepsettings" }, new Command.KeepSettingsCommand());
-            this.AddCommands(new string[] { "hp", "sethp" }, new Command.SetHpCommand());
+            this.AddCommands(new string[] { "athp", "atsethp", "at-hp", "at-sethp" }, new Command.SetHpCommand());
             this.AddCommand("pos", new Command.PosCommand());
             this.AddCommand("tpx", new Command.TeleportCommand());
             this.AddCommand("warp", new Command.WarpCommmand());
@@ -150,7 +150,8 @@ namespace AdminToolbox
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_endedRound_damagemultiplier", 1f, Smod2.Config.SettingType.FLOAT, true, "Damage multiplier after end of round"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_round_damagemultiplier", 1f, Smod2.Config.SettingType.FLOAT, true, "Damage multiplier"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_decontamination_damagemultiplier", 1f, Smod2.Config.SettingType.FLOAT, true, "Damage multiplier for the decontamination of LCZ"));
-
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_custom_nuke_cards", false, Smod2.Config.SettingType.BOOL, true, "Enables the use of custom keycards for the activation of the nuke"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, Smod2.Config.SettingType.NUMERIC_LIST, true, "List of all cards that can enable the nuke"));
 
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_teamkills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for teamkills"));
             this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_log_kills", false, Smod2.Config.SettingType.BOOL, true, "Writing logfiles for regular kills"));
@@ -167,17 +168,17 @@ namespace AdminToolbox
             #endregion
         }
 
-        public static void AddMissingPlayerVariables(Player[] players = null)
+        public static void AddMissingPlayerVariables(List<Player> players = null)
         {
             if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
-            if (players.Length > 0 && players != null)
+            else if (players != null && players.Count > 0)
                 foreach (Player player in players)
-                    AddSpesificPlayer(player);
+                    AdminToolbox.AddToPlayerDict(player);
             else
                 foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-                    AddSpesificPlayer(player);
+                    AdminToolbox.AddToPlayerDict(player);
         }
-        public static void AddSpesificPlayer(Player player)
+        public static void AddToPlayerDict(Player player)
         {
             if (player.SteamId != null && player.SteamId != string.Empty)
                 if (!playerdict.ContainsKey(player.SteamId))
@@ -534,16 +535,8 @@ namespace AdminToolbox
             return text;
         }
     }
-    class SetPlayerVariables : AdminToolbox
+    class SetPlayerVariables
     {
-        private bool spectatorOnly;
-
-
-        public SetPlayerVariables()
-        {
-
-        }
-        
         public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
         {
             if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
@@ -554,7 +547,7 @@ namespace AdminToolbox
             AdminToolbox.playerdict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.playerdict[steamID].lockDown;
             AdminToolbox.playerdict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.playerdict[steamID].instantKill;
         }
-        public static void SetPlayerStats(string steamID, int? Kills = 0, int? TeamKills = 0, int? Deaths = 0, int? RoundsPlayed = 0)
+        public static void SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null)
         {
             if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
             AdminToolbox.playerdict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.playerdict[steamID].Kills;

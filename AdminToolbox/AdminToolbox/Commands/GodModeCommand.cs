@@ -16,7 +16,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "GOD [PLAYER] (BOOL)";
+			return "(ATGOD / ATGODMODE / AT-GOD) [PLAYER] (BOOL)";
 		}
 
         public string[] OnCall(ICommandSender sender, string[] args)
@@ -41,9 +41,9 @@ namespace AdminToolbox.Command
                                 if(changedState) AdminToolbox.playerdict[pl.SteamId].dmgOff = j;
                                 playerNum++;
                             }
-                            outPut += "\nSet " + playerNum + " player's Godmode to " + j;
-                            if (changedState) return new string[] { "\nSet " + playerNum + " player's Godmode to " + j, "\nNoDmg for theese " + playerNum + " players set to: " + j };
-                            return new string[] { "\nSet " + playerNum + " player's Godmode to " + j };
+                            outPut += "\nSet " + playerNum + " player's AT-Godmode to " + j;
+                            if (changedState) return new string[] { "\n" + "Set " + playerNum + " player's AT-Godmode to " + j, "\n" + "NoDmg for theese " + playerNum + " players set to: " + j };
+                            return new string[] { "\n" + "Set " + playerNum + " player's AT-Godmode to " + j };
                         }
                         else
                         {
@@ -53,12 +53,12 @@ namespace AdminToolbox.Command
                     else
                     {
                         foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].godMode = !AdminToolbox.playerdict[pl.SteamId].godMode; }
-                        return new string[] { "Toggled all players godmodes" };
+                        return new string[] { "Toggled all players AT-Godmodes" };
                     }
                 }
                 else if(args[0].ToLower() == "list" || args[0].ToLower() == "get")
                 {
-                    string str = "\nPlayers with Godmode enabled: \n";
+                    string str = "\n" + "Players with AT-Godmode enabled: " + "\n";
                     List<string> myPlayerList = new List<string>();
                     foreach(Player pl in server.GetPlayers())
                     {
@@ -76,7 +76,7 @@ namespace AdminToolbox.Command
                             str += "\n - " + item;
                         }
                     }
-                    else str = "\nNo players with \"Godmode\" enabled!";
+                    else str = "\n" + "No players with \"AT-Godmode\" enabled!";
                     return new string[] { str };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
@@ -90,15 +90,15 @@ namespace AdminToolbox.Command
                     if (changedValue)
                     {
                         AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = AdminToolbox.playerdict[myPlayer.SteamId].godMode;
-                        return new string[] { myPlayer.Name + " godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode, myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
+                        return new string[] { myPlayer.Name + " AT-Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode, myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
                     }
                     else
-                        return new string[] { myPlayer.Name + " godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
+                        return new string[] { myPlayer.Name + " AT-Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
                 }
                 else
                 {
                     AdminToolbox.playerdict[myPlayer.SteamId].godMode = !AdminToolbox.playerdict[myPlayer.SteamId].godMode;
-                    return new string[] { myPlayer.Name + " Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
+                    return new string[] { myPlayer.Name + " AT-Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
                 }
 
             }

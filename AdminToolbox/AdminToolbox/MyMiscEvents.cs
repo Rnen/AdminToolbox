@@ -8,22 +8,21 @@ using System;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole
+    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown
     {
         private Plugin plugin;
-
-        //public static float defaultIntercomDuration, defaultIntercomCooldown;
 
         public MyMiscEvents(Plugin plugin)
         {
             this.plugin = plugin;
         }
 
-        public void OnIntercom(PlayerIntercomEvent ev)
+		public void OnIntercom(PlayerIntercomEvent ev)
         {
-            AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Player });
-            //Blacklist
-            string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
+            AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+            if (AdminToolbox.intercomLock) ev.SpeechTime = 0f;
+			#region Blacklis
+			string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
             if (blackListedSTEAMIDS.Length > 0)
                 foreach (string item in blackListedSTEAMIDS)
                     if (item == ev.Player.SteamId)
@@ -31,8 +30,9 @@ namespace AdminToolbox
                         ev.SpeechTime = 0f;
                         break;
                     }
-            #region IntercomWhitelist
-            string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
+			#endregion
+			#region IntercomWhitelist
+			string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
             if (whitelistRanks.Length > 0)
             {
                 foreach (var item in whitelistRanks)
@@ -60,11 +60,11 @@ namespace AdminToolbox
 
             }
             #endregion
-        }
+        } //Un-comment if intercom is fix c:
 
-        public void OnDoorAccess(PlayerDoorAccessEvent ev)
+		public void OnDoorAccess(PlayerDoorAccessEvent ev)
         {
-            AdminToolbox.AddSpesificPlayer(ev.Player);
+            AdminToolbox.AddToPlayerDict(ev.Player);
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
             {
                 if (AdminToolbox.playerdict[ev.Player.SteamId].destroyDoor)
@@ -76,7 +76,7 @@ namespace AdminToolbox
 
         public void OnSpawn(PlayerSpawnEvent ev)
         {
-            AdminToolbox.AddSpesificPlayer(ev.Player);
+            AdminToolbox.AddToPlayerDict(ev.Player);
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
             {
                 AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.SpawnPos;
@@ -116,7 +116,7 @@ namespace AdminToolbox
         }
         public void OnPlayerJoin(PlayerJoinEvent ev)
         {
-            AdminToolbox.AddSpesificPlayer(ev.Player);
+            AdminToolbox.AddToPlayerDict(ev.Player);
 
             if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info", true, false))
             {
@@ -145,6 +145,15 @@ namespace AdminToolbox
                     return false;
             }
             if (nextCheck()) AdminToolbox.CheckJailedPlayers();
+        }
+
+        public void OnStartCountdown(WarheadStartEvent ev)
+        {
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_custom_nuke_cards", false))
+            {
+                int[] allowedCards = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, false);
+                ev.Cancel = !allowedCards.Contains((int)ev.Activator.GetCurrentItem().ItemType);
+            }
         }
     }
 }
