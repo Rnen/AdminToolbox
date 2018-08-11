@@ -38,8 +38,7 @@ namespace AdminToolbox
                 foreach (var item in whitelistRanks)
                 {
                     string[] myKeyString = item.Split(':', '-', '_', '#');
-                    plugin.Info(item.Replace(" ", string.Empty) + Environment.NewLine + ev.Player.GetRankName().Replace(" ", string.Empty));
-                    if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) && myKeyString.Length > 1)
+                    if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty))
                     {
                         if (myKeyString.Length >= 2)
                         {
@@ -54,13 +53,10 @@ namespace AdminToolbox
                                 plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + item + "\", skipping...");
                         }
                     }
-                    else
-                        plugin.Info("Value for: \"" + ev.Player.GetRankName() + "\" not found");
                 }
-
             }
             #endregion
-        } //Un-comment if intercom is fix c:
+        }
 
 		public void OnDoorAccess(PlayerDoorAccessEvent ev)
         {
