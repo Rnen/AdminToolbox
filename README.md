@@ -33,10 +33,10 @@ Command | Value Type | Value Type | Description
 --- | :---: | :---: | ---
 P / PLAYER | Player |    | Lists all values for the specified Player
 PLAYERS |   |    | Lists all players + IP's + SteamID's.
-GOD | Player | Boolean |  Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
+ATGOD | Player | Boolean |  Turns on/off godmode for that player. Use without (bool) to toggle. Add `nodmg` after (bool) to turn on NoDmg as as well for this player
 NODMG | Player | Boolean | Turns on/off damageOutput for that player. Use without (bool) to toggle.
-HP / SETHP | Player | Integer  | Sets player HP to (Integer).
-HEAL | Player | Integer  | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
+ATHP / ATSETHP | Player | Integer  | Sets player HP to (Integer).
+ATHEAL | Player | Integer  | Heals player for (Integer) amount. Use without (Integer) to set to Role default max HP.
 TPX | Player1 | Player2  | Teleports Player1 to Player2. (Will not grab all players names that contain the string you entered like TP does, only the closest match)
 TUT / TUTORIAL | Player  |  | Sets player role to TUTORIAL.
 ROLE  | Player | ROLEID |  Sets player to ROLE without teleporting them to ROLE SPAWN or giving items.
@@ -100,6 +100,8 @@ admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 admintoolbox_block_role_damage | Example[Here](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
+admintoolbox_custom_nuke_cards | Boolean | False | Enables config for having to use a specified card to activate nuke
+admintoolbox_nuke_card_list | List | 6, 9, 11 | What item(s) the player needs to have in his hand to start the nuke
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
