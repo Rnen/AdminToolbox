@@ -7,12 +7,6 @@ namespace AdminToolbox.Command
 {
 	class BreakDoorsCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;        
-		public BreakDoorsCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Toggles that players break doors when interacting with them";
@@ -39,22 +33,18 @@ namespace AdminToolbox.Command
                             int playerNum = 0;
                             foreach (Player pl in server.GetPlayers())
                             {
-                                AdminToolbox.playerdict[pl.SteamId][3] = j;
+                                AdminToolbox.playerdict[pl.SteamId].destroyDoor = j;
                                 playerNum++;
                             }
                             outPut += "\nSet " + playerNum + " player's BreakDoors to " + j;
                             return new string[] { "\nSet " + playerNum + " player's BreakDoors to " + j };
                         }
                         else
-                        {
-                            //plugin.Info("Not a valid bool!");
                             return new string[] { "Not a valid bool!" };
-                        }
                     }
                     else
                     {
-                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId][3] = !AdminToolbox.playerdict[pl.SteamId][3]; }
-                        //plugin.Info("Toggled all players godmodes");
+                        foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].destroyDoor = !AdminToolbox.playerdict[pl.SteamId].destroyDoor; }
                         return new string[] { "Toggled all players BreakDoors" };
                     }
                 }
@@ -64,19 +54,14 @@ namespace AdminToolbox.Command
                     List<string> myPlayerList = new List<string>();
                     foreach (Player pl in server.GetPlayers())
                     {
-                        if (AdminToolbox.playerdict[pl.SteamId][3])
-                        {
+                        if (AdminToolbox.playerdict[pl.SteamId].destroyDoor)
                             myPlayerList.Add(pl.Name);
-                            //str += " - " +pl.Name + "\n";
-                        }
                     }
                     if (myPlayerList.Count > 0)
                     {
                         myPlayerList.Sort();
                         foreach (var item in myPlayerList)
-                        {
                             str += "\n - " + item;
-                        }
                     }
                     else str = "\nNo players with \"BreakDoors\" enabled!";
                     return new string[] { str };
@@ -85,14 +70,14 @@ namespace AdminToolbox.Command
                 if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
                 if (args.Length > 1)
                 {
-                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId][3] = true; }
-                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId][3] = false; }
-                    return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId][3] };
+                    if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = true; }
+                    else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = false; }
+                    return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor };
                 }
                 else
                 {
-                    AdminToolbox.playerdict[myPlayer.SteamId][3] = !AdminToolbox.playerdict[myPlayer.SteamId][3];
-                    return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId][3] };
+                    AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = !AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor;
+                    return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor };
                 }
 
             }

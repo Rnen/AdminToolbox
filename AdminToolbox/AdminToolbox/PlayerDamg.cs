@@ -9,13 +9,6 @@ using System;
 namespace AdminToolbox
 {
     #region PlayerDamage
-
-    class LastAttacked
-    {
-        //Just a place to store the last attacked player 
-        public static Player lastAttacker = null, lastVictim = null;
-        public static DamageType lastDamageType = DamageType.NONE, last106Damage;
-    }
     class DamageDetect : IEventHandlerPlayerHurt
     {
         private Plugin plugin;
@@ -25,6 +18,7 @@ namespace AdminToolbox
         }
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
+
             int[] humanDamageTypes = {
                 (int)DamageType.COM15,
                 (int)DamageType.E11_STANDARD_RIFLE,
@@ -50,25 +44,23 @@ namespace AdminToolbox
                 (int)Team.CDP
             };
 
-            AdminToolbox.AddSpesificPlayer(ev.Player);
-            AdminToolbox.AddSpesificPlayer(ev.Attacker);
+            AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Attacker, ev.Player });
 
             float originalDamage = ev.Damage;
             DamageType originalType = ev.DamageType;
+            float damageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_round_damageMultiplier", 1f, true);
+            ev.Damage = originalDamage * damageMultiplier;
 
-            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId][1]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
-            if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId][2]) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
+            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].isJailed) { ev.Damage = 0f; return; }
+            if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].isJailed) { ev.Damage = 0f; return; }
+
+            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId].godMode) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
+            if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId].dmgOff) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", humanDamageTypes, false);
 
-            float damageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_round_damageMultiplier", 1, true);
-            ev.Damage = ev.Damage * damageMultiplier;
-
-            if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
-                if (AdminToolbox.playerdict[ev.Attacker.SteamId][6])
-                    if (ev.DamageType != DamageType.FRAG)
+            if (ev.DamageType != DamageType.FRAG && AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
                         ev.Damage = ev.Player.GetHealth() + 1;
-
             string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "14:14" }, false);
             if (roleDamages.Length > 0)
             {
@@ -86,6 +78,7 @@ namespace AdminToolbox
                             {
                                 if (z == (int)ev.Attacker.TeamRole.Role && x == (int)ev.Player.TeamRole.Role)
                                 {
+                                    if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) return;
                                     ev.Damage = 0f;
                                     ev.DamageType = DamageType.NONE;
                                     foundPlayer = true;
@@ -101,15 +94,18 @@ namespace AdminToolbox
                         if (foundPlayer) break;
                     }
                 }
-                if (foundPlayer) return;
+                //if (foundPlayer) return;
             }
-
             if (AdminToolbox.isRoundFinished)
             {
-                float enddamageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1, true);
-                ev.Damage = originalDamage * enddamageMultiplier;
-                if ((int)ev.Player.TeamRole.Role != 14)
-                    return;
+                if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
+                    goto SkipMultiplier;
+                else
+                {
+                    float enddamageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1f, true);
+                    ev.Damage = originalDamage * enddamageMultiplier;
+                }
+                SkipMultiplier:;
             }
             switch ((int)ev.Player.TeamRole.Role)
             {
@@ -117,52 +113,42 @@ namespace AdminToolbox
                     if (!allowedDmg.Contains((int)ev.DamageType))
                     {
                         if (DebugDmg.Contains((int)ev.DamageType) && (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))) plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) goto default;
                         ev.DamageType = DamageType.NONE;
                         ev.Damage = 0f;
-                        return;
                     }
                     else
                         goto default;
+                    break;
                 default:
-                    if (ev.Player.TeamRole.Role == Role.SCP_106) { LastAttacked.last106Damage = ev.DamageType; };
+                    if (AdminToolbox.isRoundFinished) break;
+                    if (ev.DamageType == DamageType.DECONT) ev.Damage = originalDamage * ConfigManager.Manager.Config.GetFloatValue("admintoolbox_decontamination_damagemultiplier", 1f, true);
                     if ((ev.Attacker.Name == "Server" && !(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_server", false, false))) || (ev.Attacker.Name == "Spectator" && !(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_spectator", false, false)))) return;
                     if (nineTailsTeam.Contains((int)ev.Player.TeamRole.Team) && nineTailsTeam.Contains((int)ev.Attacker.TeamRole.Team))
                     {
-                        if (ev.DamageType == DamageType.FRAG)
-                        {
-                            LastAttacked.lastAttacker = ev.Attacker;
-                            LastAttacked.lastVictim = ev.Player;
-                            LastAttacked.lastDamageType = ev.DamageType;
-                            //string x = LastAttacked.lastAttacker.Name + " " + LastAttacked.lastVictim.Name + " " + LastAttacked.lastDamageType;
-                            //plugin.Info(x);
-                        }
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
                         {
-                            if (DebugDmg.Contains((int)ev.DamageType))
+                            if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
                                 plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
                         }
                     }
                     else if (chaosTeam.Contains((int)ev.Player.TeamRole.Team) && chaosTeam.Contains((int)ev.Attacker.TeamRole.Team))
                     {
-                        if (ev.DamageType == DamageType.FRAG)
-                        {
-                            LastAttacked.lastAttacker = ev.Attacker;
-                            LastAttacked.lastVictim = ev.Player;
-                            LastAttacked.lastDamageType = ev.DamageType;
-                        }
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
                         {
-                            if (DebugDmg.Contains((int)ev.DamageType))
+                            if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
                                 plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
                         }
                     }
                     else if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_damage", false, false))
                     {
-                        if (DebugDmg.Contains((int)ev.DamageType))
+                        if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
                             plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + ev.Damage + " damage" +*/ " with: " + ev.DamageType);
                     }
                     break;
             }
+            if(ev.Damage >= ev.Player.GetHealth() && AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.Player.GetPosition();
+
         }
     }
 
@@ -180,38 +166,30 @@ namespace AdminToolbox
         {
             int[] nineTailsTeam = { (int)Team.MTF, (int)Team.RSC }, chaosTeam = { (int)Team.CHI, (int)Team.CDP };
 
-            AdminToolbox.AddSpesificPlayer(ev.Player);
-            AdminToolbox.AddSpesificPlayer(ev.Killer);
-
-            if (AdminToolbox.playerDeathPos.ContainsKey(ev.Player.SteamId))
-                AdminToolbox.playerDeathPos[ev.Player.SteamId] = ev.Player.GetPosition();
+            AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player, ev.Killer });
 
             if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
-            if (AdminToolbox.playerStats.ContainsKey(ev.Player.SteamId)) AdminToolbox.playerStats[ev.Player.SteamId][2]++;
             switch ((int)ev.Player.TeamRole.Role)
             {
                 case 3:
-                    if (LastAttacked.last106Damage == DamageType.LURE || LastAttacked.last106Damage == DamageType.CONTAIN)
+                    if (ev.DamageTypeVar == DamageType.LURE || ev.DamageTypeVar == DamageType.CONTAIN)
                         ev.SpawnRagdoll = false;
                     goto default;
                 default:
-                    if (AdminToolbox.isRoundFinished) return;
-
+                    if (AdminToolbox.isRoundFinished) break;
+                    if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) AdminToolbox.playerdict[ev.Player.SteamId].Deaths++;
                     if (!(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_scp_and_self_killed", false, false)) && ev.Player.Name == ev.Killer.Name) return;
                     if (nineTailsTeam.Contains((int)ev.Player.TeamRole.Team) && nineTailsTeam.Contains((int)ev.Killer.TeamRole.Team))
                     {
-                        if (AdminToolbox.playerStats.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerStats[ev.Killer.SteamId][1]++;
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerdict[ev.Killer.SteamId].TeamKills++;
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
-                            if ((LastAttacked.lastDamageType == DamageType.FRAG) && (ev.Player.SteamId == LastAttacked.lastVictim.SteamId && ev.Killer.SteamId == LastAttacked.lastAttacker.SteamId))
+                            if (ev.DamageTypeVar == DamageType.FRAG)
                             {
                                 if (AdminToolbox.isColored)
                                     plugin.Info(ev.Killer.TeamRole.Name + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=Red; granaded @#fg=Default;fellow @#fg=Blue;" + ev.Player.TeamRole.Name + "@#fg=Yellow; " + ev.Player.Name + "@#fg=Default;");
                                 else
                                     plugin.Info(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " granaded fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name);
                                 AdminToolbox.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " granaded fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name },LogHandlers.ServerLogType.TeamKill);
-                                LastAttacked.lastAttacker = null;
-                                LastAttacked.lastVictim = null;
-                                LastAttacked.lastDamageType = DamageType.NONE;
                             }
                             else
                             {
@@ -224,18 +202,15 @@ namespace AdminToolbox
                     }
                     else if (chaosTeam.Contains((int)ev.Player.TeamRole.Team) && chaosTeam.Contains((int)ev.Killer.TeamRole.Team))
                     {
-                        if (AdminToolbox.playerStats.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerStats[ev.Killer.SteamId][1]++;
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerdict[ev.Killer.SteamId].TeamKills++;
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
-                            if ((LastAttacked.lastDamageType == DamageType.FRAG) && (ev.Player.SteamId == LastAttacked.lastVictim.SteamId && ev.Killer.SteamId == LastAttacked.lastAttacker.SteamId))
+                            if (ev.DamageTypeVar == DamageType.FRAG)
                             {
                                 if (AdminToolbox.isColored)
                                     plugin.Info(ev.Killer.TeamRole.Name + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=Red; granaded @#fg=Default;fellow @#fg=Green;" + ev.Player.TeamRole.Name + " @#fg=Yellow;" + ev.Player.Name+ "@#fg=Default;");
                                 else
                                     plugin.Info(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " granaded fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name);
                                 AdminToolbox.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " granaded fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name },LogHandlers.ServerLogType.TeamKill);
-                                LastAttacked.lastAttacker = null;
-                                LastAttacked.lastVictim = null;
-                                LastAttacked.lastDamageType = DamageType.NONE;
                             }
                             else
                             {
@@ -249,11 +224,11 @@ namespace AdminToolbox
                     else if ((ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_kill", false, false)))
                     {
                         plugin.Info(ev.Killer.Name + " killed: " + ev.Player.Name);
-                        if (AdminToolbox.playerStats.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerStats[ev.Killer.SteamId][0]++;
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerdict[ev.Killer.SteamId].Kills++;
                         AdminToolbox.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed " + ev.Player.TeamRole.Name + " " + ev.Player.Name }, LogHandlers.ServerLogType.KillLog);
                     }
                     else
-                        if (AdminToolbox.playerStats.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerStats[ev.Killer.SteamId][0]++;
+                        if (AdminToolbox.playerdict.ContainsKey(ev.Killer.SteamId)) AdminToolbox.playerdict[ev.Killer.SteamId].Kills++;
                     break;
             }
         }
