@@ -8,15 +8,8 @@ using System;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown
+    class MyMiscEvents : AdminToolbox, IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown
     {
-        private Plugin plugin;
-
-        public MyMiscEvents(Plugin plugin)
-        {
-            this.plugin = plugin;
-        }
-
 		public void OnIntercom(PlayerIntercomEvent ev)
         {
             AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
@@ -84,7 +77,7 @@ namespace AdminToolbox
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
         {
             AdminToolbox.lockRound = false;
-            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.plugin.pluginManager.DisablePlugin(this.plugin);
+            if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.pluginManager.DisablePlugin(plugin);
             if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_colors", false);
             if (!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLock = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercomlock", false);
             //this.plugin.Info(System.Reflection.Assembly.GetExecutingAssembly().Location);
