@@ -1,7 +1,7 @@
 # AdminToolbox
 This is a plugin for SCL:Secret Lab servers. 
 It offers multiple admin tools like 
-* Friendly fire logs in server console
+* Friendly fire logs in server console & logs to file
 * Godmode, ability to turn off damage for players
 * Heal & SetHP
 * Warp Points
@@ -9,7 +9,7 @@ It offers multiple admin tools like
 * Prevent the round from ending
 * Per-player stats
 * Breaking doors interacted with
-* Player Joined messages in server log
+* Player Joined messages in server window
 
 and more commands, and other features that do not exist in the base game (yet).
 There is also more to come!
@@ -66,7 +66,7 @@ WARP | Player | WarpName |   |  Teleports `Player` to `WarpName`
 POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up).  (No need to use every cordinate (X Y Z))
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | Player | GET | |  Gets XYZ position of `Player`
-EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping.
+EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping. (The second del part is for if you use an item number)
 
 > Player input doesn't need the full name, it will grab the closest matching name containing your entry
 ## ^These commands work in both server console and text-based remote admin!^
