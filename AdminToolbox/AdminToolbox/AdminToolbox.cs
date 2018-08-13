@@ -19,7 +19,7 @@ namespace AdminToolbox
         name = "Admin Toolbox",
         description = "Plugin for advanced admin tools",
         id = "rnen.admin.toolbox",
-        version = "1.3.3",
+        version = "1.3.4",
         SmodMajor = 3,
         SmodMinor = 1,
         SmodRevision = 12
@@ -101,7 +101,7 @@ namespace AdminToolbox
             this.AddEventHandlers(new RoundEventHandler(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.Normal);
             this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
-            this.AddEventHandlers(new MyMiscEvents(), Priority.Normal);
+            this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
             #endregion
             #region Commands Registering Commands
             // Register Commands
@@ -535,7 +535,7 @@ namespace AdminToolbox
             return text;
         }
     }
-    class SetPlayerVariables : AdminToolbox
+    class SetPlayerVariables
     {
         public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
         {
