@@ -26,11 +26,11 @@ namespace AdminToolbox.Command
             else
                 timeString = minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
             bool isPlayer()
-            {
-                if (sender.GetType() == typeof(Player))
-                    return true;
-                else
-                    return false;
+			{
+				if (sender.GetType() == typeof(Player))
+					return true;
+				else
+					return false;
             }
             string ColoredBools(bool input)
             {

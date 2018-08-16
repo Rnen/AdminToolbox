@@ -5,10 +5,11 @@ using Smod2.EventHandlers;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Text.RegularExpressions;
 
 namespace AdminToolbox
 {
-    class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName
     {
 		private Plugin plugin;
 
@@ -150,5 +151,10 @@ namespace AdminToolbox
                 ev.Cancel = !allowedCards.Contains((int)ev.Activator.GetCurrentItem().ItemType);
             }
         }
-    }
+
+		public void OnSetServerName(SetServerNameEvent ev)
+		{
+			ev.ServerName = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#3f704d><size=1>AT:" + plugin.Details.version + "</size></color>" : Regex.Replace(ev.ServerName, "$atversion", "AT:" + plugin.Details.version, RegexOptions.IgnoreCase);
+		}
+	}
 }

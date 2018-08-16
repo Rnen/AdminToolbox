@@ -56,13 +56,23 @@ namespace AdminToolbox
 
             if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) { if (AdminToolbox.playerdict[ev.Player.SteamId].godMode) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
             if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId].dmgOff) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
-            int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
+            int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { (int)ItemType.NULL }, false);
             int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", humanDamageTypes, false);
 
             if (ev.DamageType != DamageType.FRAG && AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
                         ev.Damage = ev.Player.GetHealth() + 1;
             string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "14:14" }, false);
-            if (roleDamages.Length > 0)
+
+			bool isFriendlyDmg()
+			{
+				if (nineTailsTeam.Contains((int)ev.Player.TeamRole.Team) && nineTailsTeam.Contains((int)ev.Attacker.TeamRole.Team)) return true;
+				else if (chaosTeam.Contains((int)ev.Player.TeamRole.Team) && chaosTeam.Contains((int)ev.Attacker.TeamRole.Team))
+					return true;
+				else
+					return false;
+			}
+
+			if (roleDamages.Length > 0)
             {
                 bool foundPlayer = false;
                 foreach (var item in roleDamages)
@@ -110,33 +120,22 @@ namespace AdminToolbox
             switch ((int)ev.Player.TeamRole.Role)
             {
                 case 14:
-                    if (!allowedDmg.Contains((int)ev.DamageType))
-                    {
-                        if (DebugDmg.Contains((int)ev.DamageType) && (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))) plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
+                    if (allowedDmg.Contains((int)ev.DamageType)) goto default;
+					if (DebugDmg.Contains((int)ev.DamageType) && (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))) plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
                         if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) goto default;
                         ev.DamageType = DamageType.NONE;
                         ev.Damage = 0f;
-                    }
-                    else
-                        goto default;
-                    break;
+					break;
                 default:
                     if (AdminToolbox.isRoundFinished) break;
-                    if (ev.DamageType == DamageType.DECONT) ev.Damage = originalDamage * ConfigManager.Manager.Config.GetFloatValue("admintoolbox_decontamination_damagemultiplier", 1f, true);
-                    if ((ev.Attacker.Name == "Server" && !(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_server", false, false))) || (ev.Attacker.Name == "Spectator" && !(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_spectator", false, false)))) return;
-                    if (nineTailsTeam.Contains((int)ev.Player.TeamRole.Team) && nineTailsTeam.Contains((int)ev.Attacker.TeamRole.Team))
+					ev.Damage = (ev.DamageType == DamageType.DECONT) ? originalDamage * ConfigManager.Manager.Config.GetFloatValue("admintoolbox_decontamination_damagemultiplier", 1f, true) : ev.Damage;
+                    if ((ev.Attacker.Name == "Server" && !(ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_server", false, false))) || (ev.Attacker.Name == "Spectator" && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_spectator", false, false))) return;
+                    if (isFriendlyDmg())
                     {
                         if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
                         {
-                            if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
-                                plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
-                        }
-                    }
-                    else if (chaosTeam.Contains((int)ev.Player.TeamRole.Team) && chaosTeam.Contains((int)ev.Attacker.TeamRole.Team))
-                    {
-                        if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
-                        {
-                            if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
+							ev.Damage = (ev.Damage >= 1) ? ConfigManager.Manager.Config.GetFloatValue("admintoolbox_friendlyfire_damagemultiplier", 1f) * originalDamage : ev.Damage;
+							if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
                                 plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
                         }
                     }
@@ -168,7 +167,7 @@ namespace AdminToolbox
 
             AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player, ev.Killer });
 
-            if (ev.Player.Name == "Server" || ev.Killer.Name == "Server") { ev.SpawnRagdoll = false; return; }
+            if (ev.Player.Name == "Server" || ev.Killer.Name == "Server" || ev.Player.Name == string.Empty) { ev.SpawnRagdoll = false; return; }
             switch ((int)ev.Player.TeamRole.Role)
             {
                 case 3:

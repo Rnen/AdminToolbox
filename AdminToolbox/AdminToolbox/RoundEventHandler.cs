@@ -28,7 +28,7 @@ namespace AdminToolbox
             }
             AdminToolbox.AddMissingPlayerVariables();
             AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-            AdminToolbox.warpVectors = AdminToolbox.presetWarps;
+            AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.presetWarps);
         }
         DateTime lastChecked = DateTime.Now.AddSeconds(5);
         public void OnCheckRoundEnd(CheckRoundEndEvent ev)
