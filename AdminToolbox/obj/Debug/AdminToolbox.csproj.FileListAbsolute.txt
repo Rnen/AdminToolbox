@@ -1,0 +1,6 @@
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\AdminToolbox\obj\Debug\AdminToolbox.csprojAssemblyReference.cache
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\AdminToolbox\obj\Debug\AdminToolbox.csproj.CoreCompileInputs.cache
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\Builds\AdminToolbox.dll
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\Builds\AdminToolbox.pdb
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\AdminToolbox\obj\Debug\AdminToolbox.dll
+E:\LIAMS_DESKTOP\programming\AdminToolbox-master\AdminToolbox-master\AdminToolbox\AdminToolbox\obj\Debug\AdminToolbox.pdb
