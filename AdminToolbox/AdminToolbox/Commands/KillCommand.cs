@@ -47,8 +47,10 @@ namespace AdminToolbox.Command
                 if (myPlayer.TeamRole.Role != Role.SPECTATOR)
                 {
                     myPlayer.Kill();
+                    return new string[] { myPlayer + " has been slain!" };
                 }
-                return new string[] { myPlayer + " has been slain!" };
+                else
+                    return new string[] { myPlayer + " is already dead!" };
             }
             else
             {
