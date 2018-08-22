@@ -110,6 +110,7 @@ namespace AdminToolbox
             this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
             this.AddCommands(new string[] { "atheal", "at-heal" }, new Command.HealCommand());
             this.AddCommands(new string[] { "atgod", "atgodmode", "at-god", "at-godmode" }, new Command.GodModeCommand());
+            this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
             this.AddCommand("nodmg", new Command.NoDmgCommand());
             this.AddCommands(new string[] { "tut", "tutorial" }, new Command.TutorialCommand());
             this.AddCommand("role", new Command.RoleCommand());
