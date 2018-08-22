@@ -29,13 +29,25 @@ namespace AdminToolbox.Command
             Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
+                if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+                {
+
+                    string outPut = null;
+                    int playerNum = 0;
+                    foreach (Player pl in server.GetPlayers())
+                    {
+                        AdminToolbox.playerdict[pl.SteamId].Kill();
+                        playerNum++;
+                    }
+                    outPut += "\nSlain " + playerNum + " palyers!";
+                    return new string[] { "\nSlain " + playerNum + " players!" };
+                }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
                 if (myPlayer.TeamRole.Role.Role != Role.SPECTATOR)
                 {
                     myPlayer.Kill();
                 }
-                return new string[] { myPlayer + "has been slain!" };
             }
             else
             {
