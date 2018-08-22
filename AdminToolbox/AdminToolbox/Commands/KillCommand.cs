@@ -36,7 +36,7 @@ namespace AdminToolbox.Command
                     int playerNum = 0;
                     foreach (Player pl in server.GetPlayers())
                     {
-                        AdminToolbox.playerdict[pl.SteamId].Kill();
+                        pl.Kill();
                         playerNum++;
                     }
                     outPut += "\nSlain " + playerNum + " palyers!";
@@ -44,10 +44,11 @@ namespace AdminToolbox.Command
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-                if (myPlayer.TeamRole.Role.Role != Role.SPECTATOR)
+                if (myPlayer.TeamRole.Role != Role.SPECTATOR)
                 {
                     myPlayer.Kill();
                 }
+                return new string[] { myPlayer + " has been slain!" };
             }
             else
             {
