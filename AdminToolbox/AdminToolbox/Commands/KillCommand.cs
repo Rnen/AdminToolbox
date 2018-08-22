@@ -39,11 +39,11 @@ namespace AdminToolbox.Command
                         pl.Kill();
                         playerNum++;
                     }
-                    outPut += "\nSlain " + playerNum + " palyers!";
-                    return new string[] { "\nSlain " + playerNum + " players!" };
+                    outPut += "Slain " + playerNum + " players!";
+                    return new string[] { "Slain " + playerNum + " players!" };
                 }
                 Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
+                if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
                 if (myPlayer.TeamRole.Role != Role.SPECTATOR)
                 {
                     myPlayer.Kill();
