@@ -36,8 +36,8 @@ namespace AdminToolbox.Command
 								AdminToolbox.playerdict[pl.SteamId].destroyDoor = j;
 								playerNum++;
 							}
-							outPut += "\nSet " + playerNum + " player's BreakDoors to " + j;
-							return new string[] { "\nSet " + playerNum + " player's BreakDoors to " + j };
+							outPut += "Set " + playerNum + " player's BreakDoors to " + j;
+							return new string[] { "Set " + playerNum + " player's BreakDoors to " + j };
 						}
 						else
 							return new string[] { "Not a valid bool!" };
@@ -50,7 +50,7 @@ namespace AdminToolbox.Command
 				}
 				else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 				{
-					string str = "\nPlayers with BreakDoors enabled: \n";
+					string str = "Players with BreakDoors enabled: \n";
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
@@ -63,10 +63,10 @@ namespace AdminToolbox.Command
 						foreach (var item in myPlayerList)
 							str += "\n - " + item;
 					}
-					else str = "\nNo players with \"BreakDoors\" enabled!";
+					else str = "No players with \"BreakDoors\" enabled!";
 					return new string[] { str };
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
+				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{

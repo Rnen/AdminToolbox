@@ -26,7 +26,7 @@ namespace AdminToolbox
 				plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
 			}
 			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.AdminToolboxLogger.WritePlayerStatsToFile();
+			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.presetWarps);
 		}
@@ -65,7 +65,7 @@ namespace AdminToolbox
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
 						AdminToolbox.playerdict[pl.SteamId].RoundsPlayed++;
 				}
-				AdminToolbox.AdminToolboxLogger.WritePlayerStatsToFile();
+				AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write);
 			}
 
 		}
@@ -77,6 +77,9 @@ namespace AdminToolbox
 			if (AdminToolbox.playerdict.Count > 0)
 				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.playerdict)
 					if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+			//foreach (Player player in ev.Server.GetPlayers())
+			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
+			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;
 		}
 	}
 }

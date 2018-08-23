@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace AdminToolbox
 {
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerSetRole, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName
 	{
 		private Plugin plugin;
 
@@ -20,7 +21,7 @@ namespace AdminToolbox
 		public void OnIntercom(PlayerIntercomEvent ev)
 		{
 			if (AdminToolbox.intercomLock) ev.SpeechTime = 0f;
-			#region Blacklis
+			#region Blacklist
 			string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
 			if (blackListedSTEAMIDS.Length > 0)
 				foreach (string item in blackListedSTEAMIDS)
@@ -42,7 +43,7 @@ namespace AdminToolbox
 						if (myKeyString.Length >= 2)
 						{
 							if (float.TryParse(myKeyString[1], out float x))
-								ev.SpeechTime = x;
+								ev.SpeechTime = (x <= 0) ? 300 : x;
 							else plugin.Info(myKeyString[1] + " is not a valid speakTime number in: " + myKeyString[0]);
 							if (myKeyString.Length == 3)
 								if (float.TryParse(myKeyString[2], out float z))
@@ -83,7 +84,7 @@ namespace AdminToolbox
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
 			AdminToolbox.lockRound = false;
-			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false) == false) this.plugin.pluginManager.DisablePlugin(plugin);
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false)) this.plugin.pluginManager.DisablePlugin(plugin);
 			if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_colors", false);
 			if (!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLock = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercomlock", false);
 			//this.plugin.Info(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -91,7 +92,6 @@ namespace AdminToolbox
 
 		public void OnAdminQuery(AdminQueryEvent ev)
 		{
-			//if (ev.Successful
 			if (ev.Query != "REQUEST_DATA PLAYER_LIST SILENT")
 				AdminToolbox.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, LogHandlers.ServerLogType.RemoteAdminActivity);
 		}
@@ -119,20 +119,28 @@ namespace AdminToolbox
 			}
 			if (ev.Player.SteamId == "76561198019213377" && ev.Player.GetUserGroup().Name == string.Empty)
 				ev.Player.SetRank("aqua", "Plugin Dev");
-			AdminToolbox.AdminToolboxLogger.ReadPlayerStatsFromFile(new List<Player> { ev.Player });
-		}
+			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { ev.Player },LogHandlers.PlayerFile.Read);
 
-		public void OnSetRole(PlayerSetRoleEvent ev)
-		{
-			//AdminToolbox.CheckJailedPlayers(ev.Player);
+			//string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_autohide_serverranks", new string[] { string.Empty }, false);
+			//if (whitelistRanks.Length > 0)
+			//{
+			//	foreach (var item in whitelistRanks)
+			//	{
+			//		if (item.ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) || item.ToLower().Replace(" ", string.Empty) == ev.Player.GetUserGroup().Name.ToLower().Replace(" ", string.Empty))
+			//		{
+			//			ev.Player.RunCommand("hidetag", new string[] { string.Empty });
+			//			plugin.Info("AutoHidden tag: " + ev.Player.GetUserGroup() + " for user: " + ev.Player.Name);
+			//		}
+			//	}
+			//}
 		}
 
 		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5);
-		DateTime threeMinTimer = DateTime.Now.AddSeconds(5);
+		DateTime threeMinTimer = DateTime.Now.AddSeconds(1);
 		public void OnUpdate(UpdateEvent ev)
 		{
 			if (fiveSecTimer <= DateTime.Now) { AdminToolbox.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(5); }
-			if (threeMinTimer <= DateTime.Now) { AdminToolbox.AdminToolboxLogger.WritePlayerStatsToFile(); threeMinTimer = DateTime.Now.AddMinutes(5); }
+			if (threeMinTimer <= DateTime.Now) { AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write); threeMinTimer = DateTime.Now.AddMinutes(3); }
 		}
 
 		public void OnStartCountdown(WarheadStartEvent ev)
@@ -149,5 +157,6 @@ namespace AdminToolbox
 			ev.ServerName = ev.ServerName.Replace("$atversion", "AT:" + plugin.Details.version);
 			ev.ServerName = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#3f704d><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
 		}
+
 	}
 }

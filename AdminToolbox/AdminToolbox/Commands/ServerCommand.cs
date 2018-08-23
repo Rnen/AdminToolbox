@@ -27,8 +27,11 @@ namespace AdminToolbox.Command
 				timeString = minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
 			bool isPlayer()
 			{
-				if (sender.GetType() == typeof(Player))
-					return true;
+				if (sender is Player pl)
+					if (!string.IsNullOrEmpty(pl.SteamId))
+						return true;
+					else
+						return false;
 				else
 					return false;
 			}

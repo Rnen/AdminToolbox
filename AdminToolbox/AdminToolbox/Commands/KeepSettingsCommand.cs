@@ -72,7 +72,7 @@ namespace AdminToolbox.Command
 					else str = "\nNo players with \"KeepSettings\" enabled!";
 					return new string[] { str };
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
+				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{

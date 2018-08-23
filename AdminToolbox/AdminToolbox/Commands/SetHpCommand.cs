@@ -51,7 +51,7 @@ namespace AdminToolbox.Command
 						return new string[] { "Set all players to their default max HP" };
 					}
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
+				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				if (args.Length > 1)
 				{

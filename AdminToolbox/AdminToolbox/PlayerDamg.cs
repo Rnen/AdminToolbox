@@ -78,19 +78,20 @@ namespace AdminToolbox
 				foreach (var item in roleDamages)
 				{
 					string[] myStringKey = item.Replace(" ", "").Split(':');
-					if (!Int32.TryParse(myStringKey[0], out int z)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1]); continue; }
+					if (!int.TryParse(myStringKey[0], out int attackRole)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1]); continue; }
 					string[] myString = myStringKey[1].Split('.', '-', '#', '_', ',', '+', '@', '>', '<', ';');
 					if (myString.Length >= 1)
 					{
 						foreach (var item2 in myString)
 						{
-							if (Int32.TryParse(item2, out int x))
+							if (int.TryParse(item2, out int victimRole))
 							{
-								if (z == (int)ev.Attacker.TeamRole.Role && x == (int)ev.Player.TeamRole.Role)
+								if (attackRole == (int)ev.Attacker.TeamRole.Role && victimRole == (int)ev.Player.TeamRole.Role)
 								{
-									if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) return;
+									if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) continue;
 									ev.Damage = 0f;
 									ev.DamageType = DamageType.NONE;
+									//plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + "was blocked from attacking " + ev.Player.TeamRole.Name + " " + ev.Player + " with " + ev.DamageType);
 									foundPlayer = true;
 									break;
 								}

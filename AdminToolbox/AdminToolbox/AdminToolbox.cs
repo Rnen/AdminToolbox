@@ -34,6 +34,7 @@ namespace AdminToolbox
 				{ "flat",new Vector(250,980,110) },
 				{ "heli",new Vector(293,977,-62) },
 				{ "car",new Vector(-96,987,-59) },
+				{ "topsitedoor",new Vector(89,989,-69)},
 				{ "escape", new Vector(179,996,27) }
 			};
 
@@ -66,7 +67,8 @@ namespace AdminToolbox
 				originalPos = Vector.Zero;
 			public Role previousRole = Role.CLASSD;
 			public List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
-			public DateTime JailedToTime = DateTime.Now;
+			public DateTime JailedToTime = DateTime.Now, joinTime = DateTime.Now;
+			//public double playTime = 1;
 		}
 
 		public override void OnDisable()
@@ -389,38 +391,46 @@ namespace AdminToolbox
 	}
 	public class GetPlayerFromString
 	{
-		public static Player GetPlayer(string args, out Player playerOut)
+		public static Player GetPlayer(string args)
 		{
-			//Takes a string and finds the closest player from the playerlist
-			int maxNameLength = 31, LastnameDifference = 31/*, lastNameLength = 31*/;
-			Player plyer = null;
-			string str1 = args.ToLower();
-			foreach (Player pl in PluginManager.Manager.Server.GetPlayers(str1))
+			Player playerOut = null;
+			if (int.TryParse(args, out int pID))
 			{
-				if (!pl.Name.ToLower().Contains(args.ToLower())) { goto NoPlayer; }
-				if (str1.Length < maxNameLength)
-				{
-					int x = maxNameLength - str1.Length;
-					int y = maxNameLength - pl.Name.Length;
-					string str2 = pl.Name;
-					for (int i = 0; i < x; i++)
-					{
-						str1 += "z";
-					}
-					for (int i = 0; i < y; i++)
-					{
-						str2 += "z";
-					}
-					int nameDifference = LevenshteinDistance.Compute(str1, str2);
-					if (nameDifference < LastnameDifference)
-					{
-						LastnameDifference = nameDifference;
-						plyer = pl;
-					}
-				}
-				NoPlayer:;
+				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+					if (pl.PlayerId == pID || pl.SteamId == pID.ToString())
+						return pl;
 			}
-			playerOut = plyer;
+			else
+			{
+				//Takes a string and finds the closest player from the playerlist
+				int maxNameLength = 31, LastnameDifference = 31/*, lastNameLength = 31*/;
+				string str1 = args.ToLower();
+				foreach (Player pl in PluginManager.Manager.Server.GetPlayers(str1))
+				{
+					if (!pl.Name.ToLower().Contains(args.ToLower())) { goto NoPlayer; }
+					if (str1.Length < maxNameLength)
+					{
+						int x = maxNameLength - str1.Length;
+						int y = maxNameLength - pl.Name.Length;
+						string str2 = pl.Name;
+						for (int i = 0; i < x; i++)
+						{
+							str1 += "z";
+						}
+						for (int i = 0; i < y; i++)
+						{
+							str2 += "z";
+						}
+						int nameDifference = LevenshteinDistance.Compute(str1, str2);
+						if (nameDifference < LastnameDifference)
+						{
+							LastnameDifference = nameDifference;
+							playerOut = pl;
+						}
+					}
+					NoPlayer:;
+				}
+			}
 			return playerOut;
 		}
 	}
@@ -472,7 +482,6 @@ namespace AdminToolbox
 			{
 				_maxlen = Math.Max(_maxlen, txt.Length);
 			});
-			AddLog("Started logging.", ServerLogType.Misc);
 		}
 		void Start()
 		{
@@ -514,13 +523,6 @@ namespace AdminToolbox
 				}
 				streamWriter.Write(text);
 				streamWriter.Close();
-				//string[] lines = File.ReadAllLines(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.roundCount + ".txt");
-				//foreach(var item in lines)
-				//{
-				//    string[] myStrings = item.Split('|');
-				//    DateTime logfileDate = DateTime.Parse(myStrings[0]);
-				//    DateTime.Now.Subtract(logfileDate);
-				//}
 			}
 		}
 		private void MoveOldFiles()
@@ -546,7 +548,13 @@ namespace AdminToolbox
 			}
 			return text;
 		}
-		public void WritePlayerStatsToFile(List<Player> players = null)
+
+		public enum PlayerFile
+		{
+			Read = 0,
+			Write = 1
+		}
+		public void PlayerStatsFileManager(List<Player> players = null, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (Directory.Exists(FileManager.AppFolder))
 			{
@@ -555,58 +563,56 @@ namespace AdminToolbox
 					Directory.CreateDirectory(AdminToolboxFolder);
 				if (!Directory.Exists(AdminToolboxPlayerStats))
 					Directory.CreateDirectory(AdminToolboxPlayerStats);
+
 				if (players != null && players.Count > 0)
 					foreach (Player player in players)
-						WriteToFile(player);
+						ReadWriteHandler(player, FileOperation);
 				else
 					foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-						WriteToFile(player);
-				void WriteToFile(Player pl)
+						ReadWriteHandler(player, FileOperation);
+
+				void ReadWriteHandler(Player pl, PlayerFile Operation)
 				{
 					if (pl.SteamId == string.Empty || pl.SteamId == null || pl.Name == "Server" || pl.Name == string.Empty) return;
 					if (!AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.AddMissingPlayerVariables(new List<Player> { pl });
+					switch (Operation)
+					{
+						case PlayerFile.Read:
+							ReadFromFile(pl);
+							break;
+						case PlayerFile.Write:
+							WriteToFile(pl);
+							break;
+					}
+				}
+				void WriteToFile(Player pl)
+				{
 					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
 
 					int Kills = 0, TeamKills = 0, Deaths = 0;
+					//double timePlayed = 0;
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
 					{
 						Kills = AdminToolbox.playerdict[pl.SteamId].Kills;
 						TeamKills = AdminToolbox.playerdict[pl.SteamId].TeamKills;
 						Deaths = AdminToolbox.playerdict[pl.SteamId].Deaths;
+						//timePlayed = DateTime.Now.Subtract(AdminToolbox.playerdict[pl.SteamId].joinTime).TotalSeconds + AdminToolbox.playerdict[pl.SteamId].playTime;
+						//AdminToolbox.playerdict[pl.SteamId].joinTime = DateTime.Now;
 					}
 					StreamWriter streamWriter = new StreamWriter(playerFilePath, false);
-					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths;
+					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths/* + splitChar +  timePlayed*/;
 					streamWriter.Write(str);
 					//File.WriteAllText(playerFilePath,str);
 					streamWriter.Close();
-
+					ReadFromFile(pl);
 				}
-			}
-		}
-		public void ReadPlayerStatsFromFile(List<Player> players = null)
-		{
-			if (Directory.Exists(FileManager.AppFolder))
-			{
-				char splitChar = ';';
-				if (!Directory.Exists(AdminToolboxFolder))
-					Directory.CreateDirectory(AdminToolboxFolder);
-				if (!Directory.Exists(AdminToolboxPlayerStats))
-					Directory.CreateDirectory(AdminToolboxPlayerStats);
-				if (players != null && players.Count > 0)
-					foreach (Player player in players)
-						ReadFromFile(player);
-				else
-					foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-						ReadFromFile(player);
 				void ReadFromFile(Player pl)
 				{
-					if (pl.SteamId == string.Empty || pl.SteamId == null || pl.Name == "Server" || pl.Name == string.Empty) return;
-					if (!AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.AddMissingPlayerVariables(new List<Player> { pl });
 					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
-						WritePlayerStatsToFile(new List<Player> { pl });
+						PlayerStatsFileManager(new List<Player> { pl }, LogHandlers.PlayerFile.Write);
 					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0" };
 					string[] playerStats = fileStrings[0].Split(splitChar);
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
@@ -615,6 +621,7 @@ namespace AdminToolbox
 						myPlayer.Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x1) && x1 > myPlayer.Kills) ? x1 : myPlayer.Kills;
 						myPlayer.TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x2) && x2 > myPlayer.TeamKills) ? x2 : myPlayer.TeamKills;
 						myPlayer.Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x3) && x3 > myPlayer.Deaths) ? x3 : myPlayer.Deaths;
+						//myPlayer.playTime = (playerStats.Length > 3 && double.TryParse(playerStats[2], out double x4) && x4 > myPlayer.playTime) ? x4 : myPlayer.playTime;
 						AdminToolbox.playerdict[pl.SteamId] = myPlayer;
 					}
 				}
