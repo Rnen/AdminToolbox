@@ -34,6 +34,7 @@ namespace AdminToolbox.Command
                 string ipb = FileManager.AppFolder + "IpBans.txt";
                 string sib = FileManager.AppFolder + "SteamIdBans.txt";
                 string outs = "";
+                string IssuingPlayer = (sender is Player pl) ? pl.Name : "Server";
                 DateTime lastminute = DateTime.Now;
                 if(double.TryParse(args[2],out var oarg))
                 {
@@ -48,13 +49,13 @@ namespace AdminToolbox.Command
                 {
                     if(args[1].Split('.').Length != 4) return new string[] { "Invalid IP: " + args[1] };
                     string ip = (args[1].Contains("::ffff:")) ? args[1] : "::ffff:" + args[1]; 
-                    outs += args[0] + ";" + ip + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
+                    outs += args[0] + ";" + ip + ";" + lastminute.Ticks + ";;IssuingPlayer;" + DateTime.Now.Ticks;
                     File.AppendAllText(ipb,"\n"+outs);
                     return new string[] {"Player with nick: " + args[0] + " and with IP: " + args[1] + " has banned for " + args[2] + " minutes."};
                 }
                 else
                 {
-                    outs += args[0] + ";" + args[1] + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
+                    outs += args[0] + ";" + args[1] + ";" + lastminute.Ticks + ";;IssuingPlayer;" + DateTime.Now.Ticks;
                     File.AppendAllText(sib,"\n"+outs);
                     return new string[] {"Player with nick: " + args[0] + " and with SteamID: " + args[1] + " has banned for " + args[2] + " minutes."};
                 }
