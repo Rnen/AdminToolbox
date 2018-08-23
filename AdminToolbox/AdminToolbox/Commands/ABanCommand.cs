@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
                 string ipb = FileManager.AppFolder + "IpBans.txt";
                 string sib = FileManager.AppFolder + "SteamIdBans.txt";
                 string outs = "";
-                string IssuingPlayer = (sender is Player pl) ? pl.Name : "Server";
+                string IssuingPlayer = (sender is Player pl && !string.IsNullOrEmpty(pl.SteamId)) ? pl.Name : "Server";
                 DateTime lastminute = DateTime.Now;
                 if(double.TryParse(args[2],out var oarg))
                 {
