@@ -41,18 +41,19 @@ namespace AdminToolbox.Command
                 }
                 else
                 {
-                    return new []{"Wrong time."};
+                    return new []{"Wrong time format: " + args[2] };
                 }
 
                 if (args[1].Contains("."))
                 {
-                    outs = outs + args[0] + ";" + args[1] + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
+                    string ip = (args[1].Contains("::ffff:")) ? args[1] : "::ffff:" + args[1]; 
+                    outs += args[0] + ";" + ip + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
                     File.AppendAllText(ipb,"\n"+outs);
                     return new[] {"Player with nick: " + args[0] + " and with IP: " + args[1] + " has banned for " + args[2] + " minutes."};
                 }
                 else
                 {
-                    outs = outs + args[0] + ";" + args[1] + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
+                    outs += args[0] + ";" + args[1] + ";" + lastminute.Ticks + ";;Server;" + DateTime.Now.Ticks;
                     File.AppendAllText(sib,"\n"+outs);
                     return new[] {"Player with nick: " + args[0] + " and with SteamID: " + args[1] + " has banned for " + args[2] + " minutes."};
                 }
