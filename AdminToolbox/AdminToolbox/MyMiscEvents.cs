@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace AdminToolbox
 {
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, IEventHandlerHandcuff
 	{
 		private Plugin plugin;
 
@@ -38,7 +38,7 @@ namespace AdminToolbox
 				foreach (var item in whitelistRanks)
 				{
 					string[] myKeyString = item.Split(':', '-', '_', '#');
-					if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty))
+					if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) || myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetUserGroup().Name.ToLower().Replace(" ", string.Empty))
 					{
 						if (myKeyString.Length >= 2)
 						{
@@ -156,6 +156,14 @@ namespace AdminToolbox
 		{
 			ev.ServerName = ev.ServerName.Replace("$atversion", "AT:" + plugin.Details.version);
 			ev.ServerName = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#3f704d><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
+		}
+
+		public void OnHandcuff(PlayerHandcuffEvent ev)
+		{
+			if (AdminToolbox.playerdict[ev.Target.SteamId].godMode || ev.Target.GetGodmode())
+				ev.Handcuffed = false;
+			else if (ev.Target.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+				ev.Handcuffed = false;
 		}
 	}
 }

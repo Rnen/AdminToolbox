@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ATBanCommand.cs" />
     <Compile Include="Commands\IntercomLockCommand.cs" />
     <Compile Include="Commands\ATDisableCommand.cs" />
     <Compile Include="Commands\KeepSettingsCommand.cs" />

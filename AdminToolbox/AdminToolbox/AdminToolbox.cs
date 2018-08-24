@@ -22,10 +22,10 @@ namespace AdminToolbox
 		)]
 	class AdminToolbox : Plugin
 	{
-		public static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false;
+		internal static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false;
 		public static Dictionary<string, AdminToolboxPlayerSettings> playerdict = new Dictionary<string, AdminToolboxPlayerSettings>();
-		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(),
-			presetWarps = new Dictionary<string, Vector>()
+		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
+		public static Dictionary<string, Vector> presetWarps { get; private set; } = new Dictionary<string, Vector>()
 			{
 				{ "mtf",new Vector(181,994,-61) },
 				{ "grass",new Vector(237,999,17) },
@@ -38,8 +38,8 @@ namespace AdminToolbox
 				{ "escape", new Vector(179,996,27) }
 			};
 
-		public static int roundCount = 1;
-		public static LogHandlers AdminToolboxLogger = new LogHandlers();
+		public static int roundCount { get; internal set; } = 1;
+		public static LogHandlers AdminToolboxLogger { get; internal set; } = new LogHandlers();
 		public static string _roundStartTime;
 
 		public static AdminToolbox plugin;
@@ -68,7 +68,7 @@ namespace AdminToolbox
 			public Role previousRole = Role.CLASSD;
 			public List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
 			public DateTime JailedToTime = DateTime.Now, joinTime = DateTime.Now;
-			//public double playTime = 1;
+			public double minutesPlayed = 1;
 		}
 
 		public override void OnDisable()
@@ -128,6 +128,7 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
 			this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand());
 			this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
+			this.AddCommands(new string[] { "atban","offlineban","oban" }, new Command.ATBanCommand(this));
 			#endregion
 			#region Config Registering Config Entries
 			// Register config settings
@@ -590,22 +591,18 @@ namespace AdminToolbox
 					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
-
-					int Kills = 0, TeamKills = 0, Deaths = 0;
-					//double timePlayed = 0;
-					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
-					{
-						Kills = AdminToolbox.playerdict[pl.SteamId].Kills;
-						TeamKills = AdminToolbox.playerdict[pl.SteamId].TeamKills;
-						Deaths = AdminToolbox.playerdict[pl.SteamId].Deaths;
-						//timePlayed = DateTime.Now.Subtract(AdminToolbox.playerdict[pl.SteamId].joinTime).TotalSeconds + AdminToolbox.playerdict[pl.SteamId].playTime;
-						//AdminToolbox.playerdict[pl.SteamId].joinTime = DateTime.Now;
-					}
+					
+					//AdminToolbox.AdminToolboxPlayerSettings playerSettings = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolbox.playerdict[pl.SteamId] : new AdminToolbox.AdminToolboxPlayerSettings();
+					int Kills = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].Kills > 0) ? AdminToolbox.playerdict[pl.SteamId].Kills : 0;
+					int TeamKills = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].TeamKills > 0) ? AdminToolbox.playerdict[pl.SteamId].TeamKills : 0;
+					int Deaths = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].Deaths > 0) ? AdminToolbox.playerdict[pl.SteamId].Deaths : 0;
+					double minutesPlayed = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].minutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.playerdict[pl.SteamId].joinTime).TotalMinutes + AdminToolbox.playerdict[pl.SteamId].minutesPlayed : 0;
+					if(AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.playerdict[pl.SteamId].joinTime = DateTime.Now;
 					StreamWriter streamWriter = new StreamWriter(playerFilePath, false);
-					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths/* + splitChar +  timePlayed*/;
+					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar +  minutesPlayed;
 					streamWriter.Write(str);
-					//File.WriteAllText(playerFilePath,str);
 					streamWriter.Close();
+					AdminToolbox.plugin.Info("Wrote player: " + pl.Name + "'s stats file. (" + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar + minutesPlayed + ")");
 					ReadFromFile(pl);
 				}
 				void ReadFromFile(Player pl)
@@ -613,22 +610,23 @@ namespace AdminToolbox
 					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						PlayerStatsFileManager(new List<Player> { pl }, LogHandlers.PlayerFile.Write);
-					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0" };
+					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0;0" };
 					string[] playerStats = fileStrings[0].Split(splitChar);
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
 					{
-						AdminToolbox.AdminToolboxPlayerSettings myPlayer = AdminToolbox.playerdict[pl.SteamId];
-						myPlayer.Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x1) && x1 > myPlayer.Kills) ? x1 : myPlayer.Kills;
-						myPlayer.TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x2) && x2 > myPlayer.TeamKills) ? x2 : myPlayer.TeamKills;
-						myPlayer.Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x3) && x3 > myPlayer.Deaths) ? x3 : myPlayer.Deaths;
-						//myPlayer.playTime = (playerStats.Length > 3 && double.TryParse(playerStats[2], out double x4) && x4 > myPlayer.playTime) ? x4 : myPlayer.playTime;
-						AdminToolbox.playerdict[pl.SteamId] = myPlayer;
+						AdminToolbox.plugin.Info("Read player: " + pl.Name + "'s stats file. (" + fileStrings[0] + ")");
+						//AdminToolbox.AdminToolboxPlayerSettings myPlayer = AdminToolbox.playerdict[pl.SteamId];
+						AdminToolbox.playerdict[pl.SteamId].Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x1) && x1 > AdminToolbox.playerdict[pl.SteamId].Kills) ? x1 : AdminToolbox.playerdict[pl.SteamId].Kills;
+						AdminToolbox.playerdict[pl.SteamId].TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x2) && x2 > AdminToolbox.playerdict[pl.SteamId].TeamKills) ? x2 : AdminToolbox.playerdict[pl.SteamId].TeamKills;
+						AdminToolbox.playerdict[pl.SteamId].Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x3) && x3 > AdminToolbox.playerdict[pl.SteamId].Deaths) ? x3 : AdminToolbox.playerdict[pl.SteamId].Deaths;
+						AdminToolbox.playerdict[pl.SteamId].minutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[2], out double x4) && x4 > AdminToolbox.playerdict[pl.SteamId].minutesPlayed) ? x4 : AdminToolbox.playerdict[pl.SteamId].minutesPlayed;
+						//AdminToolbox.playerdict[pl.SteamId] = myPlayer;
 					}
 				}
 			}
 		}
 	}
-	class SetPlayerVariables
+	public class SetPlayerVariables
 	{
 		public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
@@ -639,6 +637,7 @@ namespace AdminToolbox
 			AdminToolbox.playerdict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.playerdict[steamID].destroyDoor;
 			AdminToolbox.playerdict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.playerdict[steamID].lockDown;
 			AdminToolbox.playerdict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.playerdict[steamID].instantKill;
+			AdminToolbox.playerdict[steamID].isJailed = (isJailed.HasValue) ? (bool)isJailed : AdminToolbox.playerdict[steamID].isJailed;
 		}
 		public static void SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null)
 		{
