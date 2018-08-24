@@ -26,23 +26,22 @@ namespace AdminToolbox.Command
         public string[] OnCall(ICommandSender sender, string[] args)
         {
             AdminToolbox.AddMissingPlayerVariables();
-            Server server = PluginManager.Manager.Server;
+			Player caller = (sender is Player send) ? send : null;
+			Server server = PluginManager.Manager.Server;
             if (args.Length > 0)
             {
                 if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
                 {
-
-                    string outPut = null;
                     int playerNum = 0;
                     foreach (Player pl in server.GetPlayers())
                     {
+						if (caller != null && (pl.PlayerId == caller.PlayerId) || (AdminToolbox.playerdict[pl.SteamId].godMode || pl.GetGodmode()) /*|| (caller.GetUserGroup().Permissions < pl.GetUserGroup().Permissions)*/) continue;
                         pl.Kill();
                         playerNum++;
                     }
-                    outPut += "Slain " + playerNum + " players!";
-                    return new string[] { "Slain " + playerNum + " players!" };
+                    return new string[] {  playerNum + " players has been slain!" };
                 }
-                Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
+                Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
                 if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
                 if (myPlayer.TeamRole.Role != Role.SPECTATOR)
                 {
