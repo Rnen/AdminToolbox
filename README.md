@@ -91,10 +91,12 @@ Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from loading on server start
 admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+admintoolbox_tracking | Boolean | True | When True, puts `AT:VersionNbr` in the server name. When false, looks for `$atversion` in the name and replaces it with the version if found
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
 +admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
+admintoolbox_friendlyfire_damagemultiplier | Float | 1 | Multiplies friendly damage with the specified number. (ex 0.5 would half the damage)
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under

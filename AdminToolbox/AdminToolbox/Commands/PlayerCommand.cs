@@ -2,11 +2,26 @@
 using Smod2;
 using Smod2.API;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AdminToolbox.Command
 {
 	class PlayerCommand : ICommandHandler
 	{
+		public static readonly string[] PlayerLabels = new string[]
+		{
+			"Player:",
+			"SteamID:",
+			"Health:",
+			"Role:",
+			"Server Rank:",
+			"AdminToolbox Toggables:",
+			"Misc"
+		};
+		static int _maxlen;
+		int LeftPadding = 3;
+
 		public string GetCommandDescription()
 		{
 			return "Gets toolbox info about spesific player";
@@ -16,73 +31,125 @@ namespace AdminToolbox.Command
 		{
 			return "(P / PLAYER) [PLAYERNAME]";
 		}
+		private static string StringToMax(string text, int max)
+		{
+			while (text.Length < max)
+			{
+				text += ' ';
+			}
+			return text;
+		}
 
-        public string[] OnCall(ICommandSender sender, string[] args)
-        {
-            bool isPlayer()
-            {
-                if (sender.GetType() == typeof(Player))
-                    return true;
-                else
-                    return false; 
-            }
+		public string[] OnCall(ICommandSender sender, string[] args)
+		{
+			Server server = PluginManager.Manager.Server;
+			bool isPlayer()
+			{
+				if (sender is Player pl)
+				{
+					if (!string.IsNullOrEmpty(pl.SteamId))
+						return true;
+					else
+						return false;
+				}
+				else
+					return false;
+			}
 
-            AdminToolbox.AddMissingPlayerVariables();
-            Server server = PluginManager.Manager.Server;
-            string ColoredBools(bool input)
-            {
-                if (isPlayer() && input)
-                    return "<color=green>" + input + "</color>";
-                else if (isPlayer() && !input)
-                    return "<color=red>" + input + "</color>";
-                else
-                    return input.ToString();
-            }
-            if (args.Length > 0 && server.GetPlayers().Count>0)
-            {
-                Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-                TimeSpan myTimespan = AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime.Subtract(DateTime.Now);
-                string myCurrentJailTime()
-                {
-                    int minutes = (int)(myTimespan.TotalSeconds / 60);
-                    int seconds = (int)(myTimespan.TotalSeconds - (minutes * 60));
-                    if (seconds <= 0) return "N/A";
-                    if (minutes > 0)
-                        return minutes + " minutes, " + seconds + " seconds";
-                    else
-                        return seconds + " seconds";
-                }
-                
-                string x = "Player info: \n " +
-                    "\n Player: " + myPlayer.Name +
-                    "\n - SteamID: " + myPlayer.SteamId +
-                    "\n - Health: " + myPlayer.GetHealth() +
-                    "\n - Role: " + myPlayer.TeamRole.Role +
-                    "\n - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color+ ">" + myPlayer.GetRankName()+"</color>" +
-                    "\n - AdminToolbox Toggables: " +
-                    "\n     - SpectatorOnly: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly) +
-                    "\n     - Godmode: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].godMode) +
-                    "\n     - NoDmg: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].dmgOff) +
-                    "\n     - BreakDoors: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor) +
-                    "\n     - KeepSettings: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].keepSettings) +
-                    "\n     - PlayerLockDown: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].lockDown) +
-                    "\n     - InstantKill: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].instantKill) +
-                    "\n     - IsJailed: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].isJailed) +
-                    "\n         - Released In: "+ myCurrentJailTime() + 
-                    /*"\n     - IsInJail: " + ColoredBools(AdminToolbox.playerdict[myPlayer.SteamId].isInJail) +*/
-                    "\n - Stats:" +
-                    "\n     - Kills: " + AdminToolbox.playerdict[myPlayer.SteamId].Kills +
-                    "\n     - TeamKills: " + AdminToolbox.playerdict[myPlayer.SteamId].TeamKills +
-                    "\n     - Deaths: " + AdminToolbox.playerdict[myPlayer.SteamId].Deaths +
-                    "\n     - Rounds Played: " + AdminToolbox.playerdict[myPlayer.SteamId].RoundsPlayed +
-                    "\n - Position:" +
-                        " - X:" + (int)myPlayer.GetPosition().x +
-                        "   Y:" + (int)myPlayer.GetPosition().y +
-                        "   Z:" + (int)myPlayer.GetPosition().z;
-                return new string[] { x };
-            }
-            return new string[] { GetUsage() };
-        }
+			string ColoredBools(bool input)
+			{
+				if (isPlayer() && input)
+					return "<color=green>" + input + "</color>";
+				else if (isPlayer() && !input)
+					return "<color=red>" + input + "</color>";
+				else if (input)
+					return input.ToString() + " ";
+				else
+					return input.ToString();
+			}
+			if (args.Length > 0 && server.GetPlayers().Count > 0)
+			{
+				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
+				AdminToolbox.AddMissingPlayerVariables(new System.Collections.Generic.List<Player> { myPlayer });
+				AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { myPlayer }, LogHandlers.PlayerFile.Write);
+				AdminToolbox.AdminToolboxPlayerSettings playerDict = (AdminToolbox.playerdict.TryGetValue(myPlayer.SteamId,out playerDict)) ? playerDict : null;
+				int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
+				string z = "Player info: \n " +
+					"\n Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name +
+					"\n - SteamID: " + myPlayer.SteamId +
+					"\n - Health: " + myPlayer.GetHealth() +
+					"\n - Role: " + myPlayer.TeamRole.Role +
+					"\n - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color + ">" + myPlayer.GetRankName() + "</color>" +
+					"\n - AdminToolbox Toggables: " +
+					"\n     - Godmode: " + ColoredBools(playerDict.godMode) + "     - NoDmg: " + ColoredBools(playerDict.dmgOff) +
+					"\n     - SpectatorOnly: " + ColoredBools(playerDict.spectatorOnly) + " - KeepSettings: " + ColoredBools(playerDict.keepSettings) +
+					"\n     - BreakDoors: " + ColoredBools(playerDict.destroyDoor) + "    - PlayerLockDown: " + ColoredBools(playerDict.lockDown) +
+					"\n     - InstantKill: " + ColoredBools(playerDict.instantKill) +
+					"\n     - IsJailed: " + ColoredBools(playerDict.isJailed) + " - Released In: " + remainingJailTime +
+					"\n - Stats:" +
+					"\n     - Kills: " + playerDict.Kills + "  - TeamKills: " + playerDict.TeamKills + "  - Deaths: " + playerDict.Deaths +
+					//"\n     - Rounds Played: " + playerDict.RoundsPlayed + "  - Playtime: " + playerDict.playTime + " seconds" +
+					"\n - Position:" +
+						" - X:" + (int)myPlayer.GetPosition().x +
+						"   Y:" + (int)myPlayer.GetPosition().y +
+						"   Z:" + (int)myPlayer.GetPosition().z;
+				string[] playerStrings = new string[] 
+				{
+					"\n Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name,
+					" - SteamID: " + myPlayer.SteamId,
+					" - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color + ">" + myPlayer.GetRankName() + "</color>",
+					" - Role: " + myPlayer.TeamRole.Role,
+					" - Health: " + myPlayer.GetHealth(),
+					" - AdminToolbox Toggables: ",
+					"   - Godmode: " + ColoredBools(playerDict.godMode),
+					"   - NoDmg: " + ColoredBools(playerDict.dmgOff),
+					"   - SpectatorOnly: " + ColoredBools(playerDict.spectatorOnly),
+					"   - KeepSettings: " + ColoredBools(playerDict.keepSettings),
+					"   - BreakDoors: " + ColoredBools(playerDict.destroyDoor),
+					"   - PlayerLockDown: " + ColoredBools(playerDict.lockDown),
+					"   - InstantKill: " + ColoredBools(playerDict.instantKill),
+					"   - IsJailed: " + ColoredBools(playerDict.isJailed),
+					"   - Released In: " + remainingJailTime,
+					" - Stats:" +
+					"     - Kills: " + playerDict.Kills,
+					"     - TeamKills: " + playerDict.TeamKills,
+					"     - Deaths: " + playerDict.Deaths,
+					"     - Rounds Played: " + playerDict.RoundsPlayed,
+					//"     - Playtime: " + playerDict.playTime + " seconds",
+					" - Position:",
+					"	  - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z
+				};
+				//foreach (string str in playerStrings)
+				//{
+				//	_maxlen = Math.Max(_maxlen, str.Length);
+				//}
+				_maxlen = 29;
+				string BuildTwoLiner(string str1, string str2 = "")
+				{
+					return StringToMax(str1, _maxlen) + "|" + StringToMax(str2, _maxlen).PadLeft(LeftPadding);
+				}
+				string x = "\n\n Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name + Environment.NewLine + Environment.NewLine +
+					BuildTwoLiner(" - SteamID: " + myPlayer.SteamId, " - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color + ">" + myPlayer.GetRankName() + "</color>") + Environment.NewLine +
+					BuildTwoLiner(" - Role: " + myPlayer.TeamRole.Role, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
+					BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
+					BuildTwoLiner("   - Godmode: " + ColoredBools(playerDict.godMode), "  - NoDmg: " + ColoredBools(playerDict.dmgOff)) + Environment.NewLine +
+					BuildTwoLiner("   - SpectatorOnly: " + ColoredBools(playerDict.spectatorOnly), "  - KeepSettings: " + ColoredBools(playerDict.keepSettings)) + Environment.NewLine +
+					BuildTwoLiner("   - BreakDoors: " + ColoredBools(playerDict.destroyDoor), "  - PlayerLockDown: " + ColoredBools(playerDict.lockDown)) + Environment.NewLine +
+					BuildTwoLiner("   - InstantKill: " + ColoredBools(playerDict.instantKill)) + Environment.NewLine +
+					BuildTwoLiner("   - IsJailed: " + ColoredBools(playerDict.isJailed), " - Released In: " + remainingJailTime) + Environment.NewLine +
+					BuildTwoLiner(" - Stats:") + Environment.NewLine +
+					BuildTwoLiner("     - Kills: " + playerDict.Kills, " - TeamKills: " + playerDict.TeamKills) + Environment.NewLine +
+					BuildTwoLiner("     - Deaths: " + playerDict.Deaths) + Environment.NewLine +
+					BuildTwoLiner("     - Playtime: Not implemented"   , " - Rounds Played: " + playerDict.RoundsPlayed) + Environment.NewLine +
+					BuildTwoLiner(" - Position:") + Environment.NewLine +
+					BuildTwoLiner(" - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z) + Environment.NewLine;
+				if (!isPlayer())
+					return new string[] { x };
+				else
+					return new string[] { z };
+			}
+			return new string[] { GetUsage() };
+		}
 	}
 }
