@@ -604,7 +604,6 @@ namespace AdminToolbox
 					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar +  minutesPlayed;
 					streamWriter.Write(str);
 					streamWriter.Close();
-					AdminToolbox.plugin.Info("Wrote player: " + pl.Name + "'s stats file. (" + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar + minutesPlayed + ")");
 					ReadFromFile(pl);
 				}
 				void ReadFromFile(Player pl)
@@ -616,7 +615,6 @@ namespace AdminToolbox
 					string[] playerStats = fileStrings[0].Split(splitChar);
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
 					{
-						AdminToolbox.plugin.Info("Read player: " + pl.Name + "'s stats file. (" + fileStrings[0] + ")");
 						//AdminToolbox.AdminToolboxPlayerSettings myPlayer = AdminToolbox.playerdict[pl.SteamId];
 						AdminToolbox.playerdict[pl.SteamId].Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x1) && x1 > AdminToolbox.playerdict[pl.SteamId].Kills) ? x1 : AdminToolbox.playerdict[pl.SteamId].Kills;
 						AdminToolbox.playerdict[pl.SteamId].TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x2) && x2 > AdminToolbox.playerdict[pl.SteamId].TeamKills) ? x2 : AdminToolbox.playerdict[pl.SteamId].TeamKills;
