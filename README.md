@@ -76,7 +76,7 @@ POS | Player | GET | |  Gets XYZ position of `Player`
 EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping. (The second del part is for if you use an item number)
 ATBAN / OBAN / OFFLINEBAN | PlayerName | IP/STEAMID | Minutes | Bans IP/STEAMID for X minutes. (For banning offline users)
 
-> Player input doesn't need the full name, it will grab the closest matching name containing your entry
+> Player input doesn't need the full name, it can be PlayerID or a part of the name
 ## ^These commands work in both server console and text-based remote admin!^
 
 ## Config Additions
@@ -91,7 +91,7 @@ Type Info:
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
 - STEAMID64: [Find yours here!](https://steamid.xyz/)
 
->Crossed out config options are removed, unless otherwise specified in the description
+>Crossed out config options are temporarily removed, unless otherwise specified in the description
 
 ## If you do not intend to change the default values, there's no need to include any of theese in your config
 ### General Settings
@@ -109,7 +109,7 @@ admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cann
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
-admintoolbox_block_role_damage | Example[Here](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
+admintoolbox_block_role_damage | [ExampleHere](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
 admintoolbox_roledamageblock_onroundend | Boolean | True | Enables/Disables config above to be in effect after round has ended
 admintoolbox_custom_nuke_cards | Boolean | False | Enables config for having to use a specified card to activate nuke
 admintoolbox_nuke_card_list | List | 6, 9, 11 | What item(s) the player needs to have in his hand to start the nuke
@@ -122,14 +122,14 @@ admintoolbox_intercom_whitelist | ServerRole:SpeakTime:CooldownTime | | Whitelis
 
 >See example at the bottom
 
-### Logfile settings (file will be created in the `AppData\Roaming\SCP Secret Laboratory\ATServerLogs` folder
+### Logfile settings (file will be created at the path specified in `admintoolbox_folder_path` config)
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfile
 admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfile
 admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
 admintoolbox_folder_path | String (Path) | %Appdata%\Roaming\SCP Secret Laboratory\ | Where the Admintoolbox folder will be located
-admintoolbox_stats_unified | Bool | True | If true uses one folder for all servers, false creates a folder per server
+admintoolbox_stats_unified | Boolean | True | If true uses one folder for all servers, false creates a folder per server
 
 ### Debug/INFO Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
 Config Option | Value Type | Default Value | Description
