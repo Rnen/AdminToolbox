@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 	class MyTemplateCommand : ICommandHandler
 	{
 		private AdminToolbox plugin;
-        
+
 		public MyTemplateCommand(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
@@ -23,16 +23,16 @@ namespace AdminToolbox.Command
 			return "";
 		}
 
-        public string[] OnCall(ICommandSender sender, string[] args)
-        {
-            AdminToolbox.AddMissingPlayerVariables();
-            Server server = PluginManager.Manager.Server;
-            if (args.Length > 0)
-            {
-                Player myPlayer = GetPlayerFromString.GetPlayer(args[0], out myPlayer);
-                if (myPlayer == null) {  return new string[] { "Couldn't get player: " + args[0] };; }
-            }
-            return new string[] { GetUsage() };
-        }
+		public string[] OnCall(ICommandSender sender, string[] args)
+		{
+			Server server = PluginManager.Manager.Server;
+			if (args.Length > 0)
+			{
+				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
+				AdminToolbox.AddMissingPlayerVariables(new System.Collections.Generic.List<Player> { myPlayer });
+			}
+			return new string[] { GetUsage() };
+		}
 	}
 }

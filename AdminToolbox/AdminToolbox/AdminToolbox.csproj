@@ -49,11 +49,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ATBanCommand.cs" />
     <Compile Include="Commands\IntercomLockCommand.cs" />
     <Compile Include="Commands\ATDisableCommand.cs" />
     <Compile Include="Commands\KeepSettingsCommand.cs" />
     <Compile Include="Commands\BreakDoorsCommand.cs" />
     <Compile Include="Commands\InstantKillCommand.cs" />
+    <Compile Include="Commands\KillCommand.cs" />
     <Compile Include="Commands\LockdownCommand.cs" />
     <Compile Include="Commands\DoorCommand.cs" />
     <Compile Include="Commands\ATColorCommand.cs" />

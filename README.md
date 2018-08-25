@@ -2,10 +2,10 @@
 This is a plugin for SCL:Secret Lab servers. 
 It offers multiple admin tools like 
 * Friendly fire logs in server console & logs to file
-* Godmode, ability to turn off damage for players
-* Heal & SetHP
+* Advanced Godmode, ability to turn off damage for players, instantkill
+* Heal
 * Warp Points
-* Teleport to cordinates
+* Modifying player cordinates/position
 * Prevent the round from ending
 * Per-player stats
 * Breaking doors interacted with
@@ -26,7 +26,12 @@ To install:
 ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
  * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
  * SMOD Discord: https://discord.gg/8nvmMTr
-
+  
+## AdminToolbox Server Name Variables
+Variable | Description
+--- | ---
+$atversion | Automaticly replaced with the current version of AdminToolbox 
+  
 ### Note that all commands below requires you to have `enable_ra_server_commands:` set to true in your `config_gameplay.txt`, and your steamID64/SERVER-ROLE added to the whitelist for them to work. This is part of [Smod](https://github.com/Grover-c13/Smod2), not the plugin.
 ## Administration COMMANDS / Gameplay COMMANDS
 Command | Value Type | Value Type | Description
@@ -50,9 +55,11 @@ ATDISABLE | | |  **Disables the Admintoolbox plugin.** Server will need restart 
 ATCOLOR | Boolean | |  `Enable/Disable` admintoolbox colors in server console (currently bugged)
 JAIL | Player | seconds |  Jails the player for the specified (if not specified, defaults to 1 year) time. Re-use to unjail.
 S / SERVERINFO |  | | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
+KILL / SLAY | Player | | Kills target player. Using `*` will exclude the player using the command
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
 >Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
+> Player variable can be either Player name or PlayerID
 
 >Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 
@@ -67,8 +74,9 @@ POS | Player | ADD  |  x=5 y=10 | Teleports player 5 on X axis, 10 on Y axis (up
 POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | Player | GET | |  Gets XYZ position of `Player`
 EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping. (The second del part is for if you use an item number)
+ATBAN / OBAN / OFFLINEBAN | PlayerName | IP/STEAMID | Minutes | Bans IP/STEAMID for X minutes. (For banning offline users)
 
-> Player input doesn't need the full name, it will grab the closest matching name containing your entry
+> Player input doesn't need the full name, it can be PlayerID or a part of the name
 ## ^These commands work in both server console and text-based remote admin!^
 
 ## Config Additions
@@ -83,7 +91,7 @@ Type Info:
 - R: If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
 - STEAMID64: [Find yours here!](https://steamid.xyz/)
 
->Crossed out config options are removed, unless otherwise specified in the description
+>Crossed out config options are temporarily removed, unless otherwise specified in the description
 
 ## If you do not intend to change the default values, there's no need to include any of theese in your config
 ### General Settings
@@ -91,17 +99,22 @@ Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from loading on server start
 admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+admintoolbox_tracking | Boolean | True | When True, puts `AT:VersionNbr` in the server name. When false, looks for `$atversion` in the name and replaces it with the version if found
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
-+admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
+admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
+admintoolbox_friendlyfire_damagemultiplier | Float | 1 | Multiplies friendly damage with the specified number. (ex 0.5 would half the damage)
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
 admintoolbox_intercomlock | Boolean | False | If true locks the intercom for non-whitelisted players
 admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage other roles. See example under
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
-admintoolbox_block_role_damage | Example[Here](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
+admintoolbox_block_role_damage | [ExampleHere](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
+admintoolbox_roledamageblock_onroundend | Boolean | True | Enables/Disables config above to be in effect after round has ended
 admintoolbox_custom_nuke_cards | Boolean | False | Enables config for having to use a specified card to activate nuke
 admintoolbox_nuke_card_list | List | 6, 9, 11 | What item(s) the player needs to have in his hand to start the nuke
+admintoolbox_tutorial_canbehandcuffed | Boolean | False | Enables/Disables Tutorial players to be handcuffed
+admintoolbox_tracking | Boolean | True | If true puts `AT:Version` in the server name to keep track of servers with the plugin installed
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
@@ -109,12 +122,14 @@ admintoolbox_intercom_whitelist | ServerRole:SpeakTime:CooldownTime | | Whitelis
 
 >See example at the bottom
 
-### Logfile settings (file will be created in the `AppData\Roaming\SCP Secret Laboratory\ATServerLogs` folder
+### Logfile settings (file will be created at the path specified in `admintoolbox_folder_path` config)
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfile
 admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfile
 admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
+admintoolbox_folder_path | String (Path) | %Appdata%\Roaming\SCP Secret Laboratory\ | Where the Admintoolbox folder will be located
+admintoolbox_stats_unified | Boolean | True | If true uses one folder for all servers, false creates a folder per server
 
 ### Debug/INFO Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
 Config Option | Value Type | Default Value | Description

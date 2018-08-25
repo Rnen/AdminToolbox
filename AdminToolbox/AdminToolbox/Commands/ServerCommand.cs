@@ -16,49 +16,52 @@ namespace AdminToolbox.Command
 			return "SERVER / S / SERVERINFO";
 		}
 
-        public string[] OnCall(ICommandSender sender, string[] args)
-        {
-            Server server = PluginManager.Manager.Server;
-            int minutes = (int)(server.Round.Duration / 60), duration = server.Round.Duration;
-            string timeString = string.Empty;
-            if (duration < 60)
-                timeString =  duration + " seconds";
-            else
-                timeString = minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
-            bool isPlayer()
-            {
-                if (sender.GetType() == typeof(Player))
-                    return true;
-                else
-                    return false;
-            }
-            string ColoredBools(bool input)
-            {
-                if (isPlayer() && input)
-                    return "<color=green>" + input + "</color>";
-                else if (isPlayer() && !input)
-                    return "<color=red>" + input + "</color>";
-                else
-                    return input.ToString();
-            }
-            int pCount = server.GetPlayers().Count;
-            string pJail = string.Empty;
-            foreach (Player pl in AdminToolbox.GetJailedPlayers())
-                pJail += pl.Name + ", ";
+		public string[] OnCall(ICommandSender sender, string[] args)
+		{
+			Server server = PluginManager.Manager.Server;
+			int minutes = (int)(server.Round.Duration / 60), duration = server.Round.Duration;
+			string timeString = string.Empty;
+			if (duration < 60)
+				timeString = duration + " seconds";
+			else
+				timeString = minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
+			bool isPlayer()
+			{
+				if (sender is Player pl)
+					if (!string.IsNullOrEmpty(pl.SteamId))
+						return true;
+					else
+						return false;
+				else
+					return false;
+			}
+			string ColoredBools(bool input)
+			{
+				if (isPlayer() && input)
+					return "<color=green>" + input + "</color>";
+				else if (isPlayer() && !input)
+					return "<color=red>" + input + "</color>";
+				else
+					return input.ToString();
+			}
+			int pCount = server.GetPlayers().Count;
+			string pJail = string.Empty;
+			foreach (Player pl in AdminToolbox.GetJailedPlayers())
+				pJail += pl.Name + ", ";
 
-                string x = "Server info: \n " +
-                    "\n Server Name: " + server.Name +
-                    "\n - Server IP: " + server.IpAddress + ":" + server.Port +
-                    "\n - PlayerCount: " + pCount +
-                    "\n - AdminToolbox Toggables: " +
-                    "\n     - isColored: " + ColoredBools(AdminToolbox.isColored) +
-                    "\n     - IntercomLock: " + ColoredBools(AdminToolbox.intercomLock) +
-                    "\n     - LockRound: " + ColoredBools(AdminToolbox.lockRound) +
-                    "\n     - Jailed Players: " + pJail +
-                    "\n - Stats:" +
-                    "\n     - Round Number: " + AdminToolbox.roundCount +
-                    "\n     - Round Duration: " + timeString;
-            return new string[] { x };
-        }
+			string x = "Server info: \n " +
+				"\n Server Name: " + server.Name +
+				"\n - Server IP: " + server.IpAddress + ":" + server.Port +
+				"\n - PlayerCount: " + pCount +
+				"\n - AdminToolbox Toggables: " +
+				"\n     - isColored: " + ColoredBools(AdminToolbox.isColored) +
+				"\n     - IntercomLock: " + ColoredBools(AdminToolbox.intercomLock) +
+				"\n     - LockRound: " + ColoredBools(AdminToolbox.lockRound) +
+				"\n     - Jailed Players: " + pJail +
+				"\n - Stats:" +
+				"\n     - Round Number: " + AdminToolbox.roundCount +
+				"\n     - Round Duration: " + timeString;
+			return new string[] { x };
+		}
 	}
 }
