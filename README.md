@@ -102,7 +102,7 @@ admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in 
 admintoolbox_tracking | Boolean | True | When True, puts `AT:VersionNbr` in the server name. When false, looks for `$atversion` in the name and replaces it with the version if found
 admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
-+admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
+admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
 admintoolbox_friendlyfire_damagemultiplier | Float | 1 | Multiplies friendly damage with the specified number. (ex 0.5 would half the damage)
 admintoolbox_intercom_steamid_blacklist | SteamID64 |  | List of people who cannot use the intercom
