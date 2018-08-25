@@ -135,12 +135,25 @@ namespace AdminToolbox
 			//}
 		}
 
-		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5);
-		DateTime threeMinTimer = DateTime.Now.AddSeconds(1);
+		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(1);
 		public void OnUpdate(UpdateEvent ev)
 		{
 			if (fiveSecTimer <= DateTime.Now) { AdminToolbox.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(5); }
 			if (threeMinTimer <= DateTime.Now) { AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write); threeMinTimer = DateTime.Now.AddMinutes(3); }
+			if (fiveMinTimer <= DateTime.Now)
+			{
+				List<string> playerSteamIds = new List<string>(), keysToRemove = new List<string>();
+				if (PluginManager.Manager.Server.GetPlayers().Count > 0)
+					foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+						playerSteamIds.Add(pl.SteamId);
+				if (AdminToolbox.playerdict.Count > 0)
+					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> x in AdminToolbox.playerdict)
+						if (playerSteamIds.Count > 0 && !playerSteamIds.Contains(x.Key) && !x.Value.keepSettings)
+							keysToRemove.Add(x.Key);
+				if (keysToRemove.Count > 0)
+					foreach (string key in keysToRemove)
+						AdminToolbox.playerdict.Remove(key);
+			}
 		}
 
 		public void OnStartCountdown(WarheadStartEvent ev)

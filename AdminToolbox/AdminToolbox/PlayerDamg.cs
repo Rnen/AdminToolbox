@@ -71,7 +71,7 @@ namespace AdminToolbox
 				else
 					return false;
 			}
-
+			if (AdminToolbox.isRoundFinished && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_roledamageblock_onroundend", true)) goto RoundEnd;
 			if (roleDamages.Length > 0)
 			{
 				bool foundPlayer = false;
@@ -106,7 +106,9 @@ namespace AdminToolbox
 					}
 				}
 				//if (foundPlayer) return;
+				
 			}
+			RoundEnd:;
 			if (AdminToolbox.isRoundFinished)
 			{
 				if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)

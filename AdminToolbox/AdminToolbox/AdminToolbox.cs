@@ -621,7 +621,7 @@ namespace AdminToolbox
 						AdminToolbox.playerdict[pl.SteamId].Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x1) && x1 > AdminToolbox.playerdict[pl.SteamId].Kills) ? x1 : AdminToolbox.playerdict[pl.SteamId].Kills;
 						AdminToolbox.playerdict[pl.SteamId].TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x2) && x2 > AdminToolbox.playerdict[pl.SteamId].TeamKills) ? x2 : AdminToolbox.playerdict[pl.SteamId].TeamKills;
 						AdminToolbox.playerdict[pl.SteamId].Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x3) && x3 > AdminToolbox.playerdict[pl.SteamId].Deaths) ? x3 : AdminToolbox.playerdict[pl.SteamId].Deaths;
-						AdminToolbox.playerdict[pl.SteamId].minutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[2], out double x4) && x4 > AdminToolbox.playerdict[pl.SteamId].minutesPlayed) ? x4 : AdminToolbox.playerdict[pl.SteamId].minutesPlayed;
+						AdminToolbox.playerdict[pl.SteamId].minutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[3], out double x4) && x4 > AdminToolbox.playerdict[pl.SteamId].minutesPlayed) ? x4 : AdminToolbox.playerdict[pl.SteamId].minutesPlayed;
 						//AdminToolbox.playerdict[pl.SteamId] = myPlayer;
 					}
 				}
