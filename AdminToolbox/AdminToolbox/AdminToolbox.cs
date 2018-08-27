@@ -15,10 +15,10 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.4",
+		version = "1.3.5",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 12
+		SmodRevision = 13
 		)]
 	class AdminToolbox : Plugin
 	{
@@ -216,6 +216,7 @@ namespace AdminToolbox
 			}
 			if (myPlayer != null)
 			{
+				if (!AdminToolbox.playerdict.ContainsKey(myPlayer.SteamId)) { AddMissingPlayerVariables(new List<Player> { myPlayer }); return; }
 				AdminToolbox.playerdict[myPlayer.SteamId].isInJail = isInsideJail(myPlayer);
 				if (!AdminToolbox.playerdict[myPlayer.SteamId].isInJail) SendToJail(myPlayer);
 				else if (AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime <= DateTime.Now) ReturnFromJail(myPlayer);
@@ -223,6 +224,7 @@ namespace AdminToolbox
 			else
 				foreach (Player pl in GetJailedPlayers())
 				{
+					if(!AdminToolbox.playerdict.ContainsKey(pl.SteamId)) { AddMissingPlayerVariables(new List<Player> { pl }); continue; }
 					AdminToolbox.playerdict[pl.SteamId].isInJail = isInsideJail(pl);
 					if (!AdminToolbox.playerdict[pl.SteamId].isInJail) SendToJail(pl);
 					else if (AdminToolbox.playerdict[pl.SteamId].JailedToTime <= DateTime.Now) ReturnFromJail(pl);
