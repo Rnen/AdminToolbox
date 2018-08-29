@@ -3,7 +3,7 @@ This is a plugin for SCL:Secret Lab servers.
 It offers multiple admin tools like 
 * Friendly fire logs in server console & logs to file
 * Advanced Godmode, ability to turn off damage for players, instantkill
-  - "Advanced" in the sense of, 106 with ATGOD cannot be contained, misc other things like this
+  - "Advanced" in the sense of: 106 with ATGOD cannot be contained, amongst other things like this
 * Heal
 * Warp Points
 * Modifying player cordinates/position
