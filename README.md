@@ -112,10 +112,9 @@ admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage oth
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 admintoolbox_block_role_damage | [ExampleHere](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
 admintoolbox_roledamageblock_onroundend | Boolean | True | Enables/Disables config above to be in effect after round has ended
-admintoolbox_custom_nuke_cards | Boolean | False | Enables config for having to use a specified card to activate nuke
-admintoolbox_nuke_card_list | List | 6, 9, 11 | What item(s) the player needs to have in his hand to start the nuke
-admintoolbox_tutorial_canbehandcuffed | Boolean | False | Enables/Disables Tutorial players to be handcuffed
-admintoolbox_tracking | Boolean | True | If true puts `AT:Version` in the server name to keep track of servers with the plugin installed
+~~admintoolbox_custom_nuke_cards~~ | ~~Boolean~~ | ~~False~~ | ~~Enables config for having to use a specified card to activate nuke~~
+~~admintoolbox_nuke_card_list~~ | ~~List~~ | ~~6, 9, 11~~ | ~~What item(s) the player needs to have in his hand to start the nuke~~
+~~admintoolbox_tutorial_canbehandcuffed~~ | ~~Boolean~~ | ~~False~~ | ~~Enables/Disables Tutorial players to be handcuffed~~
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
