@@ -77,7 +77,7 @@ namespace AdminToolbox
 				bool foundPlayer = false;
 				foreach (var item in roleDamages)
 				{
-					string[] myStringKey = item.Replace(" ", "").Split(':');
+					string[] myStringKey = item.Trim().Split(':');
 					if (!int.TryParse(myStringKey[0], out int attackRole)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1]); continue; }
 					string[] myString = myStringKey[1].Split('.', '-', '#', '_', ',', '+', '@', '>', '<', ';');
 					if (myString.Length >= 1)

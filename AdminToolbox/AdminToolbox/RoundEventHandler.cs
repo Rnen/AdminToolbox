@@ -29,7 +29,19 @@ namespace AdminToolbox
 			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.presetWarps);
+
+			//IConfigFile config = ConfigManager.Manager.Config;
+			//string intercomReady = config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
+			//	intercomRestart = config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
+			//	intercomTransmit = config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+			//if (intercomReady != string.Empty)
+			//	ev.Server.Map.SetIntercomContent(IntercomStatus.Ready, intercomReady);
+			//if(intercomRestart != string.Empty)
+			//	ev.Server.Map.SetIntercomContent(IntercomStatus.Restarting, intercomRestart);
+			//if(intercomTransmit != string.Empty)
+			//	ev.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
 		}
+
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
 			if (AdminToolbox.lockRound)

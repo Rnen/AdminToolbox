@@ -7,10 +7,12 @@ using System.Linq;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
+using UnityEngine;
+using Unity;
 
 namespace AdminToolbox
 {
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, IEventHandlerHandcuff
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, /*IEventHandlerHandcuff,*/ IEventHandlerBan
 	{
 		private Plugin plugin;
 
@@ -38,7 +40,7 @@ namespace AdminToolbox
 				foreach (var item in whitelistRanks)
 				{
 					string[] myKeyString = item.Split(':', '-', '_', '#');
-					if (myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) || myKeyString[0].ToLower().Replace(" ", string.Empty) == ev.Player.GetUserGroup().Name.ToLower().Replace(" ", string.Empty))
+					if (myKeyString[0].ToLower().Trim() == ev.Player.GetRankName().ToLower().Trim() || myKeyString[0].ToLower().Trim() == ev.Player.GetUserGroup().Name.ToLower().Trim())
 					{
 						if (myKeyString.Length >= 2)
 						{
@@ -117,8 +119,8 @@ namespace AdminToolbox
 			{
 				plugin.Info(ev.Player.Name + " just joined the server!");
 			}
-			if (ev.Player.SteamId == "76561198019213377" && ev.Player.GetUserGroup().Name == string.Empty)
-				ev.Player.SetRank("aqua", "Plugin Dev");
+			//if (ev.Player.SteamId == "76561198019213377" && ev.Player.GetUserGroup().Name == string.Empty)
+			//	ev.Player.SetRank("aqua", "Plugin Dev");
 			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { ev.Player },LogHandlers.PlayerFile.Read);
 
 			//string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_autohide_serverranks", new string[] { string.Empty }, false);
@@ -171,12 +173,22 @@ namespace AdminToolbox
 			ev.ServerName = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#3f704d><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
 		}
 
-		public void OnHandcuff(PlayerHandcuffEvent ev)
+		//public void OnHandcuff(PlayerHandcuffEvent ev)
+		//{
+		//	if (AdminToolbox.playerdict.ContainsKey(ev.Target.SteamId) && AdminToolbox.playerdict[ev.Target.SteamId].godMode || ev.Target.GetGodmode())
+		//		ev.Handcuffed = false;
+		//	else if (ev.Target.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+		//		ev.Handcuffed = false;
+		//}
+
+		public void OnBan(BanEvent ev)
 		{
-			if (AdminToolbox.playerdict[ev.Target.SteamId].godMode || ev.Target.GetGodmode())
-				ev.Handcuffed = false;
-			else if (ev.Target.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
-				ev.Handcuffed = false;
+			AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Admin, ev.Player });
+			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+				if (ev.Duration > 1)
+					AdminToolbox.playerdict[ev.Player.SteamId].banCount++;
+				else
+					AdminToolbox.playerdict[ev.Player.SteamId].kickCount++;
 		}
 	}
 }

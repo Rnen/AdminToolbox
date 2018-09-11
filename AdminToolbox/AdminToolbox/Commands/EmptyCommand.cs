@@ -27,6 +27,7 @@ namespace AdminToolbox.Command
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { myPlayer });
+				if (sender is Player p) AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
 				byte itemNumber = 0;
 				string[] deleteAliases = { "delete", "del", "d" };
 				if (args.Length > 1 && deleteAliases.Contains(args[1].ToLower()))

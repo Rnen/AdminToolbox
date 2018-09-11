@@ -22,6 +22,7 @@ namespace AdminToolbox.Command
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
 			AdminToolbox.AddMissingPlayerVariables();
+			if (sender is Player p) AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
 			Server server = PluginManager.Manager.Server;
 			if (args.Length > 0)
 			{
@@ -37,9 +38,12 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].godMode = j;
-								if (changedState) AdminToolbox.playerdict[pl.SteamId].dmgOff = j;
-								playerNum++;
+								if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
+								{
+									AdminToolbox.playerdict[pl.SteamId].godMode = j;
+									if (changedState) AdminToolbox.playerdict[pl.SteamId].dmgOff = j;
+									playerNum++;
+								}
 							}
 							outPut += "\nSet " + playerNum + " player's AT-Godmode to " + j;
 							if (changedState) return new string[] { "\n" + "Set " + playerNum + " player's AT-Godmode to " + j, "\n" + "NoDmg for theese " + playerNum + " players set to: " + j };
@@ -62,7 +66,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].godMode)
+						if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].godMode)
 						{
 							myPlayerList.Add(pl.Name);
 							//str += " - " +pl.Name + "\n";
@@ -81,6 +85,7 @@ namespace AdminToolbox.Command
 				}
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
+				if (!AdminToolbox.playerdict.ContainsKey(myPlayer.SteamId)) return new string[] { "Player not in dictionary" };
 				if (args.Length > 1)
 				{
 					bool changedValue = false;

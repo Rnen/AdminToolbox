@@ -25,9 +25,9 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			AdminToolbox.AddMissingPlayerVariables();
 			Player caller = (sender is Player send) ? send : null;
 			Server server = PluginManager.Manager.Server;
+			AdminToolbox.AddMissingPlayerVariables();
 			if (args.Length > 0)
 			{
 				if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
@@ -35,7 +35,7 @@ namespace AdminToolbox.Command
 					int playerNum = 0;
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (caller != null && (pl.PlayerId == caller.PlayerId) || (AdminToolbox.playerdict[pl.SteamId].godMode || pl.GetGodmode()) /*|| (caller.GetUserGroup().Permissions < pl.GetUserGroup().Permissions)*/) continue;
+						if (caller != null && pl.PlayerId == caller.PlayerId || (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].godMode) || pl.GetGodmode() /*|| (caller.GetUserGroup().Permissions < pl.GetUserGroup().Permissions)*/) continue;
 						pl.Kill();
 						playerNum++;
 					}

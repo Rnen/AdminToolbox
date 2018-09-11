@@ -33,8 +33,11 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].instantKill = j;
-								playerNum++;
+								if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
+								{
+									AdminToolbox.playerdict[pl.SteamId].instantKill = j;
+									playerNum++;
+								}
 							}
 							outPut += "\nSet " + playerNum + " player's InstantKill to " + j;
 							return new string[] { outPut };
