@@ -59,7 +59,6 @@ namespace AdminToolbox
 				TeamKills = 0,
 				Deaths = 0,
 				RoundsPlayed = 0,
-				kickCount = 0,
 				banCount = 0,
 				previousHealth = 100,
 				prevAmmo5 = 0,
@@ -453,7 +452,8 @@ namespace AdminToolbox
 		private bool unifiedStats = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_stats_unified", true);
 
 		private static string AdminToolboxFolder = (ConfigManager.Manager.Config.GetStringValue("admintoolbox_folder_path", string.Empty) != string.Empty) ? ConfigManager.Manager.Config.GetStringValue("admintoolbox_folder_path", FileManager.AppFolder + "AdminToolbox") : FileManager.AppFolder + "AdminToolbox";
-		private static string AdminToolboxPlayerStats = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_stats_unified", true)) ? AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + "Global" : AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + PluginManager.Manager.Server.Port, AdminToolboxLogs = AdminToolboxFolder + Path.DirectorySeparatorChar + "ServerLogs";
+		private static string AdminToolboxPlayerStats = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_stats_unified", true)) ? AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + "Global" : AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + PluginManager.Manager.Server.Port,
+			AdminToolboxLogs = AdminToolboxFolder + Path.DirectorySeparatorChar + "ServerLogs";
 
 
 		public enum ServerLogType
@@ -523,6 +523,17 @@ namespace AdminToolbox
 				streamWriter.Close();
 			}
 		}
+
+		public void ManageDatedLogs()
+		{
+			int configInt = ConfigManager.Manager.Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
+
+			if(configInt > 0)
+			{
+				Directory.GetFiles(AdminToolboxLogs).ToList().ForEach(path => { if ((DateTime.Now - File.GetCreationTime(path)).TotalHours > configInt) File.Delete(path); } );
+			}
+		}
+
 		private void MoveOldFiles()
 		{
 			string infoString = (Directory.GetDirectories(FileManager.AppFolder + "ATServerLogs").Length > 0) ? "\n\n Relocated folders: " : string.Empty;

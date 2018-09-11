@@ -92,6 +92,7 @@ namespace AdminToolbox
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
 			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;
+			AdminToolbox.AdminToolboxLogger.ManageDatedLogs();
 		}
 	}
 }

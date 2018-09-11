@@ -12,7 +12,7 @@ using Unity;
 
 namespace AdminToolbox
 {
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, /*IEventHandlerHandcuff,*/ IEventHandlerBan
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, IEventHandlerHandcuffed, IEventHandlerBan
 	{
 		private Plugin plugin;
 
@@ -173,13 +173,13 @@ namespace AdminToolbox
 			ev.ServerName = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#3f704d><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
 		}
 
-		//public void OnHandcuff(PlayerHandcuffEvent ev)
-		//{
-		//	if (AdminToolbox.playerdict.ContainsKey(ev.Target.SteamId) && AdminToolbox.playerdict[ev.Target.SteamId].godMode || ev.Target.GetGodmode())
-		//		ev.Handcuffed = false;
-		//	else if (ev.Target.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
-		//		ev.Handcuffed = false;
-		//}
+		public void OnHandcuffed(PlayerHandcuffedEvent ev)
+		{
+			//if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].godMode || ev.Player.GetGodmode())
+			//	ev.Handcuffed = false;
+			//else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+			//	ev.Handcuffed = false;
+		}
 
 		public void OnBan(BanEvent ev)
 		{
@@ -187,8 +187,6 @@ namespace AdminToolbox
 			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
 				if (ev.Duration > 1)
 					AdminToolbox.playerdict[ev.Player.SteamId].banCount++;
-				else
-					AdminToolbox.playerdict[ev.Player.SteamId].kickCount++;
 		}
 	}
 }
