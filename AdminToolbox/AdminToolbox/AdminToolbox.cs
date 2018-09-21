@@ -18,11 +18,11 @@ namespace AdminToolbox
 		version = "1.3.5",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 16
+		SmodRevision = 17
 		)]
 	class AdminToolbox : Plugin
 	{
-		internal static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false;
+		internal static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false, isStarting = true;
 		public static Dictionary<string, AdminToolboxPlayerSettings> playerdict = new Dictionary<string, AdminToolboxPlayerSettings>();
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
 		public static Dictionary<string, Vector> presetWarps { get; private set; } = new Dictionary<string, Vector>()
@@ -179,11 +179,11 @@ namespace AdminToolbox
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
 			else if ( players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
 			if (players.Count > 0)
-				players.ForEach(p => AddToPlayerDict(p));
+				players.ForEach(p => { if(p != null) AddToPlayerDict(p); });
 		}
 		private static void AddToPlayerDict(Player player)
 		{
-			if (!string.IsNullOrEmpty(player.SteamId) && !playerdict.ContainsKey(player.SteamId))
+			if (player != null && player is Player && !string.IsNullOrEmpty(player.SteamId) && !playerdict.ContainsKey(player.SteamId))
 				playerdict.Add(player.SteamId, new AdminToolboxPlayerSettings());
 		}
 
@@ -240,7 +240,7 @@ namespace AdminToolbox
 				}
 				//Changes role to Tutorial, teleports to jail, removes inv.
 				ply.ChangeRole(Role.TUTORIAL, true, false);
-				ply.Teleport(AdminToolbox.warpVectors["jail"]);
+				ply.Teleport(AdminToolbox.warpVectors["jail"],true);
 				foreach (Smod2.API.Item item in ply.GetInventory())
 					item.Remove();
 				AdminToolbox.playerdict[ply.SteamId].isJailed = true;
@@ -254,7 +254,7 @@ namespace AdminToolbox
 			{
 				AdminToolbox.playerdict[ply.SteamId].isJailed = false;
 				ply.ChangeRole(AdminToolbox.playerdict[ply.SteamId].previousRole, true, false);
-				ply.Teleport(AdminToolbox.playerdict[ply.SteamId].originalPos);
+				ply.Teleport(AdminToolbox.playerdict[ply.SteamId].originalPos,true);
 				AdminToolbox.playerdict[ply.SteamId].isInJail = false;
 				ply.SetHealth(AdminToolbox.playerdict[ply.SteamId].previousHealth);
 				foreach (Smod2.API.Item item in ply.GetInventory())
@@ -394,17 +394,24 @@ namespace AdminToolbox
 			if (int.TryParse(args, out int pID))
 			{
 				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-					if (pl.PlayerId == pID || pl.SteamId == pID.ToString())
+					if (pl.PlayerId == pID)
+						return pl;
+			}
+			else if (long.TryParse(args, out long sID))
+			{
+				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+					if (pl.SteamId == sID.ToString())
 						return pl;
 			}
 			else
 			{
 				//Takes a string and finds the closest player from the playerlist
-				int maxNameLength = 31, LastnameDifference = 31/*, lastNameLength = 31*/;
+				int maxNameLength = 31, LastnameDifference = 31;
 				string str1 = args.ToLower();
 				foreach (Player pl in PluginManager.Manager.Server.GetPlayers(str1))
 				{
-					if (!pl.Name.ToLower().Contains(args.ToLower())) { goto NoPlayer; }
+					if (!pl.Name.ToLower().Contains(args.ToLower()))
+						continue;
 					if (str1.Length < maxNameLength)
 					{
 						int x = maxNameLength - str1.Length;
@@ -425,7 +432,6 @@ namespace AdminToolbox
 							playerOut = pl;
 						}
 					}
-					NoPlayer:;
 				}
 			}
 			return playerOut;

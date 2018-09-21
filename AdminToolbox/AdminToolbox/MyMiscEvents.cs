@@ -62,7 +62,8 @@ namespace AdminToolbox
 
 		public void OnDoorAccess(PlayerDoorAccessEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+			if (ev.Player != null && ev.Player is Player)
+				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
 			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
 			{
 				if (AdminToolbox.playerdict[ev.Player.SteamId].destroyDoor)
@@ -74,7 +75,8 @@ namespace AdminToolbox
 
 		public void OnSpawn(PlayerSpawnEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+			if(ev.Player != null && ev.Player is Player)
+				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
 			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
 			{
 				AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.SpawnPos;
@@ -85,6 +87,7 @@ namespace AdminToolbox
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
+			if (AdminToolbox.isStarting) AdminToolbox.isStarting = false;
 			AdminToolbox.lockRound = false;
 			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_enable", true, false)) this.plugin.pluginManager.DisablePlugin(plugin);
 			if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_colors", false);
@@ -109,32 +112,34 @@ namespace AdminToolbox
 		{
 			foreach (Player pl in ev.SCP106s)
 				if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && (AdminToolbox.playerdict[pl.SteamId].godMode || AdminToolbox.playerdict[ev.Player.SteamId].dmgOff))
+				{
 					ev.ActivateContainment = false;
+					break;
+				}
 		}
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
-			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info", true, false))
+			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player p)
 			{
-				plugin.Info(ev.Player.Name + " just joined the server!");
-			}
-			//if (ev.Player.SteamId == "76561198019213377" && ev.Player.GetUserGroup().Name == string.Empty)
-			//	ev.Player.SetRank("aqua", "Plugin Dev");
-			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { ev.Player },LogHandlers.PlayerFile.Read);
+				AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
+				AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { p }, LogHandlers.PlayerFile.Read);
 
-			//string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_autohide_serverranks", new string[] { string.Empty }, false);
-			//if (whitelistRanks.Length > 0)
-			//{
-			//	foreach (var item in whitelistRanks)
-			//	{
-			//		if (item.ToLower().Replace(" ", string.Empty) == ev.Player.GetRankName().ToLower().Replace(" ", string.Empty) || item.ToLower().Replace(" ", string.Empty) == ev.Player.GetUserGroup().Name.ToLower().Replace(" ", string.Empty))
-			//		{
-			//			ev.Player.RunCommand("hidetag", new string[] { string.Empty });
-			//			plugin.Info("AutoHidden tag: " + ev.Player.GetUserGroup() + " for user: " + ev.Player.Name);
-			//		}
-			//	}
-			//}
+				if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
+				{
+					int bancount = (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) ? AdminToolbox.playerdict[ev.Player.SteamId].banCount : 0;
+					string str = Environment.NewLine +
+						ev.Player.Name + " joined as player (" + ev.Player.PlayerId + ")" + Environment.NewLine +
+						"From IP: " + ev.Player.IpAddress + Environment.NewLine +
+						"Using steamID: " + ev.Player.SteamId + Environment.NewLine;
+					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
+					plugin.Info(str);
+				}
+				else if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info", true, false))
+				{
+					plugin.Info(ev.Player.Name + " just joined the server!");
+				}
+			}
 		}
 
 		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(1);
@@ -144,14 +149,15 @@ namespace AdminToolbox
 			if (threeMinTimer <= DateTime.Now) { AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write); threeMinTimer = DateTime.Now.AddMinutes(3); }
 			if (fiveMinTimer <= DateTime.Now)
 			{
+				fiveMinTimer = DateTime.Now.AddMinutes(5);
 				List<string> playerSteamIds = new List<string>(), keysToRemove = new List<string>();
+
 				if (PluginManager.Manager.Server.GetPlayers().Count > 0)
-					foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-						playerSteamIds.Add(pl.SteamId);
-				if (AdminToolbox.playerdict.Count > 0)
-					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> x in AdminToolbox.playerdict)
-						if (playerSteamIds.Count > 0 && !playerSteamIds.Contains(x.Key) && !x.Value.keepSettings)
-							keysToRemove.Add(x.Key);
+					PluginManager.Manager.Server.GetPlayers().ForEach(p => { if (!string.IsNullOrEmpty(p.SteamId)) playerSteamIds.Add(p.SteamId); });
+				if (AdminToolbox.playerdict.Count > 0 && playerSteamIds.Count > 0)
+					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> kp in AdminToolbox.playerdict)
+						if (!playerSteamIds.Contains(kp.Key) && !kp.Value.keepSettings)
+							keysToRemove.Add(kp.Key);
 				if (keysToRemove.Count > 0)
 					foreach (string key in keysToRemove)
 						AdminToolbox.playerdict.Remove(key);
@@ -183,10 +189,11 @@ namespace AdminToolbox
 
 		public void OnBan(BanEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Admin, ev.Player });
-			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
-				if (ev.Duration > 1)
-					AdminToolbox.playerdict[ev.Player.SteamId].banCount++;
+			if (ev.Player != null && ev.Player is Player)
+				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+
+			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
+				AdminToolbox.playerdict[ev.Player.SteamId].banCount++;
 		}
 	}
 }

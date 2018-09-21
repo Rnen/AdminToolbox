@@ -13,6 +13,8 @@ namespace AdminToolbox.Command
 {
 	class PosCommand : ICommandHandler
 	{
+		private const bool Unstuck = false;
+
 		public string GetCommandDescription()
 		{
 			return "Alters the player position";
@@ -22,7 +24,6 @@ namespace AdminToolbox.Command
 		{
 			return "pos (player) [add/set/get] [x=][y=][z=]\nVisit the \"github.com/Rnen/AdminToolbox\" for more info";
 		}
-
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
@@ -65,7 +66,7 @@ namespace AdminToolbox.Command
 							yInput = myPos["y"];
 							zInput = myPos["z"];
 							Vector myvector = new Vector(myPlayer.GetPosition().x + xInput, myPlayer.GetPosition().y + yInput, myPlayer.GetPosition().z + zInput);
-							myPlayer.Teleport(myvector);
+							myPlayer.Teleport(myvector, Unstuck);
 							return new string[] { "Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z };
 						}
 						else if (args[1].ToLower() == "set")
@@ -109,7 +110,7 @@ namespace AdminToolbox.Command
 							zInput = myPos["z"];
 							Vector myvector = new Vector(xInput, yInput, zInput);
 
-							myPlayer.Teleport(myvector);
+							myPlayer.Teleport(myvector, Unstuck);
 							return new string[] { "Teleported " + myPlayer.Name + " to x:" + myvector.x + " y:" + myvector.y + " z:" + myvector.z };
 						}
 						else

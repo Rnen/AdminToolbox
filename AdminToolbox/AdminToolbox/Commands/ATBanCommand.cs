@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
@@ -8,7 +7,6 @@ namespace AdminToolbox.Command
 {
 	public class ATBanCommand : ICommandHandler
 	{
-
 		private Plugin plugin;
 
 		public ATBanCommand(Plugin plugin)
@@ -18,7 +16,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "ATBAN [NAME] [IP/SteamID] [MINUTES]";
+			return "ATBAN [NAME] [IP/SteamID] [MINUTES] (OPTIONAL REASON)";
 		}
 
 		public string GetCommandDescription()
@@ -30,37 +28,40 @@ namespace AdminToolbox.Command
 		{
 			try
 			{
-				if (args.Length != 3) return new string[] { GetUsage() };
-				string ipBanPath = FileManager.AppFolder + "IpBans.txt";
-				string sidBanPath = FileManager.AppFolder + "SteamIdBans.txt";
-				string outs = "";
-				string IssuingPlayer = (sender is Player pl && !string.IsNullOrEmpty(pl.SteamId)) ? pl.Name : "Server";
-				DateTime bannedTime; ;
-				if (double.TryParse(args[2], out var minutes))
-					bannedTime = DateTime.Now.AddMinutes(minutes);
-				else
-					return new string[] { "Wrong time format: " + args[2] };
+				if (args.Length < 3) return new string[] { GetUsage() };
 
-				if (args[1].Contains("."))
+				string IssuingPlayer = (sender is Player pl && !string.IsNullOrEmpty(pl.SteamId)) ? pl.Name : "Server";
+				string bannedPlayer = args[0];
+				string input = args[1];
+				int minutes = (int.TryParse(args[2], out int x)) ? x : 0;
+				string reason = (args.Length > 3) ? args[3] : "";
+
+				if (minutes < 1)
+					return new string[] { "Wrong time format: \"" + minutes + "\"" };
+
+
+				if (input.Contains("."))
 				{
-					if (args[1].Split('.').Length != 4) return new string[] { "Invalid IP: " + args[1] };
-					string ip = (args[1].Contains("::ffff:")) ? args[1] : "::ffff:" + args[1];
-					outs += args[0] + ";" + ip + ";" + bannedTime.Ticks + ";;" + IssuingPlayer + ";" + DateTime.Now.Ticks;
-					File.AppendAllText(ipBanPath, "\n" + outs);
-					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + args[0] + " and with IP: " + args[1] + " was banned for " + args[2] + " minutes by " + IssuingPlayer);
-					return new string[] { "Player with name: " + args[0] + " and with IP: " + args[1] + " was banned for " + args[2] + " minutes by " + IssuingPlayer };
+					if (input.Split('.').Length != 4) return new string[] { "Invalid IP: " + input };
+					string ip = (input.Contains("::ffff:")) ? input : "::ffff:" + input;
+
+					PluginManager.Manager.Server.BanIpAddress(bannedPlayer, ip, minutes, reason, IssuingPlayer);
+
+					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + bannedPlayer + " and with IP: " + ip + " was banned for " + minutes + " minutes by " + IssuingPlayer);
+					return new string[] { "Player with name: " + bannedPlayer + " and with IP: " + ip + " was banned for " + minutes + " minutes by " + IssuingPlayer };
 				}
 				else
 				{
-					outs += args[0] + ";" + args[1] + ";" + bannedTime.Ticks + ";;" + IssuingPlayer + ";" + DateTime.Now.Ticks;
-					File.AppendAllText(sidBanPath, "\n" + outs);
-					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + args[0] + " and with SteamID: " + args[1] + " was banned for " + args[2] + " minutes by " + IssuingPlayer);
-					return new string[] { "Player with name: " + args[0] + " and with SteamID: " + args[1] + " was banned for " + args[2] + " minutes by " + IssuingPlayer };
+					PluginManager.Manager.Server.BanSteamId(args[0], input, minutes, reason, IssuingPlayer);
+
+					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + bannedPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer);
+					return new string[] { "Player with name: " + IssuingPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer };
 				}
 			}
 			catch (Exception e)
 			{
-				return new string[] { e.StackTrace };
+				plugin.Error(e.StackTrace);
+				return new string[] { "Encountered an error! Check server window." };
 			}
 		}
 	}

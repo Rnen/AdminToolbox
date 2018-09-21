@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				Vector originalPos = myPlayer.GetPosition();
 				myPlayer.ChangeRole(Role.TUTORIAL);
-				myPlayer.Teleport(originalPos);
+				myPlayer.Teleport(originalPos, true);
 				return new string[] { "Set " + myPlayer.Name + " to " + Role.TUTORIAL };
 			}
 			else

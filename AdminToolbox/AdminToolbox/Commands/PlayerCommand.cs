@@ -19,7 +19,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "(P / PLAYER) [PLAYERNAME]";
+			return "(P / PLAYER) [PLAYERNAME/ID/STEAMID]";
 		}
 		private static string StringToMax(string text, int max = 29)
 		{
@@ -61,11 +61,13 @@ namespace AdminToolbox.Command
 			if (server.GetPlayers().Count > 0)
 			{
 				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
-				if (args.Length == 0)
-					if (sender is Player sendingPlayer)
-						myPlayer = sendingPlayer;
-				if (myPlayer == null)
-					return new string[] { "Couldn't get player: " + args[0] };
+				if (myPlayer == null && sender is Player sendingPlayer)
+					myPlayer = sendingPlayer;
+				else if (myPlayer == null)
+					if (args.Length > 0)
+						return new string[] { "Couldn't get player: " + args[0] };
+					else
+						return new string[] { GetUsage() };
 
 				//Handling player stats
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { myPlayer });
