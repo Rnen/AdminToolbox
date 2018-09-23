@@ -33,13 +33,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\SCPSL\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Assembly-CSharp, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Smod2">
-      <HintPath>..\..\..\SCPSL\Smod2.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Smod2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +61,7 @@
     <Compile Include="Commands\ATColorCommand.cs" />
     <Compile Include="Commands\JailCommand.cs" />
     <Compile Include="Commands\EmptyCommand.cs" />
+    <Compile Include="Commands\SpeakCommand.cs" />
     <Compile Include="Commands\ServerCommand.cs" />
     <Compile Include="Commands\RoundLockCommand.cs" />
     <Compile Include="Commands\WarpsCommand.cs" />

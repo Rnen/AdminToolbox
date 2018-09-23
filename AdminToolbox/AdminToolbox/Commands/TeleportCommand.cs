@@ -27,10 +27,14 @@ namespace AdminToolbox.Command
 					int playerNum = -1;
 					Player myTpPlayer = GetPlayerFromString.GetPlayer(args[1]);
 					if (myTpPlayer == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
+					Vector pos = myTpPlayer.GetPosition();
 					foreach (Player pl in server.GetPlayers())
 					{
-						pl.Teleport(myTpPlayer.GetPosition());
-						playerNum++;
+						if (pl.PlayerId != myTpPlayer.PlayerId)
+						{
+							pl.Teleport(pos, true);
+							playerNum++;
+						}
 					}
 					return new string[] { "Teleported " + playerNum + " players to " + myTpPlayer.Name };
 				}
@@ -40,7 +44,7 @@ namespace AdminToolbox.Command
 				if (myPlayer2 == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
 				if (args[1] != null)
 				{
-					myPlayer.Teleport(myPlayer2.GetPosition());
+					myPlayer.Teleport(myPlayer2.GetPosition(), true);
 					return new string[] { "Teleported: " + myPlayer.Name + " to " + myPlayer2.Name };
 				}
 				else

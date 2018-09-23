@@ -14,7 +14,7 @@ namespace AdminToolbox.Command
 
 		public string GetUsage()
 		{
-			return "LOCKDOWN [PLAYER] [BOOLEAN]";
+			return "(PL / PLAYERLOCKDOWN / PLOCK / PLAYERLOCK) [PLAYER] [BOOLEAN]";
 		}
 
 		public string[] OnCall(ICommandSender sender, string[] args)

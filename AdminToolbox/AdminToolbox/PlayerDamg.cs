@@ -58,10 +58,23 @@ namespace AdminToolbox
 			if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId)) { if (AdminToolbox.playerdict[ev.Attacker.SteamId].dmgOff) { ev.Damage = 0f; ev.DamageType = DamageType.NONE; ; return; }; }
 			int[] allowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { (int)ItemType.NULL }, false);
 			int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", humanDamageTypes, false);
+			string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "14:14" }, false);
+
 
 			if (ev.DamageType != DamageType.FRAG && AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
 				ev.Damage = ev.Player.GetHealth() + 1;
-			string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "14:14" }, false);
+			
+
+			if(ev.Player.IsHandcuffed() && humanDamageTypes.Contains((int)ev.DamageType) && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_nokill_captured", false))
+			{
+				if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill)
+					ev.Damage = ev.Damage; //basically doing nothing
+				else
+				{
+					ev.Damage = 0f;
+					return;
+				}
+			}
 
 			bool isFriendlyDmg()
 			{
@@ -77,7 +90,7 @@ namespace AdminToolbox
 				bool foundPlayer = false;
 				foreach (var item in roleDamages)
 				{
-					string[] myStringKey = item.Replace(" ", "").Split(':');
+					string[] myStringKey = item.Trim().Split(':');
 					if (!int.TryParse(myStringKey[0], out int attackRole)) { plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1]); continue; }
 					string[] myString = myStringKey[1].Split('.', '-', '#', '_', ',', '+', '@', '>', '<', ';');
 					if (myString.Length >= 1)

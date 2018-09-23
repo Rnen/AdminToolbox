@@ -4,7 +4,6 @@ It offers multiple admin tools like
 * Friendly fire logs in server console & logs to file
 * Advanced Godmode, ability to turn off damage for players, instantkill
   - "Advanced" in the sense of: 106 with ATGOD cannot be contained, amongst other things like this
-* Heal
 * Warp Points
 * Modifying player cordinates/position
 * Prevent the round from ending
@@ -57,6 +56,7 @@ ATCOLOR | Boolean | |  `Enable/Disable` admintoolbox colors in server console (c
 JAIL | Player | seconds |  Jails the player for the specified (if not specified, defaults to 1 year) time. Re-use to unjail.
 S / SERVERINFO |  | | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
 KILL / SLAY | Player | | Kills target player. Using `*` will exclude the player using the command
+SPEAK | Player | | Sets player as Intercom Speaker. Use without Player to set yourself. If used while broadcast, the current broadcast will cancel.
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
 >Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
@@ -112,9 +112,9 @@ admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage oth
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 admintoolbox_block_role_damage | [ExampleHere](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
 admintoolbox_roledamageblock_onroundend | Boolean | True | Enables/Disables config above to be in effect after round has ended
-~~admintoolbox_custom_nuke_cards~~ | ~~Boolean~~ | ~~False~~ | ~~Enables config for having to use a specified card to activate nuke~~
-~~admintoolbox_nuke_card_list~~ | ~~List~~ | ~~6, 9, 11~~ | ~~What item(s) the player needs to have in his hand to start the nuke~~
-~~admintoolbox_tutorial_canbehandcuffed~~ | ~~Boolean~~ | ~~False~~ | ~~Enables/Disables Tutorial players to be handcuffed~~
+admintoolbox_intercomtransmit_text | String | | Sets what the intercom screen displays while broadcasting. (Use `$player` to display currently speaking player)
+admintoolbox_intercomready_text | String |  |  Sets what the intercom screen displays while "Ready"
+admintoolbox_intercomrestart_text | String |  | Sets what the intercom screen displays while restarting
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
@@ -130,6 +130,7 @@ admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfi
 admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
 admintoolbox_folder_path | String (Path) | %Appdata%\Roaming\SCP Secret Laboratory\ | Where the Admintoolbox folder will be located
 admintoolbox_stats_unified | Boolean | True | If true uses one folder for all servers, false creates a folder per server
+admintoolbox_logremover_hours_old | Int | 0 | Automaticly removes AT logs older than specified hours of age
 
 ### Debug/INFO Settings (If you do not intend to change the default values, theres no need to include any of theese in your config)
 Config Option | Value Type | Default Value | Description
@@ -140,6 +141,7 @@ admintoolbox_debug_friendly_damage | Boolean | False | Displays team damage in s
 admintoolbox_debug_player_kill | Boolean | False | Displays all non-friendly kills in server console.
 admintoolbox_debug_scp_and_self_killed  | Boolean | False | Displays suicides, granade kills and SCP kills in server console.
 admintoolbox_debug_friendly_kill | Boolean | True | Displays teamkills in server console.
+admintoolbox_player_join_info_extended | Boolean | True | Displays extended info about joining player
 admintoolbox_player_join_info | Boolean | True | Displays joining player's name upon joining.
 
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt

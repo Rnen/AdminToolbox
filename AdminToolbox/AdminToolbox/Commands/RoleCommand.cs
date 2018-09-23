@@ -38,7 +38,7 @@ namespace AdminToolbox.Command
 								else
 								{
 									pl.ChangeRole((Role)j, true, false);
-									pl.Teleport(originalPos);
+									pl.Teleport(originalPos,true);
 								}
 								pl.SetHealth(pl.TeamRole.MaxHP);
 								playerNum++;
@@ -71,7 +71,7 @@ namespace AdminToolbox.Command
 						else
 						{
 							myPlayer.ChangeRole((Role)j, true, false);
-							myPlayer.Teleport(originalPos);
+							myPlayer.Teleport(originalPos,true);
 						}
 						myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
 						return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + (Role)j };

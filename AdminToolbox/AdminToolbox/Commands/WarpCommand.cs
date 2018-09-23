@@ -81,7 +81,7 @@ namespace AdminToolbox.Command
 							byte playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								pl.Teleport(AdminToolbox.warpVectors[args[1].ToLower()]);
+								pl.Teleport(AdminToolbox.warpVectors[args[1].ToLower()], true);
 								playerNum++;
 							}
 							return new string[] { "Teleported " + playerNum + " players to warp point: " + args[1] };
@@ -90,7 +90,7 @@ namespace AdminToolbox.Command
 						if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 						if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
 							return new string[] { "No warp point called: " + args[1] };
-						myPlayer.Teleport(AdminToolbox.warpVectors[args[1].ToLower()]);
+						myPlayer.Teleport(AdminToolbox.warpVectors[args[1].ToLower()], true);
 						return new string[] { "Teleported: " + myPlayer.Name + " to warp point: " + args[1] };
 					}
 					else
