@@ -15,10 +15,10 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.5",
+		version = "1.3.6",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 17
+		SmodRevision = 18
 		)]
 	class AdminToolbox : Plugin
 	{
