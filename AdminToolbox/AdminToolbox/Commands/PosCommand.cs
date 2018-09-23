@@ -46,7 +46,7 @@ namespace AdminToolbox.Command
 								{"z",0 }
 							};
 							int xInput = 0, yInput = 0, zInput = 0;
-							char[] delimiterChars = { '.', ',', '=', '_', ':', ';', ' ', '-' };
+							char[] delimiterChars = { '.', ',', '=', '_', ':','^','/','>','<','\''};
 							string[] charsAllowed = { "x", "y", "z" };
 							for (int i = 2; i < args.Length; i++)
 							{

@@ -131,6 +131,7 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
 			this.AddCommands(new string[] { "atban","offlineban","oban" }, new Command.ATBanCommand(this));
 			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
+			this.AddCommands(new string[] { "speak" }, new Command.SpeakCommand());
 
 			#endregion
 			#region Config Registering Config Entries

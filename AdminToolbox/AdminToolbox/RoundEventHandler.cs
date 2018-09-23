@@ -12,6 +12,10 @@ namespace AdminToolbox
 	class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
 	{
 		private Plugin plugin;
+		IConfigFile config = ConfigManager.Manager.Config;
+		internal string intercomReady = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
+			intercomRestart = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
+			intercomTransmit = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 
 		public RoundEventHandler(Plugin plugin)
 		{
@@ -30,10 +34,8 @@ namespace AdminToolbox
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.presetWarps);
 
-			IConfigFile config = ConfigManager.Manager.Config;
-			string intercomReady = config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
-				intercomRestart = config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
-				intercomTransmit = config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+
+
 			if (intercomReady != string.Empty)
 				ev.Server.Map.SetIntercomContent(IntercomStatus.Ready, intercomReady);
 			if (intercomRestart != string.Empty)

@@ -21,7 +21,7 @@ namespace AdminToolbox.Command
 		{
 			return "(P / PLAYER) [PLAYERNAME/ID/STEAMID]";
 		}
-		private static string StringToMax(string text, int max = 29)
+		private static string StringToMax(string text, int max = 32)
 		{
 			while (text.Length < max)
 				text += ' ';
@@ -29,7 +29,10 @@ namespace AdminToolbox.Command
 		}
 		string BuildTwoLiner(string str1, string str2 = "")
 		{
-			return StringToMax(str1) + "|" + StringToMax(str2.PadLeft(LeftPadding));
+			if(!string.IsNullOrEmpty(str2))
+				return StringToMax(str1) + "|" + StringToMax(str2.PadLeft(LeftPadding));
+			else
+				return StringToMax(str1);
 		}
 
 		bool isPlayer(ICommandSender sender)
@@ -46,18 +49,6 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			string ColoredBools(bool input)
-			{
-				if (isPlayer(sender) && input)
-					return "<color=green>" + input + " </color>";
-				else if (isPlayer(sender) && !input)
-					return "<color=red>" + input + "</color>";
-				else if (input)
-					return input.ToString() + " ";
-				else
-					return input.ToString();
-			}
-
 			if (server.GetPlayers().Count > 0)
 			{
 				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
@@ -89,20 +80,22 @@ namespace AdminToolbox.Command
 					BuildTwoLiner(" - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color + ">" + myPlayer.GetRankName() + "</color>") + Environment.NewLine +
 					BuildTwoLiner(" - Role: " + myPlayer.TeamRole.Role,								" - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
 					BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
-					BuildTwoLiner("   - Godmode: " + ColoredBools(playerDict.godMode),				"  - NoDmg: " + ColoredBools(playerDict.dmgOff)) + Environment.NewLine +
-					BuildTwoLiner("   - SpectatorOnly: " + ColoredBools(playerDict.spectatorOnly),	"  - KeepSettings: " + ColoredBools(playerDict.keepSettings)) + Environment.NewLine +
-					BuildTwoLiner("   - BreakDoors: " + ColoredBools(playerDict.destroyDoor),		"  - PlayerLockDown: " + ColoredBools(playerDict.lockDown)) + Environment.NewLine +
-					BuildTwoLiner("   - InstantKill: " + ColoredBools(playerDict.instantKill)) + Environment.NewLine +
-					BuildTwoLiner("   - IsJailed: " + ColoredBools(playerDict.isJailed),			" - Released In: " + remainingJailTime) + Environment.NewLine +
+					BuildTwoLiner("   - Godmode: " + (playerDict.godMode),							" - NoDmg: " + (playerDict.dmgOff)) + Environment.NewLine +
+					BuildTwoLiner("   - SpectatorOnly: " + (playerDict.spectatorOnly),				" - KeepSettings: " + (playerDict.keepSettings)) + Environment.NewLine +
+					BuildTwoLiner("   - BreakDoors: " + (playerDict.destroyDoor),					" - PlayerLockDown: " + (playerDict.lockDown)) + Environment.NewLine +
+					BuildTwoLiner("   - InstantKill: " + (playerDict.instantKill)) + Environment.NewLine +
+					BuildTwoLiner("   - IsJailed: " + (playerDict.isJailed),						" - Released In: " + remainingJailTime) + Environment.NewLine +
 					BuildTwoLiner(" - Stats:") + Environment.NewLine +
-					BuildTwoLiner("     - Kills: " + playerDict.Kills,								"- TeamKills: " + playerDict.TeamKills) + Environment.NewLine +
-					BuildTwoLiner("     - Deaths: " + playerDict.Deaths,							"- Times Banned: " + playerDict.banCount) + Environment.NewLine +
-					BuildTwoLiner("     - Playtime: " + playerDict.minutesPlayed + " minutes",		"- Rounds Played: " + playerDict.RoundsPlayed) + Environment.NewLine +
+					BuildTwoLiner("   - Kills: " + playerDict.Kills,								" - TeamKills: " + playerDict.TeamKills) + Environment.NewLine +
+					BuildTwoLiner("   - Deaths: " + playerDict.Deaths,								" - Times Banned: " + playerDict.banCount) + Environment.NewLine +
+					BuildTwoLiner("   - Playtime: " + (int)playerDict.minutesPlayed + " minutes",	" - Rounds Played: " + playerDict.RoundsPlayed) + Environment.NewLine +
 					BuildTwoLiner(" - Position:") + Environment.NewLine +
-					BuildTwoLiner(" - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z) + Environment.NewLine +
+					BuildTwoLiner("  - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z) + Environment.NewLine +
 					BuildTwoLiner(" - Inventory: " + playerInv) + Environment.NewLine;
-
-				return new string[] { playerInfoString };
+				if (isPlayer(sender))
+					return new string[] { playerInfoString.Replace("True", "<color=green>" + "True" + " </color>").Replace("False", "<color=red>" + "False" + "</color>") };
+				else
+					return new string[] { playerInfoString };
 			}
 			else
 				return new string[] { "Server is empty!" };

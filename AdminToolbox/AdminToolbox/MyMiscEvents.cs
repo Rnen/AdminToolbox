@@ -57,6 +57,9 @@ namespace AdminToolbox
 					}
 				}
 			}
+			string intercomTransmit = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
+				plugin.pluginManager.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit.Replace("$player",ev.Player.Name));
 			#endregion
 		}
 

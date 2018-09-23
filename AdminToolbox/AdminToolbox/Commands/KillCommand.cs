@@ -27,6 +27,8 @@ namespace AdminToolbox.Command
 		{
 			Player caller = (sender is Player send) ? send : null;
 			Server server = PluginManager.Manager.Server;
+			const DamageType killType = DamageType.NONE;
+
 			AdminToolbox.AddMissingPlayerVariables();
 			if (args.Length > 0)
 			{
@@ -35,21 +37,24 @@ namespace AdminToolbox.Command
 					int playerNum = 0;
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (caller != null && pl.PlayerId == caller.PlayerId || (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].godMode) || pl.GetGodmode() /*|| (caller.GetUserGroup().Permissions < pl.GetUserGroup().Permissions)*/) continue;
-						pl.Kill();
+						if(server.GetPlayers().Count > 1)
+							if (caller != null && pl.PlayerId == caller.PlayerId || (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].godMode) || pl.GetGodmode() /*|| (caller.GetUserGroup().Permissions < pl.GetUserGroup().Permissions)*/) continue;
+						pl.Kill(killType);
 						playerNum++;
 					}
+					if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
 					return new string[] { playerNum + " players has been slain!" };
 				}
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
 				if (myPlayer.TeamRole.Role != Role.SPECTATOR)
 				{
-					myPlayer.Kill();
-					return new string[] { myPlayer + " has been slain!" };
+					if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
+					myPlayer.Kill(killType);
+					return new string[] { myPlayer.Name + " has been slain!" };
 				}
 				else
-					return new string[] { myPlayer + " is already dead!" };
+					return new string[] { myPlayer.Name + " is already dead!" };
 			}
 			else
 			{
