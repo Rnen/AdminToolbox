@@ -33,7 +33,7 @@ namespace AdminToolbox.Command
 				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
 				if (myPlayer == null && sender is Player sendingPlayer)
 					myPlayer = sendingPlayer;
-				else if (myPlayer == null)
+				if (myPlayer == null)
 					if (args.Length > 0)
 						return new string[] { "Couldn't get player: " + args[0] };
 					else
