@@ -74,25 +74,27 @@
 | :--- | :--- | ---: |
 #0| NONE | 
 #1| LURE | Stepping into the Femur Breaker
-#2| SCP_049_2 | Zombie attack
-#3| NUKE | Nuke explosion
-#4| WALL | Crush damage
-#5| DECONT | Decontamination
-#6| TESLA | Tesla gates
-#7| FRAG | Boom boom
-#8| SCP_939 | Doggo
-#9| SCP_173 | Peanut
-#10| SCP_106 | Larry / Old man
-#11| CONTAIN | What kills Larry when the button is pressed
-#12| SCP_096 | Shy Guy
-#13| SCP_049 | Plague doctor
-#14| POCKET | Per-second damage in the pocket dim
-#15| FALLDOWN | Fall damage
-#16| COM15 | Pistol
-#17| E11_STANDARD_RIFLE | NTF Rifle
-#18| P90 | 
-#19| MP4 |
-#20| LOGICER | Chaos weapon
+#2| NUKE | Nuke explosion
+#3| WALL | Crush damage
+#4| DECONT | Decontamination
+#5| TESLA | Tesla gates
+#6| FALLDOWN | Fall damage
+#7| FLYING | Anti-Fly damage
+#8| CONTAIN | What kills SCP106 when the button is pressed
+#9| POCKET | Per-second damage in the pocket dim
+#10| RAGDOLLLESS | Damagetype used for not spawning a ragdoll
+#11| COM15 | Pistol
+#12| P90 | 
+#13| E11_STANDARD_RIFLE | NTF Rifle
+#14| MP7 | 
+#15| LOGICER | Chaos weapon
+#16| FRAG | Frag Grenades
+#17| SCP_049 | Plague doctor
+#18| SCP_049-2 | Zombie attacks
+#19| SCP_096 | Shy Guy
+#20| SCP_106 | Larry
+#21| SCP_173 | Peanut
+#22| SCP_939 | Doggo
 
 #
 ## Team ID's
