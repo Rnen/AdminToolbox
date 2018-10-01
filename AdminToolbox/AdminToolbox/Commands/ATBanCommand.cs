@@ -55,7 +55,7 @@ namespace AdminToolbox.Command
 					PluginManager.Manager.Server.BanSteamId(args[0], input, minutes, reason, IssuingPlayer);
 
 					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + bannedPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer);
-					return new string[] { "Player with name: " + IssuingPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer };
+					return new string[] { "Player with name: " + bannedPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer };
 				}
 			}
 			catch (Exception e)
