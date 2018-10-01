@@ -18,7 +18,6 @@ namespace AdminToolbox
 		}
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-
 			int[] humanDamageTypes = {
 				(int)DamageType.COM15,
 				(int)DamageType.E11_STANDARD_RIFLE,
@@ -85,7 +84,7 @@ namespace AdminToolbox
 					return false;
 			}
 			if (AdminToolbox.isRoundFinished && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_roledamageblock_onroundend", true)) goto RoundEnd;
-			if (roleDamages.Length > 0)
+			if (roleDamages.Length > 0 && ev.Attacker.PlayerId != ev.Player.PlayerId)
 			{
 				bool foundPlayer = false;
 				foreach (var item in roleDamages)
