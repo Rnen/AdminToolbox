@@ -15,13 +15,15 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.6",
+		version = ATversion,
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 18
+		SmodRevision = 19
 		)]
 	class AdminToolbox : Plugin
 	{
+		public const string ATversion = "1.3.7";
+
 		internal static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false, isStarting = true;
 		public static Dictionary<string, AdminToolboxPlayerSettings> playerdict = new Dictionary<string, AdminToolboxPlayerSettings>();
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
