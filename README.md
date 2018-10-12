@@ -112,9 +112,12 @@ admintoolbox_block_role_damage | Dictionary | 2:2 | What roles cannot damage oth
 admintoolbox_round_info | Boolean | True | Displays round-count and dudation on start/end of round
 admintoolbox_block_role_damage | [ExampleHere](https://github.com/Rnen/AdminToolbox/blob/1.3.3/README.md#examples) | | Specifies what roles (AttackerRole) cannot damage.
 admintoolbox_roledamageblock_onroundend | Boolean | True | Enables/Disables config above to be in effect after round has ended
-admintoolbox_intercomtransmit_text | String | | Sets what the intercom screen displays while broadcasting. (Use `$player` to display currently speaking player)
+admintoolbox_intercomtransmit_text | String | | Sets what the intercom screen displays while broadcasting. List of usable name-variables below
 admintoolbox_intercomready_text | String |  |  Sets what the intercom screen displays while "Ready"
 admintoolbox_intercomrestart_text | String |  | Sets what the intercom screen displays while restarting
+
+Name variables for intercom_transmit config:
+`$player` `$playerid` `$playerrole` `$playerteam` `$playerhp` (alternative `$playerhealth`) `$playerrank`
 
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
