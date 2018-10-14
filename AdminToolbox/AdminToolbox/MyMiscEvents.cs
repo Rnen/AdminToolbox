@@ -61,13 +61,13 @@ namespace AdminToolbox
 			string intercomTransmit = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
 				plugin.pluginManager.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit
-					.Replace("$player",ev.Player.Name)
 					.Replace("$playerid",ev.Player.PlayerId.ToString())
 					.Replace("$playerrole",ev.Player.TeamRole.Role.ToString())
 					.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
 					.Replace("$playerhp",ev.Player.GetHealth().ToString())
 					.Replace("$playerhealth", ev.Player.GetHealth().ToString())
-					.Replace("$playerrank", ev.Player.GetRankName()));
+					.Replace("$playerrank", ev.Player.GetRankName())
+					.Replace("$player", ev.Player.Name));
 		}
 
 		public void OnDoorAccess(PlayerDoorAccessEvent ev)
