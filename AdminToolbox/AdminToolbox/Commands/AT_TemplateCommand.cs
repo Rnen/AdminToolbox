@@ -4,11 +4,11 @@ using Smod2.API;
 
 namespace AdminToolbox.Command
 {
-	class MyTemplateCommand : ICommandHandler
+	class AT_TemplateCommand : ICommandHandler
 	{
 		private AdminToolbox plugin;
 
-		public MyTemplateCommand(AdminToolbox plugin)
+		public AT_TemplateCommand(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
 		}
