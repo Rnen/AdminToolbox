@@ -31,7 +31,7 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								pl.ChangeRole(Role.TUTORIAL);
+								pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
 								playerNum++;
 							}
 							if (playerNum > 1)
@@ -44,14 +44,14 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						foreach (Player pl in server.GetPlayers()) { pl.ChangeRole(Role.TUTORIAL); }
+						foreach (Player pl in server.GetPlayers()) { pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true); }
 						return new string[] { "Changed all players to " + Role.TUTORIAL };
 					}
 				}
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				Vector originalPos = myPlayer.GetPosition();
-				myPlayer.ChangeRole(Role.TUTORIAL);
+				myPlayer.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
 				myPlayer.Teleport(originalPos, true);
 				return new string[] { "Set " + myPlayer.Name + " to " + Role.TUTORIAL };
 			}

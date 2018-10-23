@@ -35,13 +35,11 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SCPSL\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SCPSL\Smod2.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Smod2.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\ATBanCommand.cs" />
+    <Compile Include="Commands\GhostCommand.cs" />
     <Compile Include="Commands\IntercomLockCommand.cs" />
     <Compile Include="Commands\ATDisableCommand.cs" />
     <Compile Include="Commands\KeepSettingsCommand.cs" />
@@ -79,7 +78,7 @@
     <Compile Include="Commands\GodModeCommand.cs" />
     <Compile Include="MyMiscEvents.cs" />
     <Compile Include="Commands\TeleportCommand.cs" />
-    <Compile Include="Commands\MyTemplateCommand.cs" />
+    <Compile Include="Commands\AT_TemplateCommand.cs" />
     <Compile Include="Commands\PlayerListCommand.cs" />
     <Compile Include="PlayerDamg.cs" />
     <Compile Include="RoundEventHandler.cs" />

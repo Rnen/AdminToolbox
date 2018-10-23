@@ -28,8 +28,15 @@ namespace AdminToolbox.Command
 		{
 			AdminToolbox.AddMissingPlayerVariables();
 			Server server = PluginManager.Manager.Server;
+			if(args.Length == 0 && sender is Player p)
+			{
+				p.SetGhostMode(!p.GetGhostMode());
+				return new string[] { "Toggled " + p.Name + "'s GhostMode to " + p.GetGhostMode() };
+			}
 			if (args.Length > 0)
 			{
+				if (args[0].ToLower() == "help")
+					return new string[] { GetUsage() };
 				if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
 				{
 					if (args.Length > 1)
@@ -59,7 +66,7 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						server.GetPlayers().ForEach(p => p.SetGhostMode(!p.GetGhostMode()));
+						server.GetPlayers().ForEach(ply => ply.SetGhostMode(!ply.GetGhostMode()));
 						return new string[] { "Toggled all players GhostMode!" };
 					}
 				}
