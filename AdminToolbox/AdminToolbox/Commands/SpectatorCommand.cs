@@ -33,13 +33,14 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].spectatorOnly = j;
+								AdminToolbox.playerdict[pl.SteamId].overwatchMode = j;
+								pl.OverwatchMode = j;
 								playerNum++;
 							}
 							if (playerNum > 1)
-								return new string[] { playerNum + " players set to AlwaysSpectator: " + j };
+								return new string[] { playerNum + " player's Overwatch status set to: " + j };
 							else
-								return new string[] { playerNum + " player set to AlwaysSpectator: " + j };
+								return new string[] { playerNum + " player Overwatch status set to: " + j };
 						}
 						else
 							return new string[] { "Not a valid bool!" };
@@ -47,17 +48,17 @@ namespace AdminToolbox.Command
 					else
 					{
 						int playerNum = 0;
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].spectatorOnly = !AdminToolbox.playerdict[pl.SteamId].spectatorOnly; playerNum++; }
-						return new string[] { "Toggled " + playerNum + " player's \"AlwaysSpectator\"" };
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].overwatchMode = !AdminToolbox.playerdict[pl.SteamId].overwatchMode; pl.OverwatchMode = !pl.OverwatchMode; playerNum++; }
+						return new string[] { "Toggled " + playerNum + " player's \"OverwatchMode\"" };
 					}
 				}
 				else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 				{
-					string str = "\nPlayers with \"AlwaysSpectator\" enabled: \n";
+					string str = "\nPlayers with \"Overwatch\" enabled: \n";
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].spectatorOnly)
+						if (pl.OverwatchMode)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -66,21 +67,22 @@ namespace AdminToolbox.Command
 						foreach (var item in myPlayerList)
 							str += "\n - " + item;
 					}
-					else str = "\nNo players with \"AlwaysSpectator\" enabled!";
+					else str = "\nNo players with \"Overwatch\" enabled!";
 					return new string[] { str };
 				}
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{
-					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = true; }
-					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = false; }
-					return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly };
+					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = true; myPlayer.OverwatchMode = true; }
+					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = false; myPlayer.OverwatchMode = false; }
+					return new string[] { myPlayer.Name + " Overwatch: " + myPlayer.OverwatchMode };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly = !AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly;
-					return new string[] { myPlayer.Name + " AlwaysSpectator: " + AdminToolbox.playerdict[myPlayer.SteamId].spectatorOnly };
+					AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = !AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode;
+					myPlayer.OverwatchMode = !myPlayer.OverwatchMode;
+					return new string[] { myPlayer.Name + " Overwatch: " + AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode };
 				}
 
 			}

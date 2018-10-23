@@ -90,8 +90,8 @@ namespace AdminToolbox
 			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
 			{
 				AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.SpawnPos;
-				if (AdminToolbox.playerdict[ev.Player.SteamId].spectatorOnly)
-					ev.Player.ChangeRole(Role.SPECTATOR);
+				if (AdminToolbox.playerdict[ev.Player.SteamId].overwatchMode)
+					ev.Player.OverwatchMode = true;
 			}
 		}
 
@@ -149,6 +149,8 @@ namespace AdminToolbox
 				{
 					plugin.Info(ev.Player.Name + " just joined the server!");
 				}
+				if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].overwatchMode)
+					ev.Player.OverwatchMode = true;
 			}
 		}
 

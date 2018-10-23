@@ -48,7 +48,7 @@ namespace AdminToolbox
 
 		public class AdminToolboxPlayerSettings
 		{
-			public bool spectatorOnly = false,
+			public bool overwatchMode = false,
 				godMode = false,
 				dmgOff = false,
 				destroyDoor = false,
@@ -107,8 +107,8 @@ namespace AdminToolbox
 			#endregion
 			#region Commands Registering Commands
 			// Register Commands
-			this.AddCommands(new string[] { "spec", "spectator" }, new Command.SpectatorCommand());
-			this.AddCommands(new string[] { "p", "player" }, new Command.PlayerCommand());
+			this.AddCommands(new string[] { "spec", "spectator", "atoverwatch" }, new Command.SpectatorCommand());
+			this.AddCommands(new string[] { "p", "player", "playerinfo", "pinfo" }, new Command.PlayerCommand());
 			this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
 			this.AddCommands(new string[] { "atheal", "at-heal" }, new Command.HealCommand());
 			this.AddCommands(new string[] { "atgod", "atgodmode", "at-god", "at-godmode" }, new Command.GodModeCommand());
@@ -134,6 +134,7 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "atban","offlineban","oban" }, new Command.ATBanCommand(this));
 			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
 			this.AddCommands(new string[] { "speak" }, new Command.SpeakCommand());
+			this.AddCommands(new string[] { "ghost", "ghostmode", "ghostm", "invisible", "gh" }, new Command.GhostCommand(this));
 
 			#endregion
 			#region Config Registering Config Entries
@@ -648,7 +649,7 @@ namespace AdminToolbox
 		public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
-			AdminToolbox.playerdict[steamID].spectatorOnly = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.playerdict[steamID].spectatorOnly;
+			AdminToolbox.playerdict[steamID].overwatchMode = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.playerdict[steamID].overwatchMode;
 			AdminToolbox.playerdict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.playerdict[steamID].godMode;
 			AdminToolbox.playerdict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.playerdict[steamID].dmgOff;
 			AdminToolbox.playerdict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.playerdict[steamID].destroyDoor;

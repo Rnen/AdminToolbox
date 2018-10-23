@@ -90,7 +90,7 @@ namespace AdminToolbox
 			AdminToolbox.roundCount++;
 			if (AdminToolbox.playerdict.Count > 0)
 				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.playerdict)
-					if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, spectatorOnly: false, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+					if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
 			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;

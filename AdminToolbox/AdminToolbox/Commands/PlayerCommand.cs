@@ -81,9 +81,9 @@ namespace AdminToolbox.Command
 					BuildTwoLiner(" - Role: " + myPlayer.TeamRole.Role,								" - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
 					BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
 					BuildTwoLiner("   - Godmode: " + (playerDict.godMode),							" - NoDmg: " + (playerDict.dmgOff)) + Environment.NewLine +
-					BuildTwoLiner("   - SpectatorOnly: " + (playerDict.spectatorOnly),				" - KeepSettings: " + (playerDict.keepSettings)) + Environment.NewLine +
+					BuildTwoLiner("   - OverwatchMode: " + (myPlayer.OverwatchMode),				" - KeepSettings: " + (playerDict.keepSettings)) + Environment.NewLine +
 					BuildTwoLiner("   - BreakDoors: " + (playerDict.destroyDoor),					" - PlayerLockDown: " + (playerDict.lockDown)) + Environment.NewLine +
-					BuildTwoLiner("   - InstantKill: " + (playerDict.instantKill)) + Environment.NewLine +
+					BuildTwoLiner("   - InstantKill: " + (playerDict.instantKill),					" - GhostMode: " + myPlayer.GetGhostMode()) + Environment.NewLine +
 					BuildTwoLiner("   - IsJailed: " + (playerDict.isJailed),						" - Released In: " + remainingJailTime) + Environment.NewLine +
 					BuildTwoLiner(" - Stats:") + Environment.NewLine +
 					BuildTwoLiner("   - Kills: " + playerDict.Kills,								" - TeamKills: " + playerDict.TeamKills) + Environment.NewLine +
