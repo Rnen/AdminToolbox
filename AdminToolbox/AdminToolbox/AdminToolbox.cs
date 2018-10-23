@@ -307,10 +307,12 @@ namespace AdminToolbox
 		{
 			if (Directory.Exists(FileManager.AppFolder))
 			{
-				StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "at_version.md", false);
 				string text = "at_version=" + plugin.Details.version;
-				streamWriter.Write(text);
-				streamWriter.Close();
+				using (StreamWriter streamWriter = new StreamWriter(FileManager.AppFolder + "at_version.md", false))
+				{
+					streamWriter.Write(text);
+					streamWriter.Close();
+				}
 				if (File.Exists(FileManager.AppFolder + "n_at_version.md"))
 					File.Delete(FileManager.AppFolder + "n_at_version.md");
 			}
@@ -518,7 +520,6 @@ namespace AdminToolbox
 				if (!Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port))
 					Directory.CreateDirectory(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
 
-				StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.roundCount + ".txt", true);
 				string text = string.Empty;
 				foreach (LogHandler log in logs)
 				{
@@ -529,8 +530,11 @@ namespace AdminToolbox
 						text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
 					}
 				}
-				streamWriter.Write(text);
-				streamWriter.Close();
+				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.roundCount + ".txt", true))
+				{
+					streamWriter.Write(text);
+					streamWriter.Close();
+				}
 			}
 		}
 
@@ -617,10 +621,12 @@ namespace AdminToolbox
 					double minutesPlayed = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].minutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.playerdict[pl.SteamId].joinTime).TotalMinutes + AdminToolbox.playerdict[pl.SteamId].minutesPlayed : 0;
 					int BanCount = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].banCount > 0) ? AdminToolbox.playerdict[pl.SteamId].banCount : 0;
 					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.playerdict[pl.SteamId].joinTime = DateTime.Now;
-					StreamWriter streamWriter = new StreamWriter(playerFilePath, false);
 					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar +  minutesPlayed + splitChar + BanCount;
-					streamWriter.Write(str);
-					streamWriter.Close();
+					using (StreamWriter streamWriter = new StreamWriter(playerFilePath, false))
+					{
+						streamWriter.Write(str);
+						streamWriter.Close();
+					}
 					ReadFromFile(pl);
 				}
 				void ReadFromFile(Player pl)
