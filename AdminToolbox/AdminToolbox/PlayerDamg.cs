@@ -135,7 +135,7 @@ namespace AdminToolbox
 			switch ((int)ev.Player.TeamRole.Role)
 			{
 				case 14:
-					if (allowedDmg.Contains((int)ev.DamageType)) goto default;
+					if (allowedDmg.Contains((int)ev.DamageType) || allowedDmg.Contains(-2)) goto default;
 					if (DebugDmg.Contains((int)ev.DamageType) && (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))) plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
 					if (AdminToolbox.playerdict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.playerdict[ev.Attacker.SteamId].instantKill) goto default;
 					ev.DamageType = DamageType.NONE;
