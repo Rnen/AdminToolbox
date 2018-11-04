@@ -93,7 +93,7 @@ namespace AdminToolbox.Command
 					BuildTwoLiner("  - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z) + Environment.NewLine +
 					BuildTwoLiner(" - Inventory: " + playerInv) + Environment.NewLine;
 				if (isPlayer(sender))
-					return new string[] { playerInfoString.Replace("True", "<color=green>" + "True" + " </color>").Replace("False", "<color=red>" + "False" + "</color>") };
+					return new string[] { playerInfoString.Replace("True", "<color=green>" + "True " + " </color>").Replace("False", "<color=red>" + "False" + "</color>") };
 				else
 					return new string[] { playerInfoString };
 			}
