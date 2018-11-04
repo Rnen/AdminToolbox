@@ -26,6 +26,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
+			if (!ConfigManager.Manager.Config.GetBoolValue("sm_enable_ghostmode", false)) return new string[] { "\"sm_enable_ghostmode\" needs to be set TRUE to use this!" };
 			AdminToolbox.AddMissingPlayerVariables();
 			Server server = PluginManager.Manager.Server;
 			if(args.Length == 0 && sender is Player p)
