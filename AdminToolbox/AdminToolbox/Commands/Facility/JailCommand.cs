@@ -34,14 +34,12 @@ namespace AdminToolbox.Command
 					{
 						if (x > 0)
 						{
-							AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddSeconds(x);
-							AdminToolbox.SendToJail(myPlayer);
+							JailManager.SendToJail(myPlayer, DateTime.Now.AddSeconds(x));
 							return new string[] { "\"" + myPlayer.Name + "\" sent to jail for: " + x + " seconds." };
 						}
 						else
 						{
-							AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
-							AdminToolbox.SendToJail(myPlayer);
+							JailManager.SendToJail(myPlayer);
 							return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
 						}
 					}
@@ -50,15 +48,15 @@ namespace AdminToolbox.Command
 				}
 				else if (args.Length == 1)
 				{
-					if (AdminToolbox.playerdict[myPlayer.SteamId].isInJail || AdminToolbox.playerdict[myPlayer.SteamId].isJailed)
+					if (AdminToolbox.ATPlayerDict[myPlayer.SteamId].IsInsideJail || AdminToolbox.ATPlayerDict[myPlayer.SteamId].isJailed)
 					{
-						AdminToolbox.ReturnFromJail(myPlayer);
+						JailManager.ReturnFromJail(myPlayer);
 						return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
 					}
 					else
 					{
-						AdminToolbox.SendToJail(myPlayer);
-						AdminToolbox.playerdict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
+						JailManager.SendToJail(myPlayer);
+						AdminToolbox.ATPlayerDict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
 						return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
 					}
 				}

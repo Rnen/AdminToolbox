@@ -32,7 +32,7 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].dmgOff = j;
+								AdminToolbox.ATPlayerDict[pl.SteamId].dmgOff = j;
 								playerNum++;
 							}
 							return new string[] { "Set " + playerNum + " player's \"No Dmg\" to " + j };
@@ -42,7 +42,7 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].dmgOff = !AdminToolbox.playerdict[pl.SteamId].dmgOff; }
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].dmgOff = !AdminToolbox.ATPlayerDict[pl.SteamId].dmgOff; }
 						return new string[] { "Toggled all player's \"No Dmg\"" };
 					}
 				}
@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].dmgOff)
+						if (AdminToolbox.ATPlayerDict[pl.SteamId].dmgOff)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -72,19 +72,19 @@ namespace AdminToolbox.Command
 				{
 					bool changedValue = false;
 					if (args.Length > 2) { if (args[2].ToLower() == "godmode") { changedValue = true; } }
-					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = true; }
-					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = false; }
+					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff = true; }
+					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff = false; }
 					if (changedValue)
 					{
-						AdminToolbox.playerdict[myPlayer.SteamId].godMode = AdminToolbox.playerdict[myPlayer.SteamId].dmgOff;
-						return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff, myPlayer.Name + " Godmode: " + AdminToolbox.playerdict[myPlayer.SteamId].godMode };
+						AdminToolbox.ATPlayerDict[myPlayer.SteamId].godMode = AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff;
+						return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff, myPlayer.Name + " Godmode: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].godMode };
 					}
-					return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
+					return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].dmgOff = !AdminToolbox.playerdict[myPlayer.SteamId].dmgOff;
-					return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.playerdict[myPlayer.SteamId].dmgOff };
+					AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff;
+					return new string[] { myPlayer.Name + " No Dmg: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].dmgOff };
 				}
 			}
 			else

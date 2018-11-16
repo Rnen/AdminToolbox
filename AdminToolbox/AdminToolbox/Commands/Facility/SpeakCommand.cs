@@ -9,7 +9,7 @@ namespace AdminToolbox.Command
 {
 	class SpeakCommand : ICommandHandler
 	{
-		Server server = PluginManager.Manager.Server;
+		Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription()
 		{
@@ -23,11 +23,11 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if (server.GetPlayers().Count > 0)
+			if (Server.GetPlayers().Count > 0)
 			{
-				if (server.Map.GetIntercomSpeaker() != null)
+				if (Server.Map.GetIntercomSpeaker() != null)
 				{
-					server.Map.SetIntercomSpeaker(null);
+					Server.Map.SetIntercomSpeaker(null);
 					return new string[] { "Stopped Broadcast" };
 				}
 				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
@@ -40,7 +40,7 @@ namespace AdminToolbox.Command
 						return new string[] { GetUsage() };
 				if (myPlayer != null)
 				{
-					server.Map.SetIntercomSpeaker(myPlayer);
+					Server.Map.SetIntercomSpeaker(myPlayer);
 					return new string[] { "Intercom speaker set to " + myPlayer.Name };
 				}
 				else

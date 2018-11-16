@@ -33,7 +33,7 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].overwatchMode = j;
+								AdminToolbox.ATPlayerDict[pl.SteamId].overwatchMode = j;
 								pl.OverwatchMode = j;
 								playerNum++;
 							}
@@ -48,7 +48,7 @@ namespace AdminToolbox.Command
 					else
 					{
 						int playerNum = 0;
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].overwatchMode = !AdminToolbox.playerdict[pl.SteamId].overwatchMode; pl.OverwatchMode = !pl.OverwatchMode; playerNum++; }
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].overwatchMode = !AdminToolbox.ATPlayerDict[pl.SteamId].overwatchMode; pl.OverwatchMode = !pl.OverwatchMode; playerNum++; }
 						return new string[] { "Toggled " + playerNum + " player's \"OverwatchMode\"" };
 					}
 				}
@@ -74,15 +74,15 @@ namespace AdminToolbox.Command
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{
-					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = true; myPlayer.OverwatchMode = true; }
-					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = false; myPlayer.OverwatchMode = false; }
+					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].overwatchMode = true; myPlayer.OverwatchMode = true; }
+					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].overwatchMode = false; myPlayer.OverwatchMode = false; }
 					return new string[] { myPlayer.Name + " Overwatch: " + myPlayer.OverwatchMode };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode = !AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode;
+					AdminToolbox.ATPlayerDict[myPlayer.SteamId].overwatchMode = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].overwatchMode;
 					myPlayer.OverwatchMode = !myPlayer.OverwatchMode;
-					return new string[] { myPlayer.Name + " Overwatch: " + AdminToolbox.playerdict[myPlayer.SteamId].overwatchMode };
+					return new string[] { myPlayer.Name + " Overwatch: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].overwatchMode };
 				}
 
 			}

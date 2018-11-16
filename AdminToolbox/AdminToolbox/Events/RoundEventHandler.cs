@@ -12,10 +12,10 @@ namespace AdminToolbox
 	class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
 	{
 		private Plugin plugin;
-		IConfigFile config = ConfigManager.Manager.Config;
-		internal string intercomReady = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
-			intercomRestart = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
-			intercomTransmit = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+		static IConfigFile Config => ConfigManager.Manager.Config;
+		internal string intercomReady = Config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
+			intercomRestart = Config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
+			intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 
 		public RoundEventHandler(Plugin plugin)
 		{
@@ -26,13 +26,13 @@ namespace AdminToolbox
 			AdminToolbox.isRoundFinished = false;
 			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
 			{
-				plugin.Info("Round: " + AdminToolbox.roundCount + " started.");
+				plugin.Info("Round: " + AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
 			}
 			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write);
+			AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.presetWarps);
+			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.WarpManager.ReadWarpsFromFile());
 
 
 
@@ -43,6 +43,7 @@ namespace AdminToolbox
 			if (intercomTransmit != string.Empty)
 				ev.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
 		}
+
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
@@ -66,7 +67,7 @@ namespace AdminToolbox
 				AdminToolbox.lockRound = false;
 				if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
 				{
-					plugin.Info("Round: " + AdminToolbox.roundCount + " has ended.");
+					plugin.Info("Round: " + AdminToolbox.RoundCount + " has ended.");
 					int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
 					if (duration < 60)
 						plugin.Info("Round lasted for: " + duration + " sec");
@@ -76,10 +77,10 @@ namespace AdminToolbox
 				AdminToolbox.AddMissingPlayerVariables();
 				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
 				{
-					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
-						AdminToolbox.playerdict[pl.SteamId].RoundsPlayed++;
+					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
+						AdminToolbox.ATPlayerDict[pl.SteamId].RoundsPlayed++;
 				}
-				AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write);
+				AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write);
 			}
 
 		}
@@ -87,14 +88,14 @@ namespace AdminToolbox
 		public void OnRoundRestart(RoundRestartEvent ev)
 		{
 			AdminToolbox.lockRound = false;
-			AdminToolbox.roundCount++;
-			if (AdminToolbox.playerdict.Count > 0)
-				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.playerdict)
+			AdminToolbox.RoundCount++;
+			if (AdminToolbox.ATPlayerDict.Count > 0)
+				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.ATPlayerDict)
 					if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
 			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;
-			AdminToolbox.AdminToolboxLogger.ManageDatedLogs();
+			AdminToolbox.LogManager.ManageDatedATLogs();
 		}
 	}
 }

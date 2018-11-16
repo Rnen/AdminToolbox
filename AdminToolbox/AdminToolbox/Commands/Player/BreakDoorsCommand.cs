@@ -33,7 +33,7 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].destroyDoor = j;
+								AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor = j;
 								playerNum++;
 							}
 							outPut += "Set " + playerNum + " player's BreakDoors to " + j;
@@ -44,7 +44,7 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].destroyDoor = !AdminToolbox.playerdict[pl.SteamId].destroyDoor; }
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor = !AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor; }
 						return new string[] { "Toggled all players BreakDoors" };
 					}
 				}
@@ -54,7 +54,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].destroyDoor)
+						if (AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -70,14 +70,14 @@ namespace AdminToolbox.Command
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{
-					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = true; }
-					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = false; }
-					return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor };
+					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = true; }
+					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = false; }
+					return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor = !AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor;
-					return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.playerdict[myPlayer.SteamId].destroyDoor };
+					AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor;
+					return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor };
 				}
 
 			}

@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 {
 	class GhostCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
 
 		public GhostCommand(AdminToolbox plugin)
 		{
@@ -32,7 +32,13 @@ namespace AdminToolbox.Command
 			if(args.Length == 0 && sender is Player p)
 			{
 				p.SetGhostMode(!p.GetGhostMode());
-				return new string[] { "Toggled " + p.Name + "'s GhostMode to " + p.GetGhostMode() };
+				return new string[]
+				{
+					"\nSet " + p.Name + " 's GhostMode to:" +
+					"\n - Enabled: " + p.GetGhostMode() +
+					"\n - Visible to specators: " + true +
+					"\n - Visible while talking: " + true
+				};	
 			}
 			if (args.Length > 0)
 			{

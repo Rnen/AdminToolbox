@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -34,3 +35,5 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion(AdminToolbox.AdminToolbox.ATversion)]
 [assembly: AssemblyFileVersion(AdminToolbox.AdminToolbox.ATversion)]
+[assembly: NeutralResourcesLanguage("en")]
+

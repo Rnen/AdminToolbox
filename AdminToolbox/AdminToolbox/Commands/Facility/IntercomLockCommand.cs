@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 {
 	class IntercomLockCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
 
 		public IntercomLockCommand(AdminToolbox plugin)
 		{

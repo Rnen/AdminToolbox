@@ -5,16 +5,16 @@ using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
-	class KeepSettingsCommand : ICommandHandler
+	class LockdownCommand : ICommandHandler
 	{
 		public string GetCommandDescription()
 		{
-			return "Toggles that players keeping settings on round restart";
+			return "Locks all the doors for specified players";
 		}
 
 		public string GetUsage()
 		{
-			return "KEEP [PLAYER] [BOOLEAN]";
+			return "(PL / PLAYERLOCKDOWN / PLOCK / PLAYERLOCK) [PLAYER] [BOOLEAN]";
 		}
 
 		public string[] OnCall(ICommandSender sender, string[] args)
@@ -33,32 +33,31 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								AdminToolbox.playerdict[pl.SteamId].keepSettings = j;
+								AdminToolbox.ATPlayerDict[pl.SteamId].lockDown = j;
 								playerNum++;
 							}
-							outPut += "\nSet " + playerNum + " player's KeepSettings to " + j;
+							outPut += "\nSet " + playerNum + " player's Lockdown to " + j;
 							return new string[] { outPut };
 						}
 						else
-						{
 							return new string[] { "Not a valid bool!" };
-						}
 					}
 					else
 					{
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].keepSettings = !AdminToolbox.playerdict[pl.SteamId].keepSettings; }
-						return new string[] { "Toggled all players KeepSettings" };
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].lockDown = !AdminToolbox.ATPlayerDict[pl.SteamId].lockDown; }
+						return new string[] { "Toggled all players Lockdown" };
 					}
 				}
 				else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 				{
-					string str = "\nPlayers with KeepSettings enabled: \n";
+					string str = "\nPlayers with Lockdown enabled: \n";
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].keepSettings)
+						if (AdminToolbox.ATPlayerDict[pl.SteamId].lockDown)
 						{
 							myPlayerList.Add(pl.Name);
+							//str += " - " +pl.Name + "\n";
 						}
 					}
 					if (myPlayerList.Count > 0)
@@ -69,21 +68,23 @@ namespace AdminToolbox.Command
 							str += "\n - " + item;
 						}
 					}
-					else str = "\nNo players with \"KeepSettings\" enabled!";
+					else str = "\nNo players with \"LockDown\" enabled!";
 					return new string[] { str };
 				}
 				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{
-					if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = true; }
-					else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = false; }
-					return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId].keepSettings };
+					if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = g;
+					else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = true; }
+					else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = false; }
+					else return new string[] { GetUsage() };
+					return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].keepSettings = !AdminToolbox.playerdict[myPlayer.SteamId].keepSettings;
-					return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.playerdict[myPlayer.SteamId].keepSettings };
+					AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown;
+					return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown };
 				}
 
 			}

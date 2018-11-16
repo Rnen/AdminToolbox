@@ -6,6 +6,9 @@ namespace AdminToolbox.Command
 {
 	class ServerCommand : ICommandHandler
 	{
+		static IConfigFile Config => ConfigManager.Manager.Config;
+		Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription()
 		{
 			return "Gets toolbox info about the server";
@@ -18,8 +21,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Server server = PluginManager.Manager.Server;
-			int minutes = (int)(server.Round.Duration / 60), duration = server.Round.Duration;
+			int minutes = (int)(Server.Round.Duration / 60), duration = Server.Round.Duration;
 			string timeString = string.Empty;
 			if (duration < 60)
 				timeString = duration + " seconds";
@@ -44,14 +46,16 @@ namespace AdminToolbox.Command
 				else
 					return input.ToString();
 			}
-			int pCount = server.GetPlayers().Count;
+			int pCount = Server.GetPlayers().Count;
 			string pJail = string.Empty;
-			foreach (Player pl in AdminToolbox.GetJailedPlayers())
+			foreach (Player pl in JailManager.GetJailedPlayers())
 				pJail += pl.Name + ", ";
+			if (string.IsNullOrEmpty(pJail))
+				pJail = "No jailed players!";
 
 			string x = "Server info: \n " +
-				"\n Server Name: " + server.Name +
-				"\n - Server IP: " + server.IpAddress + ":" + server.Port +
+				"\n Server Name: " + Server.Name +
+				"\n - Server IP: " + Server.IpAddress + ":" + Server.Port +
 				"\n - PlayerCount: " + pCount +
 				"\n - AdminToolbox Toggables: " +
 				"\n     - isColored: " + ColoredBools(AdminToolbox.isColored) +
@@ -59,7 +63,7 @@ namespace AdminToolbox.Command
 				"\n     - LockRound: " + ColoredBools(AdminToolbox.lockRound) +
 				"\n     - Jailed Players: " + pJail +
 				"\n - Stats:" +
-				"\n     - Round Number: " + AdminToolbox.roundCount +
+				"\n     - Round Number: " + AdminToolbox.RoundCount +
 				"\n     - Round Duration: " + timeString;
 			return new string[] { x };
 		}

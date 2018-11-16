@@ -74,11 +74,11 @@ namespace AdminToolbox
 		{
 			if (ev.Player != null && ev.Player is Player)
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
-			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
 			{
-				if (AdminToolbox.playerdict[ev.Player.SteamId].destroyDoor)
+				if (AdminToolbox.ATPlayerDict[ev.Player.SteamId].destroyDoor)
 					ev.Destroy = true;
-				if (AdminToolbox.playerdict[ev.Player.SteamId].lockDown)
+				if (AdminToolbox.ATPlayerDict[ev.Player.SteamId].lockDown)
 					ev.Allow = false;
 			}
 		}
@@ -87,11 +87,16 @@ namespace AdminToolbox
 		{
 			if(ev.Player != null && ev.Player is Player)
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
-			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId))
+			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
 			{
-				AdminToolbox.playerdict[ev.Player.SteamId].DeathPos = ev.SpawnPos;
-				if (AdminToolbox.playerdict[ev.Player.SteamId].overwatchMode)
+				AdminToolbox.AdminToolboxPlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
+				pSettings.DeathPos = ev.SpawnPos;
+				if (pSettings.overwatchMode)
 					ev.Player.OverwatchMode = true;
+				else if (pSettings.isJailed)
+				{
+					JailManager.SendToJail(ev.Player,pSettings.JailedToTime);
+				}
 			}
 		}
 
@@ -108,20 +113,20 @@ namespace AdminToolbox
 		public void OnAdminQuery(AdminQueryEvent ev)
 		{
 			if (ev.Query != "REQUEST_DATA PLAYER_LIST SILENT")
-				AdminToolbox.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, LogHandlers.ServerLogType.RemoteAdminActivity);
+				AdminToolbox.LogManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, LogManager.ServerLogType.RemoteAdminActivity);
 		}
 
 		public void OnLure(PlayerLureEvent ev)
 		{
 			int[] TUTallowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
-			if ((AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
+			if ((AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && AdminToolbox.ATPlayerDict[ev.Player.SteamId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
 				ev.AllowContain = false;
 		}
 
 		public void OnContain106(PlayerContain106Event ev)
 		{
 			foreach (Player pl in ev.SCP106s)
-				if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && (AdminToolbox.playerdict[pl.SteamId].godMode || AdminToolbox.playerdict[ev.Player.SteamId].dmgOff))
+				if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && (AdminToolbox.ATPlayerDict[pl.SteamId].godMode || AdminToolbox.ATPlayerDict[ev.Player.SteamId].dmgOff))
 				{
 					ev.ActivateContainment = false;
 					break;
@@ -133,11 +138,11 @@ namespace AdminToolbox
 			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player p)
 			{
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
-				AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(new List<Player> { p }, LogHandlers.PlayerFile.Read);
+				AdminToolbox.LogManager.PlayerStatsFileManager(new List<Player> { p }, LogManager.PlayerFile.Read);
 
 				if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
-					int bancount = (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId)) ? AdminToolbox.playerdict[ev.Player.SteamId].banCount : 0;
+					int bancount = (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId)) ? AdminToolbox.ATPlayerDict[ev.Player.SteamId].banCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + ev.Player.PlayerId + ")" + Environment.NewLine +
 						"From IP: " + ev.Player.IpAddress + Environment.NewLine +
@@ -149,30 +154,34 @@ namespace AdminToolbox
 				{
 					plugin.Info(ev.Player.Name + " just joined the server!");
 				}
-				if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].overwatchMode)
+				if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && AdminToolbox.ATPlayerDict[ev.Player.SteamId].overwatchMode)
 					ev.Player.OverwatchMode = true;
 			}
 		}
 
-		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(1);
+		private readonly static int JailCheckInterval = ConfigManager.Manager.Config.GetIntValue("admintoolbox_jailcheck_interval", 5),
+			WritePlayerFileInterval = ConfigManager.Manager.Config.GetIntValue("admintoolbox_writeplayerfile_interval",180),
+			DictCleanupInterval = ConfigManager.Manager.Config.GetIntValue("admintoolbox_dictcleanup_interval",300);
+
+		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(2);
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (fiveSecTimer <= DateTime.Now) { AdminToolbox.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(5); }
-			if (threeMinTimer <= DateTime.Now) { AdminToolbox.AdminToolboxLogger.PlayerStatsFileManager(null, LogHandlers.PlayerFile.Write); threeMinTimer = DateTime.Now.AddMinutes(3); }
+			if (fiveSecTimer <= DateTime.Now) { JailManager.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
+			if (threeMinTimer <= DateTime.Now) { AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
 			if (fiveMinTimer <= DateTime.Now)
 			{
-				fiveMinTimer = DateTime.Now.AddMinutes(5);
+				fiveMinTimer = DateTime.Now.AddMinutes(DictCleanupInterval);
 				List<string> playerSteamIds = new List<string>(), keysToRemove = new List<string>();
 
 				if (PluginManager.Manager.Server.GetPlayers().Count > 0)
 					PluginManager.Manager.Server.GetPlayers().ForEach(p => { if (!string.IsNullOrEmpty(p.SteamId)) playerSteamIds.Add(p.SteamId); });
-				if (AdminToolbox.playerdict.Count > 0 && playerSteamIds.Count > 0)
-					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> kp in AdminToolbox.playerdict)
+				if (AdminToolbox.ATPlayerDict.Count > 0 && playerSteamIds.Count > 0)
+					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> kp in AdminToolbox.ATPlayerDict)
 						if (!playerSteamIds.Contains(kp.Key) && !kp.Value.keepSettings)
 							keysToRemove.Add(kp.Key);
 				if (keysToRemove.Count > 0)
 					foreach (string key in keysToRemove)
-						AdminToolbox.playerdict.Remove(key);
+						AdminToolbox.ATPlayerDict.Remove(key);
 			}
 		}
 
@@ -204,8 +213,8 @@ namespace AdminToolbox
 			if (ev.Player != null && ev.Player is Player)
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
 
-			if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
-				AdminToolbox.playerdict[ev.Player.SteamId].banCount++;
+			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
+				AdminToolbox.ATPlayerDict[ev.Player.SteamId].banCount++;
 		}
 	}
 }

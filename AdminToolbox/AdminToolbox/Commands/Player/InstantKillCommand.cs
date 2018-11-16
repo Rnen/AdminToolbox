@@ -33,9 +33,9 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in server.GetPlayers())
 							{
-								if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
+								if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
 								{
-									AdminToolbox.playerdict[pl.SteamId].instantKill = j;
+									AdminToolbox.ATPlayerDict[pl.SteamId].instantKill = j;
 									playerNum++;
 								}
 							}
@@ -49,7 +49,7 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						foreach (Player pl in server.GetPlayers()) { AdminToolbox.playerdict[pl.SteamId].instantKill = !AdminToolbox.playerdict[pl.SteamId].instantKill; }
+						foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].instantKill = !AdminToolbox.ATPlayerDict[pl.SteamId].instantKill; }
 						return new string[] { "Toggled all players InstantKill" };
 					}
 				}
@@ -59,7 +59,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in server.GetPlayers())
 					{
-						if (AdminToolbox.playerdict[pl.SteamId].instantKill)
+						if (AdminToolbox.ATPlayerDict[pl.SteamId].instantKill)
 						{
 							myPlayerList.Add(pl.Name);
 							//str += " - " +pl.Name + "\n";
@@ -80,16 +80,16 @@ namespace AdminToolbox.Command
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{
-					if (bool.TryParse(args[1], out bool g)) AdminToolbox.playerdict[myPlayer.SteamId].instantKill = g;
-					else if (args[1].ToLower() == "on") { AdminToolbox.playerdict[myPlayer.SteamId].instantKill = true; }
-					else if (args[1].ToLower() == "off") { AdminToolbox.playerdict[myPlayer.SteamId].instantKill = false; }
+					if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = g;
+					else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = true; }
+					else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = false; }
 					else return new string[] { GetUsage() };
-					return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId].instantKill };
+					return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill };
 				}
 				else
 				{
-					AdminToolbox.playerdict[myPlayer.SteamId].instantKill = !AdminToolbox.playerdict[myPlayer.SteamId].instantKill;
-					return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.playerdict[myPlayer.SteamId].instantKill };
+					AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill;
+					return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill };
 				}
 
 			}

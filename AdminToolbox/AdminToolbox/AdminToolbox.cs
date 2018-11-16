@@ -18,60 +18,89 @@ namespace AdminToolbox
 		version = ATversion,
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 19
+		SmodRevision = 21
 		)]
-	class AdminToolbox : Plugin
+	public class AdminToolbox : Plugin
 	{
 		public const string ATversion = "1.3.7";
 
-		internal static bool isRoundFinished = false, lockRound = false, isColored = false, isColoredCommand = false, intercomLock = false, intercomLockChanged = false, isStarting = true;
-		public static Dictionary<string, AdminToolboxPlayerSettings> playerdict = new Dictionary<string, AdminToolboxPlayerSettings>();
-		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>();
-		public static Dictionary<string, Vector> presetWarps { get; private set; } = new Dictionary<string, Vector>()
-			{
-				{ "mtf",new Vector(181,994,-61) },
-				{ "grass",new Vector(237,999,17) },
-				{ "ci",new Vector(10,989,-60) },
-				{ "jail",new Vector(53,1020,-44) },
-				{ "flat",new Vector(250,980,110) },
-				{ "heli",new Vector(293,977,-62) },
-				{ "car",new Vector(-96,987,-59) },
-				{ "topsitedoor",new Vector(89,989,-69)},
-				{ "escape", new Vector(179,996,27) }
-			};
+		public readonly static LogManager LogManager = new LogManager();
+		public readonly static WarpManager.WarpManager WarpManager = new WarpManager.WarpManager();
+		public readonly static JailManager JailManager = new JailManager();
 
-		public static int roundCount { get; internal set; } = 1;
-		public static LogHandlers AdminToolboxLogger { get; internal set; } = new LogHandlers();
-		public static string _roundStartTime;
+		internal static bool 
+			isRoundFinished = false, 
+			isColored = false,
+			isColoredCommand = false, 
+			intercomLockChanged = false, 
+			isStarting = true;
+		public static bool lockRound = false, intercomLock = false;
+		public static Dictionary<string, AdminToolboxPlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, AdminToolboxPlayerSettings>();
+		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(WarpManager.ReadWarpsFromFile());
 
-		public static AdminToolbox plugin;
+		public static Vector JailPos = (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
+
+		public static int RoundCount { get; internal set; } = 1;
+		internal static string _roundStartTime;
+
+		internal static AdminToolbox plugin;
 
 		public class AdminToolboxPlayerSettings
 		{
-			public bool overwatchMode = false,
+			public string SteamID { get; private set; } = "";
+			public bool
+				overwatchMode = false,
 				godMode = false,
 				dmgOff = false,
 				destroyDoor = false,
 				keepSettings = false,
 				lockDown = false,
 				instantKill = false,
-				isJailed = false,
-				isInJail = false;
-			public int Kills = 0,
+				isJailed = false;
+			public bool IsInsideJail
+			{
+				get
+				{
+					if (string.IsNullOrEmpty(this.SteamID))
+						foreach (Player ply in plugin.Server.GetPlayers())
+							if (ATPlayerDict.ContainsKey(ply.SteamId))
+								ATPlayerDict[ply.SteamId].SteamID = ply.SteamId;
+					Player player = plugin.Server.GetPlayers().Where(p => p.SteamId == SteamID).FirstOrDefault();
+					if (player == null) return false;
+					Vector jail = JailPos,
+						pPos = player.GetPosition();
+					float x = Math.Abs(pPos.x - jail.x),
+						y = Math.Abs(pPos.y - jail.y),
+						z = Math.Abs(pPos.z - jail.z);
+					if (x > 7 || y > 5 || z > 7)
+						return false;
+					else
+						return true;
+				}
+			}
+			public int
+				Kills = 0,
 				TeamKills = 0,
 				Deaths = 0,
 				RoundsPlayed = 0,
-				banCount = 0,
+				banCount = 0;
+			internal int
 				previousHealth = 100,
 				prevAmmo5 = 0,
 				prevAmmo7 = 0,
 				prevAmmo9 = 0;
 			public Vector DeathPos = Vector.Zero,
 				originalPos = Vector.Zero;
-			public Role previousRole = Role.CLASSD;
-			public List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
-			public DateTime JailedToTime = DateTime.Now, joinTime = DateTime.Now;
-			public double minutesPlayed = 1;
+			internal Role previousRole = Role.CLASSD;
+			internal List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
+			public DateTime JailedToTime { get; internal set; } = DateTime.Now;
+			public DateTime JoinTime { get; internal set; } = DateTime.Now;
+			public double MinutesPlayed { get; internal set; } = 1;
+
+			public AdminToolboxPlayerSettings(string steamID)
+			{
+				this.SteamID = steamID;
+			}
 		}
 
 		public override void OnDisable()
@@ -92,8 +121,8 @@ namespace AdminToolbox
 			else
 				this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
 			_roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			warpVectors = new Dictionary<string, Vector>(presetWarps);
-			AdminToolbox.WriteToLog(new string[] { "\"Plugin Started\"" }, LogHandlers.ServerLogType.Misc);
+			warpVectors = new Dictionary<string, Vector>(AdminToolbox.WarpManager.ReadWarpsFromFile());
+			LogManager.WriteToLog(new string[] { "\"Plugin Started\"" }, LogManager.ServerLogType.Misc);
 		}
 
 		public override void Register()
@@ -178,7 +207,7 @@ namespace AdminToolbox
 			#endregion
 		}
 
-		public static void AddMissingPlayerVariables(List<Player> players = null)
+		internal static void AddMissingPlayerVariables(List<Player> players = null)
 		{
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
 			else if ( players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
@@ -187,122 +216,12 @@ namespace AdminToolbox
 		}
 		private static void AddToPlayerDict(Player player)
 		{
-			if (player != null && player is Player && !string.IsNullOrEmpty(player.SteamId) && !playerdict.ContainsKey(player.SteamId))
-				playerdict.Add(player.SteamId, new AdminToolboxPlayerSettings());
+			if (player != null && player is Player && !string.IsNullOrEmpty(player.SteamId) && !ATPlayerDict.ContainsKey(player.SteamId))
+			{
+				ATPlayerDict.Add(player.SteamId, new AdminToolboxPlayerSettings(player.SteamId));
+			}
 		}
 
-		public static List<Player> GetJailedPlayers(string filter = "")
-		{
-			List<Player> myPlayers = new List<Player>();
-			if (PluginManager.Manager.Server.GetPlayers().Count > 0)
-				if (filter != string.Empty)
-					foreach (Player pl in PluginManager.Manager.Server.GetPlayers(filter))
-					{
-						if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
-							myPlayers.Add(pl);
-					}
-				else
-					foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-						if (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].isJailed)
-							myPlayers.Add(pl);
-			return myPlayers;
-		}
-		public static void CheckJailedPlayers()
-		{
-			bool isInsideJail(Player pl)
-			{
-				float x = System.Math.Abs(pl.GetPosition().x - presetWarps["jail"].x), y = System.Math.Abs(pl.GetPosition().y - presetWarps["jail"].y), z = System.Math.Abs(pl.GetPosition().z - presetWarps["jail"].z);
-				if (x > 7 || y > 5 || z > 7) return false;
-				else return true;
-			}
-			if (GetJailedPlayers().Count > 0)
-				GetJailedPlayers().ForEach(pl => 
-				{
-					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
-					{
-						AdminToolbox.playerdict[pl.SteamId].isInJail = isInsideJail(pl);
-						if (!AdminToolbox.playerdict[pl.SteamId].isInJail) SendToJail(pl);
-						else if (AdminToolbox.playerdict[pl.SteamId].JailedToTime <= DateTime.Now) ReturnFromJail(pl);
-					}
-				});
-		}
-
-		public static void SendToJail(Player ply)
-		{
-			if (AdminToolbox.playerdict.ContainsKey(ply.SteamId))
-			{
-				//Saves original variables
-				AdminToolbox.playerdict[ply.SteamId].originalPos = ply.GetPosition();
-				if (!AdminToolbox.playerdict[ply.SteamId].isJailed)
-				{
-					AdminToolbox.playerdict[ply.SteamId].previousRole = ply.TeamRole.Role;
-					AdminToolbox.playerdict[ply.SteamId].playerPrevInv = ply.GetInventory();
-					AdminToolbox.playerdict[ply.SteamId].previousHealth = ply.GetHealth();
-					AdminToolbox.playerdict[ply.SteamId].prevAmmo5 = ply.GetAmmo(AmmoType.DROPPED_5);
-					AdminToolbox.playerdict[ply.SteamId].prevAmmo7 = ply.GetAmmo(AmmoType.DROPPED_7);
-					AdminToolbox.playerdict[ply.SteamId].prevAmmo9 = ply.GetAmmo(AmmoType.DROPPED_9);
-				}
-				//Changes role to Tutorial, teleports to jail, removes inv.
-				ply.ChangeRole(Role.TUTORIAL, true, false);
-				ply.Teleport(AdminToolbox.warpVectors["jail"],true);
-				foreach (Smod2.API.Item item in ply.GetInventory())
-					item.Remove();
-				AdminToolbox.playerdict[ply.SteamId].isJailed = true;
-			}
-			else
-				plugin.Info("Player not in PlayerDict!");
-		}
-		public static void ReturnFromJail(Player ply)
-		{
-			if (AdminToolbox.playerdict.ContainsKey(ply.SteamId))
-			{
-				AdminToolbox.playerdict[ply.SteamId].isJailed = false;
-				ply.ChangeRole(AdminToolbox.playerdict[ply.SteamId].previousRole, true, false);
-				ply.Teleport(AdminToolbox.playerdict[ply.SteamId].originalPos,true);
-				AdminToolbox.playerdict[ply.SteamId].isInJail = false;
-				ply.SetHealth(AdminToolbox.playerdict[ply.SteamId].previousHealth);
-				foreach (Smod2.API.Item item in ply.GetInventory())
-					item.Remove();
-				foreach (Smod2.API.Item item in AdminToolbox.playerdict[ply.SteamId].playerPrevInv)
-					ply.GiveItem(item.ItemType);
-				ply.SetAmmo(AmmoType.DROPPED_5, AdminToolbox.playerdict[ply.SteamId].prevAmmo5);
-				ply.SetAmmo(AmmoType.DROPPED_7, AdminToolbox.playerdict[ply.SteamId].prevAmmo7);
-				ply.SetAmmo(AmmoType.DROPPED_9, AdminToolbox.playerdict[ply.SteamId].prevAmmo9);
-				AdminToolbox.playerdict[ply.SteamId].playerPrevInv = null;
-			}
-			else
-				plugin.Info("Player not in PlayerDict!");
-		}
-
-		public static string WriteParseableLogKills(Player attacker, Player victim, DamageType dmgType)
-		{
-			return " ";
-		}
-		public static void WriteToLog(string[] str, LogHandlers.ServerLogType logType = LogHandlers.ServerLogType.Misc)
-		{
-			string str2 = string.Empty;
-			if (str.Length != 0)
-				foreach (string st in str)
-					str2 += st;
-			switch (logType)
-			{
-				case LogHandlers.ServerLogType.TeamKill:
-					if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_teamkills", false, false))
-						AdminToolboxLogger.AddLog(str2, logType);
-					break;
-				case LogHandlers.ServerLogType.KillLog:
-					if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_kills", false, false))
-						AdminToolboxLogger.AddLog(str2, logType);
-					break;
-				case LogHandlers.ServerLogType.RemoteAdminActivity:
-					if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_log_commands", false, false))
-						AdminToolboxLogger.AddLog(str2, logType);
-					break;
-				default:
-					AdminToolboxLogger.AddLog(str2, logType);
-					break;
-			}
-		}
 		public static void WriteVersionToFile()
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
@@ -319,7 +238,7 @@ namespace AdminToolbox
 			else
 				plugin.Info("Could not find SCP Secret Lab folder!");
 		}
-		public static void CheckCurrVersion(AdminToolbox plugin, string version)
+		internal static void CheckCurrVersion(AdminToolbox plugin, string version)
 		{
 			try
 			{
@@ -342,12 +261,12 @@ namespace AdminToolbox
 		}
 	}
 
-	public static class LevenshteinDistance
+	internal static class LevenshteinDistance
 	{
 		/// <summary>
 		/// Compute the distance between two strings.
 		/// </summary>
-		public static int Compute(string s, string t)
+		internal static int Compute(string s, string t)
 		{
 			int n = s.Length;
 			int m = t.Length;
@@ -397,7 +316,7 @@ namespace AdminToolbox
 		public static Player GetPlayer(string args)
 		{
 			Player playerOut = null;
-			if (int.TryParse(args, out int pID))
+			if (short.TryParse(args, out short pID))
 			{
 				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
 					if (pl.PlayerId == pID)
@@ -443,234 +362,28 @@ namespace AdminToolbox
 			return playerOut;
 		}
 	}
-	public class LogHandlers
-	{
-		public class LogHandler
-		{
-			public string Content;
 
-			public string Type;
-
-			public string Time;
-
-			public bool Saved;
-		}
-		private readonly List<LogHandler> logs = new List<LogHandler>();
-
-		private int _port;
-
-		private int _maxlen;
-
-		private bool unifiedStats = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_stats_unified", true);
-
-		private static string AdminToolboxFolder = (ConfigManager.Manager.Config.GetStringValue("admintoolbox_folder_path", string.Empty) != string.Empty) ? ConfigManager.Manager.Config.GetStringValue("admintoolbox_folder_path", FileManager.GetAppFolder() + "AdminToolbox") : FileManager.GetAppFolder() + "AdminToolbox";
-		private static string AdminToolboxPlayerStats = (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_stats_unified", true)) ? AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + "Global" : AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + PluginManager.Manager.Server.Port,
-			AdminToolboxLogs = AdminToolboxFolder + Path.DirectorySeparatorChar + "ServerLogs";
-
-
-		public enum ServerLogType
-		{
-			RemoteAdminActivity,
-			KillLog,
-			TeamKill,
-			Suicice,
-			GameEvent,
-			Misc
-		}
-		public static readonly string[] Txt = new string[]
-		{
-		"Remote Admin",
-		"Kill",
-		"TeamKill",
-		"Suicide",
-		"Game Event",
-		"Misc"
-		};
-		private void Awake()
-		{
-			Txt.ToList().ForEach(delegate (string txt)
-			{
-				_maxlen = Math.Max(_maxlen, txt.Length);
-			});
-		}
-		void Start()
-		{
-			_port = PluginManager.Manager.Server.Port;
-		}
-
-		public void AddLog(string msg, ServerLogType type)
-		{
-			_port = PluginManager.Manager.Server.Port;
-			string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss zzz");
-			logs.Add(new LogHandler
-			{
-				Content = msg,
-				Type = Txt[(int)type],
-				Time = time
-			});
-			string mystring = System.Reflection.Assembly.GetAssembly(this.GetType()).Location;
-			if (Directory.Exists(FileManager.GetAppFolder()))
-			{
-				if (!Directory.Exists(AdminToolboxFolder))
-					Directory.CreateDirectory(AdminToolboxFolder);
-				if (!Directory.Exists(AdminToolboxLogs))
-					Directory.CreateDirectory(AdminToolboxLogs);
-				if (Directory.Exists(FileManager.GetAppFolder() + "ATServerLogs"))
-					MoveOldFiles();
-				if (!Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port))
-					Directory.CreateDirectory(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
-
-				string text = string.Empty;
-				foreach (LogHandler log in logs)
-				{
-					if (!log.Saved)
-					{
-						log.Saved = true;
-						string text2 = text;
-						text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
-					}
-				}
-				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.roundCount + ".txt", true))
-				{
-					streamWriter.Write(text);
-					streamWriter.Close();
-				}
-			}
-		}
-
-		public void ManageDatedLogs()
-		{
-			int configInt = ConfigManager.Manager.Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
-
-			if(configInt > 0)
-			{
-				Directory.GetFiles(AdminToolboxLogs).ToList().ForEach(path => { if ((DateTime.Now - File.GetCreationTime(path)).TotalHours > configInt) File.Delete(path); } );
-			}
-		}
-
-		private void MoveOldFiles()
-		{
-			string infoString = (Directory.GetDirectories(FileManager.GetAppFolder() + "ATServerLogs").Length > 0) ? "\n\n Relocated folders: " : string.Empty;
-			string appdataPath = FileManager.GetAppFolder();
-			foreach (string path in Directory.GetDirectories(FileManager.GetAppFolder() + "ATServerLogs"))
-			{
-				if (!Directory.Exists(Path.DirectorySeparatorChar + path.Replace(FileManager.GetAppFolder() + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty)))
-				{
-					Directory.Move(path, AdminToolboxLogs + Path.DirectorySeparatorChar + path.Replace(FileManager.GetAppFolder() + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty));
-					infoString += "\n" + " - " + path.Replace(appdataPath, string.Empty);
-				}
-			}
-			if (infoString != string.Empty) AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(appdataPath, string.Empty));
-			Directory.Delete(FileManager.GetAppFolder() + "ATServerLogs");
-		}
-		private static string ToMax(string text, int max)
-		{
-			while (text.Length < max)
-			{
-				text += " ";
-			}
-			return text;
-		}
-
-		public enum PlayerFile
-		{
-			Read = 0,
-			Write = 1
-		}
-		public void PlayerStatsFileManager(List<Player> players = null, PlayerFile FileOperation = PlayerFile.Read)
-		{
-			if (Directory.Exists(FileManager.GetAppFolder()))
-			{
-				char splitChar = ';';
-				if (!Directory.Exists(AdminToolboxFolder))
-					Directory.CreateDirectory(AdminToolboxFolder);
-				if (!Directory.Exists(AdminToolboxPlayerStats))
-					Directory.CreateDirectory(AdminToolboxPlayerStats);
-
-				if (players != null && players.Count > 0)
-					foreach (Player player in players)
-						ReadWriteHandler(player, FileOperation);
-				else
-					foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-						ReadWriteHandler(player, FileOperation);
-
-				void ReadWriteHandler(Player pl, PlayerFile Operation)
-				{
-					if (pl.SteamId == string.Empty || pl.SteamId == null || pl.Name == "Server" || pl.Name == string.Empty) return;
-					if (!AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.AddMissingPlayerVariables(new List<Player> { pl });
-					switch (Operation)
-					{
-						case PlayerFile.Read:
-							ReadFromFile(pl);
-							break;
-						case PlayerFile.Write:
-							WriteToFile(pl);
-							break;
-					}
-				}
-				void WriteToFile(Player pl)
-				{
-					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
-					if (!File.Exists(playerFilePath))
-						File.Create(playerFilePath).Dispose();
-					
-					//AdminToolbox.AdminToolboxPlayerSettings playerSettings = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolbox.playerdict[pl.SteamId] : new AdminToolbox.AdminToolboxPlayerSettings();
-					int Kills = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].Kills > 0) ? AdminToolbox.playerdict[pl.SteamId].Kills : 0;
-					int TeamKills = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].TeamKills > 0) ? AdminToolbox.playerdict[pl.SteamId].TeamKills : 0;
-					int Deaths = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].Deaths > 0) ? AdminToolbox.playerdict[pl.SteamId].Deaths : 0;
-					double minutesPlayed = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].minutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.playerdict[pl.SteamId].joinTime).TotalMinutes + AdminToolbox.playerdict[pl.SteamId].minutesPlayed : 0;
-					int BanCount = (AdminToolbox.playerdict.ContainsKey(pl.SteamId) && AdminToolbox.playerdict[pl.SteamId].banCount > 0) ? AdminToolbox.playerdict[pl.SteamId].banCount : 0;
-					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) AdminToolbox.playerdict[pl.SteamId].joinTime = DateTime.Now;
-					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar +  minutesPlayed + splitChar + BanCount;
-					using (StreamWriter streamWriter = new StreamWriter(playerFilePath, false))
-					{
-						streamWriter.Write(str);
-						streamWriter.Close();
-					}
-					ReadFromFile(pl);
-				}
-				void ReadFromFile(Player pl)
-				{
-					string playerFilePath = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
-					if (!File.Exists(playerFilePath))
-						PlayerStatsFileManager(new List<Player> { pl }, LogHandlers.PlayerFile.Write);
-					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0;0;0" };
-					string[] playerStats = fileStrings.First().Split(splitChar);
-					if (AdminToolbox.playerdict.ContainsKey(pl.SteamId))
-					{
-						//AdminToolbox.AdminToolboxPlayerSettings myPlayer = AdminToolbox.playerdict[pl.SteamId];
-						AdminToolbox.playerdict[pl.SteamId].Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x0) && x0 > AdminToolbox.playerdict[pl.SteamId].Kills) ? x0 : AdminToolbox.playerdict[pl.SteamId].Kills;
-						AdminToolbox.playerdict[pl.SteamId].TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x1) && x1 > AdminToolbox.playerdict[pl.SteamId].TeamKills) ? x1 : AdminToolbox.playerdict[pl.SteamId].TeamKills;
-						AdminToolbox.playerdict[pl.SteamId].Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x2) && x2 > AdminToolbox.playerdict[pl.SteamId].Deaths) ? x2 : AdminToolbox.playerdict[pl.SteamId].Deaths;
-						AdminToolbox.playerdict[pl.SteamId].minutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[3], out double x3) && x3 > AdminToolbox.playerdict[pl.SteamId].minutesPlayed) ? x3 : AdminToolbox.playerdict[pl.SteamId].minutesPlayed;
-						AdminToolbox.playerdict[pl.SteamId].banCount = (playerStats.Length > 4 && int.TryParse(playerStats[4], out int x4) && x4 > AdminToolbox.playerdict[pl.SteamId].banCount) ? x4 : AdminToolbox.playerdict[pl.SteamId].banCount;
-						//AdminToolbox.playerdict[pl.SteamId] = myPlayer;
-					}
-				}
-			}
-		}
-	}
 	public class SetPlayerVariables
 	{
 		public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
-			if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
-			AdminToolbox.playerdict[steamID].overwatchMode = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.playerdict[steamID].overwatchMode;
-			AdminToolbox.playerdict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.playerdict[steamID].godMode;
-			AdminToolbox.playerdict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.playerdict[steamID].dmgOff;
-			AdminToolbox.playerdict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.playerdict[steamID].destroyDoor;
-			AdminToolbox.playerdict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.playerdict[steamID].lockDown;
-			AdminToolbox.playerdict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.playerdict[steamID].instantKill;
-			AdminToolbox.playerdict[steamID].isJailed = (isJailed.HasValue) ? (bool)isJailed : AdminToolbox.playerdict[steamID].isJailed;
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
+			AdminToolbox.ATPlayerDict[steamID].overwatchMode = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.ATPlayerDict[steamID].overwatchMode;
+			AdminToolbox.ATPlayerDict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.ATPlayerDict[steamID].godMode;
+			AdminToolbox.ATPlayerDict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.ATPlayerDict[steamID].dmgOff;
+			AdminToolbox.ATPlayerDict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.ATPlayerDict[steamID].destroyDoor;
+			AdminToolbox.ATPlayerDict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.ATPlayerDict[steamID].lockDown;
+			AdminToolbox.ATPlayerDict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.ATPlayerDict[steamID].instantKill;
+			AdminToolbox.ATPlayerDict[steamID].isJailed = (isJailed.HasValue) ? (bool)isJailed : AdminToolbox.ATPlayerDict[steamID].isJailed;
 		}
 		public static void SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
-			if (!AdminToolbox.playerdict.ContainsKey(steamID)) return;
-			AdminToolbox.playerdict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.playerdict[steamID].Kills;
-			AdminToolbox.playerdict[steamID].TeamKills = (TeamKills.HasValue) ? (int)TeamKills : AdminToolbox.playerdict[steamID].TeamKills; ;
-			AdminToolbox.playerdict[steamID].Deaths = (Deaths.HasValue) ? (int)Deaths : AdminToolbox.playerdict[steamID].Deaths;
-			AdminToolbox.playerdict[steamID].RoundsPlayed = (RoundsPlayed.HasValue) ? (int)RoundsPlayed : AdminToolbox.playerdict[steamID].RoundsPlayed;
-			AdminToolbox.playerdict[steamID].banCount = (BanCount.HasValue) ? (int)BanCount : AdminToolbox.playerdict[steamID].banCount;
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
+			AdminToolbox.ATPlayerDict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.ATPlayerDict[steamID].Kills;
+			AdminToolbox.ATPlayerDict[steamID].TeamKills = (TeamKills.HasValue) ? (int)TeamKills : AdminToolbox.ATPlayerDict[steamID].TeamKills; ;
+			AdminToolbox.ATPlayerDict[steamID].Deaths = (Deaths.HasValue) ? (int)Deaths : AdminToolbox.ATPlayerDict[steamID].Deaths;
+			AdminToolbox.ATPlayerDict[steamID].RoundsPlayed = (RoundsPlayed.HasValue) ? (int)RoundsPlayed : AdminToolbox.ATPlayerDict[steamID].RoundsPlayed;
+			AdminToolbox.ATPlayerDict[steamID].banCount = (BanCount.HasValue) ? (int)BanCount : AdminToolbox.ATPlayerDict[steamID].banCount;
 		}
 	}
 }
