@@ -30,9 +30,9 @@ namespace AdminToolbox
 				plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
 			}
 			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write);
+			AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.WarpManager.ReadWarpsFromFile());
+			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.warpManager.ReadWarpsFromFile());
 
 
 
@@ -80,7 +80,7 @@ namespace AdminToolbox
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
 						AdminToolbox.ATPlayerDict[pl.SteamId].RoundsPlayed++;
 				}
-				AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write);
+				AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write);
 			}
 
 		}
@@ -91,11 +91,11 @@ namespace AdminToolbox
 			AdminToolbox.RoundCount++;
 			if (AdminToolbox.ATPlayerDict.Count > 0)
 				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.ATPlayerDict)
-					if (!item.Value.keepSettings && !item.Value.isJailed) SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+					if (!item.Value.keepSettings && !item.Value.isJailed) Managers.SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
 			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;
-			AdminToolbox.LogManager.ManageDatedATLogs();
+			AdminToolbox.logManager.ManageDatedATLogs();
 		}
 	}
 }

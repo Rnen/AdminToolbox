@@ -8,7 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdminToolbox.WarpManager
+namespace AdminToolbox.Managers
 {
 	public class WarpManager
 	{
@@ -28,7 +28,7 @@ namespace AdminToolbox.WarpManager
 
 		static int _port => PluginManager.Manager.Server.Port;
 
-		static string ATFolder => AdminToolbox.LogManager.GetFolderLocation();
+		static string ATFolder => AdminToolbox.logManager.GetFolderLocation();
 		static readonly string MiscFolder = ATFolder + Path.DirectorySeparatorChar + "Misc";
 		static readonly string WarpPointsFolder = MiscFolder + Path.DirectorySeparatorChar + "WarpPoints";
 		static readonly string WarpFilePath = WarpPointsFolder + Path.DirectorySeparatorChar + (globalFiles ? "Global"  : _port.ToString()) + ".txt";

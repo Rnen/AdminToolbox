@@ -24,9 +24,10 @@ namespace AdminToolbox
 	{
 		public const string ATversion = "1.3.7";
 
-		public readonly static LogManager LogManager = new LogManager();
-		public readonly static WarpManager.WarpManager WarpManager = new WarpManager.WarpManager();
-		public readonly static JailManager JailManager = new JailManager();
+		public static readonly Managers.LogManager logManager = new Managers.LogManager();
+		public static readonly Managers.WarpManager warpManager = new Managers.WarpManager();
+		public static readonly Managers.ATFileManager atfileManager = new Managers.ATFileManager();
+		//public readonly static JailManager JailManager = new JailManager();
 
 		internal static bool 
 			isRoundFinished = false, 
@@ -36,7 +37,7 @@ namespace AdminToolbox
 			isStarting = true;
 		public static bool lockRound = false, intercomLock = false;
 		public static Dictionary<string, AdminToolboxPlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, AdminToolboxPlayerSettings>();
-		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(WarpManager.ReadWarpsFromFile());
+		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
 
 		public static Vector JailPos = (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
 
@@ -114,15 +115,15 @@ namespace AdminToolbox
 		public override void OnEnable()
 		{
 			plugin = this;
-			WriteVersionToFile();
+			Managers.ATFileManager.WriteVersionToFile();
 			//CheckCurrVersion(this, this.Details.version);
 			if (isColored)
 				this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
 			else
 				this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
 			_roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			warpVectors = new Dictionary<string, Vector>(AdminToolbox.WarpManager.ReadWarpsFromFile());
-			LogManager.WriteToLog(new string[] { "\"Plugin Started\"" }, LogManager.ServerLogType.Misc);
+			warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
+			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, Managers.LogManager.ServerLogType.Misc);
 		}
 
 		public override void Register()
@@ -222,22 +223,6 @@ namespace AdminToolbox
 			}
 		}
 
-		public static void WriteVersionToFile()
-		{
-			if (Directory.Exists(FileManager.GetAppFolder()))
-			{
-				string text = "at_version=" + plugin.Details.version;
-				using (StreamWriter streamWriter = new StreamWriter(FileManager.GetAppFolder() + "at_version.md", false))
-				{
-					streamWriter.Write(text);
-					streamWriter.Close();
-				}
-				if (File.Exists(FileManager.GetAppFolder() + "n_at_version.md"))
-					File.Delete(FileManager.GetAppFolder() + "n_at_version.md");
-			}
-			else
-				plugin.Info("Could not find SCP Secret Lab folder!");
-		}
 		internal static void CheckCurrVersion(AdminToolbox plugin, string version)
 		{
 			try
@@ -360,30 +345,6 @@ namespace AdminToolbox
 				}
 			}
 			return playerOut;
-		}
-	}
-
-	public class SetPlayerVariables
-	{
-		public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
-		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
-			AdminToolbox.ATPlayerDict[steamID].overwatchMode = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.ATPlayerDict[steamID].overwatchMode;
-			AdminToolbox.ATPlayerDict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.ATPlayerDict[steamID].godMode;
-			AdminToolbox.ATPlayerDict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.ATPlayerDict[steamID].dmgOff;
-			AdminToolbox.ATPlayerDict[steamID].destroyDoor = (destroyDoor.HasValue) ? (bool)destroyDoor : AdminToolbox.ATPlayerDict[steamID].destroyDoor;
-			AdminToolbox.ATPlayerDict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.ATPlayerDict[steamID].lockDown;
-			AdminToolbox.ATPlayerDict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.ATPlayerDict[steamID].instantKill;
-			AdminToolbox.ATPlayerDict[steamID].isJailed = (isJailed.HasValue) ? (bool)isJailed : AdminToolbox.ATPlayerDict[steamID].isJailed;
-		}
-		public static void SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
-		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
-			AdminToolbox.ATPlayerDict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.ATPlayerDict[steamID].Kills;
-			AdminToolbox.ATPlayerDict[steamID].TeamKills = (TeamKills.HasValue) ? (int)TeamKills : AdminToolbox.ATPlayerDict[steamID].TeamKills; ;
-			AdminToolbox.ATPlayerDict[steamID].Deaths = (Deaths.HasValue) ? (int)Deaths : AdminToolbox.ATPlayerDict[steamID].Deaths;
-			AdminToolbox.ATPlayerDict[steamID].RoundsPlayed = (RoundsPlayed.HasValue) ? (int)RoundsPlayed : AdminToolbox.ATPlayerDict[steamID].RoundsPlayed;
-			AdminToolbox.ATPlayerDict[steamID].banCount = (BanCount.HasValue) ? (int)BanCount : AdminToolbox.ATPlayerDict[steamID].banCount;
 		}
 	}
 }

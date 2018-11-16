@@ -8,7 +8,7 @@ using System;
 
 namespace AdminToolbox
 {
-	#region PlayerDamage
+	
 	class DamageDetect : IEventHandlerPlayerHurt
 	{
 		private Plugin plugin;
@@ -207,9 +207,6 @@ namespace AdminToolbox
 		}
 	}
 
-	#endregion
-	#region PlayerDeath
-
 	class DieDetect : IEventHandlerPlayerDie
 	{
 		private Plugin plugin;
@@ -255,21 +252,21 @@ namespace AdminToolbox
 								plugin.Info(Colors.ColoredMARole(ev.Killer) + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=DarkRed; " + keyWord + " fellow @#fg=Default;" + Colors.ColoredMARole(ev.Player) + "@#fg=Yellow; " + ev.Player.Name + "@#fg=Default;");
 							else
 								plugin.Info(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name);
-						AdminToolbox.LogManager.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name }, LogManager.ServerLogType.TeamKill);
+						AdminToolbox.logManager.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name }, Managers.LogManager.ServerLogType.TeamKill);
 					} // Colors.ColoredRole()
 					else
 					{
 						if (Config.GetBoolValue("admintoolbox_debug_player_kill", false, false))
 							plugin.Info(ev.Killer.Name + " killed: " + ev.Player.Name);
 						if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Killer.SteamId)) AdminToolbox.ATPlayerDict[ev.Killer.SteamId].Kills++;
-						AdminToolbox.LogManager.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed " + ev.Player.TeamRole.Name + " " + ev.Player.Name }, LogManager.ServerLogType.KillLog);
+						AdminToolbox.logManager.WriteToLog(new string[] { ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed " + ev.Player.TeamRole.Name + " " + ev.Player.Name }, Managers.LogManager.ServerLogType.KillLog);
 					}
 					break;
 			}
 		}
 	}
-	#endregion
-	public class Colors
+	
+	class Colors
 	{
 		public static string ColoredMARole(Player player)
 		{

@@ -95,7 +95,7 @@ namespace AdminToolbox
 					ev.Player.OverwatchMode = true;
 				else if (pSettings.isJailed)
 				{
-					JailManager.SendToJail(ev.Player,pSettings.JailedToTime);
+					Managers.JailManager.SendToJail(ev.Player,pSettings.JailedToTime);
 				}
 			}
 		}
@@ -113,7 +113,7 @@ namespace AdminToolbox
 		public void OnAdminQuery(AdminQueryEvent ev)
 		{
 			if (ev.Query != "REQUEST_DATA PLAYER_LIST SILENT")
-				AdminToolbox.LogManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, LogManager.ServerLogType.RemoteAdminActivity);
+				AdminToolbox.logManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, Managers.LogManager.ServerLogType.RemoteAdminActivity);
 		}
 
 		public void OnLure(PlayerLureEvent ev)
@@ -138,7 +138,7 @@ namespace AdminToolbox
 			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player p)
 			{
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
-				AdminToolbox.LogManager.PlayerStatsFileManager(new List<Player> { p }, LogManager.PlayerFile.Read);
+				AdminToolbox.atfileManager.PlayerStatsFileManager(new List<Player> { p }, Managers.ATFileManager.PlayerFile.Read);
 
 				if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
@@ -166,8 +166,8 @@ namespace AdminToolbox
 		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(2);
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (fiveSecTimer <= DateTime.Now) { JailManager.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
-			if (threeMinTimer <= DateTime.Now) { AdminToolbox.LogManager.PlayerStatsFileManager(null, LogManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
+			if (fiveSecTimer <= DateTime.Now) { Managers.JailManager.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
+			if (threeMinTimer <= DateTime.Now) { AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
 			if (fiveMinTimer <= DateTime.Now)
 			{
 				fiveMinTimer = DateTime.Now.AddMinutes(DictCleanupInterval);
