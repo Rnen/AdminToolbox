@@ -1,12 +1,16 @@
 ﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
+using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
 	class AT_TemplateCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
+
+		static IConfigFile Config => ConfigManager.Manager.Config;
+		Server Server => PluginManager.Manager.Server;
 
 		public AT_TemplateCommand(AdminToolbox plugin)
 		{
@@ -25,14 +29,27 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Server server = PluginManager.Manager.Server;
+			Player caller = (sender is Player _p) ? _p : null;
+
 			if (args.Length > 0)
 			{
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				AdminToolbox.AddMissingPlayerVariables(new System.Collections.Generic.List<Player> { myPlayer });
+				//Get player from first arguement of OnCall
+				Player targetPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				//If player could not be found, return
+				if (targetPlayer == null) { return new string[] { "Could not find player: " + args[0] }; ; }
+
+				//Adds player(s) to the AdminToolbox settings
+				AdminToolbox.AddMissingPlayerVariables(new List<Player> { targetPlayer, caller });
+				//Do whatever with the found player
+				return new string[] { "We did something to player: " + targetPlayer.Name + "!" };
 			}
-			return new string[] { GetUsage() };
+			else if (caller != null)
+			{
+				//Do something on calling player without any arguements
+				return new string[] { "We did something to player: " + caller.Name + "!" };
+			}
+			else
+				return new string[] { GetUsage() };
 		}
 	}
 }
