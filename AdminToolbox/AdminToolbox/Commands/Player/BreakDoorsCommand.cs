@@ -66,7 +66,7 @@ namespace AdminToolbox.Command
 					else str = "No players with \"BreakDoors\" enabled!";
 					return new string[] { str };
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{

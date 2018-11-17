@@ -46,7 +46,7 @@ namespace AdminToolbox.Command
 					if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
 					return new string[] { playerNum + " players has been slain!" };
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
 				if (myPlayer.TeamRole.Role != Role.SPECTATOR)
 				{

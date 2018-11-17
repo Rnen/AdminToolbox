@@ -83,7 +83,7 @@ namespace AdminToolbox.Command
 					else str = "\n" + "No players with \"AT-Godmode\" enabled!";
 					return new string[] { str };
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
 				if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) return new string[] { "Player not in dictionary" };
 				if (args.Length > 1)

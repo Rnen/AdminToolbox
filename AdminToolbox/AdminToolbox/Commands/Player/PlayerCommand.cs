@@ -71,7 +71,7 @@ namespace AdminToolbox.Command
 		{
 			if (Server.GetPlayers().Count > 0)
 			{
-				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
+				Player myPlayer = (args.Length > 0) ? API.GetPlayerFromString.GetPlayer(args[0]) : null;
 				if (myPlayer == null && sender is Player sendingPlayer)
 					myPlayer = sendingPlayer;
 				else if (myPlayer == null)
@@ -83,7 +83,7 @@ namespace AdminToolbox.Command
 				//Handling player stats
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { myPlayer });
 				AdminToolbox.atfileManager.PlayerStatsFileManager(new List<Player> { myPlayer }, Managers.ATFileManager.PlayerFile.Write);
-				AdminToolbox.AdminToolboxPlayerSettings playerDict = (AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) ? AdminToolbox.ATPlayerDict[myPlayer.SteamId] : new AdminToolbox.AdminToolboxPlayerSettings(myPlayer.SteamId);
+				API.PlayerSettings playerDict = (AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) ? AdminToolbox.ATPlayerDict[myPlayer.SteamId] : new API.PlayerSettings(myPlayer.SteamId);
 				
 				//Inventory
 				string playerInv = string.Empty;

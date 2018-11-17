@@ -58,7 +58,7 @@ namespace AdminToolbox.Command
 						return new string[] { GetUsage() };
 					}
 				}
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				if (args.Length > 1)
 				{

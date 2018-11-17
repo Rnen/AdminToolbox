@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 {
 	class DoorCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
 
 		public DoorCommand(AdminToolbox plugin)
 		{
@@ -29,7 +29,7 @@ namespace AdminToolbox.Command
 			Server server = PluginManager.Manager.Server;
 			if (args.Length > 0)
 			{
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				if (args.Length > 1)
 				{

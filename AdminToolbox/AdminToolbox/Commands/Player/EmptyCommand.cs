@@ -24,7 +24,7 @@ namespace AdminToolbox.Command
 			Server server = PluginManager.Manager.Server;
 			if (args.Length > 0)
 			{
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { myPlayer });
 				if (sender is Player p) AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });

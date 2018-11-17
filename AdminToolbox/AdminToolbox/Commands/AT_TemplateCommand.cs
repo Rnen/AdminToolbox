@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 			if (args.Length > 0)
 			{
 				//Get player from first arguement of OnCall
-				Player targetPlayer = GetPlayerFromString.GetPlayer(args[0]);
+				Player targetPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				//If player could not be found, return
 				if (targetPlayer == null) { return new string[] { "Could not find player: " + args[0] }; ; }
 

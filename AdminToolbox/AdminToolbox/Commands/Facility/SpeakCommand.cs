@@ -30,7 +30,7 @@ namespace AdminToolbox.Command
 					Server.Map.SetIntercomSpeaker(null);
 					return new string[] { "Stopped Broadcast" };
 				}
-				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
+				Player myPlayer = (args.Length > 0) ? API.GetPlayerFromString.GetPlayer(args[0]) : null;
 				if (myPlayer == null && sender is Player sendingPlayer)
 					myPlayer = sendingPlayer;
 				if (myPlayer == null)

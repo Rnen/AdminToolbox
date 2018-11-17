@@ -89,7 +89,7 @@ namespace AdminToolbox
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
 			{
-				AdminToolbox.AdminToolboxPlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
+				API.PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
 				pSettings.DeathPos = ev.SpawnPos;
 				if (pSettings.overwatchMode)
 					ev.Player.OverwatchMode = true;
@@ -145,7 +145,7 @@ namespace AdminToolbox
 					int bancount = (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId)) ? AdminToolbox.ATPlayerDict[ev.Player.SteamId].banCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + ev.Player.PlayerId + ")" + Environment.NewLine +
-						"From IP: " + ev.Player.IpAddress + Environment.NewLine +
+						"From IP: " + (ev.Player.IpAddress).Replace("::ffff:",string.Empty) + Environment.NewLine +
 						"Using steamID: " + ev.Player.SteamId + Environment.NewLine;
 					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
 					plugin.Info(str);
@@ -173,10 +173,12 @@ namespace AdminToolbox
 				fiveMinTimer = DateTime.Now.AddMinutes(DictCleanupInterval);
 				List<string> playerSteamIds = new List<string>(), keysToRemove = new List<string>();
 
+				List<string> steamIDs = PluginManager.Manager.Server.GetPlayers().Select(p => p.SteamId).ToList();
+
 				if (PluginManager.Manager.Server.GetPlayers().Count > 0)
 					PluginManager.Manager.Server.GetPlayers().ForEach(p => { if (!string.IsNullOrEmpty(p.SteamId)) playerSteamIds.Add(p.SteamId); });
 				if (AdminToolbox.ATPlayerDict.Count > 0 && playerSteamIds.Count > 0)
-					foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> kp in AdminToolbox.ATPlayerDict)
+					foreach (KeyValuePair<string, API.PlayerSettings> kp in AdminToolbox.ATPlayerDict)
 						if (!playerSteamIds.Contains(kp.Key) && !kp.Value.keepSettings)
 							keysToRemove.Add(kp.Key);
 				if (keysToRemove.Count > 0)

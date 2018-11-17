@@ -90,7 +90,7 @@ namespace AdminToolbox
 			AdminToolbox.lockRound = false;
 			AdminToolbox.RoundCount++;
 			if (AdminToolbox.ATPlayerDict.Count > 0)
-				foreach (KeyValuePair<string, AdminToolbox.AdminToolboxPlayerSettings> item in AdminToolbox.ATPlayerDict)
+				foreach (KeyValuePair<string, API.PlayerSettings> item in AdminToolbox.ATPlayerDict)
 					if (!item.Value.keepSettings && !item.Value.isJailed) Managers.SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))

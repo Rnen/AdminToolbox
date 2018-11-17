@@ -35,8 +35,11 @@ namespace AdminToolbox
 			isColoredCommand = false, 
 			intercomLockChanged = false, 
 			isStarting = true;
-		public static bool lockRound = false, intercomLock = false;
-		public static Dictionary<string, AdminToolboxPlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, AdminToolboxPlayerSettings>();
+		public static bool 
+			lockRound = false, 
+			intercomLock = false;
+
+		public static Dictionary<string, API.PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, API.PlayerSettings>();
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
 
 		public static Vector JailPos = (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
@@ -45,64 +48,6 @@ namespace AdminToolbox
 		internal static string _roundStartTime;
 
 		internal static AdminToolbox plugin;
-
-		public class AdminToolboxPlayerSettings
-		{
-			public string SteamID { get; private set; } = "";
-			public bool
-				overwatchMode = false,
-				godMode = false,
-				dmgOff = false,
-				destroyDoor = false,
-				keepSettings = false,
-				lockDown = false,
-				instantKill = false,
-				isJailed = false;
-			public bool IsInsideJail
-			{
-				get
-				{
-					if (string.IsNullOrEmpty(this.SteamID))
-						foreach (Player ply in plugin.Server.GetPlayers())
-							if (ATPlayerDict.ContainsKey(ply.SteamId))
-								ATPlayerDict[ply.SteamId].SteamID = ply.SteamId;
-					Player player = plugin.Server.GetPlayers().Where(p => p.SteamId == SteamID).FirstOrDefault();
-					if (player == null) return false;
-					Vector jail = JailPos,
-						pPos = player.GetPosition();
-					float x = Math.Abs(pPos.x - jail.x),
-						y = Math.Abs(pPos.y - jail.y),
-						z = Math.Abs(pPos.z - jail.z);
-					if (x > 7 || y > 5 || z > 7)
-						return false;
-					else
-						return true;
-				}
-			}
-			public int
-				Kills = 0,
-				TeamKills = 0,
-				Deaths = 0,
-				RoundsPlayed = 0,
-				banCount = 0;
-			internal int
-				previousHealth = 100,
-				prevAmmo5 = 0,
-				prevAmmo7 = 0,
-				prevAmmo9 = 0;
-			public Vector DeathPos = Vector.Zero,
-				originalPos = Vector.Zero;
-			internal Role previousRole = Role.CLASSD;
-			internal List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
-			public DateTime JailedToTime { get; internal set; } = DateTime.Now;
-			public DateTime JoinTime { get; internal set; } = DateTime.Now;
-			public double MinutesPlayed { get; internal set; } = 1;
-
-			public AdminToolboxPlayerSettings(string steamID)
-			{
-				this.SteamID = steamID;
-			}
-		}
 
 		public override void OnDisable()
 		{
@@ -219,16 +164,17 @@ namespace AdminToolbox
 		{
 			if (player != null && player is Player && !string.IsNullOrEmpty(player.SteamId) && !ATPlayerDict.ContainsKey(player.SteamId))
 			{
-				ATPlayerDict.Add(player.SteamId, new AdminToolboxPlayerSettings(player.SteamId));
+				ATPlayerDict.Add(player.SteamId, new API.PlayerSettings(player.SteamId));
 			}
 		}
 
-		internal static void CheckCurrVersion(AdminToolbox plugin, string version)
+		internal static void CheckCurrVersion()
 		{
+			//Un-used code
 			try
 			{
 				string host = "http://raw.githubusercontent.com/Rnen/AdminToolbox/master/version.md";
-				if (!int.TryParse(version.Replace(".", string.Empty), out int currentVersion))
+				if (!int.TryParse(AdminToolbox.plugin.Details.version.Replace(".", string.Empty), out int currentVersion))
 					plugin.Info("Coult not get Int16 from currentVersion");
 				if (int.TryParse(new System.Net.WebClient().DownloadString(host).Replace(".", string.Empty).Replace("at_version=", string.Empty), out int onlineVersion))
 				{
@@ -243,108 +189,6 @@ namespace AdminToolbox
 			{
 				plugin.Error("Could not fetch latest version: " + e.Message);
 			}
-		}
-	}
-
-	internal static class LevenshteinDistance
-	{
-		/// <summary>
-		/// Compute the distance between two strings.
-		/// </summary>
-		internal static int Compute(string s, string t)
-		{
-			int n = s.Length;
-			int m = t.Length;
-			int[,] d = new int[n + 1, m + 1];
-
-			// Step 1
-			if (n == 0)
-			{
-				return m;
-			}
-
-			if (m == 0)
-			{
-				return n;
-			}
-
-			// Step 2
-			for (int i = 0; i <= n; d[i, 0] = i++)
-			{
-			}
-
-			for (int j = 0; j <= m; d[0, j] = j++)
-			{
-			}
-
-			// Step 3
-			for (int i = 1; i <= n; i++)
-			{
-				//Step 4
-				for (int j = 1; j <= m; j++)
-				{
-					// Step 5
-					int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
-
-					// Step 6
-					d[i, j] = Math.Min(
-						Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
-						d[i - 1, j - 1] + cost);
-				}
-			}
-			// Step 7
-			return d[n, m];
-		}
-	}
-	public class GetPlayerFromString
-	{
-		public static Player GetPlayer(string args)
-		{
-			Player playerOut = null;
-			if (short.TryParse(args, out short pID))
-			{
-				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-					if (pl.PlayerId == pID)
-						return pl;
-			}
-			else if (long.TryParse(args, out long sID))
-			{
-				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
-					if (pl.SteamId == sID.ToString())
-						return pl;
-			}
-			else
-			{
-				//Takes a string and finds the closest player from the playerlist
-				int maxNameLength = 31, LastnameDifference = 31;
-				string str1 = args.ToLower();
-				foreach (Player pl in PluginManager.Manager.Server.GetPlayers(str1))
-				{
-					if (!pl.Name.ToLower().Contains(args.ToLower()))
-						continue;
-					if (str1.Length < maxNameLength)
-					{
-						int x = maxNameLength - str1.Length;
-						int y = maxNameLength - pl.Name.Length;
-						string str2 = pl.Name;
-						for (int i = 0; i < x; i++)
-						{
-							str1 += "z";
-						}
-						for (int i = 0; i < y; i++)
-						{
-							str2 += "z";
-						}
-						int nameDifference = LevenshteinDistance.Compute(str1, str2);
-						if (nameDifference < LastnameDifference)
-						{
-							LastnameDifference = nameDifference;
-							playerOut = pl;
-						}
-					}
-				}
-			}
-			return playerOut;
 		}
 	}
 }

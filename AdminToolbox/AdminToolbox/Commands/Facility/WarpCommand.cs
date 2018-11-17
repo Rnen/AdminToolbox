@@ -56,7 +56,7 @@ namespace AdminToolbox.Command
 					{
 						if (!AdminToolbox.warpVectors.ContainsKey(args[2]))
 						{
-							Player myPlayer = GetPlayerFromString.GetPlayer(args[1]);
+							Player myPlayer = API.GetPlayerFromString.GetPlayer(args[1]);
 							if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[1] }; ; }
 							Vector myvector = myPlayer.GetPosition();
 							AdminToolbox.warpVectors.Add(args[2].ToLower(), myvector);
@@ -86,7 +86,7 @@ namespace AdminToolbox.Command
 							}
 							return new string[] { "Teleported " + playerNum + " players to warp point: " + args[1] };
 						}
-						Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+						Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 						if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 						if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
 							return new string[] { "No warp point called: " + args[1] };

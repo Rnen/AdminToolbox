@@ -54,6 +54,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\GetPlayerFromString.cs" />
+    <Compile Include="API\LevenshteinDistance.cs" />
+    <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />
