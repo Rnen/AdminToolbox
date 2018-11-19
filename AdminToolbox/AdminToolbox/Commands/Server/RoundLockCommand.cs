@@ -8,7 +8,9 @@ namespace AdminToolbox.Command
 {
 	class RoundLockCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
+		static IConfigFile Config => ConfigManager.Manager.Config;
+		Server Server => PluginManager.Manager.Server;
 
 		public RoundLockCommand(AdminToolbox plugin)
 		{
@@ -27,14 +29,13 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			AdminToolbox.AddMissingPlayerVariables();
-			Server server = PluginManager.Manager.Server;
+			Player caller = (sender is Player _p) ? _p : null;
 			if (args.Length > 0)
 			{
 				if (bool.TryParse(args[0], out bool k))
 				{
 					AdminToolbox.lockRound = k;
-					plugin.Info("Round lock: " + k);
+					if (caller != null) plugin.Info("Round lock: " + k);
 					return new string[] { "Round lock: " + k };
 				}
 				else if (Int32.TryParse(args[0], out int l))
@@ -42,13 +43,13 @@ namespace AdminToolbox.Command
 					if (l < 1)
 					{
 						AdminToolbox.lockRound = false;
-						plugin.Info("Round lock: " + AdminToolbox.lockRound);
+						if (caller != null) plugin.Info("Round lock: " + AdminToolbox.lockRound);
 						return new string[] { "Round lock: " + AdminToolbox.lockRound };
 					}
 					else
 					{
 						AdminToolbox.lockRound = true;
-						plugin.Info("Round lock: " + AdminToolbox.lockRound);
+						if (caller != null) plugin.Info("Round lock: " + AdminToolbox.lockRound);
 						return new string[] { "Round lock: " + AdminToolbox.lockRound };
 					}
 				}
@@ -58,7 +59,7 @@ namespace AdminToolbox.Command
 			else
 			{
 				AdminToolbox.lockRound = !AdminToolbox.lockRound;
-				plugin.Info("Round lock: " + AdminToolbox.lockRound);
+				if(caller!= null) plugin.Info("Round lock: " + AdminToolbox.lockRound);
 				return new string[] { "Round lock: " + AdminToolbox.lockRound };
 			}
 		}

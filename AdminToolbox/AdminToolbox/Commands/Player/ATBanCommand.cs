@@ -42,21 +42,37 @@ namespace AdminToolbox.Command
 
 				if (input.Contains("."))
 				{
-					if (input.Split('.').Length != 4) return new string[] { "Invalid IP: " + input };
+					if (input.Split('.').Length != 4) return new string[] { "Invalid IP: " + input, GetUsage() };
 					string ip = (input.Contains("::ffff:")) ? input : "::ffff:" + input;
 
 					PluginManager.Manager.Server.BanIpAddress(bannedPlayer, ip, minutes, reason, IssuingPlayer);
 
-					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + bannedPlayer + " and with IP: " + ip + " was banned for " + minutes + " minutes by " + IssuingPlayer);
-					return new string[] { "Player with name: " + bannedPlayer + " and with IP: " + ip + " was banned for " + minutes + " minutes by " + IssuingPlayer };
+					string response = "\n" +
+						"Player with name: " + bannedPlayer + "\n" +
+						"IP: " + ip + "\n" +
+						"Was banned for: " + minutes + " minutes \n" +
+						"By: " + IssuingPlayer;
+
+					if (IssuingPlayer != "Server")
+						plugin.Info(response);
+					return new string[] { response };
+				}
+				else if (input.Trim().Length == 17  && long.TryParse(input.Trim(), out long sID))
+				{
+					PluginManager.Manager.Server.BanSteamId(bannedPlayer, input, minutes, reason, IssuingPlayer);
+
+					string response = "\n" +
+						"Player with name: " + bannedPlayer + "\n" +
+						"SteamID64: " + input.Trim() + "\n" +
+						"Was banned for: " + minutes + " minutes \n" +
+						"By: " + IssuingPlayer;
+
+					if (IssuingPlayer != "Server")
+						plugin.Info(response);
+					return new string[] { response };
 				}
 				else
-				{
-					PluginManager.Manager.Server.BanSteamId(args[0], input, minutes, reason, IssuingPlayer);
-
-					if (IssuingPlayer != "Server") plugin.Info("Player with name: " + bannedPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer);
-					return new string[] { "Player with name: " + bannedPlayer + " and with SteamID: " + input + " was banned for " + minutes + " minutes by " + IssuingPlayer };
-				}
+					return new string[] { "SteamID / IP not in correct format!", GetUsage() };
 			}
 			catch (Exception e)
 			{

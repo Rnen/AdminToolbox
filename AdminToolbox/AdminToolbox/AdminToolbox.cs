@@ -18,7 +18,7 @@ namespace AdminToolbox
 		version = ATversion,
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 21
+		SmodRevision = 22
 		)]
 	public class AdminToolbox : Plugin
 	{
@@ -153,10 +153,14 @@ namespace AdminToolbox
 			#endregion
 		}
 
-		internal static void AddMissingPlayerVariables(List<Player> players = null)
+		internal static void AddMissingPlayerVariables()
 		{
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
-			else if ( players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
+			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
+		}
+		internal static void AddMissingPlayerVariables(List<Player> players)
+		{
+			if (players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
 			if (players.Count > 0)
 				players.ForEach(p => { if(p != null) AddToPlayerDict(p); });
 		}
