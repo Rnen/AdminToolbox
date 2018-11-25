@@ -5,7 +5,7 @@ namespace AdminToolbox.API
 	internal static class LevenshteinDistance
 	{
 		/// <summary>
-		/// Compute the distance between two strings.
+		/// Compute the distance between two <see cref="string"/>s.
 		/// </summary>
 		internal static int Compute(string s, string t)
 		{

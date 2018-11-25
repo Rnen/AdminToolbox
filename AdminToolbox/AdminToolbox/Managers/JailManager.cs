@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox.Managers
 {
+	/// <summary>
+	/// Contains all Jail-related <see cref ="AdminToolbox"/> functionality
+	/// </summary>
 	public class JailManager
 	{
 		static Vector JailPos => AdminToolbox.JailPos;
@@ -19,6 +22,9 @@ namespace AdminToolbox.Managers
 			
 		}
 
+		/// <summary>
+		/// Returns <see cref ="List{Player}"/> of jailed <see cref="Player"/>s
+		/// </summary>
 		public static List<Player> GetJailedPlayers(string filter = "")
 		{
 			List<Player> myPlayers = new List<Player>();
@@ -48,6 +54,9 @@ namespace AdminToolbox.Managers
 				});
 		}
 
+		/// <summary>
+		/// Sends <see cref="Player"/> to jail
+		/// </summary>
 		public static void SendToJail(Player player, DateTime? jailedToTime = null)
 		{
 			if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
@@ -74,6 +83,10 @@ namespace AdminToolbox.Managers
 			else
 				AdminToolbox.plugin.Debug("Could not send player to jail! Player not in PlayerDict!");
 		}
+
+		/// <summary>
+		/// Returns <see cref="Player"/> from jail
+		/// </summary>
 		public static void ReturnFromJail(Player ply)
 		{
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ply.SteamId))

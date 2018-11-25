@@ -114,9 +114,13 @@ namespace AdminToolbox.Managers
 			}
 		}
 
+		/// <summary>
+		/// Manages <see cref ="AdminToolbox"/> logfiles. Set <see cref="bool"/> 
+		/// <paramref name="force"/> to <see cref="true"/> to forcefully delete
+		/// </summary>
 		public void ManageDatedATLogs(bool force = false)
 		{
-			int configInt = Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
+			int configInt = Config.GetIntValue("admintoolbox_logremover_hours_old", 48);
 
 			if (configInt > 0 || force)
 			{
@@ -133,6 +137,9 @@ namespace AdminToolbox.Managers
 			return text;
 		}
 
+		/// <summary>
+		/// Appends <see cref="string"/> <see cref="Array"/> to the <see cref="AdminToolbox"/> log.
+		/// </summary>
 		public void WriteToLog(string[] str, LogManager.ServerLogType logType = LogManager.ServerLogType.Misc)
 		{
 			string str2 = string.Empty;

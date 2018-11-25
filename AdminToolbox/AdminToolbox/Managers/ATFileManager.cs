@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox.Managers
 {
+	/// <summary>
+	/// Contains all <see cref="File"/>-related <see cref ="AdminToolbox"/> functionality
+	/// </summary>
 	public class ATFileManager
 	{
 		static IConfigFile Config => ConfigManager.Manager.Config;

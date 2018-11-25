@@ -7,6 +7,9 @@ namespace AdminToolbox.API
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
+		/// <summary>
+		/// Returns <see cref ="Player"/> from <see cref ="string"/>
+		/// </summary>
 		public static Player GetPlayer(string args)
 		{
 			Player playerOut = null;

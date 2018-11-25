@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox.API
 {
+	/// <summary>
+	/// <see cref ="PlayerSettings"/> contains all <see cref="Smod2.API.Player"/> <see cref ="AdminToolbox"/> settings
+	/// </summary>
 	public class PlayerSettings
 	{
 		public string SteamID { get; private set; } = "";
@@ -22,6 +25,9 @@ namespace AdminToolbox.API
 			lockDown = false,
 			instantKill = false,
 			isJailed = false;
+		/// <summary>
+		/// Checks to see if <see cref ="Player"/> is currently inside radius of <see cref="Vector"/> <see cref ="AdminToolbox.JailPos"/>
+		/// </summary>
 		public bool IsInsideJail
 		{
 			get

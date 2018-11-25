@@ -24,10 +24,20 @@ namespace AdminToolbox
 	{
 		public const string ATversion = "1.3.7";
 
+		/// <summary>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
+		/// </summary>
 		public static readonly Managers.LogManager logManager = new Managers.LogManager();
+		
+		/// <summary>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.WarpManager"/>
+		/// </summary>
 		public static readonly Managers.WarpManager warpManager = new Managers.WarpManager();
+		
+		/// <summary>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.ATFileManager"/>
+		/// </summary>
 		public static readonly Managers.ATFileManager atfileManager = new Managers.ATFileManager();
-		//public readonly static JailManager JailManager = new JailManager();
 
 		internal static bool 
 			isRoundFinished = false, 
@@ -39,7 +49,14 @@ namespace AdminToolbox
 			lockRound = false, 
 			intercomLock = false;
 
+		/// <summary>
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminT"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
+		/// </summary>
 		public static Dictionary<string, API.PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, API.PlayerSettings>();
+		
+		/// <summary>
+		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
+		/// </summary>
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
 
 		public static Vector JailPos = (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);

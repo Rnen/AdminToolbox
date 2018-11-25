@@ -9,20 +9,11 @@ namespace AdminToolbox.Command
 	{
 		private Plugin plugin;
 
-		public ATBanCommand(Plugin plugin)
-		{
-			this.plugin = plugin;
-		}
+		public ATBanCommand(Plugin plugin) => this.plugin = plugin;
 
-		public string GetUsage()
-		{
-			return "ATBAN [NAME] [IP/SteamID] [MINUTES] (OPTIONAL REASON)";
-		}
+		public string GetUsage() => "ATBAN [NAME] [IP/SteamID] [MINUTES] (OPTIONAL REASON)";
 
-		public string GetCommandDescription()
-		{
-			return "Alternative ban for offline users";
-		}
+		public string GetCommandDescription() => "Alternative ban for offline users";
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{

@@ -12,20 +12,11 @@ namespace AdminToolbox.Command
 		static IConfigFile Config => ConfigManager.Manager.Config;
 		Server Server => PluginManager.Manager.Server;
 
-		public AT_TemplateCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
+		public AT_TemplateCommand(AdminToolbox plugin) => this.plugin = plugin;
 
-		public string GetCommandDescription()
-		{
-			return "";
-		}
+		public string GetCommandDescription() => "";
 
-		public string GetUsage()
-		{
-			return "";
-		}
+		public string GetUsage() => "";
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{

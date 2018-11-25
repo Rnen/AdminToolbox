@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox.Managers
 {
+	/// <summary>
+	/// Contains all Warp-related <see cref ="AdminToolbox"/> functionality
+	/// </summary>
 	public class WarpManager
 	{
 		private readonly Dictionary<string, Vector> presetWarps = new Dictionary<string, Vector>()
@@ -68,6 +71,9 @@ namespace AdminToolbox.Managers
 			return false;
 		}
 
+		/// <summary>
+		/// Reads from file and returns <see cref ="Dictionary{String, Vector}"/>
+		/// </summary>
 		public Dictionary<string,Vector> ReadWarpsFromFile()
 		{
 			return presetWarps;
