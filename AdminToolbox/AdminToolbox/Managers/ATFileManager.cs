@@ -13,7 +13,7 @@ namespace AdminToolbox.Managers
 	/// <summary>
 	/// Contains all <see cref="File"/>-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
-	public class ATFileManager
+	public partial class ATFileManager
 	{
 		static IConfigFile Config => ConfigManager.Manager.Config;
 
@@ -26,11 +26,9 @@ namespace AdminToolbox.Managers
 			AdminToolboxPlayerStats = (unifiedStats) ? AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + "Global" : AdminToolboxFolder + Path.DirectorySeparatorChar + "PlayerStats" + Path.DirectorySeparatorChar + PluginManager.Manager.Server.Port,
 			AdminToolboxLogs = AdminToolboxFolder + Path.DirectorySeparatorChar + "ServerLogs";
 
-		public enum PlayerFile
-		{
-			Read = 0,
-			Write = 1
-		}
+		/// <summary>
+		/// Read/Writes <see cref ="Player"/> stats to/from <see cref="File"/>
+		/// </summary>
 		public void PlayerStatsFileManager(List<Player> players = null, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
@@ -103,6 +101,10 @@ namespace AdminToolbox.Managers
 				}
 			}
 		}
+
+		/// <summary>
+		/// Writes current <see cref="AdminToolbox"/> version to <see cref ="File"/>
+		/// </summary>
 		public static void WriteVersionToFile()
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
@@ -120,11 +122,18 @@ namespace AdminToolbox.Managers
 				AdminToolbox.plugin.Info("Could not find SCP Secret Lab folder!");
 		}
 	}
+	/// <summary>
+	/// Functions for modifying <see cref="API.PlayerSettings"/> on <see cref="Player"/>s
+	/// </summary>
 	public static class SetPlayerVariables
 	{
-		public static void SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
+		/// <summary>
+		/// For setting <see cref="API.PlayerSettings"/> bools
+		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// </summary>
+		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
 			AdminToolbox.ATPlayerDict[steamID].overwatchMode = (spectatorOnly.HasValue) ? (bool)spectatorOnly : AdminToolbox.ATPlayerDict[steamID].overwatchMode;
 			AdminToolbox.ATPlayerDict[steamID].godMode = (godMode.HasValue) ? (bool)godMode : AdminToolbox.ATPlayerDict[steamID].godMode;
 			AdminToolbox.ATPlayerDict[steamID].dmgOff = (dmgOff.HasValue) ? (bool)dmgOff : AdminToolbox.ATPlayerDict[steamID].dmgOff;
@@ -132,15 +141,21 @@ namespace AdminToolbox.Managers
 			AdminToolbox.ATPlayerDict[steamID].lockDown = (lockDown.HasValue) ? (bool)lockDown : AdminToolbox.ATPlayerDict[steamID].lockDown;
 			AdminToolbox.ATPlayerDict[steamID].instantKill = (instantKill.HasValue) ? (bool)instantKill : AdminToolbox.ATPlayerDict[steamID].instantKill;
 			AdminToolbox.ATPlayerDict[steamID].isJailed = (isJailed.HasValue) ? (bool)isJailed : AdminToolbox.ATPlayerDict[steamID].isJailed;
+			return true;
 		}
-		public static void SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
+		/// <summary>
+		/// For setting <see cref="API.PlayerSettings"/> stats
+		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// </summary>
+		public static bool SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
 			AdminToolbox.ATPlayerDict[steamID].Kills = (Kills.HasValue) ? (int)Kills : AdminToolbox.ATPlayerDict[steamID].Kills;
 			AdminToolbox.ATPlayerDict[steamID].TeamKills = (TeamKills.HasValue) ? (int)TeamKills : AdminToolbox.ATPlayerDict[steamID].TeamKills; ;
 			AdminToolbox.ATPlayerDict[steamID].Deaths = (Deaths.HasValue) ? (int)Deaths : AdminToolbox.ATPlayerDict[steamID].Deaths;
 			AdminToolbox.ATPlayerDict[steamID].RoundsPlayed = (RoundsPlayed.HasValue) ? (int)RoundsPlayed : AdminToolbox.ATPlayerDict[steamID].RoundsPlayed;
 			AdminToolbox.ATPlayerDict[steamID].banCount = (BanCount.HasValue) ? (int)BanCount : AdminToolbox.ATPlayerDict[steamID].banCount;
+			return true;
 		}
 	}
 }

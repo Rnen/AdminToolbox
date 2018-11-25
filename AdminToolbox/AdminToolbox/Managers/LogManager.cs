@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox.Managers
 {
+	/// <summary>
+	/// Contains all Log-related <see cref ="AdminToolbox"/> functionality
+	/// </summary>
 	public class LogManager
 	{
 		static IConfigFile Config => ConfigManager.Manager.Config;
@@ -115,8 +118,8 @@ namespace AdminToolbox.Managers
 		}
 
 		/// <summary>
-		/// Manages <see cref ="AdminToolbox"/> logfiles. Set <see cref="bool"/> 
-		/// <paramref name="force"/> to <see cref="true"/> to forcefully delete
+		/// Manages <see cref ="AdminToolbox"/> logfiles. <para>Set <see cref="bool"/> 
+		/// <paramref name="force"/> to <see cref="true"/> to forcefully delete all </para>
 		/// </summary>
 		public void ManageDatedATLogs(bool force = false)
 		{

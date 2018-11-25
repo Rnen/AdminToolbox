@@ -11,7 +11,8 @@ using System.Linq;
 namespace AdminToolbox.API
 {
 	/// <summary>
-	/// <see cref ="PlayerSettings"/> contains all <see cref="Smod2.API.Player"/> <see cref ="AdminToolbox"/> settings
+	/// <see cref ="PlayerSettings"/> is <see cref ="AdminToolbox"/>'s settings <see cref="Class"/>
+	/// <para>Used in <see cref="AdminToolbox.ATPlayerDict"/></para>
 	/// </summary>
 	public class PlayerSettings
 	{
@@ -60,8 +61,8 @@ namespace AdminToolbox.API
 			prevAmmo5 = 0,
 			prevAmmo7 = 0,
 			prevAmmo9 = 0;
-		public Vector DeathPos = Vector.Zero,
-			originalPos = Vector.Zero;
+		public Vector DeathPos = Vector.Zero;
+		internal Vector originalPos = Vector.Zero;
 		internal Role previousRole = Role.CLASSD;
 		internal List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
 		public DateTime JailedToTime { get; internal set; } = DateTime.Now;
