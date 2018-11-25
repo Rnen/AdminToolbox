@@ -5,7 +5,7 @@ using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	public class ATBanCommand : ICommandHandler
+	class ATBanCommand : ICommandHandler
 	{
 		private Plugin plugin;
 

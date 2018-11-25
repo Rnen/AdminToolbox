@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox
 {
+	/// <summary>
+	/// The <see cref="AdminToolbox"/> <see cref="Plugin"/>!
+	/// </summary>
 	[PluginDetails(
 		author = "Evan (AKA Rnen)",
 		name = "Admin Toolbox",
@@ -22,6 +25,9 @@ namespace AdminToolbox
 		)]
 	public class AdminToolbox : Plugin
 	{
+		/// <summary>
+		/// <see cref="AdminToolbox"/> version
+		/// </summary>
 		public const string ATversion = "1.3.7";
 
 		/// <summary>
@@ -59,32 +65,27 @@ namespace AdminToolbox
 		/// </summary>
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
 
-		public static Vector JailPos = (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
+		internal static Vector JailPos => (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
 
+		/// <summary>
+		/// <see cref="AdminToolbox"/> round count
+		/// </summary>
 		public static int RoundCount { get; internal set; } = 1;
 		internal static string _roundStartTime;
-
+		
 		internal static AdminToolbox plugin;
 
 		public override void OnDisable()
-		{
-			if (isColored)
-				this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Red;Disabled@#fg=Default;");
-			else
-				this.Info(this.Details.name + " v." + this.Details.version + " - Disabled");
-		}
+			=> this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
 
 		public override void OnEnable()
 		{
 			plugin = this;
 			Managers.ATFileManager.WriteVersionToFile();
 			//CheckCurrVersion(this, this.Details.version);
-			if (isColored)
-				this.Info(this.Details.name + " v." + this.Details.version + " - @#fg=Green;Enabled@#fg=Default;");
-			else
-				this.Info(this.Details.name + " v." + this.Details.version + " - Enabled");
+			this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 			_roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
+			AdminToolbox.warpManager.RefreshWarps();
 			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, Managers.LogManager.ServerLogType.Misc);
 		}
 

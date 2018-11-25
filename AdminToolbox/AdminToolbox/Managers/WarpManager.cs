@@ -51,6 +51,19 @@ namespace AdminToolbox.Managers
 				File.Create(WarpFilePath);
 		}
 
+		public bool RefreshWarps()
+		{
+			try
+			{
+				AdminToolbox.warpVectors = new Dictionary<string, Vector>(this.ReadWarpsFromFile());
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		public bool WriteWarpsToFile()
 		{
 			return false;

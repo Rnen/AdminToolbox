@@ -87,7 +87,7 @@
     <Compile Include="Commands\Player\HealCommand.cs" />
     <Compile Include="Commands\Player\GodModeCommand.cs" />
     <Compile Include="Managers\ATFileManager.cs" />
-    <Compile Include="Managers\JailManager.cs" />
+    <Compile Include="API\JailHandler.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Events\MyMiscEvents.cs" />
     <Compile Include="Commands\Player\TeleportCommand.cs" />

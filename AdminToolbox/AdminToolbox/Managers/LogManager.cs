@@ -42,6 +42,9 @@ namespace AdminToolbox.Managers
 		private static string
 			AdminToolboxLogs = ATFileManager.AdminToolboxLogs;
 
+		/// <summary>
+		/// Returns <see cref="string"/> path of <see cref="AdminToolbox"/> location
+		/// </summary>
 		public string GetFolderLocation()
 		{
 			return AdminToolboxFolder;

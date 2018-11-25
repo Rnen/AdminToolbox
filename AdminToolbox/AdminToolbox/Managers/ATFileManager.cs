@@ -123,12 +123,12 @@ namespace AdminToolbox.Managers
 		}
 	}
 	/// <summary>
-	/// Functions for modifying <see cref="API.PlayerSettings"/> on <see cref="Player"/>s
+	/// Functions for modifying <see cref="Managers.PlayerSettings"/> on <see cref="Player"/>s
 	/// </summary>
 	public static class SetPlayerVariables
 	{
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools
+		/// For setting <see cref="Managers.PlayerSettings"/> bools
 		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
@@ -144,7 +144,7 @@ namespace AdminToolbox.Managers
 			return true;
 		}
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> stats
+		/// For setting <see cref="Managers.PlayerSettings"/> stats
 		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)

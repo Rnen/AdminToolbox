@@ -12,15 +12,10 @@ namespace AdminToolbox.Command
 		const int LeftPadding = 3;
 		Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription()
-		{
-			return "Gets toolbox info about spesific player";
-		}
+		public string GetCommandDescription() => "Gets toolbox info about spesific player";
 
-		public string GetUsage()
-		{
-			return "(P / PLAYER) [PLAYERNAME/ID/STEAMID]";
-		}
+		public string GetUsage() => "(P / PLAYER) [PLAYERNAME/ID/STEAMID]";
+
 		private static string StringToMax(string text, int max = 32)
 		{
 			while (text.Length < max)

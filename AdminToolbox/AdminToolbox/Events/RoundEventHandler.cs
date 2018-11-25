@@ -32,7 +32,7 @@ namespace AdminToolbox
 			AdminToolbox.AddMissingPlayerVariables();
 			AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			AdminToolbox.warpVectors = new Dictionary<string, Vector>(AdminToolbox.warpManager.ReadWarpsFromFile());
+			AdminToolbox.warpManager.RefreshWarps();
 
 
 

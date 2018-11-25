@@ -8,19 +8,17 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdminToolbox.Managers
+namespace AdminToolbox.API
 {
 	/// <summary>
 	/// Contains all Jail-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
-	public class JailManager
+	public class JailHandler
 	{
-		static Vector JailPos => AdminToolbox.JailPos;
-
-		public JailManager()
-		{
-			
-		}
+		/// <summary>
+		/// <see cref ="AdminToolbox"/> jail <see cref="Vector"/> position
+		/// </summary>
+		public static Vector JailPos => AdminToolbox.JailPos;
 
 		/// <summary>
 		/// Returns <see cref ="List{Player}"/> of jailed <see cref="Player"/>s

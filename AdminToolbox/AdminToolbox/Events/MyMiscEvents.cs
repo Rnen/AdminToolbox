@@ -95,7 +95,7 @@ namespace AdminToolbox
 					ev.Player.OverwatchMode = true;
 				else if (pSettings.isJailed)
 				{
-					Managers.JailManager.SendToJail(ev.Player,pSettings.JailedToTime);
+					API.JailHandler.SendToJail(ev.Player,pSettings.JailedToTime);
 				}
 			}
 		}
@@ -166,7 +166,7 @@ namespace AdminToolbox
 		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(2);
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (fiveSecTimer <= DateTime.Now) { Managers.JailManager.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
+			if (fiveSecTimer <= DateTime.Now) { API.JailHandler.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
 			if (threeMinTimer <= DateTime.Now) { AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
 			if (fiveMinTimer <= DateTime.Now)
 			{

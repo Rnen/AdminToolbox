@@ -48,7 +48,7 @@ namespace AdminToolbox.Command
 			}
 			int pCount = Server.GetPlayers().Count;
 			string pJail = string.Empty;
-			foreach (Player pl in Managers.JailManager.GetJailedPlayers())
+			foreach (Player pl in API.JailHandler.GetJailedPlayers())
 				pJail += pl.Name + ", ";
 			if (string.IsNullOrEmpty(pJail))
 				pJail = "No jailed players!";

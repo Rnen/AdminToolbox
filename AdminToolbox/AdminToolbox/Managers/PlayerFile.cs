@@ -3,7 +3,7 @@
 	public partial class ATFileManager
 	{
 		/// <summary>
-		/// <see cref="PlayerFile"/> <see cref="enum"/> for <see cref="ATFileManager.PlayerStatsFileManager()"/>
+		/// <see cref="PlayerFile"/> <see cref="System.Enum"/> for <see cref="ATFileManager.PlayerStatsFileManager"/>
 		/// </summary>
 		public enum PlayerFile
 		{
