@@ -28,7 +28,7 @@ namespace AdminToolbox
 		/// <summary>
 		/// <see cref="AdminToolbox"/> version
 		/// </summary>
-		public const string ATversion = "1.3.7";
+		internal const string ATversion = "1.3.7";
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
@@ -56,7 +56,7 @@ namespace AdminToolbox
 			intercomLock = false;
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminT"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
 		/// </summary>
 		public static Dictionary<string, API.PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, API.PlayerSettings>();
 		
@@ -65,7 +65,7 @@ namespace AdminToolbox
 		/// </summary>
 		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
 
-		internal static Vector JailPos => (warpVectors.ContainsKey("jail")) ? warpVectors["jail"] : new Vector(53, 1020, -44);
+		internal static Vector JailPos => warpVectors["jail"] ?? new Vector(53, 1020, -44);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
@@ -128,6 +128,8 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
 			this.AddCommands(new string[] { "speak" }, new Command.SpeakCommand());
 			this.AddCommands(new string[] { "ghost", "ghostmode", "ghostm", "invisible", "gh" }, new Command.GhostCommand(this));
+			this.AddCommands(new string[] { "athelp", "atbhelp", "at-help", "admintoolboxhelp", "admintoolbox-help" }, new Command.AT_HelpCommand());
+			this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new Command.ATCommand(this));
 
 			#endregion
 			#region Config Registering Config Entries
@@ -176,11 +178,16 @@ namespace AdminToolbox
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
 			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
 		}
+		internal static void AddMissingPlayerVariables(Player player)
+		{
+			AddMissingPlayerVariables(new List<Player>() { player });
+		}
 		internal static void AddMissingPlayerVariables(List<Player> players)
 		{
 			if (players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
 			if (players.Count > 0)
-				players.ForEach(p => { if(p != null) AddToPlayerDict(p); });
+				foreach(Player player in players.Where(p => p != null && !string.IsNullOrEmpty(p.SteamId)))
+						AddToPlayerDict(player);
 		}
 		private static void AddToPlayerDict(Player player)
 		{

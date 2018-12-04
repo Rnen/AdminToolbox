@@ -50,6 +50,9 @@ namespace AdminToolbox.Managers
 			return AdminToolboxFolder;
 		}
 
+		/// <summary>
+		/// Enum used by <see cref="WriteToLog(string[], ServerLogType)"/>
+		/// </summary>
 		public enum ServerLogType
 		{
 			RemoteAdminActivity,
@@ -70,10 +73,10 @@ namespace AdminToolbox.Managers
 		};
 		private void Awake()
 		{
-			Txt.ToList().ForEach(delegate (string txt)
+			foreach(string txt in Txt.ToList())
 			{
 				_maxlen = Math.Max(_maxlen, txt.Length);
-			});
+			}
 		}
 		void Start()
 		{
@@ -122,7 +125,7 @@ namespace AdminToolbox.Managers
 
 		/// <summary>
 		/// Manages <see cref ="AdminToolbox"/> logfiles. <para>Set <see cref="bool"/> 
-		/// <paramref name="force"/> to <see cref="true"/> to forcefully delete all </para>
+		/// <paramref name="force"/> to true to forcefully delete all </para>
 		/// </summary>
 		public void ManageDatedATLogs(bool force = false)
 		{

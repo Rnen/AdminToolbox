@@ -3,6 +3,9 @@ using Smod2.API;
 
 namespace AdminToolbox.API
 {
+	/// <summary>
+	/// Class containing the <see cref="GetPlayer(string)"/> constructor
+	/// </summary>
 	public class GetPlayerFromString
 	{
 		private static Server Server => PluginManager.Manager.Server;

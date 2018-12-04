@@ -82,7 +82,8 @@ namespace AdminToolbox.Command
 				
 				//Inventory
 				string playerInv = string.Empty;
-				myPlayer.GetInventory().ForEach(i => { if (i.ItemType != ItemType.NULL) playerInv += i.ItemType + ", "; });
+				foreach(Smod2.API.Item i in myPlayer.GetInventory().Where(i => i.ItemType != ItemType.NULL))
+					playerInv += i.ItemType + ", ";
 				if (playerInv == string.Empty) playerInv = "Empty Inventory";
 
 				//Calculating remaining jail time

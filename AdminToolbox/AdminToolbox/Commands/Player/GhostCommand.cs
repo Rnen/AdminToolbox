@@ -73,7 +73,8 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						server.GetPlayers().ForEach(ply => ply.SetGhostMode(!ply.GetGhostMode()));
+						foreach(Player ply in server.GetPlayers())
+							ply.SetGhostMode(!ply.GetGhostMode());
 						return new string[] { "Toggled all players GhostMode!" };
 					}
 				}

@@ -47,10 +47,11 @@ namespace AdminToolbox
 		int[] CalculateTutorialDamage()
 		{
 			List<int> _tutDamageList = new List<int>();
+			string _tutDefaultDmgAllowed = (PluginManager.Manager.Plugins.Where(p => p.Details.id == "cyan.serpents.hand").Count() > 0) ?  "*" : ((int)DamageType.NONE).ToString();
 			string[] _allowedDmgString = 
 				ConfigManager.Manager.Config.GetListValue(
 					"admintoolbox_tutorial_dmg_allowed",
-					new string[] { ((int)DamageType.NONE).ToString() },
+					new string[] { (_tutDefaultDmgAllowed).ToString() },
 					false
 				);
 			string[] _allAliasWords = { "*", "all", "every" };
@@ -77,8 +78,10 @@ namespace AdminToolbox
 
 		bool IsFriendlyFire(Player victim, Player attacker)
 		{
+			if (victim == null || attacker == null) return false;
 			if ( (nineTailsTeam.Contains((int)victim.TeamRole.Team) && nineTailsTeam.Contains((int)attacker.TeamRole.Team)) 
-				|| (chaosTeam.Contains((int)victim.TeamRole.Team) && chaosTeam.Contains((int)attacker.TeamRole.Team)) )
+				|| (chaosTeam.Contains((int)victim.TeamRole.Team) && chaosTeam.Contains((int)attacker.TeamRole.Team))
+				|| (victim.TeamRole.Team == Smod2.API.Team.TUTORIAL && attacker.TeamRole.Team == Smod2.API.Team.TUTORIAL) )
 				return true;
 			else
 				return false;
@@ -107,7 +110,8 @@ namespace AdminToolbox
 
 			int[] DebugDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_debug_damagetypes", humanDamageTypes, false);
 
-			string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { "14:14" }, false);
+			string _roleDamagesDefault = (PluginManager.Manager.Plugins.Where(p => p.Details.id == "cyan.serpents.hand").Count() > 0) ? "2:2" : "14:14";
+			string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { _roleDamagesDefault }, false);
 
 
 			if (ev.DamageType != DamageType.FRAG && AdminToolbox.ATPlayerDict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.ATPlayerDict[ev.Attacker.SteamId].instantKill)

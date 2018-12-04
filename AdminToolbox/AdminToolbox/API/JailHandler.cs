@@ -42,14 +42,14 @@ namespace AdminToolbox.API
 		internal static void CheckJailedPlayers()
 		{
 			if (GetJailedPlayers().Count > 0)
-				GetJailedPlayers().ForEach(pl =>
+				foreach(Player pl in GetJailedPlayers())
 				{
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
 					{
 						if (!AdminToolbox.ATPlayerDict[pl.SteamId].IsInsideJail) SendToJail(pl);
 						else if (AdminToolbox.ATPlayerDict[pl.SteamId].JailedToTime <= DateTime.Now) ReturnFromJail(pl);
 					}
-				});
+				}
 		}
 
 		/// <summary>

@@ -38,11 +38,6 @@ namespace AdminToolbox.Managers
 
 		private const char splitChar = ';';
 
-		public WarpManager()
-		{
-
-		}
-
 		void CheckAndCreateFolders()
 		{
 			if (!Directory.Exists(WarpPointsFolder))
@@ -51,6 +46,9 @@ namespace AdminToolbox.Managers
 				File.Create(WarpFilePath);
 		}
 
+		/// <summary>
+		/// Refreshing the <see cref="AdminToolbox.warpVectors"/> from <see cref="File"/>
+		/// </summary>
 		public bool RefreshWarps()
 		{
 			try
@@ -64,6 +62,9 @@ namespace AdminToolbox.Managers
 			}
 		}
 
+		/// <summary>
+		/// Wrtiting the <see cref="presetWarps"/> dict to <see cref="File"/>
+		/// </summary>
 		public bool WriteWarpsToFile()
 		{
 			return false;

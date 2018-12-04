@@ -16,22 +16,24 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\Builds\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>..\Builds\AdminToolbox.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Builds\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\Builds\AdminToolbox.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -58,6 +60,7 @@
   <ItemGroup>
     <Compile Include="API\GetPlayerFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
+    <Compile Include="API\PlayerDictCleanup.cs" />
     <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
@@ -73,6 +76,8 @@
     <Compile Include="Commands\Facility\JailCommand.cs" />
     <Compile Include="Commands\Player\EmptyCommand.cs" />
     <Compile Include="Commands\Facility\SpeakCommand.cs" />
+    <Compile Include="Commands\Server\AT_HelpCommand.cs" />
+    <Compile Include="Commands\Server\ATCommand.cs" />
     <Compile Include="Commands\Server\ServerCommand.cs" />
     <Compile Include="Commands\Server\RoundLockCommand.cs" />
     <Compile Include="Commands\Facility\WarpsCommand.cs" />

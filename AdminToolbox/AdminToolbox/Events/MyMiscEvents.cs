@@ -171,19 +171,7 @@ namespace AdminToolbox
 			if (fiveMinTimer <= DateTime.Now)
 			{
 				fiveMinTimer = DateTime.Now.AddMinutes(DictCleanupInterval);
-				List<string> playerSteamIds = new List<string>(), keysToRemove = new List<string>();
-
-				List<string> steamIDs = PluginManager.Manager.Server.GetPlayers().Select(p => p.SteamId).ToList();
-
-				if (PluginManager.Manager.Server.GetPlayers().Count > 0)
-					PluginManager.Manager.Server.GetPlayers().ForEach(p => { if (!string.IsNullOrEmpty(p.SteamId)) playerSteamIds.Add(p.SteamId); });
-				if (AdminToolbox.ATPlayerDict.Count > 0 && playerSteamIds.Count > 0)
-					foreach (KeyValuePair<string, API.PlayerSettings> kp in AdminToolbox.ATPlayerDict)
-						if (!playerSteamIds.Contains(kp.Key) && !kp.Value.keepSettings)
-							keysToRemove.Add(kp.Key);
-				if (keysToRemove.Count > 0)
-					foreach (string key in keysToRemove)
-						AdminToolbox.ATPlayerDict.Remove(key);
+				API.PlayerDictCleanup.Clean();
 			}
 		}
 
