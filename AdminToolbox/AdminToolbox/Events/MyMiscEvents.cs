@@ -14,9 +14,9 @@ namespace AdminToolbox
 {
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, IEventHandlerHandcuffed, IEventHandlerBan
 	{
-		private Plugin plugin;
+		private readonly AdminToolbox plugin;
 
-		public MyMiscEvents(Plugin plugin)
+		public MyMiscEvents(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
 		}
@@ -100,6 +100,8 @@ namespace AdminToolbox
 			}
 		}
 
+		int checkNewVersion = 8;
+
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
 			if (AdminToolbox.isStarting) AdminToolbox.isStarting = false;
@@ -108,6 +110,14 @@ namespace AdminToolbox
 			if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_colors", false);
 			if (!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLock = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_intercomlock", false);
 			//this.plugin.Info(System.Reflection.Assembly.GetExecutingAssembly().Location);
+			if (checkNewVersion >= 8)
+			{
+				checkNewVersion = 0;
+				if (this.plugin.NewerVersionAvailable())
+					plugin.Info("\n\n [New Version of AdminToolbox avaiable for download!] [V:" + this.plugin.GetGitReleaseInfo().Version + "]\n " + " Either update via \"AT_AutoUpdate.bat\" or write \"AT DOWNLOAD\"" + "\n\n");
+			}
+			else
+				checkNewVersion++;
 		}
 
 		public void OnAdminQuery(AdminQueryEvent ev)

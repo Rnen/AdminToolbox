@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AdminToolbox")]
 [assembly: AssemblyDescription("Advanced Admin tools")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Tam's Pizzaria")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AdminToolbox")]
 [assembly: AssemblyCopyright("Copyright Rnen ©  2018 (CC BY)")]
 [assembly: AssemblyTrademark("")]

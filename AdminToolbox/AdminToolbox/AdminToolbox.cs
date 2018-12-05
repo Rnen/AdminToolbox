@@ -30,6 +30,21 @@ namespace AdminToolbox
 		/// </summary>
 		internal const string ATversion = "1.3.7";
 
+		#region GitHub release info
+		DateTime LastOnlineCheck = DateTime.Now;
+		private API.ATWeb.AT_LatestReleaseInfo LatestReleaseInfo;
+
+		internal API.ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
+		{
+			if (LastOnlineCheck.AddMinutes(2) < DateTime.Now || LatestReleaseInfo == null)
+			{
+				LatestReleaseInfo = API.ATWeb.GetOnlineInfo(this);
+				LastOnlineCheck = DateTime.Now;
+			}
+			return LatestReleaseInfo;
+		}
+		#endregion
+
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
 		/// </summary>
@@ -82,7 +97,6 @@ namespace AdminToolbox
 		{
 			plugin = this;
 			Managers.ATFileManager.WriteVersionToFile();
-			//CheckCurrVersion(this, this.Details.version);
 			this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 			_roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 			AdminToolbox.warpManager.RefreshWarps();
@@ -197,27 +211,19 @@ namespace AdminToolbox
 			}
 		}
 
-		internal static void CheckCurrVersion()
+		internal bool NewerVersionAvailable()
 		{
-			//Un-used code
-			try
-			{
-				string host = "http://raw.githubusercontent.com/Rnen/AdminToolbox/master/version.md";
-				if (!int.TryParse(AdminToolbox.plugin.Details.version.Replace(".", string.Empty), out int currentVersion))
-					plugin.Info("Coult not get Int16 from currentVersion");
-				if (int.TryParse(new System.Net.WebClient().DownloadString(host).Replace(".", string.Empty).Replace("at_version=", string.Empty), out int onlineVersion))
-				{
-					if (onlineVersion > currentVersion)
-						plugin.Info("Your version is out of date, please run the \"AT_AutoUpdate.bat\" or visit the AdminToolbox GitHub");
-				}
-				else
-					plugin.Info("Could not get Int16 from onlineVersion");
+			#if DEBUG
+			return false;
+			#endif
+			string thisVersion = this.Details.version.Replace(".", string.Empty);
+			string onlineVersion = this.GetGitReleaseInfo().Version.Replace(".", string.Empty);
 
-			}
-			catch (System.Exception e)
-			{
-				plugin.Error("Could not fetch latest version: " + e.Message);
-			}
+			if (int.TryParse(thisVersion, out int thisV)
+				&& int.TryParse(onlineVersion, out int onlineV)
+				&& onlineV > thisV)
+				return true;
+			else return false;
 		}
 	}
 }

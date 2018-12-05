@@ -20,7 +20,7 @@ namespace AdminToolbox.Command
 				try
 				{
 					System.Diagnostics.Process.Start("https://github.com/Rnen/AdminToolbox");
-					return new string[] { "Opening browser..." };
+					return new string[] { "Opening GitHub page..." };
 				}
 				catch { return new string[] { "Could not open browser!" }; }
 			}
