@@ -36,7 +36,7 @@ namespace AdminToolbox.Command
 						return CommandManager.CallCommand(sender, "athelp", new string[] { });
 					case "INFO":
 					case "I":
-						return new string[] { "[AdminToolbox Info]", "Your Local Version: " + plugin.Details.version, "Latest Release Version: " + plugin.GetGitReleaseInfo().Version };
+						return new string[] { "[AdminToolbox Info]", "Your Local Version: " + plugin.Details.version, "Latest GitHub Version: " + plugin.GetGitReleaseInfo().Version };
 					case "DOWNLOAD":
 					case "DL":
 						try

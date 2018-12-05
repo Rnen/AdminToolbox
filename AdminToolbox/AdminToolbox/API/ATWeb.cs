@@ -39,7 +39,7 @@ namespace AdminToolbox.API
 		{
 			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			string rawResponse = string.Empty;
-			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest?access_token=4c554e57a208e94804f924af1bbe74d426b9c286";
+			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest?authorization_request=4c554e57a208e94804f924af1bbe74d426b9c286";
 			string _title = "", _version = "", _author = "", _dllink ="";
 		
 			try
