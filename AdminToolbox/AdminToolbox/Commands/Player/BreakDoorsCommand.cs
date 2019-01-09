@@ -67,6 +67,8 @@ namespace AdminToolbox.Command
 					return new string[] { str };
 				}
 				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+				if (myPlayer == null && sender is Player sendingPlayer)
+					myPlayer = sendingPlayer;
 				if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 				if (args.Length > 1)
 				{

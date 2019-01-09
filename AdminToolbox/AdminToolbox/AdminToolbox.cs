@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using AdminToolbox.Managers;
+using AdminToolbox.API;
 
 namespace AdminToolbox
 {
@@ -18,17 +20,13 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = ATversion,
+		version = "1.3.7-1",
 		SmodMajor = 3,
 		SmodMinor = 1,
 		SmodRevision = 22
 		)]
 	public class AdminToolbox : Plugin
 	{
-		/// <summary>
-		/// <see cref="AdminToolbox"/> version
-		/// </summary>
-		internal const string ATversion = "1.3.7";
 
 		#region GitHub release info
 		DateTime LastOnlineCheck = DateTime.Now;
@@ -36,7 +34,7 @@ namespace AdminToolbox
 
 		internal API.ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
 		{
-			if (LastOnlineCheck.AddMinutes(2) < DateTime.Now || LatestReleaseInfo == null)
+			if (LastOnlineCheck.AddMinutes(5) < DateTime.Now || LatestReleaseInfo == null)
 			{
 				LatestReleaseInfo = API.ATWeb.GetOnlineInfo(this);
 				LastOnlineCheck = DateTime.Now;
@@ -78,14 +76,14 @@ namespace AdminToolbox
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
-		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
+		public static Dictionary<string, WarpPoint> warpVectors = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
 
-		internal static Vector JailPos => warpVectors["jail"] ?? new Vector(53, 1020, -44);
+		internal static Vector JailPos => warpVectors?["jail"]?.Vector ?? new Vector(53, 1020, -44);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
 		/// </summary>
-		public static int RoundCount { get; internal set; } = 1;
+		public static int RoundCount { get; internal set; } = 0;
 		internal static string _roundStartTime;
 		
 		internal static AdminToolbox plugin;
@@ -136,7 +134,7 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand());
 			this.AddCommands(new string[] { "j", "jail" }, new Command.JailCommand());
 			this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
-			this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand());
+			this.AddCommands(new string[] { "s", "si", "server", "serverinfo" }, new Command.ServerCommand());
 			this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
 			this.AddCommands(new string[] { "atban","offlineban","oban" }, new Command.ATBanCommand(this));
 			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
@@ -213,10 +211,7 @@ namespace AdminToolbox
 
 		internal bool NewerVersionAvailable()
 		{
-			#if DEBUG
-			return false;
-			#endif
-			string thisVersion = this.Details.version.Replace(".", string.Empty);
+			string thisVersion = this.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
 			string onlineVersion = this.GetGitReleaseInfo().Version.Replace(".", string.Empty);
 
 			if (int.TryParse(thisVersion, out int thisV)

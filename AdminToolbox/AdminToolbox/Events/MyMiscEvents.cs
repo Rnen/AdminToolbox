@@ -12,14 +12,15 @@ using Unity;
 
 namespace AdminToolbox
 {
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, IEventHandlerHandcuffed, IEventHandlerBan
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
+		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, 
+		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, 
+		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole
 	{
 		private readonly AdminToolbox plugin;
 
-		public MyMiscEvents(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
+		public MyMiscEvents(AdminToolbox plugin) => this.plugin = plugin;
+
 		public void OnIntercom(PlayerIntercomEvent ev)
 		{
 			if (AdminToolbox.intercomLock) ev.SpeechTime = 0f;
@@ -83,19 +84,46 @@ namespace AdminToolbox
 			}
 		}
 
+		public void OnSetRole(PlayerSetRoleEvent ev)
+		{
+			//if (ev.Player.TeamRole.Role == Role.TUTORIAL)
+			//{
+			//	Vector ppos = ev.Player.GetPosition();
+			//	if (Physics.Raycast(new Vector3(ppos.x + 3, ppos.y - 3, ppos.z), Vector3.down, out RaycastHit hitInfo))
+			//	{
+			//		plugin.Info(string.Format("X: {0}, Y: {1}, Z: {2}", hitInfo.transform.position.x, hitInfo.transform.position.y, hitInfo.transform.position.z));
+			//		if (hitInfo.collider.gameObject.name.ToLower() == "classname=brush.003")
+			//		{
+			//			Vector3 hitPos = hitInfo.transform.position;
+
+			//			Vector newPos = new ServerMod2.API.SmodVector(hitPos.x, hitPos.y + 10, hitPos.z);
+
+			//			ev.Player.Teleport(newPos);
+			//		}
+			//		else
+			//			plugin.Info(hitInfo.collider.gameObject.name);
+			//	}
+			//	else
+			//		plugin.Info("No hit!");
+			//}
+		}
+
 		public void OnSpawn(PlayerSpawnEvent ev)
 		{
 			if(ev.Player != null && ev.Player is Player)
-				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+				AdminToolbox.AddMissingPlayerVariables(ev.Player);
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
 			{
 				API.PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
-				pSettings.DeathPos = ev.SpawnPos;
 				if (pSettings.overwatchMode)
-					ev.Player.OverwatchMode = true;
-				else if (pSettings.isJailed)
 				{
-					API.JailHandler.SendToJail(ev.Player,pSettings.JailedToTime);
+					pSettings.DeathPos = ev.SpawnPos;
+					ev.Player.OverwatchMode = true;
+				}
+				else if (ev.Player.TeamRole.Role != Role.TUTORIAL
+					&& pSettings.isJailed && !pSettings.IsInsideJail)
+				{
+					API.JailHandler.SendToJail(ev.Player, pSettings.JailedToTime);
 				}
 			}
 		}
@@ -118,6 +146,9 @@ namespace AdminToolbox
 			}
 			else
 				checkNewVersion++;
+
+			if (AdminToolbox.RoundCount == 0)
+				AdminToolbox.warpManager.RefreshWarps();
 		}
 
 		public void OnAdminQuery(AdminQueryEvent ev)
@@ -176,8 +207,8 @@ namespace AdminToolbox
 		DateTime fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(2);
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (fiveSecTimer <= DateTime.Now) { API.JailHandler.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
-			if (threeMinTimer <= DateTime.Now) { AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
+			if (plugin.Server.Round.Duration > 0 && fiveSecTimer <= DateTime.Now) { API.JailHandler.CheckJailedPlayers(); fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval); }
+			if (threeMinTimer <= DateTime.Now) { AdminToolbox.atfileManager.PlayerStatsFileManager(plugin.Server.GetPlayers(), Managers.ATFileManager.PlayerFile.Write); threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval); }
 			if (fiveMinTimer <= DateTime.Now)
 			{
 				fiveMinTimer = DateTime.Now.AddMinutes(DictCleanupInterval);
@@ -211,10 +242,13 @@ namespace AdminToolbox
 		public void OnBan(BanEvent ev)
 		{
 			if (ev.Player != null && ev.Player is Player)
-				AdminToolbox.AddMissingPlayerVariables(new List<Player> { ev.Player });
+				AdminToolbox.AddMissingPlayerVariables(ev.Player);
 
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
+			{
 				AdminToolbox.ATPlayerDict[ev.Player.SteamId].banCount++;
+				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.SteamId);
+			}
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace AdminToolbox.API
 		{
 			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			string rawResponse = string.Empty;
-			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest?authorization_request=4c554e57a208e94804f924af1bbe74d426b9c286";
+			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
 			string _title = "", _version = "", _author = "", _dllink ="";
 		
 			try
@@ -48,28 +48,30 @@ namespace AdminToolbox.API
 				{
 					ww.SendWebRequest();
 					DateTime timer = DateTime.Now.AddSeconds(2);
-					while (!ww.isDone || !ww.downloadHandler.isDone && DateTime.Now > timer) { }
+					while (!ww.isDone || !ww.downloadHandler.isDone && DateTime.Now < timer) { }
 					rawResponse = ww.downloadHandler.text;
-					if (string.IsNullOrEmpty(rawResponse)) throw new Exception();
+					if (string.IsNullOrEmpty(rawResponse))
+						throw new Exception();
 					string FindValue(string key)
 					{
 						plugin.Debug("Searched: " + key);
 						string str = rawResponse.Split(Environment.NewLine.ToCharArray()).Where(s => s.Trim().StartsWith("\"" + key)).FirstOrDefault().Split(new[] { ':' }, 2).Last().Replace("\"", string.Empty).Trim(',').Trim();
 						plugin.Debug("Found: " + str);
+						if (key.ToLower() == "tag_name") return str.Split('-').FirstOrDefault();
 						return str;
 					}
 					_title = FindValue("name");
 					_version = FindValue("tag_name");
 					_author = FindValue("login");
-					_dllink = FindValue("browser_download_url");
-					
-					//_version = rawResponse.Split(Environment.NewLine.ToCharArray()).Where(s => s.Trim().StartsWith()).Split(':')[1].Replace("\"", string.Empty).Trim(',').Trim();
-					if (string.IsNullOrEmpty(_version)) throw new Exception();
+					_dllink = FindValue("html_url"); //FindValue("browser_download_url");
+					if (string.IsNullOrEmpty(_version))
+						throw new Exception();
 				}
 			}
 			catch
 			{
 				plugin.Info(" \n\n - Downloading online version failed, skipping..." + "\n \n");
+				return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			}
 			return new AT_LatestReleaseInfo(_title,_version,_author,_dllink);
 		}

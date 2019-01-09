@@ -26,30 +26,29 @@ namespace AdminToolbox.API
 			lockDown = false,
 			instantKill = false,
 			isJailed = false;
+
 		/// <summary>
 		/// Checks to see if <see cref ="Player"/> is currently inside radius of <see cref="Vector"/> <see cref ="AdminToolbox.JailPos"/>
 		/// </summary>
-		public bool IsInsideJail
+		public bool IsInsideJail => GetIsInsideJail();
+		private bool GetIsInsideJail()
 		{
-			get
-			{
-				if (string.IsNullOrEmpty(this.SteamID))
-					foreach (Player ply in AdminToolbox.plugin.Server.GetPlayers())
-						if (AdminToolbox.ATPlayerDict.ContainsKey(ply.SteamId))
-							AdminToolbox.ATPlayerDict[ply.SteamId].SteamID = ply.SteamId;
-				Player player = AdminToolbox.plugin.Server.GetPlayers().Where(p => p.SteamId == SteamID).FirstOrDefault();
-				if (player == null) return false;
-				Vector jail = AdminToolbox.JailPos,
-					pPos = player.GetPosition();
-				float x = Math.Abs(pPos.x - jail.x),
-					y = Math.Abs(pPos.y - jail.y),
-					z = Math.Abs(pPos.z - jail.z);
-				if (x > 7 || y > 5 || z > 7)
-					return false;
-				else
-					return true;
-			}
+			if (string.IsNullOrEmpty(this.SteamID))
+				foreach (KeyValuePair<string, PlayerSettings> kp in AdminToolbox.ATPlayerDict)
+					if (string.IsNullOrEmpty(kp.Value.SteamID)) kp.Value.SteamID = kp.Key;
+			Player player = AdminToolbox.plugin?.Server.GetPlayers(this.SteamID).FirstOrDefault();
+			if (player == null || player.SteamId != this.SteamID) return false;
+			Vector jail = AdminToolbox.JailPos,
+				pPos = player.GetPosition();
+			float x = Math.Abs(pPos.x - jail.x),
+				y = Math.Abs(pPos.y - jail.y),
+				z = Math.Abs(pPos.z - jail.z);
+			if (x > 7 || y > 5 || z > 7)
+				return false;
+			else
+				return true;
 		}
+
 		public int
 			Kills = 0,
 			TeamKills = 0,
@@ -69,9 +68,34 @@ namespace AdminToolbox.API
 		public DateTime JoinTime { get; internal set; } = DateTime.Now;
 		public double MinutesPlayed { get; internal set; } = 1;
 
-		public PlayerSettings(string steamID)
+		public PlayerSettings(string steamID) => this.SteamID = steamID;
+		public PlayerSettings(PlayerSettings playerSettings)
 		{
-			this.SteamID = steamID;
+			this.SteamID = playerSettings.SteamID;
+			this.banCount = playerSettings.banCount;
+			this.DeathPos = playerSettings.DeathPos;
+			this.Deaths = playerSettings.Deaths;
+			this.destroyDoor = playerSettings.destroyDoor;
+			this.dmgOff = playerSettings.dmgOff;
+			this.godMode = playerSettings.godMode;
+			this.instantKill = playerSettings.instantKill;
+			this.isJailed = playerSettings.isJailed;
+			this.JailedToTime = playerSettings.JailedToTime;
+			this.JoinTime = playerSettings.JoinTime;
+			this.keepSettings = playerSettings.keepSettings;
+			this.Kills = playerSettings.Kills;
+			this.lockDown = playerSettings.lockDown;
+			this.MinutesPlayed = playerSettings.MinutesPlayed;
+			this.originalPos = playerSettings.originalPos;
+			this.overwatchMode = playerSettings.overwatchMode;
+			this.playerPrevInv = playerSettings.playerPrevInv;
+			this.prevAmmo5 = playerSettings.prevAmmo5;
+			this.prevAmmo7 = playerSettings.prevAmmo7;
+			this.prevAmmo9 = playerSettings.prevAmmo9;
+			this.previousHealth = playerSettings.previousHealth;
+			this.previousRole = playerSettings.previousRole;
+			this.RoundsPlayed = playerSettings.RoundsPlayed;
+			this.TeamKills = playerSettings.TeamKills;
 		}
 	}
 }

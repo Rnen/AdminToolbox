@@ -15,26 +15,17 @@ namespace AdminToolbox.Command
 	{
 		public string GetCommandDescription()
 		{
-			return "";
+			return "Returns a list of warps";
 		}
 
 		public string GetUsage()
 		{
-			return "WARP [PlayerName] [WarpPointName]" + "\n" + "WARP LIST" + "\n" + "WARP [ADD/+] [PlayerName] [YourWarpPointName]" + "\n" + "WARP [REMOVE/-] [YourWarpPointName]";
+			return "WARPS";
 		}
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			AdminToolbox.AddMissingPlayerVariables();
-			Server server = PluginManager.Manager.Server;
-
-			if (AdminToolbox.warpVectors.Count < 1) { return new string[] { "No warp points created yet!" }; }
-			string str = "\n" + "Warp Points:";
-			List<string> list = AdminToolbox.warpVectors.Keys.ToList();
-			list.Sort();
-			foreach (string i in list)
-				str += "\n - " + i;
-			return new string[] { str };
+			return PluginManager.Manager.CommandManager.CallCommand(sender, "warp", new string[] { "list" });
 		}
 	}
 }

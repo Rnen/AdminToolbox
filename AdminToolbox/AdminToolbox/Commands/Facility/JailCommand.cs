@@ -27,8 +27,8 @@ namespace AdminToolbox.Command
 			{
 				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
 				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				AdminToolbox.AddMissingPlayerVariables(new List<Player> { myPlayer });
-				if (args.Length == 2)
+				AdminToolbox.AddMissingPlayerVariables(myPlayer);
+				if (args.Length > 1)
 				{
 					if (Int32.TryParse(args[1], out int x))
 					{
@@ -48,7 +48,8 @@ namespace AdminToolbox.Command
 				}
 				else if (args.Length == 1)
 				{
-					if (AdminToolbox.ATPlayerDict[myPlayer.SteamId].IsInsideJail || AdminToolbox.ATPlayerDict[myPlayer.SteamId].isJailed)
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
+					if (AdminToolbox.ATPlayerDict[myPlayer.SteamId].isJailed)
 					{
 						API.JailHandler.ReturnFromJail(myPlayer);
 						return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
@@ -56,7 +57,6 @@ namespace AdminToolbox.Command
 					else
 					{
 						API.JailHandler.SendToJail(myPlayer);
-						AdminToolbox.ATPlayerDict[myPlayer.SteamId].JailedToTime = DateTime.Now.AddYears(1);
 						return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
 					}
 				}

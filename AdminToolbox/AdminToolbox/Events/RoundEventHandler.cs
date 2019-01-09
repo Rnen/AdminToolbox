@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using UnityEngine;
+using System.Linq;
 
 namespace AdminToolbox
 {
@@ -26,11 +27,11 @@ namespace AdminToolbox
 			AdminToolbox.isRoundFinished = false;
 			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
 			{
-				plugin.Info("Round: " + AdminToolbox.RoundCount + " started.");
+				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.GetPlayers().Count);
 			}
 			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write);
+			AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Server.GetPlayers(), Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox._roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 			AdminToolbox.warpManager.RefreshWarps();
 
@@ -53,15 +54,15 @@ namespace AdminToolbox
 
 		public void OnRoundEnd(RoundEndEvent ev)
 		{
-			bool realRoundEnd()
+			bool realRoundEnd(RoundEndEvent myEvent)
 			{
 				//Temp fix for the OnRoundEnd triggering on RoundStart bug
-				if (ev.Round.Duration >= 3)
+				if (myEvent.Round.Duration >= 3)
 					return true;
 				else
 					return false;
 			}
-			if (realRoundEnd())
+			if (realRoundEnd(ev))
 			{
 				AdminToolbox.isRoundFinished = true;
 				AdminToolbox.lockRound = false;
@@ -80,18 +81,18 @@ namespace AdminToolbox
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
 						AdminToolbox.ATPlayerDict[pl.SteamId].RoundsPlayed++;
 				}
-				AdminToolbox.atfileManager.PlayerStatsFileManager(null, Managers.ATFileManager.PlayerFile.Write);
+				AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToList(), Managers.ATFileManager.PlayerFile.Write);
 			}
 
 		}
 
 		public void OnRoundRestart(RoundRestartEvent ev)
 		{
+			List<string> keysToChange = AdminToolbox.ATPlayerDict.Where(kp => !kp.Value.keepSettings).Select(p => p.Key).ToList() ?? new List<string>();
 			AdminToolbox.lockRound = false;
-			AdminToolbox.RoundCount++;
-			if (AdminToolbox.ATPlayerDict.Count > 0)
-				foreach (KeyValuePair<string, API.PlayerSettings> item in AdminToolbox.ATPlayerDict)
-					if (!item.Value.keepSettings && !item.Value.isJailed) Managers.SetPlayerVariables.SetPlayerBools(item.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+			if (keysToChange.Count > 0)
+				foreach(string key in keysToChange)
+					Managers.SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 			//foreach (Player player in ev.Server.GetPlayers())
 			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
 			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;

@@ -56,6 +56,7 @@ namespace AdminToolbox.Managers
 		public enum ServerLogType
 		{
 			RemoteAdminActivity,
+			PlayerDamage,
 			KillLog,
 			TeamKill,
 			Suicice,
@@ -65,6 +66,7 @@ namespace AdminToolbox.Managers
 		private static readonly string[] Txt = new string[]
 		{
 			"Remote Admin",
+			"Player Damage",
 			"Kill",
 			"TeamKill",
 			"Suicide",
@@ -167,6 +169,10 @@ namespace AdminToolbox.Managers
 					break;
 				case LogManager.ServerLogType.RemoteAdminActivity:
 					if (Config.GetBoolValue("admintoolbox_log_commands", false, false))
+						AddLog(str2, logType);
+					break;
+				case LogManager.ServerLogType.PlayerDamage:
+					if (Config.GetBoolValue("admintoolbox_log_damage", false, false))
 						AddLog(str2, logType);
 					break;
 				default:

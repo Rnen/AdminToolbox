@@ -29,7 +29,23 @@ namespace AdminToolbox.Managers
 		/// <summary>
 		/// Read/Writes <see cref ="Player"/> stats to/from <see cref="File"/>
 		/// </summary>
-		public void PlayerStatsFileManager(List<Player> players = null, PlayerFile FileOperation = PlayerFile.Read)
+		public void PlayerStatsFileManager(PlayerFile FileOperation = PlayerFile.Read)
+			=> PlayerStatsFileManager(new List<string>() { }, FileOperation);
+
+		public void PlayerStatsFileManager(string steamID, PlayerFile FileOperation = PlayerFile.Write)
+			=> PlayerStatsFileManager(new List<string>() { steamID }, FileOperation);
+
+		public void PlayerStatsFileManager(Player player, PlayerFile FileOperation = PlayerFile.Write)
+			=> PlayerStatsFileManager(new List<string>() { player.SteamId }, FileOperation);
+
+		public void PlayerStatsFileManager(List<Player> playerList, PlayerFile FileOperation = PlayerFile.Read)
+		{
+			if (playerList != null && playerList.Count > 0)
+				PlayerStatsFileManager(playerList.Select(p => p.SteamId).ToList(), FileOperation);
+			else
+				PlayerStatsFileManager(FileOperation);
+		}
+		public void PlayerStatsFileManager(List<string> steamIdList, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
 			{
@@ -39,64 +55,73 @@ namespace AdminToolbox.Managers
 				if (!Directory.Exists(AdminToolboxPlayerStats))
 					Directory.CreateDirectory(AdminToolboxPlayerStats);
 
-				if (players != null && players.Count > 0)
-					foreach (Player player in players)
-						ReadWriteHandler(player, FileOperation);
+				if (steamIdList != null && steamIdList.Count > 0)
+					foreach (string sid in steamIdList)
+						ReadWriteHandler(sid, FileOperation);
 				else
 					foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-						ReadWriteHandler(player, FileOperation);
+						ReadWriteHandler(player.SteamId, FileOperation);
 
-				void ReadWriteHandler(Player pl, PlayerFile Operation)
+				void ReadWriteHandler(string steamID, PlayerFile Operation)
 				{
-					if (string.IsNullOrEmpty(pl.SteamId) || pl.Name == "Server" || string.IsNullOrEmpty(pl.Name)) return;
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId)) AdminToolbox.AddMissingPlayerVariables(new List<Player> { pl });
+					if (string.IsNullOrEmpty(steamID)) return;
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) { AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID)); return; };
 					switch (Operation)
 					{
 						case PlayerFile.Read:
-							ReadFromFile(pl);
+							ReadFromFile(steamID);
 							break;
 						case PlayerFile.Write:
-							WriteToFile(pl);
+							WriteToFile(steamID);
+							break;
+						default:
+							ReadFromFile(steamID);
 							break;
 					}
 				}
-				void WriteToFile(Player pl)
+				void WriteToFile(string steamID)
 				{
-					string playerFilePath = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID))
+					{
+						if (PluginManager.Manager.Server.GetPlayers(steamID).Count < 1) return;
+						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID).FirstOrDefault());
+					}
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
+					string playerFilePath = (AdminToolbox.ATPlayerDict.ContainsKey(steamID)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + steamID + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
 
-					//AdminToolbox.AdminToolboxPlayerSettings playerSettings = (AdminToolbox.playerdict.ContainsKey(pl.SteamId)) ? AdminToolbox.playerdict[pl.SteamId] : new AdminToolbox.AdminToolboxPlayerSettings();
-					int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].Kills > 0) ? AdminToolbox.ATPlayerDict[pl.SteamId].Kills : 0;
-					int TeamKills = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].TeamKills > 0) ? AdminToolbox.ATPlayerDict[pl.SteamId].TeamKills : 0;
-					int Deaths = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].Deaths > 0) ? AdminToolbox.ATPlayerDict[pl.SteamId].Deaths : 0;
-					double minutesPlayed = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].MinutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.ATPlayerDict[pl.SteamId].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[pl.SteamId].MinutesPlayed : 0;
-					int BanCount = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].banCount > 0) ? AdminToolbox.ATPlayerDict[pl.SteamId].banCount : 0;
-					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId)) AdminToolbox.ATPlayerDict[pl.SteamId].JoinTime = DateTime.Now;
+					API.PlayerSettings setting = (AdminToolbox.ATPlayerDict.ContainsKey(steamID)) ? AdminToolbox.ATPlayerDict[steamID] : new API.PlayerSettings(steamID);
+					int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].Kills > 0) ? AdminToolbox.ATPlayerDict[steamID].Kills : 0;
+					int TeamKills = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].TeamKills > 0) ? AdminToolbox.ATPlayerDict[steamID].TeamKills : 0;
+					int Deaths = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].Deaths > 0) ? AdminToolbox.ATPlayerDict[steamID].Deaths : 0;
+					double minutesPlayed = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].MinutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.ATPlayerDict[steamID].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[steamID].MinutesPlayed : 0;
+					int BanCount = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].banCount > 0) ? AdminToolbox.ATPlayerDict[steamID].banCount : 0;
+					if (AdminToolbox.ATPlayerDict.ContainsKey(steamID)) AdminToolbox.ATPlayerDict[steamID].JoinTime = DateTime.Now;
 					string str = string.Empty + Kills + splitChar + TeamKills + splitChar + Deaths + splitChar + minutesPlayed + splitChar + BanCount;
 					using (StreamWriter streamWriter = new StreamWriter(playerFilePath, false))
 					{
 						streamWriter.Write(str);
 						streamWriter.Close();
 					}
-					ReadFromFile(pl);
+					ReadFromFile(steamID);
 				}
-				void ReadFromFile(Player pl)
+				void ReadFromFile(string steamID)
 				{
-					string playerFilePath = (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + pl.SteamId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
+					string playerFilePath = (AdminToolbox.ATPlayerDict.ContainsKey(steamID)) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + steamID + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
-						PlayerStatsFileManager(new List<Player> { pl }, PlayerFile.Write);
+						PlayerStatsFileManager(new List<string> { steamID }, PlayerFile.Write);
 					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0;0;0" };
 					string[] playerStats = fileStrings.FirstOrDefault().Split(splitChar);
-					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
+					if (AdminToolbox.ATPlayerDict.ContainsKey(steamID))
 					{
-						//AdminToolbox.AdminToolboxPlayerSettings myPlayer = AdminToolbox.playerdict[pl.SteamId];
-						AdminToolbox.ATPlayerDict[pl.SteamId].Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x0) && x0 > AdminToolbox.ATPlayerDict[pl.SteamId].Kills) ? x0 : AdminToolbox.ATPlayerDict[pl.SteamId].Kills;
-						AdminToolbox.ATPlayerDict[pl.SteamId].TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x1) && x1 > AdminToolbox.ATPlayerDict[pl.SteamId].TeamKills) ? x1 : AdminToolbox.ATPlayerDict[pl.SteamId].TeamKills;
-						AdminToolbox.ATPlayerDict[pl.SteamId].Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x2) && x2 > AdminToolbox.ATPlayerDict[pl.SteamId].Deaths) ? x2 : AdminToolbox.ATPlayerDict[pl.SteamId].Deaths;
-						AdminToolbox.ATPlayerDict[pl.SteamId].MinutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[3], out double x3) && x3 > AdminToolbox.ATPlayerDict[pl.SteamId].MinutesPlayed) ? x3 : AdminToolbox.ATPlayerDict[pl.SteamId].MinutesPlayed;
-						AdminToolbox.ATPlayerDict[pl.SteamId].banCount = (playerStats.Length > 4 && int.TryParse(playerStats[4], out int x4) && x4 > AdminToolbox.ATPlayerDict[pl.SteamId].banCount) ? x4 : AdminToolbox.ATPlayerDict[pl.SteamId].banCount;
-						//AdminToolbox.playerdict[pl.SteamId] = myPlayer;
+						API.PlayerSettings setting = AdminToolbox.ATPlayerDict[steamID];
+						setting.Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x0) && x0 > setting.Kills) ? x0 : setting.Kills;
+						setting.TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x1) && x1 > setting.TeamKills) ? x1 : setting.TeamKills;
+						setting.Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x2) && x2 > setting.Deaths) ? x2 : setting.Deaths;
+						setting.MinutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[3], out double x3) && x3 > setting.MinutesPlayed) ? x3 : setting.MinutesPlayed;
+						setting.banCount = (playerStats.Length > 4 && int.TryParse(playerStats[4], out int x4) && x4 > setting.banCount) ? x4 : setting.banCount;
+						AdminToolbox.ATPlayerDict[steamID] = setting;
 					}
 				}
 			}
@@ -123,7 +148,7 @@ namespace AdminToolbox.Managers
 		}
 	}
 	/// <summary>
-	/// Functions for modifying <see cref="API.PlayerSettings"/> on <see cref="Player"/>s
+	/// Class containing methods for modifying <see cref="API.PlayerSettings"/> on <see cref="Player"/>s
 	/// </summary>
 	public static class SetPlayerVariables
 	{
@@ -134,14 +159,28 @@ namespace AdminToolbox.Managers
 		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
-			AdminToolbox.ATPlayerDict[steamID].overwatchMode =  spectatorOnly ?? AdminToolbox.ATPlayerDict[steamID].overwatchMode;
-			AdminToolbox.ATPlayerDict[steamID].godMode = godMode ?? AdminToolbox.ATPlayerDict[steamID].godMode;
-			AdminToolbox.ATPlayerDict[steamID].dmgOff = dmgOff ?? AdminToolbox.ATPlayerDict[steamID].dmgOff;
-			AdminToolbox.ATPlayerDict[steamID].destroyDoor = destroyDoor ?? AdminToolbox.ATPlayerDict[steamID].destroyDoor;
-			AdminToolbox.ATPlayerDict[steamID].lockDown = lockDown ?? AdminToolbox.ATPlayerDict[steamID].lockDown;
-			AdminToolbox.ATPlayerDict[steamID].instantKill = instantKill ?? AdminToolbox.ATPlayerDict[steamID].instantKill;
-			AdminToolbox.ATPlayerDict[steamID].isJailed = isJailed ?? AdminToolbox.ATPlayerDict[steamID].isJailed;
+			API.PlayerSettings setting = AdminToolbox.ATPlayerDict[steamID];
+			setting.overwatchMode =  spectatorOnly ?? setting.overwatchMode;
+			setting.godMode = godMode ?? setting.godMode;
+			setting.dmgOff = dmgOff ?? setting.dmgOff;
+			setting.destroyDoor = destroyDoor ?? setting.destroyDoor;
+			setting.lockDown = lockDown ?? setting.lockDown;
+			setting.instantKill = instantKill ?? setting.instantKill;
+			setting.isJailed = isJailed ?? setting.isJailed;
+			AdminToolbox.ATPlayerDict[steamID] = setting;
 			return true;
+		}
+		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
+		{
+			return SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
+		}
+		public static bool SetPlayerBools(List<Player> players, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
+		{
+			int failiures = 0;
+			foreach (Player player in players)
+				if (!SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed))
+					failiures++;
+			return !(failiures > 0);
 		}
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> stats
@@ -150,11 +189,13 @@ namespace AdminToolbox.Managers
 		public static bool SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
 			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
-			AdminToolbox.ATPlayerDict[steamID].Kills = Kills ?? AdminToolbox.ATPlayerDict[steamID].Kills;
-			AdminToolbox.ATPlayerDict[steamID].TeamKills = TeamKills ?? AdminToolbox.ATPlayerDict[steamID].TeamKills; ;
-			AdminToolbox.ATPlayerDict[steamID].Deaths = Deaths ?? AdminToolbox.ATPlayerDict[steamID].Deaths;
-			AdminToolbox.ATPlayerDict[steamID].RoundsPlayed = RoundsPlayed ?? AdminToolbox.ATPlayerDict[steamID].RoundsPlayed;
-			AdminToolbox.ATPlayerDict[steamID].banCount = BanCount ?? AdminToolbox.ATPlayerDict[steamID].banCount;
+			API.PlayerSettings setting = AdminToolbox.ATPlayerDict[steamID];
+			setting.Kills = Kills ?? setting.Kills;
+			setting.TeamKills = TeamKills ?? setting.TeamKills;
+			setting.Deaths = Deaths ?? setting.Deaths;
+			setting.RoundsPlayed = RoundsPlayed ?? setting.RoundsPlayed;
+			setting.banCount = BanCount ?? setting.banCount;
+			AdminToolbox.ATPlayerDict[steamID] = setting;
 			return true;
 		}
 	}

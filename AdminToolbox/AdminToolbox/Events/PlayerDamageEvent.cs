@@ -11,9 +11,9 @@ namespace AdminToolbox
 	
 	class DamageDetect : IEventHandlerPlayerHurt
 	{
-		private Plugin plugin;
+		private AdminToolbox plugin;
 		static IConfigFile Config => ConfigManager.Manager.Config;
-		public DamageDetect(Plugin plugin)
+		public DamageDetect(AdminToolbox plugin)
 		{
 			this.plugin = plugin;
 		}
@@ -207,7 +207,7 @@ namespace AdminToolbox
 					break;
 			}
 			if (ev.Damage >= ev.Player.GetHealth() && AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId)) AdminToolbox.ATPlayerDict[ev.Player.SteamId].DeathPos = ev.Player.GetPosition();
-
+			AdminToolbox.logManager.AddLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}
 	}
 
