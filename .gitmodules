@@ -1,0 +1,3 @@
+[submodule "lib/.github/Depencies"]
+	path = lib/.github/Depencies
+	url = git://github.com/Grover-c13/Smod2.git
