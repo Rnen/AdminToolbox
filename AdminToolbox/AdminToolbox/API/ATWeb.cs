@@ -34,7 +34,8 @@ namespace AdminToolbox.API
 
 		public static AT_LatestReleaseInfo GetOnlineInfo(AdminToolbox plugin)
 		{
-			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
+			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)
+				|| ConfigManager.Manager.Config.GetBoolValue("admintoolbox_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			string rawResponse = string.Empty;
 			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
 			string _title = "", _version = "", _author = "", _dllink ="";
