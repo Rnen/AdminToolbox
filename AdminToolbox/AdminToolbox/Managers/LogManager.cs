@@ -47,6 +47,8 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public string GetFolderLocation()
 		{
+			if (!Directory.Exists(AdminToolboxFolder))
+				Directory.CreateDirectory(AdminToolboxFolder);
 			return AdminToolboxFolder;
 		}
 
@@ -55,16 +57,20 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public enum ServerLogType
 		{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			RemoteAdminActivity,
+			PlayerDamage,
 			KillLog,
 			TeamKill,
 			Suicice,
 			GameEvent,
 			Misc
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 		private static readonly string[] Txt = new string[]
 		{
 			"Remote Admin",
+			"Player Damage",
 			"Kill",
 			"TeamKill",
 			"Suicide",
@@ -115,7 +121,7 @@ namespace AdminToolbox.Managers
 						text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
 					}
 				}
-				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
+				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._logStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
 				{
 					streamWriter.Write(text);
 					streamWriter.Close();
@@ -167,6 +173,10 @@ namespace AdminToolbox.Managers
 					break;
 				case LogManager.ServerLogType.RemoteAdminActivity:
 					if (Config.GetBoolValue("admintoolbox_log_commands", false, false))
+						AddLog(str2, logType);
+					break;
+				case LogManager.ServerLogType.PlayerDamage:
+					if (Config.GetBoolValue("admintoolbox_log_damage", false, false))
 						AddLog(str2, logType);
 					break;
 				default:

@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using AdminToolbox.Managers;
+using AdminToolbox.API;
 
 namespace AdminToolbox
 {
@@ -18,102 +20,135 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = ATversion,
+		version = "1.3.8-0",
 		SmodMajor = 3,
 		SmodMinor = 1,
 		SmodRevision = 22
 		)]
 	public class AdminToolbox : Plugin
 	{
-		/// <summary>
-		/// <see cref="AdminToolbox"/> version
-		/// </summary>
-		internal const string ATversion = "1.3.7";
+		internal const string assemblyInfoVersion = "1.3.8.0";
 
 		#region GitHub release info
 		DateTime LastOnlineCheck = DateTime.Now;
-		private API.ATWeb.AT_LatestReleaseInfo LatestReleaseInfo;
+		private ATWeb.AT_LatestReleaseInfo LatestReleaseInfo;
 
-		internal API.ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
+		internal ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
 		{
-			if (LastOnlineCheck.AddMinutes(2) < DateTime.Now || LatestReleaseInfo == null)
+			if (LastOnlineCheck.AddMinutes(5) < DateTime.Now || LatestReleaseInfo == null)
 			{
-				LatestReleaseInfo = API.ATWeb.GetOnlineInfo(this);
+				LatestReleaseInfo = ATWeb.GetOnlineInfo(this);
 				LastOnlineCheck = DateTime.Now;
 			}
 			return LatestReleaseInfo;
 		}
 		#endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+		public List<ScheduledCommandCall> scheduledCommands;
+		public ScheduledRestart scheduledRestart;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
 		/// </summary>
-		public static readonly Managers.LogManager logManager = new Managers.LogManager();
-		
+		public static readonly LogManager logManager = new LogManager();
+
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.WarpManager"/>
 		/// </summary>
-		public static readonly Managers.WarpManager warpManager = new Managers.WarpManager();
-		
+		public static readonly WarpManager warpManager = new WarpManager();
+
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.ATFileManager"/>
 		/// </summary>
-		public static readonly Managers.ATFileManager atfileManager = new Managers.ATFileManager();
+		public static readonly ATFileManager atfileManager = new ATFileManager();
 
-		internal static bool 
-			isRoundFinished = false, 
+		internal static bool roundStatsRecorded = false;
+		internal static readonly ATRoundStats roundStats = new ATRoundStats();
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+		internal static bool
+			isRoundFinished = false,
 			isColored = false,
-			isColoredCommand = false, 
-			intercomLockChanged = false, 
+			isColoredCommand = false,
+			intercomLockChanged = false,
 			isStarting = true;
-		public static bool 
-			lockRound = false, 
+		public static bool
+			lockRound = false,
 			intercomLock = false;
+
+#if DEBUG
+		public static bool DebugMode { get; internal set; } = true;
+#else
+		public static bool DebugMode { get; internal set; } = false;
+#endif
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
 		/// </summary>
-		public static Dictionary<string, API.PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, API.PlayerSettings>();
+		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 		
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
-		public static Dictionary<string, Vector> warpVectors = new Dictionary<string, Vector>(warpManager.ReadWarpsFromFile());
+		public static Dictionary<string, WarpPoint> warpVectors = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
 
-		internal static Vector JailPos => warpVectors["jail"] ?? new Vector(53, 1020, -44);
+		internal static Vector JailPos => warpVectors?["jail"]?.Vector ?? new Vector(53, 1020, -44);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
 		/// </summary>
-		public static int RoundCount { get; internal set; } = 1;
-		internal static string _roundStartTime;
+		public static int RoundCount { get; internal set; } = 0;
+		internal static string _logStartTime;
 		
 		internal static AdminToolbox plugin;
 
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> gets disabled
+		/// </summary>
 		public override void OnDisable()
 			=> this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
 
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> gets enabled
+		/// </summary>
 		public override void OnEnable()
 		{
 			plugin = this;
-			Managers.ATFileManager.WriteVersionToFile();
+			ATFileManager.WriteVersionToFile();
 			this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
-			_roundStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			AdminToolbox.warpManager.RefreshWarps();
-			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, Managers.LogManager.ServerLogType.Misc);
+			_logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, LogManager.ServerLogType.Misc);
+			scheduledRestart = new ScheduledRestart(this);
+			scheduledCommands = new List<ScheduledCommandCall>();
 		}
 
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> registers its configs, commands and events
+		/// </summary>
 		public override void Register()
 		{
-			#region EventHandlers Registering Eventhandlers
-			// Register Events
+			this.RegisterEvents();
+			this.RegisterCommands();
+			this.RegisterConfigs();
+		}
+
+		internal void RegisterEvents()
+		{
 			this.AddEventHandlers(new RoundEventHandler(this), Priority.Normal);
 			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.Normal);
 			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
 			this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
-			#endregion
-			#region Commands Registering Commands
-			// Register Commands
+			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
+		}
+		internal void UnRegisterEvents()
+		{
+			this.eventManager.RemoveEventHandlers(this);
+		}
+		internal void RegisterCommands()
+		{
 			this.AddCommands(new string[] { "spec", "spectator", "atoverwatch" }, new Command.SpectatorCommand());
 			this.AddCommands(new string[] { "p", "player", "playerinfo", "pinfo" }, new Command.PlayerCommand());
 			this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
@@ -136,18 +171,23 @@ namespace AdminToolbox
 			this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand());
 			this.AddCommands(new string[] { "j", "jail" }, new Command.JailCommand());
 			this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
-			this.AddCommands(new string[] { "s", "server", "serverinfo" }, new Command.ServerCommand());
+			this.AddCommands(new string[] { "s", "si", "server", "serverinfo" }, new Command.ServerCommand());
 			this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
-			this.AddCommands(new string[] { "atban","offlineban","oban" }, new Command.ATBanCommand(this));
+			this.AddCommands(new string[] { "atban", "offlineban", "oban" }, new Command.ATBanCommand(this));
 			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
-			this.AddCommands(new string[] { "speak" }, new Command.SpeakCommand());
+			this.AddCommands(new string[] { "atspeak", "speak", "atintercom", "at-speak" }, new Command.SpeakCommand());
 			this.AddCommands(new string[] { "ghost", "ghostmode", "ghostm", "invisible", "gh" }, new Command.GhostCommand(this));
 			this.AddCommands(new string[] { "athelp", "atbhelp", "at-help", "admintoolboxhelp", "admintoolbox-help" }, new Command.AT_HelpCommand());
 			this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new Command.ATCommand(this));
-
-			#endregion
-			#region Config Registering Config Entries
-			// Register config settings
+			this.AddCommands(new string[] { "serverstats", "sstats", "roundstats", "rstats" }, new Command.ServerStatsCommand(this));
+			//this.AddCommands(new string[] { "timedrestart", "trestart" }, new Command.TimedCommand(this));
+		}
+		internal void UnRegisterCommands()
+		{
+			this.pluginManager.CommandManager.UnregisterCommands(this);
+		}
+		internal void RegisterConfigs()
+		{
 			this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_enable", true, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox"));
 			this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_colors", false, Smod2.Config.SettingType.BOOL, true, "Enable/Disable AdminToolbox colors in server window"));
 			this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_tracking", true, Smod2.Config.SettingType.BOOL, true, "Appends the AdminToolbox version to your server name, this is for tracking how many servers are running the plugin"));
@@ -184,8 +224,16 @@ namespace AdminToolbox
 			this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercomlock", false, Smod2.Config.SettingType.BOOL, true, "If set to true, locks the command for all non-whitelist players"));
 
 			this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_block_role_damage", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What roles cannot attack other roles"));
-			#endregion
+
+			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
+			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
+
 		}
+		internal void UnRegisterConfigs()
+		{
+			
+		}
+
 
 		internal static void AddMissingPlayerVariables()
 		{
@@ -205,18 +253,16 @@ namespace AdminToolbox
 		}
 		private static void AddToPlayerDict(Player player)
 		{
-			if (player != null && player is Player && !string.IsNullOrEmpty(player.SteamId) && !ATPlayerDict.ContainsKey(player.SteamId))
+			if (player != null && player is Player p &&
+				!string.IsNullOrEmpty(p.SteamId) && !ATPlayerDict.ContainsKey(p.SteamId))
 			{
-				ATPlayerDict.Add(player.SteamId, new API.PlayerSettings(player.SteamId));
+				ATPlayerDict.Add(p.SteamId, new PlayerSettings(p.SteamId));
 			}
 		}
 
 		internal bool NewerVersionAvailable()
 		{
-			#if DEBUG
-			return false;
-			#endif
-			string thisVersion = this.Details.version.Replace(".", string.Empty);
+			string thisVersion = this.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
 			string onlineVersion = this.GetGitReleaseInfo().Version.Replace(".", string.Empty);
 
 			if (int.TryParse(thisVersion, out int thisV)
@@ -224,6 +270,12 @@ namespace AdminToolbox
 				&& onlineV > thisV)
 				return true;
 			else return false;
+		}
+
+		internal void AtInfo(string str)
+		{
+			if(DebugMode)
+				this.Info(str);
 		}
 	}
 }

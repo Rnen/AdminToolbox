@@ -46,15 +46,15 @@ namespace AdminToolbox.Command
 			switch ((Team)player.TeamRole.Team)
 			{
 				case Team.SCP:
-					return "@#fg=red;" + player.TeamRole.Name + "</color>";
+					return "<color=red>" + player.TeamRole.Name + "</color>";
 				case Team.MTF:
-					return "@#fg=blue;" + player.TeamRole.Name + "</color>";
+					return "<color=blue>" + player.TeamRole.Name + "</color>";
 				case Team.CHI:
-					return "@#fg=green;" + player.TeamRole.Name + "</color>";
+					return "<color=green>" + player.TeamRole.Name + "</color>";
 				case Team.RSC:
-					return "@#fg=silver;" + player.TeamRole.Name + "</color>";
+					return "<color=silver>" + player.TeamRole.Name + "</color>";
 				case Team.CDP:
-					return "@#fg=orange;" + player.TeamRole.Name + "</color>";
+					return "<color=orange>" + player.TeamRole.Name + "</color>";
 				case Team.TUT:
 					return "<color=lime>" + player.TeamRole.Name + "</color>";
 				default:

@@ -1,5 +1,5 @@
 # AdminToolbox
-This is a plugin for SCL:Secret Lab servers. 
+This is a plugin for **SCP:Secret Lab** servers. 
 It offers multiple admin tools like 
 * Friendly fire logs in server console & logs to file
 * Advanced Godmode, ability to turn off damage for players, instantkill
@@ -57,6 +57,9 @@ JAIL | Player | seconds |  Jails the player for the specified (if not specified,
 S / SERVERINFO |  | | Lists information on the server, such as the name, IP, port, player count, round number and duration, admintoolbox coloring, roundlock and jailed players
 KILL / SLAY | Player | | Kills target player. Using `*` will exclude the player using the command
 SPEAK | Player | | Sets player as Intercom Speaker. Use without Player to set yourself. If used while broadcast, the current broadcast will cancel.
+ATHELP | | | Opens this GitHub page for the user
+AT | HELP / INFO / DOWNLOAD |  | `INFO` compares the server's AT version with the latest GitHub one. `DOWNLOAD` opens a new browser page for the newest download
+SERVERSTATS / ROUNDSTATS | |  | Displays each type of victory since last server (re)boot
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
 >Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
@@ -65,7 +68,7 @@ SPEAK | Player | | Sets player as Intercom Speaker. Use without Player to set yo
 >Find a complete list of Role ID's & Item ID's [HERE](https://github.com/Rnen/AdminToolbox/blob/master/.github/RESOURCES.md)
 
 ### Advanced Commands (Theese are harder to use and/or requires more Values)
-Command | Value Type | Value Type |  Value_Type | Description
+Command | Value Type | Value Type |  Value Type | Description
 --- | :---: | :---: | :---: | ---
 WARP | ADD | Player | WarpName | Adds a warp point where `Player` is
 WARP | REMOVE | WarpName |   | Removes `WarpName` from WarpPoints
@@ -76,6 +79,16 @@ POS | Player | SET  |  x=50 y=0 z=-50  | Sets player position to X:50 Y:0 Z:-50
 POS | Player | GET | |  Gets XYZ position of `Player`
 EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping. (The second del part is for if you use an item number)
 ATBAN / OBAN / OFFLINEBAN | PlayerName | IP/STEAMID | Minutes | Bans IP/STEAMID for X minutes. (For banning offline users)
+
+### GhostMode (exapmples below, all bools but "Enabled" is optional)
+GHOST | Player | Bool: Enabled | Bool: Visible to Spectators | Bool: Visible when speaking | Description
+--- | :---: | :---: | :---: | :---: | ---
+GHOST | Evan | true | | | This would enable ghostmode with `visible to spectator` & `visible when speaking` to true
+GHOSTMODE | Hubert | true | false | | This would enable ghostmode without beeing visible to spectators
+GH | * | true | | | Would enable ghostmode for all players
+GHOSTM | LIST / GET | | | | Would list all players with GHOSTMODE active
+
+>Note that the `sm_enable_ghostmode` config needs to be set to true to use GHOSTMODE
 
 > Player input doesn't need the full name, it can be PlayerID or a part of the name
 ## ^These commands work in both server console and text-based remote admin!^
@@ -100,8 +113,9 @@ Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
 admintoolbox_enable | Boolean | True | `Enable / Disable` AdminToolbox from loading on server start
 admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+atb_disable_networking | Boolean | False | `True` disables all GitHub version checking.
 admintoolbox_tracking | Boolean | True | When True, puts `AT:VersionNbr` in the server name. When false, looks for `$atversion` in the name and replaces it with the version if found
-admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed
+admintoolbox_tutorial_dmg_allowed | List | -1 | What damage types the TUTORIAL role is allowed to take. -1 means no damagetypes allowed, -2 means all. Alternative keywords are `*` & `all`
 admintoolbox_Round_damageMultiplier | Float | 1 | Multiplies all damage by this number
 admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
 admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
@@ -131,6 +145,7 @@ Config Option | Value Type | Default Value | Description
 admintoolbox_log_teamkills | Boolean | False | Writes teamkills to the AT logfile
 admintoolbox_log_kills | Boolean | False | Writes non-team kills to the AT logfile
 admintoolbox_log_commands | Boolean | False | Writes command usage to the AT logfile
+admintoolbox_log_damage | Boolean | False | Writes all player-damage to the AT logfile
 admintoolbox_folder_path | String (Path) | %Appdata%\Roaming\SCP Secret Laboratory\ | Where the Admintoolbox folder will be located
 admintoolbox_stats_unified | Boolean | True | If true uses one folder for all servers, false creates a folder per server
 admintoolbox_logremover_hours_old | Int | 0 | Automaticly removes AT logs older than specified hours of age

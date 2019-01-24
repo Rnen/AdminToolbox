@@ -27,7 +27,11 @@ namespace AdminToolbox.Command
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
 			Player caller = (sender is Player _p) ? _p : null;
-			if (caller != null) return new string[] { "This command is for only for use in the server window!" };
+			if (args.Length > 0 && (args[0].ToUpper() == "INFO" || args[0].ToUpper() == "I"))
+				goto SkipPlayerCheck;
+			if (caller != null)
+				return new string[] { "This command is for only for use in the server window!" };
+			SkipPlayerCheck:;
 			if (args.Length > 0)
 				switch (args[0].ToUpper())
 				{
