@@ -27,6 +27,7 @@ namespace AdminToolbox
 		)]
 	public class AdminToolbox : Plugin
 	{
+		internal const string assemblyInfoVersion = "1.3.8.0";
 
 		#region GitHub release info
 		DateTime LastOnlineCheck = DateTime.Now;
