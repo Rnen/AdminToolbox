@@ -44,8 +44,10 @@ namespace AdminToolbox
 		}
 		#endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public List<ScheduledCommandCall> scheduledCommands;
 		public ScheduledRestart scheduledRestart;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
@@ -65,6 +67,7 @@ namespace AdminToolbox
 		internal static bool roundStatsRecorded = false;
 		internal static readonly ATRoundStats roundStats = new ATRoundStats();
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		internal static bool
 			isRoundFinished = false,
 			isColored = false,
@@ -80,7 +83,7 @@ namespace AdminToolbox
 #else
 		public static bool DebugMode { get; internal set; } = false;
 #endif
-
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
@@ -102,10 +105,15 @@ namespace AdminToolbox
 		
 		internal static AdminToolbox plugin;
 
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> gets disabled
+		/// </summary>
 		public override void OnDisable()
 			=> this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
 
-
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> gets enabled
+		/// </summary>
 		public override void OnEnable()
 		{
 			plugin = this;
@@ -117,6 +125,9 @@ namespace AdminToolbox
 			scheduledCommands = new List<ScheduledCommandCall>();
 		}
 
+		/// <summary>
+		/// Called when <see cref="AdminToolbox"/> registers its configs, commands and events
+		/// </summary>
 		public override void Register()
 		{
 			this.RegisterEvents();

@@ -63,7 +63,9 @@ namespace AdminToolbox.Managers
 			}
 		}
 
-
+		/// <summary>
+		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.warpVectors"/> dictionary to file
+		/// </summary>
 		public bool WriteWarpsToFile()
 		{
 			WarpPoint[] warparray = AdminToolbox.warpVectors.Select(s => s.Value).ToArray();
@@ -124,8 +126,12 @@ namespace AdminToolbox.Managers
 		}
 
 	}
+	/// <summary>
+	/// WarpPoint class thats used by the <see cref="AdminToolbox"/> warpmanager system
+	/// </summary>
 	public class WarpPoint
 	{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public string Name { get; set; }
 		public string Description { get; set; } = "";
 		public Vector Vector { get; set; }
@@ -142,5 +148,6 @@ namespace AdminToolbox.Managers
 		{
 			return Name + " - " + Description + " - (" + Vector + ")";
 		}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 	}
 }

@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace AdminToolbox.API
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public class ScheduledCommandCall
 	{
 		public string command;
@@ -55,4 +56,5 @@ namespace AdminToolbox.API
 			return CommandManager.CallCommand(Server as ICommandSender, this.command, this.args);
 		}
 	}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

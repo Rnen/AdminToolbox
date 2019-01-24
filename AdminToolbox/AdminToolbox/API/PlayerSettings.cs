@@ -16,6 +16,7 @@ namespace AdminToolbox.API
 	/// </summary>
 	public class PlayerSettings
 	{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		public string SteamID { get; private set; } = "";
 		public bool
 			overwatchMode = false,
@@ -26,6 +27,7 @@ namespace AdminToolbox.API
 			lockDown = false,
 			instantKill = false,
 			isJailed = false;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// Checks to see if <see cref ="Player"/> is currently inside radius of <see cref="Vector"/> <see cref ="AdminToolbox.JailPos"/>
@@ -50,6 +52,7 @@ namespace AdminToolbox.API
 		}
 
 		public int
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			Kills = 0,
 			TeamKills = 0,
 			Deaths = 0,
@@ -97,5 +100,6 @@ namespace AdminToolbox.API
 			this.RoundsPlayed = playerSettings.RoundsPlayed;
 			this.TeamKills = playerSettings.TeamKills;
 		}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 	}
 }

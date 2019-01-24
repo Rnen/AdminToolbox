@@ -9,8 +9,14 @@ using UnityEngine.Networking;
 
 namespace AdminToolbox.API
 {
+	/// <summary>
+	/// Static <see cref="AdminToolbox"/> class that contains all of the plugins web-based methods
+	/// </summary>
 	public static class ATWeb
 	{
+		/// <summary>
+		/// Class for storing the latest GitHub release info
+		/// </summary>
 		public class AT_LatestReleaseInfo
 		{
 			readonly string title;
@@ -18,6 +24,7 @@ namespace AdminToolbox.API
 			readonly string author;
 			readonly string downloadLink;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			public string Title => title;
 			public string Version => version;
 			public string Author => author;
@@ -30,8 +37,12 @@ namespace AdminToolbox.API
 				this.author = Author;
 				this.downloadLink = DownloadLink;
 			}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 
+		/// <summary>
+		/// Returns a <see cref="AT_LatestReleaseInfo"/> class containing info about the latest GitHub release
+		/// </summary>
 		public static AT_LatestReleaseInfo GetOnlineInfo(AdminToolbox plugin)
 		{
 			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)

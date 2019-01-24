@@ -57,6 +57,7 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public enum ServerLogType
 		{
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			RemoteAdminActivity,
 			PlayerDamage,
 			KillLog,
@@ -64,6 +65,7 @@ namespace AdminToolbox.Managers
 			Suicice,
 			GameEvent,
 			Misc
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 		private static readonly string[] Txt = new string[]
 		{

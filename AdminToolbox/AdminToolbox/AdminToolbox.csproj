@@ -33,8 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>..\Builds\AdminToolbox.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>

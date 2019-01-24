@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace AdminToolbox.API
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public class ScheduledRestart
 	{
 		IConfigFile Config => ConfigManager.Manager.Config;
@@ -62,4 +63,5 @@ namespace AdminToolbox.API
 			catch { throw new Exception(this.plugin.Details.name + " restart procedure failed!"); }
 		}
 	}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

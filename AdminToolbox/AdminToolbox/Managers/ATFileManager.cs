@@ -32,12 +32,21 @@ namespace AdminToolbox.Managers
 		public void PlayerStatsFileManager(PlayerFile FileOperation = PlayerFile.Read)
 			=> PlayerStatsFileManager(new List<string>() { }, FileOperation);
 
+		/// <summary>
+		/// Read/Writes the <paramref name="steamID"/>'s stats to/from <see cref="File"/>
+		/// </summary>
 		public void PlayerStatsFileManager(string steamID, PlayerFile FileOperation = PlayerFile.Write)
 			=> PlayerStatsFileManager(new List<string>() { steamID }, FileOperation);
 
+		/// <summary>
+		/// Read/Writes <see cref ="Player"/> stats to/from <see cref="File"/>
+		/// </summary>
 		public void PlayerStatsFileManager(Player player, PlayerFile FileOperation = PlayerFile.Write)
 			=> PlayerStatsFileManager(new List<string>() { player.SteamId }, FileOperation);
 
+		/// <summary>
+		/// Read/Writes stats to/from <see cref="File"/> for each <see cref="Player"/> in the <see cref="List{T}"/>
+		/// </summary>
 		public void PlayerStatsFileManager(List<Player> playerList, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (playerList != null && playerList.Count > 0)
@@ -45,6 +54,9 @@ namespace AdminToolbox.Managers
 			else
 				PlayerStatsFileManager(FileOperation);
 		}
+		/// <summary>
+		/// Read/Writes stats to/from <see cref="File"/> for each steamID in the <see cref="List{T}"/>
+		/// </summary>
 		public void PlayerStatsFileManager(List<string> steamIdList, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
@@ -59,13 +71,17 @@ namespace AdminToolbox.Managers
 					foreach (string sid in steamIdList)
 						ReadWriteHandler(sid, FileOperation);
 				else
-					foreach (Player player in PluginManager.Manager.Server.GetPlayers())
-						ReadWriteHandler(player.SteamId, FileOperation);
+					foreach (string steamID in AdminToolbox.ATPlayerDict.Keys)
+						ReadWriteHandler(steamID, FileOperation);
 
 				void ReadWriteHandler(string steamID, PlayerFile Operation)
 				{
 					if (string.IsNullOrEmpty(steamID)) return;
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) { AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID)); return; };
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID))
+					{
+						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID));
+						return;
+					};
 					switch (Operation)
 					{
 						case PlayerFile.Read:
@@ -153,7 +169,7 @@ namespace AdminToolbox.Managers
 	public static class SetPlayerVariables
 	{
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools
+		/// For setting <see cref="API.PlayerSettings"/> bools by <paramref name="steamID"/>
 		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
@@ -170,10 +186,18 @@ namespace AdminToolbox.Managers
 			AdminToolbox.ATPlayerDict[steamID] = setting;
 			return true;
 		}
+		/// <summary>
+		/// For setting <see cref="API.PlayerSettings"/> bools on a <see cref="Player"/>
+		/// <para>Returns false if <paramref name="player"/>'s steamID is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// </summary>
 		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			return SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
 		}
+		/// <summary>
+		/// For setting <see cref="API.PlayerSettings"/> bools on a list of <see cref="Player"/>s
+		/// <para>Returns false if one or more of <paramref name="players"/> steamid's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// </summary>
 		public static bool SetPlayerBools(List<Player> players, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			int failiures = 0;
