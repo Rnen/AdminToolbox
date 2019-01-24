@@ -26,7 +26,7 @@ namespace AdminToolbox.API
 		/// <remarks> <paramref name="filter"/> is the same as the SMod GetPlayers filter</remarks>
 		public static List<Player> GetJailedPlayers(string filter = "")
 		{
-			if (PluginManager.Manager.Server.GetPlayers().Count > 0 && PluginManager.Manager.Server.Round.Duration > 0)
+			if (PluginManager.Manager.Server.GetPlayers(filter).Count > 0 && PluginManager.Manager.Server.Round.Duration > 0)
 				return PluginManager.Manager.Server.GetPlayers(filter)
 					.Where(p => AdminToolbox.ATPlayerDict.ContainsKey(p.SteamId)
 					&& p.TeamRole.Role != Role.UNASSIGNED
