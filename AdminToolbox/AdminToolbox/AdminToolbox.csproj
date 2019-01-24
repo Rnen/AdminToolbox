@@ -93,6 +93,8 @@
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerDictCleanup.cs" />
     <Compile Include="API\PlayerSettings.cs" />
+    <Compile Include="API\ScheduledCommandCall.cs" />
+    <Compile Include="API\ScheduledRestart.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />
@@ -109,6 +111,8 @@
     <Compile Include="Commands\Facility\SpeakCommand.cs" />
     <Compile Include="Commands\Server\AT_HelpCommand.cs" />
     <Compile Include="Commands\Server\ATCommand.cs" />
+    <Compile Include="Commands\Server\ServerStatsCommand.cs" />
+    <Compile Include="Commands\Server\TimedCommand.cs" />
     <Compile Include="Commands\Server\ServerCommand.cs" />
     <Compile Include="Commands\Server\RoundLockCommand.cs" />
     <Compile Include="Commands\Facility\WarpsCommand.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="Commands\Player\NoDmgCommand.cs" />
     <Compile Include="Commands\Player\HealCommand.cs" />
     <Compile Include="Commands\Player\GodModeCommand.cs" />
+    <Compile Include="Events\LateOnCheckRoundEndEvent.cs" />
     <Compile Include="Managers\ATFileManager.cs" />
     <Compile Include="API\JailHandler.cs" />
     <Compile Include="Managers\LogManager.cs" />
@@ -135,6 +140,9 @@
     <Compile Include="Managers\PlayerFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\WarpManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PluginManager\Manager\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -19,11 +19,8 @@ namespace AdminToolbox.API
 			readonly string downloadLink;
 
 			public string Title => title;
-
 			public string Version => version;
-
 			public string Author => author;
-
 			public string DownloadLink => downloadLink;
 
 			public AT_LatestReleaseInfo(string Title, string Version, string Author, string DownloadLink)

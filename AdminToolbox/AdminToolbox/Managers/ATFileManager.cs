@@ -134,7 +134,7 @@ namespace AdminToolbox.Managers
 		{
 			if (Directory.Exists(FileManager.GetAppFolder()))
 			{
-				string text = "at_version=" + AdminToolbox.plugin.Details.version;
+				string text = "at_version=" + AdminToolbox.plugin.Details.version.Split('-').FirstOrDefault();
 				using (StreamWriter streamWriter = new StreamWriter(FileManager.GetAppFolder() + "at_version.md", false))
 				{
 					streamWriter.Write(text);

@@ -70,6 +70,8 @@ namespace AdminToolbox.Managers
 			if (warparray.Length == 0)
 				warparray = presetWarps.Select(t => t.Value).ToArray();
 			string jsonData = "";
+			if (!Directory.Exists(ATFolder))
+				Directory.CreateDirectory(ATFolder);
 			if (!Directory.Exists(WarpPointsFolder))
 				Directory.CreateDirectory(WarpPointsFolder);
 			//AdminToolbox.plugin.Info("Warparray length: " + warparray.Length);
@@ -116,8 +118,7 @@ namespace AdminToolbox.Managers
 					newDict.Add(wp.Name.ToLower(), wp);
 			}
 			if (!newDict.Any(p => p.Key.ToLower() == "jail"))
-				newDict.Add("jail", new WarpPoint("jail", "AdminToolbox Jail", AdminToolbox.JailPos));
-
+				newDict.Add("jail", new WarpPoint("jail", "AdminToolbox Jail", new Vector(53, 1020, -44)));
 
 			return newDict;
 		}

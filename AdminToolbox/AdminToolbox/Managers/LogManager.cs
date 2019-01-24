@@ -47,6 +47,8 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public string GetFolderLocation()
 		{
+			if (!Directory.Exists(AdminToolboxFolder))
+				Directory.CreateDirectory(AdminToolboxFolder);
 			return AdminToolboxFolder;
 		}
 
@@ -117,7 +119,7 @@ namespace AdminToolbox.Managers
 						text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
 					}
 				}
-				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._roundStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
+				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._logStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
 				{
 					streamWriter.Write(text);
 					streamWriter.Close();
