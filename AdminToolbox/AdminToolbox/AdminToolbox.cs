@@ -20,14 +20,14 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.8-0",
+		version = "1.3.8-2",
 		SmodMajor = 3,
 		SmodMinor = 1,
 		SmodRevision = 22
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string assemblyInfoVersion = "1.3.8.0";
+		internal const string assemblyInfoVersion = "1.3.8.2";
 
 		#region GitHub release info
 		DateTime LastOnlineCheck = DateTime.Now;
@@ -272,10 +272,11 @@ namespace AdminToolbox
 			else return false;
 		}
 
-		internal void AtInfo(string str)
+		public void Debug(string message)
 		{
-			if(DebugMode)
-				this.Info(str);
+			if (DebugMode)
+				this.Info(message);
 		}
 	}
+
 }

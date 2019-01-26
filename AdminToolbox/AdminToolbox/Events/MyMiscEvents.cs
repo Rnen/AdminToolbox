@@ -70,7 +70,8 @@ namespace AdminToolbox
 					.Replace("$playerhp",ev.Player.GetHealth().ToString())
 					.Replace("$playerhealth", ev.Player.GetHealth().ToString())
 					.Replace("$playerrank", ev.Player.GetRankName())
-					.Replace("$player", ev.Player.Name));
+					.Replace("$player", ev.Player.Name)
+					.Replace("\n", Environment.NewLine));
 		}
 
 		public void OnDoorAccess(PlayerDoorAccessEvent ev)
@@ -207,6 +208,7 @@ namespace AdminToolbox
 				{
 					if (AdminToolbox.ATPlayerDict[player.SteamId].overwatchMode)
 						ev.Player.OverwatchMode = true;
+					AdminToolbox.ATPlayerDict[player.SteamId].JoinTime = DateTime.Now;
 				}
 			}
 		}
@@ -216,7 +218,11 @@ namespace AdminToolbox
 			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval",180),
 			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval",300);
 
-		private DateTime /*oneSecTimer = DateTime.Now,*/ fiveSecTimer = DateTime.Now.AddSeconds(5), threeMinTimer = DateTime.Now.AddMinutes(1), fiveMinTimer = DateTime.Now.AddMinutes(2);
+		private DateTime /*oneSecTimer = DateTime.Now,*/ 
+			fiveSecTimer = DateTime.Now.AddSeconds(5),
+			oneMinuteTimer = DateTime.Now.AddSeconds(30), 
+			threeMinTimer = DateTime.Now.AddMinutes(1), 
+			fiveMinTimer = DateTime.Now.AddMinutes(2);
 
 		public void OnUpdate(UpdateEvent ev)
 		{ /*
@@ -248,16 +254,21 @@ namespace AdminToolbox
 					//plugin.scheduledCommands.RemoveAll(sch => sch.hasExecuted);
 				fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval);
 			}
+			if(oneMinuteTimer <= DateTime.Now)
+			{
+				AdminToolbox.ATPlayerDict.Cleanup();
+			}
 			if (threeMinTimer <= DateTime.Now)
 			{
-				AdminToolbox.atfileManager.PlayerStatsFileManager(plugin.Server.GetPlayers(), Managers.ATFileManager.PlayerFile.Write);
+				List<string> keys = AdminToolbox.ATPlayerDict.Keys.ToList();
+				if (keys?.Count > 0)
+					AdminToolbox.atfileManager.PlayerStatsFileManager(keys, Managers.ATFileManager.PlayerFile.Write);
 				threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval);
 			}
-			if (fiveMinTimer <= DateTime.Now)
-			{
-				fiveMinTimer = DateTime.Now.AddSeconds(DictCleanupInterval);
-				PlayerDictCleanup.Clean();
-			}
+			//if (fiveMinTimer <= DateTime.Now)
+			//{
+
+			//}
 		}
 
 		public void OnStartCountdown(WarheadStartEvent ev)

@@ -88,9 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ATWeb.cs" />
+    <Compile Include="API\ExtentionMethods.cs" />
     <Compile Include="API\GetPlayerFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
-    <Compile Include="API\PlayerDictCleanup.cs" />
     <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="API\ScheduledCommandCall.cs" />
     <Compile Include="API\ScheduledRestart.cs" />
@@ -140,9 +140,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\WarpManager.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PluginManager\Manager\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) D:\SCP_SL_SERVER\sm_plugins</PostBuildEvent>
