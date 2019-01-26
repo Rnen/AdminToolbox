@@ -17,15 +17,7 @@ There is also more to come!
 If you want to follow the development, take a look at the [AdminToolbox Trello Board](https://trello.com/b/NnNBzSX2/scpsl-admintoolbox-plugin)
 
 ## Plugin Installation:
-To install:
-1. Grab newest version of AdminToolbox: [Latest Release](https://github.com/Rnen/AdminToolbox/releases/latest)
-2. Navigate to your SCP Secret Lab folder.
-3. Drag AdminToolbox.dll into the sm_plugins folder
-
-## ServerMod - (This is required for any plugin)
-ServerMod is a server side plugin system with a bunch of additional configuration options, bug fixes, security patches and some optimisations built in.
- * SMOD can be found here: [Smod Github](https://github.com/Grover-c13/Smod2)
- * SMOD Discord: https://discord.gg/8nvmMTr
+[How to install??](https://github.com/Rnen/AdminToolbox/wiki/How-To-Install)
   
 ## AdminToolbox Server Name Variables
 Variable | Description
