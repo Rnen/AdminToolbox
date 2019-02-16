@@ -33,7 +33,7 @@ namespace AdminToolbox.Managers
 
 		static int _port => PluginManager.Manager.Server.Port;
 
-		static string ATFolder => AdminToolbox.logManager.GetFolderLocation();
+		static string ATFolder => ATFileManager.AdminToolboxFolder;
 		static readonly string WarpPointsFolder = ATFolder + Path.DirectorySeparatorChar + "WarpPoints";
 		static readonly string WarpFilePath = WarpPointsFolder + Path.DirectorySeparatorChar + (globalFiles ? "Global"  : _port.ToString()) + ".txt";
 

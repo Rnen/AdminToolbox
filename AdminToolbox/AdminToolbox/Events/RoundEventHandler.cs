@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace AdminToolbox
 {
+	using API;
+	using API.Extentions;
+
 	class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
 	{
 		private Plugin plugin;
@@ -76,26 +79,23 @@ namespace AdminToolbox
 						plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
 				}
 				AdminToolbox.AddMissingPlayerVariables();
-				foreach (Player pl in PluginManager.Manager.Server.GetPlayers())
+				foreach (KeyValuePair<string, PlayerSettings> kp in AdminToolbox.ATPlayerDict)
 				{
-					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
-						AdminToolbox.ATPlayerDict[pl.SteamId].RoundsPlayed++;
+					kp.Value.PlayerStats.RoundsPlayed++;
 				}
-				AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToList(), Managers.ATFileManager.PlayerFile.Write);
 			}
 
 		}
 
 		public void OnRoundRestart(RoundRestartEvent ev)
 		{
-			List<string> keysToChange = AdminToolbox.ATPlayerDict.Where(kp => !kp.Value.keepSettings).Select(p => p.Key).ToList() ?? new List<string>();
 			AdminToolbox.lockRound = false;
-			if (keysToChange.Count > 0)
-				foreach(string key in keysToChange)
-					Managers.SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
-			//foreach (Player player in ev.Server.GetPlayers())
-			//	if (AdminToolbox.playerdict.ContainsKey(player.SteamId))
-			//		AdminToolbox.playerdict[player.SteamId].playTime += DateTime.Now.Subtract(AdminToolbox.playerdict[player.SteamId].joinTime).TotalSeconds;
+			if (AdminToolbox.ATPlayerDict.Count > 0)
+				AdminToolbox.ATPlayerDict.ResetPlayerBools();
+				
+			foreach (KeyValuePair<string, PlayerSettings> kp in AdminToolbox.ATPlayerDict)
+				kp.Value.PlayerStats.MinutesPlayed += DateTime.Now.Subtract(kp.Value.JoinTime).TotalSeconds;
+			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox.logManager.ManageDatedATLogs();
 		}
 	}

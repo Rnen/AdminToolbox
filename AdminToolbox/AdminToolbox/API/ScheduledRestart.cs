@@ -51,9 +51,9 @@ namespace AdminToolbox.API
 			catch { throw new Exception(this.plugin.Details.name + " failed to save files!"); }
 			try
 			{
-				if (PlayerManager.singleton.players.Length > 0)
-					foreach (PlayerStats ps in PlayerManager.singleton.players.Where(p => p.GetComponent<PlayerStats>()).Select(s => s.GetComponent<PlayerStats>()))
-						ps.CallRpcRoundrestart();
+				//if (PlayerManager.singleton.players.Length > 0)
+					//foreach (PlayerStats ps in PlayerManager.singleton.players.Where(p => p.GetComponent<PlayerStats>()).Select(s => s.GetComponent<PlayerStats>()))
+						//ps.CallRpcRoundrestart();
 
 				foreach(Plugin pl in PluginManager.Manager.Plugins.Where(i => i.Details.id != this.plugin.Details.id))
 					PluginManager.Manager.DisablePlugin(pl);

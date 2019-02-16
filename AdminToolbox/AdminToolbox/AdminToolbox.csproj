@@ -94,6 +94,8 @@
     <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="API\ScheduledCommandCall.cs" />
     <Compile Include="API\ScheduledRestart.cs" />
+    <Compile Include="API\SetPlayerVariables.cs" />
+    <Compile Include="API\Utility.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />
@@ -136,7 +138,7 @@
     <Compile Include="Events\PlayerDamageEvent.cs" />
     <Compile Include="Events\RoundEventHandler.cs" />
     <Compile Include="AdminToolbox.cs" />
-    <Compile Include="Managers\PlayerFile.cs" />
+    <Compile Include="Managers\PlayerFileEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\WarpManager.cs" />
   </ItemGroup>

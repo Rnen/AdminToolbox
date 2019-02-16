@@ -8,28 +8,35 @@ using System;
 
 namespace AdminToolbox.Command
 {
+	using API;
+	using API.Extentions;
 	class ServerStatsCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
 		static IConfigFile Config => ConfigManager.Manager.Config;
 		Server Server => PluginManager.Manager.Server;
-
 		public ServerStatsCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Gets the server's round stats since last server restart";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 
-		public string GetUsage() => "SERVERSTATS";
+		public static readonly string[] CommandAliases = new string[] { "SERVERSTATS", "SSTATS", "RSTATS", "ROUNDSTATS" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			string reply = Environment.NewLine + " ";
-			foreach (FieldInfo field in AdminToolbox.roundStats.GetType().GetFields()
-				.OrderBy(s => s.GetValue(AdminToolbox.roundStats)).ThenBy(s => s.Name))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				reply += "\n - " + field.Name.Replace("_", " ") + ": " + field.GetValue(AdminToolbox.roundStats) + "";
+				string reply = Environment.NewLine + " ";
+				foreach (FieldInfo field in AdminToolbox.roundStats.GetType().GetFields()
+					.OrderBy(s => s.GetValue(AdminToolbox.roundStats)).ThenBy(s => s.Name))
+				{
+					reply += "\n - " + field.Name.Replace("_", " ") + ": " + field.GetValue(AdminToolbox.roundStats) + "";
+				}
+				return new string[] { reply };
 			}
-			return new string[] { reply };
+			else
+				return deniedReply;
 		}
 	}
 }

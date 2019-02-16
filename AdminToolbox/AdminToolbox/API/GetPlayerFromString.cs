@@ -50,7 +50,7 @@ namespace AdminToolbox.API
 						{
 							str2 += "z";
 						}
-						int nameDifference = API.LevenshteinDistance.Compute(str1, str2);
+						int nameDifference = LevenshteinDistance.Compute(str1, str2);
 						if (nameDifference < LastnameDifference)
 						{
 							LastnameDifference = nameDifference;

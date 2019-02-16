@@ -27,30 +27,19 @@ namespace AdminToolbox.Managers
 
 			internal bool Saved;
 		}
+
 		private readonly List<LogData> logs = new List<LogData>();
 
-		private int _port;
+		private static int _port => PluginManager.Manager.Server.Port;
 
 		private int _maxlen;
 
-		private static readonly string appFolder = FileManager.GetAppFolder();
+		private static string AppFolder => ATFileManager.appFolder;
 
 		private static string
 			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
 		private static string
-			AdminToolboxPlayerStats = ATFileManager.AdminToolboxPlayerStats;
-		private static string
-			AdminToolboxLogs = ATFileManager.AdminToolboxLogs;
-
-		/// <summary>
-		/// Returns <see cref="string"/> path of <see cref="AdminToolbox"/> location
-		/// </summary>
-		public string GetFolderLocation()
-		{
-			if (!Directory.Exists(AdminToolboxFolder))
-				Directory.CreateDirectory(AdminToolboxFolder);
-			return AdminToolboxFolder;
-		}
+			AdminToolboxLogs => ATFileManager.AdminToolboxLogs;
 
 		/// <summary>
 		/// Enum used by <see cref="WriteToLog(string[], ServerLogType)"/>
@@ -84,14 +73,9 @@ namespace AdminToolbox.Managers
 				_maxlen = Math.Max(_maxlen, txt.Length);
 			}
 		}
-		void Start()
-		{
-			_port = PluginManager.Manager.Server.Port;
-		}
 
 		internal void AddLog(string msg, ServerLogType type)
 		{
-			_port = PluginManager.Manager.Server.Port;
 			string time = TimeBehaviour.FormatTime("yyyy-MM-dd HH:mm:ss zzz");
 			logs.Add(new LogData
 			{
@@ -100,17 +84,8 @@ namespace AdminToolbox.Managers
 				Time = time
 			});
 			//string mystring = System.Reflection.Assembly.GetAssembly(this.GetType()).Location;
-			if (Directory.Exists(FileManager.GetAppFolder()))
+			if(CheckExistingFolders())
 			{
-				if (!Directory.Exists(AdminToolboxFolder))
-					Directory.CreateDirectory(AdminToolboxFolder);
-				if (!Directory.Exists(AdminToolboxLogs))
-					Directory.CreateDirectory(AdminToolboxLogs);
-				if (Directory.Exists(FileManager.GetAppFolder() + "ATServerLogs"))
-					MoveOldFiles();
-				if (!Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port))
-					Directory.CreateDirectory(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
-
 				string text = string.Empty;
 				foreach (LogData log in logs)
 				{
@@ -127,6 +102,26 @@ namespace AdminToolbox.Managers
 					streamWriter.Close();
 				}
 			}
+		}
+
+		private bool CheckExistingFolders()
+		{
+			try
+			{
+				if (!Directory.Exists(AppFolder)) return false;
+				if (!Directory.Exists(AdminToolboxFolder))
+					Directory.CreateDirectory(AdminToolboxFolder);
+				if (!Directory.Exists(AdminToolboxLogs))
+					Directory.CreateDirectory(AdminToolboxLogs);
+				MoveOldFiles();
+				if (!Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port))
+					Directory.CreateDirectory(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+			return Directory.Exists(AppFolder) && Directory.Exists(AdminToolboxFolder) && Directory.Exists(AdminToolboxLogs) && Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
 		}
 
 		/// <summary>
@@ -187,18 +182,20 @@ namespace AdminToolbox.Managers
 
 		private void MoveOldFiles()
 		{
-			string infoString = (Directory.GetDirectories(FileManager.GetAppFolder() + "ATServerLogs").Length > 0) ? "\n\n Relocated folders: " : string.Empty;
-			string appdataPath = FileManager.GetAppFolder();
-			foreach (string path in Directory.GetDirectories(FileManager.GetAppFolder() + "ATServerLogs"))
+			if (Directory.Exists(AppFolder + "ATServerLogs"))
 			{
-				if (!Directory.Exists(Path.DirectorySeparatorChar + path.Replace(FileManager.GetAppFolder() + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty)))
+				string infoString = (Directory.GetDirectories(AppFolder + "ATServerLogs").Length > 0) ? "\n\n Relocated folders: " : string.Empty;
+				foreach (string path in Directory.GetDirectories(AppFolder + "ATServerLogs"))
 				{
-					Directory.Move(path, AdminToolboxLogs + Path.DirectorySeparatorChar + path.Replace(FileManager.GetAppFolder() + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty));
-					infoString += "\n" + " - " + path.Replace(appdataPath, string.Empty);
+					if (!Directory.Exists(Path.DirectorySeparatorChar + path.Replace(AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty)))
+					{
+						Directory.Move(path, AdminToolboxLogs + Path.DirectorySeparatorChar + path.Replace(AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty));
+						infoString += "\n" + " - " + path.Replace(AppFolder, string.Empty);
+					}
 				}
+				if (infoString != string.Empty) AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(AppFolder, string.Empty));
+				Directory.Delete(AppFolder + "ATServerLogs");
 			}
-			if (infoString != string.Empty) AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(appdataPath, string.Empty));
-			Directory.Delete(FileManager.GetAppFolder() + "ATServerLogs");
 		}
 	}
 

@@ -63,9 +63,9 @@ namespace AdminToolbox.API
 						throw new Exception();
 					string FindValue(string key)
 					{
-						plugin.Debug("Searched: " + key);
+						//plugin.Debug("Searched: " + key);
 						string str = rawResponse.Split(Environment.NewLine.ToCharArray()).Where(s => s.Trim().StartsWith("\"" + key)).FirstOrDefault().Split(new[] { ':' }, 2).Last().Replace("\"", string.Empty).Trim(',').Trim();
-						plugin.Debug("Found: " + str);
+						//plugin.Debug("Found: " + str);
 						if (key.ToLower() == "tag_name") return str.Split('-').FirstOrDefault();
 						return str;
 					}

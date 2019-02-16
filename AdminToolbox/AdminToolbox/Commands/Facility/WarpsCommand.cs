@@ -1,37 +1,31 @@
 ﻿using Smod2.Commands;
 using Smod2;
-using Smod2.API;
-using Smod2.EventHandlers;
-using System.Linq;
-using ServerMod2.API;
-using System;
-using System.Collections.Generic;
-using Unity;
-using UnityEngine;
 
 namespace AdminToolbox.Command
 {
+	using API.Extentions;
 	class WarpsCommmand : ICommandHandler
 	{
-		public string GetCommandDescription()
-		{
-			return "Returns a list of warps";
-		}
+		public string GetCommandDescription() => "Returns a list of warps. Use arguement \"Refresh\" to reload warps from file";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <REFRESH / R>";
 
-		public string GetUsage()
-		{
-			return "WARPS";
-		}
+		public static readonly string[] CommandAliases = new string[] { "WARPS", "ATWARPS", "WARPLIST" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if (args.Length >= 1 && (args[0].ToUpper() == "R" || args[0].ToUpper() == "REFRESH"))
+			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				AdminToolbox.warpManager.RefreshWarps();
-				return new string[] { "Warps was refreshed!" };
+
+				if (args.Length >= 1 && (args[0].ToUpper() == "R" || args[0].ToUpper() == "REFRESH"))
+				{
+					AdminToolbox.warpManager.RefreshWarps();
+					return new string[] { "Warps was refreshed!" };
+				}
+				else
+					return PluginManager.Manager.CommandManager.CallCommand(sender, "warp", new string[] { "list" });
 			}
 			else
-				return PluginManager.Manager.CommandManager.CallCommand(sender, "warp", new string[] { "list" });
+				return deniedReply;
 		}
 	}
 }

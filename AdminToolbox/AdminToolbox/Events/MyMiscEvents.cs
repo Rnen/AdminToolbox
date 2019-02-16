@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Text.RegularExpressions;
-using System.Threading;
 using UnityEngine;
 using Unity;
-using AdminToolbox.API;
 
 namespace AdminToolbox
 {
+	using API;
+	using API.Extentions;
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
 		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, 
 		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, 
@@ -20,6 +20,7 @@ namespace AdminToolbox
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
+		Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
 		public MyMiscEvents(AdminToolbox plugin) => this.plugin = plugin;
 
@@ -61,9 +62,9 @@ namespace AdminToolbox
 				}
 			}
 			#endregion
-			string intercomTransmit = ConfigManager.Manager.Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+			string intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
-				plugin.pluginManager.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit
+				plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit
 					.Replace("$playerid",ev.Player.PlayerId.ToString())
 					.Replace("$playerrole",ev.Player.TeamRole.Role.ToString())
 					.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
@@ -129,7 +130,7 @@ namespace AdminToolbox
 					ev.Player.OverwatchMode = true;
 				}
 				else if (ev.Player.TeamRole.Role != Role.TUTORIAL
-					&& pSettings.isJailed && !pSettings.IsInsideJail)
+					&& pSettings.isJailed && !ev.Player.IsInsideJail())
 				{
 					JailHandler.SendToJail(ev.Player, pSettings.JailedToTime);
 				}
@@ -192,7 +193,7 @@ namespace AdminToolbox
 
 				if (Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
-					int bancount = (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId)) ? AdminToolbox.ATPlayerDict[player.SteamId].banCount : 0;
+					int bancount = (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId)) ? AdminToolbox.ATPlayerDict[player.SteamId].PlayerStats.BanCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + player.PlayerId + ")" + Environment.NewLine +
 						"From IP: " + (player.IpAddress).Replace("::ffff:",string.Empty) + Environment.NewLine +
@@ -221,8 +222,8 @@ namespace AdminToolbox
 		private DateTime /*oneSecTimer = DateTime.Now,*/ 
 			fiveSecTimer = DateTime.Now.AddSeconds(5),
 			oneMinuteTimer = DateTime.Now.AddSeconds(30), 
-			threeMinTimer = DateTime.Now.AddMinutes(1), 
-			fiveMinTimer = DateTime.Now.AddMinutes(2);
+			threeMinTimer = DateTime.Now.AddMinutes(1)/*, 
+			fiveMinTimer = DateTime.Now.AddMinutes(2)*/;
 
 		public void OnUpdate(UpdateEvent ev)
 		{ /*
@@ -257,6 +258,7 @@ namespace AdminToolbox
 			if(oneMinuteTimer <= DateTime.Now)
 			{
 				AdminToolbox.ATPlayerDict.Cleanup();
+				oneMinuteTimer = DateTime.Now.AddMinutes(1);
 			}
 			if (threeMinTimer <= DateTime.Now)
 			{
@@ -288,8 +290,10 @@ namespace AdminToolbox
 
 		public void OnHandcuffed(PlayerHandcuffedEvent ev)
 		{
-			//if (AdminToolbox.playerdict.ContainsKey(ev.Player.SteamId) && AdminToolbox.playerdict[ev.Player.SteamId].godMode || ev.Player.GetGodmode())
-			//	ev.Handcuffed = false;
+			PlayerSettings playerSetting = Dict.ContainsKey(ev.Player.SteamId) ? Dict[ev.Player.SteamId] : null;
+
+			if (ev.Player.GetGodmode() || (playerSetting?.godMode ?? false))
+				ev.Handcuffed = false;
 			//else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
 			//	ev.Handcuffed = false;
 		}
@@ -301,9 +305,21 @@ namespace AdminToolbox
 
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
 			{
-				AdminToolbox.ATPlayerDict[ev.Player.SteamId].banCount++;
+				AdminToolbox.ATPlayerDict[ev.Player.SteamId].PlayerStats.BanCount++;
 				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.SteamId);
 			}
 		}
 	}
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+	public class LateEscapeEventCheck : IEventHandlerCheckEscape
+	{
+		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
+		{
+			if (ev.AllowEscape && AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
+			{
+				AdminToolbox.ATPlayerDict[ev.Player.SteamId].PlayerStats.EscapeCount++;
+			}
+		}
+	}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

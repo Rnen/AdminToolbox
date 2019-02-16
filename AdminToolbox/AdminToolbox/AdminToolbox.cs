@@ -4,14 +4,15 @@ using Smod2.Events;
 using Smod2.EventHandlers;
 using Smod2.API;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using AdminToolbox.Managers;
-using AdminToolbox.API;
 
 namespace AdminToolbox
 {
+	using Command;
+	using API;
+	using Managers;
+
 	/// <summary>
 	/// The <see cref="AdminToolbox"/> <see cref="Plugin"/>!
 	/// </summary>
@@ -89,7 +90,7 @@ namespace AdminToolbox
 		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
-		
+
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
@@ -102,7 +103,7 @@ namespace AdminToolbox
 		/// </summary>
 		public static int RoundCount { get; internal set; } = 0;
 		internal static string _logStartTime;
-		
+
 		internal static AdminToolbox plugin;
 
 		/// <summary>
@@ -123,6 +124,8 @@ namespace AdminToolbox
 			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, LogManager.ServerLogType.Misc);
 			scheduledRestart = new ScheduledRestart(this);
 			scheduledCommands = new List<ScheduledCommandCall>();
+
+			ATFileManager.ConvertOldFilesToJSON();
 		}
 
 		/// <summary>
@@ -142,6 +145,7 @@ namespace AdminToolbox
 			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
 			this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
 			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
+			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
 		}
 		internal void UnRegisterEvents()
 		{
@@ -149,42 +153,43 @@ namespace AdminToolbox
 		}
 		internal void RegisterCommands()
 		{
-			this.AddCommands(new string[] { "spec", "spectator", "atoverwatch" }, new Command.SpectatorCommand());
-			this.AddCommands(new string[] { "p", "player", "playerinfo", "pinfo" }, new Command.PlayerCommand());
-			this.AddCommands(new string[] { "players", "playerlist", "plist" }, new Command.PlayerListCommand());
-			this.AddCommands(new string[] { "atheal", "at-heal" }, new Command.HealCommand());
-			this.AddCommands(new string[] { "atgod", "atgodmode", "at-god", "at-godmode" }, new Command.GodModeCommand());
-			this.AddCommand("nodmg", new Command.NoDmgCommand());
-			this.AddCommands(new string[] { "tut", "tutorial" }, new Command.TutorialCommand());
-			this.AddCommand("role", new Command.RoleCommand());
-			this.AddCommands(new string[] { "keep", "keepsettings" }, new Command.KeepSettingsCommand());
-			this.AddCommands(new string[] { "athp", "atsethp", "at-hp", "at-sethp" }, new Command.SetHpCommand());
-			this.AddCommand("pos", new Command.PosCommand());
-			this.AddCommand("tpx", new Command.TeleportCommand());
-			this.AddCommand("warp", new Command.WarpCommmand());
-			this.AddCommand("warps", new Command.WarpsCommmand());
-			this.AddCommands(new string[] { "roundlock", "lockround", "rlock", "lockr" }, new Command.RoundLockCommand(this));
-			this.AddCommands(new string[] { "breakdoor", "bd", "breakdoors" }, new Command.BreakDoorsCommand());
-			this.AddCommands(new string[] { "pl", "playerlockdown", "plock", "playerlock" }, new Command.LockdownCommand());
-			this.AddCommand("atcolor", new Command.ATColorCommand(this));
-			this.AddCommand("atdisable", new Command.ATDisableCommand(this));
-			this.AddCommands(new string[] { "ik", "instakill", "instantkill" }, new Command.InstantKillCommand());
-			this.AddCommands(new string[] { "j", "jail" }, new Command.JailCommand());
-			this.AddCommands(new string[] { "il", "ilock", "INTERLOCK", "intercomlock" }, new Command.IntercomLockCommand(this));
-			this.AddCommands(new string[] { "s", "si", "server", "serverinfo" }, new Command.ServerCommand());
-			this.AddCommands(new string[] { "e", "empty" }, new Command.EmptyCommand());
-			this.AddCommands(new string[] { "atban", "offlineban", "oban" }, new Command.ATBanCommand(this));
-			this.AddCommands(new string[] { "kill", "slay" }, new Command.KillCommand(this));
-			this.AddCommands(new string[] { "atspeak", "speak", "atintercom", "at-speak" }, new Command.SpeakCommand());
-			this.AddCommands(new string[] { "ghost", "ghostmode", "ghostm", "invisible", "gh" }, new Command.GhostCommand(this));
-			this.AddCommands(new string[] { "athelp", "atbhelp", "at-help", "admintoolboxhelp", "admintoolbox-help" }, new Command.AT_HelpCommand());
-			this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new Command.ATCommand(this));
-			this.AddCommands(new string[] { "serverstats", "sstats", "roundstats", "rstats" }, new Command.ServerStatsCommand(this));
+			this.AddCommands(SpectatorCommand.CommandAliases, new SpectatorCommand());
+			this.AddCommands(PlayerCommand.CommandAliases, new PlayerCommand());
+			this.AddCommands(PlayerListCommand.CommandAliases, new PlayerListCommand());
+			this.AddCommands(HealCommand.CommandAliases, new HealCommand());
+			this.AddCommands(GodModeCommand.CommandAliases, new GodModeCommand());
+			this.AddCommands(NoDmgCommand.CommandAliases, new NoDmgCommand());
+			this.AddCommands(TutorialCommand.CommandAliases, new TutorialCommand());
+			this.AddCommands(RoleCommand.CommandAliases, new RoleCommand());
+			this.AddCommands(KeepSettingsCommand.CommandAliases, new KeepSettingsCommand());
+			this.AddCommands(SetHpCommand.CommandAliases, new SetHpCommand());
+			this.AddCommands(PosCommand.CommandAliases, new PosCommand());
+			this.AddCommands(TeleportCommand.CommandAliases, new TeleportCommand());
+			this.AddCommands(WarpCommmand.CommandAliases, new WarpCommmand());
+			this.AddCommands(WarpsCommmand.CommandAliases, new WarpsCommmand());
+			this.AddCommands(RoundLockCommand.CommandAliases, new RoundLockCommand(this));
+			this.AddCommands(BreakDoorsCommand.CommandAliases, new BreakDoorsCommand());
+			this.AddCommands(LockdownCommand.CommandAliases, new LockdownCommand());
+			this.AddCommands(ATColorCommand.CommandAliases, new ATColorCommand(this));
+			this.AddCommands(ATDisableCommand.CommandAliases, new ATDisableCommand(this));
+			this.AddCommands(InstantKillCommand.CommandAliases, new InstantKillCommand());
+			this.AddCommands(JailCommand.CommandAliases, new JailCommand());
+			this.AddCommands(IntercomLockCommand.CommandAliases, new IntercomLockCommand(this));
+			this.AddCommands(ServerCommand.CommandAliases, new ServerCommand());
+			this.AddCommands(EmptyCommand.CommandAliases, new EmptyCommand());
+			this.AddCommands(ATBanCommand.CommandAliases, new ATBanCommand(this));
+			this.AddCommands(KillCommand.CommandAliases, new KillCommand(this));
+			this.AddCommands(SpeakCommand.CommandAliases, new SpeakCommand());
+			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand(this));
+			this.AddCommands(AT_HelpCommand.CommandAliases, new AT_HelpCommand());
+			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
+			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
 			//this.AddCommands(new string[] { "timedrestart", "trestart" }, new Command.TimedCommand(this));
 		}
 		internal void UnRegisterCommands()
 		{
 			this.pluginManager.CommandManager.UnregisterCommands(this);
+			//this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new ATCommand(this));
 		}
 		internal void RegisterConfigs()
 		{
@@ -231,7 +236,7 @@ namespace AdminToolbox
 		}
 		internal void UnRegisterConfigs()
 		{
-			
+
 		}
 
 
@@ -248,8 +253,8 @@ namespace AdminToolbox
 		{
 			if (players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
 			if (players.Count > 0)
-				foreach(Player player in players.Where(p => p != null && !string.IsNullOrEmpty(p.SteamId)))
-						AddToPlayerDict(player);
+				foreach (Player player in players.Where(p => p != null && !string.IsNullOrEmpty(p.SteamId)))
+					AddToPlayerDict(player);
 		}
 		private static void AddToPlayerDict(Player player)
 		{
@@ -272,11 +277,15 @@ namespace AdminToolbox
 			else return false;
 		}
 
-		public void Debug(string message)
+		/// <summary>
+		/// Debugs messages in <see cref="AdminToolbox"/> when DEBUG is defined
+		/// </summary>
+		public new void Debug(string message)
 		{
 			if (DebugMode)
 				this.Info(message);
 		}
+
 	}
 
 }

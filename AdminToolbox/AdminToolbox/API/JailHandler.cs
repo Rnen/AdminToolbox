@@ -7,9 +7,11 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.API
 {
+	using API.Extentions;
 	/// <summary>
 	/// Contains all Jail-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
@@ -20,29 +22,19 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static Vector JailPos => AdminToolbox.JailPos;
 
+		private static Server Server => PluginManager.Manager.Server;
+
 		/// <summary>
-		/// Returns <see cref ="List{Player}"/> of jailed <see cref="Player"/>s
+		/// Checks the players marked as "Jailed" to see if they are at where they're supposed to be
+		/// <para> Gets run in the <see cref="MyMiscEvents"/>.cs Update event</para>
 		/// </summary>
-		/// <remarks> <paramref name="filter"/> is the same as the SMod GetPlayers filter</remarks>
-		public static List<Player> GetJailedPlayers(string filter = "")
-		{
-			if (PluginManager.Manager.Server.GetPlayers(filter).Count > 0 && PluginManager.Manager.Server.Round.Duration > 0)
-				return PluginManager.Manager.Server.GetPlayers(filter)
-					.Where(p => AdminToolbox.ATPlayerDict.ContainsKey(p.SteamId)
-					&& p.TeamRole.Role != Role.UNASSIGNED
-					&& p.TeamRole.Role != Role.SPECTATOR
-					&& !p.OverwatchMode
-					&& AdminToolbox.ATPlayerDict[p.SteamId].isJailed).ToList();
-			else
-				return new List<Player>();
-		}
 		internal static void CheckJailedPlayers()
 		{
-			List<Player> jailedPlayers = GetJailedPlayers();
-			if (jailedPlayers.Count > 0 && PluginManager.Manager.Server.Round.Duration > 0)
+			Player[] jailedPlayers = Server.GetPlayers().JailedPlayers();
+			if (jailedPlayers.Length > 0)
 				foreach (Player pl in jailedPlayers)
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
-						if (!AdminToolbox.ATPlayerDict[pl.SteamId].IsInsideJail) SendToJail(pl);
+						if (!pl.IsInsideJail()) SendToJail(pl);
 						else if (AdminToolbox.ATPlayerDict[pl.SteamId].JailedToTime <= DateTime.Now) ReturnFromJail(pl);
 		}
 
@@ -51,14 +43,17 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool SendToJail(Player player) => SendToJail(player, null);
 		/// <summary>
-		/// Sends <see cref="Player"/> to jail
+		/// Sends <see cref="Player"/> to jail, with time overload
 		/// </summary>
+		/// <param name="player">The Player to send</param>
+		/// <param name="jailedToTime">The time to jail the player. Null sets the time to remaining time, or if thats null, one year</param>
+		/// <returns> Returns bool of operation success </returns>
 		public static bool SendToJail(Player player, DateTime? jailedToTime)
 		{
-			if (player.TeamRole.Role == Role.SPECTATOR) return false;
+			if (player.TeamRole.Role == Role.SPECTATOR || player.OverwatchMode) return false;
 			if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
 			{
-				API.PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
+				PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
 				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.Now) ? psetting.JailedToTime : DateTime.Now.AddYears(1));
 				//Saves original variables
 				psetting.originalPos = player.GetPosition();
@@ -74,7 +69,7 @@ namespace AdminToolbox.API
 				//Changes role to Tutorial, teleports to jail, removes inv.
 				player.ChangeRole(Role.TUTORIAL, true, false);
 				player.Teleport(JailPos, true);
-				foreach (Smod2.API.Item item in player.GetInventory())
+				foreach (SMItem item in player.GetInventory())
 					item.Remove();
 				psetting.isJailed = true;
 				return true;
@@ -94,7 +89,7 @@ namespace AdminToolbox.API
 			if (player == null || string.IsNullOrEmpty(player.SteamId.Trim())) return;
 			if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
 			{
-				API.PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
+				PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
 				psetting.isJailed = false;
 				psetting.JailedToTime = DateTime.Now;
 				player.ChangeRole(psetting.previousRole, true, false);
@@ -102,9 +97,9 @@ namespace AdminToolbox.API
 				player.SetHealth(psetting.previousHealth);
 				if (psetting.playerPrevInv != null)
 				{
-					foreach (Smod2.API.Item item in player.GetInventory())
+					foreach (SMItem item in player.GetInventory())
 						item.Remove();
-					foreach (Smod2.API.Item item in psetting.playerPrevInv)
+					foreach (SMItem item in psetting.playerPrevInv)
 						player.GiveItem(item.ItemType);
 				}
 				player.SetAmmo(AmmoType.DROPPED_5, psetting.prevAmmo5);
