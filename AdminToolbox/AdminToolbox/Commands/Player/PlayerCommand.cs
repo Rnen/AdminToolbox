@@ -95,12 +95,14 @@ namespace AdminToolbox.Command
 					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
 
 					string _playerRole = (IsPlayer(sender)) ? ColoredRole(myPlayer) : myPlayer.TeamRole.Role + "";
+					string _roleColor = myPlayer.GetUserGroup().Color != null ? myPlayer.GetUserGroup().Color : "default";
+					string _serverRole = myPlayer.GetRankName() != null ? myPlayer.GetRankName() : "";
 
 					//Building string
 					string playerInfoString = Environment.NewLine + Environment.NewLine +
 							"Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name + Environment.NewLine +
 						BuildTwoLiner(" - SteamID: " + myPlayer.SteamId, " - IP: " + myPlayer.IpAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
-						BuildTwoLiner(" - Server Rank: " + "<color=" + myPlayer.GetUserGroup().Color + ">" + myPlayer.GetRankName() + "</color>") + Environment.NewLine +
+						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
 						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
 						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
 						BuildTwoLiner("   - Godmode: " + (playerDict.godMode), " - NoDmg: " + (playerDict.dmgOff)) + Environment.NewLine +

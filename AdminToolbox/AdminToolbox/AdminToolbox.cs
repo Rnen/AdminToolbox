@@ -12,6 +12,7 @@ namespace AdminToolbox
 	using Command;
 	using API;
 	using Managers;
+	using API.Extentions;
 
 	/// <summary>
 	/// The <see cref="AdminToolbox"/> <see cref="Plugin"/>!
@@ -21,14 +22,14 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.8-2",
+		version = "1.3.8-5",
 		SmodMajor = 3,
 		SmodMinor = 1,
 		SmodRevision = 22
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string assemblyInfoVersion = "1.3.8.2";
+		internal const string assemblyInfoVersion = "1.3.8.5";
 
 		#region GitHub release info
 		DateTime LastOnlineCheck = DateTime.Now;
@@ -51,17 +52,17 @@ namespace AdminToolbox
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.LogManager"/>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="LogManager"/>
 		/// </summary>
 		public static readonly LogManager logManager = new LogManager();
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.WarpManager"/>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="WarpManager"/>
 		/// </summary>
 		public static readonly WarpManager warpManager = new WarpManager();
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="Managers.ATFileManager"/>
+		/// <see cref="AdminToolbox"/>s instance of <see cref="ATFileManager"/>
 		/// </summary>
 		public static readonly ATFileManager atfileManager = new ATFileManager();
 
@@ -94,15 +95,12 @@ namespace AdminToolbox
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
-		public static Dictionary<string, WarpPoint> warpVectors = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
-
-		internal static Vector JailPos => warpVectors?["jail"]?.Vector ?? new Vector(53, 1020, -44);
+		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
 		/// </summary>
 		public static int RoundCount { get; internal set; } = 0;
-		internal static string _logStartTime;
 
 		internal static AdminToolbox plugin;
 
@@ -120,12 +118,6 @@ namespace AdminToolbox
 			plugin = this;
 			ATFileManager.WriteVersionToFile();
 			this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
-			_logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-			logManager.WriteToLog(new string[] { "\"Plugin Started\"" }, LogManager.ServerLogType.Misc);
-			scheduledRestart = new ScheduledRestart(this);
-			scheduledCommands = new List<ScheduledCommandCall>();
-
-			ATFileManager.ConvertOldFilesToJSON();
 		}
 
 		/// <summary>
@@ -245,16 +237,31 @@ namespace AdminToolbox
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
 			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
 		}
-		internal static void AddMissingPlayerVariables(Player player)
+		internal static void AddMissingPlayerVariables(Player player) 
+			=> AddMissingPlayerVariables(new List<Player>() { player });
+		internal static void AddMissingPlayerVariables(List<Player> players) 
+			=> AddMissingPlayerVariables(players.ToArray());
+		internal static void AddMissingPlayerVariables(Player[] players)
 		{
-			AddMissingPlayerVariables(new List<Player>() { player });
-		}
-		internal static void AddMissingPlayerVariables(List<Player> players)
-		{
-			if (players == null || players.Count < 1) players = PluginManager.Manager.Server.GetPlayers();
-			if (players.Count > 0)
-				foreach (Player player in players.Where(p => p != null && !string.IsNullOrEmpty(p.SteamId)))
-					AddToPlayerDict(player);
+			Player[] allPlayers = PluginManager.Manager.Server.GetPlayers().ToArray();
+			if (allPlayers.Length == 0)
+			{
+				return;
+			}
+			else if (players == null || players.Length < 1)
+			{
+				players = allPlayers;
+			}
+			if (players.Length > 0)
+			{
+				foreach (Player player in players)
+				{
+					if (player != null && !string.IsNullOrEmpty(player.SteamId))
+					{
+						AddToPlayerDict(player);
+					}
+				}
+			}
 		}
 		private static void AddToPlayerDict(Player player)
 		{
@@ -265,18 +272,6 @@ namespace AdminToolbox
 			}
 		}
 
-		internal bool NewerVersionAvailable()
-		{
-			string thisVersion = this.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
-			string onlineVersion = this.GetGitReleaseInfo().Version.Replace(".", string.Empty);
-
-			if (int.TryParse(thisVersion, out int thisV)
-				&& int.TryParse(onlineVersion, out int onlineV)
-				&& onlineV > thisV)
-				return true;
-			else return false;
-		}
-
 		/// <summary>
 		/// Debugs messages in <see cref="AdminToolbox"/> when DEBUG is defined
 		/// </summary>
@@ -285,7 +280,6 @@ namespace AdminToolbox
 			if (DebugMode)
 				this.Info(message);
 		}
-
 	}
 
 }

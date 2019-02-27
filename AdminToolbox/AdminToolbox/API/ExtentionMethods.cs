@@ -14,20 +14,19 @@ using Smod2.Commands;
 
 namespace AdminToolbox.API.Extentions
 {
+	using Managers;
 	static internal class ExtentionMethods
 	{
 		static Server Server => PluginManager.Manager.Server;
 		static AdminToolbox Plugin => AdminToolbox.plugin;
 
-		internal static bool GetIsJailed(this Player player)
-		{
-			return AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) && AdminToolbox.ATPlayerDict[player.SteamId].isJailed;
-		}
+		internal static bool GetIsJailed(this Player player) 
+			=> AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) && AdminToolbox.ATPlayerDict[player.SteamId].isJailed;
 
 		public static bool IsInsideJail(this Player player)
 		{
 			Vector 
-				jail = AdminToolbox.JailPos,
+				jail = JailHandler.JailPos,
 				playerPos = player.GetPosition();
 			float
 				x = Math.Abs(playerPos.x - jail.x),
@@ -39,7 +38,7 @@ namespace AdminToolbox.API.Extentions
 				return true;
 		}
 
-		internal static string[] CurrentOnlineIDs(this List<Player> players)
+		internal static string[] SteamIDsToArray(this List<Player> players)
 		{
 			string[] newArray = new string[players.Count];
 			for (int i = 0; i < players.Count; i++)
@@ -71,11 +70,11 @@ namespace AdminToolbox.API.Extentions
 						continue;
 					if (str == player.SteamId)
 						return true;
-					else if (str == player.GetUserGroup().Name.Trim().ToUpper())
+					else if (player.GetUserGroup().Name != null && str == player.GetUserGroup().Name.Trim().ToUpper())
 						return true;
-					else if (str == player.GetUserGroup().BadgeText.Trim().ToUpper())
+					else if (player.GetUserGroup().BadgeText != null && str == player.GetUserGroup().BadgeText.Trim().ToUpper())
 						return true;
-					else if (str == player.GetRankName().Trim().ToUpper())
+					else if (player.GetRankName() != null && str == player.GetRankName().Trim().ToUpper())
 						return true;
 				}
 				return false;
@@ -86,15 +85,15 @@ namespace AdminToolbox.API.Extentions
 			}
 		}
 
-		public static bool IsPermitted(this ICommandSender sender, string[] commandKey)
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey)
 		{
 			return sender.IsPermitted(commandKey, false, out string[] reply);
 		}
-		public static bool IsPermitted(this ICommandSender sender, string[] commandKey, out string[] denied)
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, out string[] denied)
 		{
 			return sender.IsPermitted(commandKey, false, out denied);
 		}
-		public static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed, out string[] denied)
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed, out string[] denied)
 		{
 			denied = new string[] { "Error during command whitelist calculation!" };
 			if (sender is Player pl)
@@ -125,18 +124,20 @@ namespace AdminToolbox.API.Extentions
 				return true;
 		}
 
-		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
-		{
-			return AdminToolbox.ATPlayerDict?.ContainsKey(player?.SteamId) ?? false;
-		}
+		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player) 
+			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.SteamId) ?? false;
 
-		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings> dict)
+		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)
 		{
-			foreach (KeyValuePair<string, PlayerSettings> kp in dict)
+			string[] keys = dict.ToArray();
+			if (keys.Length > 0)
 			{
-				if (!kp.Value.keepSettings)
+				foreach (string key in keys)
 				{
-					SetPlayerVariables.SetPlayerBools(kp.Key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+					if (AdminToolbox.ATPlayerDict.ContainsKey(key) && !AdminToolbox.ATPlayerDict[key].keepSettings)
+					{
+						SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+					}
 				}
 			}
 		}
@@ -146,9 +147,10 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		internal static void Cleanup(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().CurrentOnlineIDs();
+			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().SteamIDsToArray();
 			Dictionary<string, PlayerSettings> newDict = new Dictionary<string, PlayerSettings>(dict);
 			if (newDict.Count > 0)
+			{
 				foreach (KeyValuePair<string, PlayerSettings> kp in newDict)
 				{
 					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.Now - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
@@ -157,6 +159,7 @@ namespace AdminToolbox.API.Extentions
 						dict.Remove(kp.Key);
 					}
 				}
+			}
 		}
 	}
 }

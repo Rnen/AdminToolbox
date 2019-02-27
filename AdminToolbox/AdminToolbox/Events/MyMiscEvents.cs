@@ -26,7 +26,10 @@ namespace AdminToolbox
 
 		public void OnIntercom(PlayerIntercomEvent ev)
 		{
-			if (AdminToolbox.intercomLock) ev.SpeechTime = 0f;
+			if (AdminToolbox.intercomLock)
+			{
+				ev.SpeechTime = 0f;
+			}
 			#region Blacklist
 			string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
 			if (blackListedSTEAMIDS.Length > 0)
@@ -64,15 +67,21 @@ namespace AdminToolbox
 			#endregion
 			string intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
-				plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit
-					.Replace("$playerid",ev.Player.PlayerId.ToString())
-					.Replace("$playerrole",ev.Player.TeamRole.Role.ToString())
+			{
+				if (ev.Player.GetRankName() != null)
+					intercomTransmit.Replace("$playerrank", ev.Player.GetRankName());
+				if (ev.Player.GetUserGroup().BadgeText != null)
+					intercomTransmit.Replace("$playerbadge", ev.Player.GetUserGroup().BadgeText);
+				intercomTransmit
+					.Replace("$playerid", ev.Player.PlayerId.ToString())
+					.Replace("$playerrole", ev.Player.TeamRole.Role.ToString())
 					.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
-					.Replace("$playerhp",ev.Player.GetHealth().ToString())
+					.Replace("$playerhp", ev.Player.GetHealth().ToString())
 					.Replace("$playerhealth", ev.Player.GetHealth().ToString())
-					.Replace("$playerrank", ev.Player.GetRankName())
 					.Replace("$player", ev.Player.Name)
-					.Replace("\n", Environment.NewLine));
+					.Replace("\n", Environment.NewLine);
+				plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
+			}
 		}
 
 		public void OnDoorAccess(PlayerDoorAccessEvent ev)
@@ -85,9 +94,14 @@ namespace AdminToolbox
 				if (playerSetting != null)
 				{
 					if (playerSetting.destroyDoor)
+					{
 						ev.Destroy = true;
+					}
+
 					if (playerSetting.lockDown)
+					{
 						ev.Allow = false;
+					}
 				}
 			}
 		}
@@ -114,13 +128,17 @@ namespace AdminToolbox
 			//	else
 			//		plugin.Info("No hit!");
 			//}
-		}
+		} //Currently not used
 
 		public void OnSpawn(PlayerSpawnEvent ev)
 		{
 			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghostmode
+
 			if (ev.Player != null && ev.Player is Player)
+			{
 				AdminToolbox.AddMissingPlayerVariables(ev.Player);
+			}
+
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
 			{
 				PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
@@ -141,46 +159,70 @@ namespace AdminToolbox
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
-			if (AdminToolbox.isStarting) AdminToolbox.isStarting = false;
 			AdminToolbox.lockRound = false;
-			if (!Config.GetBoolValue("admintoolbox_enable", true, false)) this.plugin.pluginManager.DisablePlugin(plugin);
-			if (!AdminToolbox.isColoredCommand) AdminToolbox.isColored = Config.GetBoolValue("admintoolbox_colors", false);
-			if (!AdminToolbox.intercomLockChanged) AdminToolbox.intercomLock = Config.GetBoolValue("admintoolbox_intercomlock", false);
+			if (AdminToolbox.isStarting)
+			{
+				AdminToolbox.isStarting = false;
+			}
+
+			if (!Config.GetBoolValue("admintoolbox_enable", true, false))
+			{
+				this.plugin.pluginManager.DisablePlugin(plugin);
+			}
+
+			if (!AdminToolbox.isColoredCommand)
+			{
+				AdminToolbox.isColored = Config.GetBoolValue("admintoolbox_colors", false);
+			}
+
+			if (!AdminToolbox.intercomLockChanged)
+			{
+				AdminToolbox.intercomLock = Config.GetBoolValue("admintoolbox_intercomlock", false);
+			}
 			//this.plugin.Info(System.Reflection.Assembly.GetExecutingAssembly().Location);
 			if (checkNewVersion >= 8)
 			{
 				checkNewVersion = 0;
-				if (this.plugin.NewerVersionAvailable())
+				if (ATWeb.NewerVersionAvailable())
+				{
 					plugin.Info("\n\n [New Version of AdminToolbox avaiable for download!] [V:" + this.plugin.GetGitReleaseInfo().Version + "]\n " + " Either update via \"AT_AutoUpdate.bat\" or write \"AT DOWNLOAD\"" + "\n\n");
+				}
 			}
 			else
+			{
 				checkNewVersion++;
-
-			if (AdminToolbox.RoundCount == 0)
-				AdminToolbox.warpManager.RefreshWarps();
+			}
+			AdminToolbox.warpManager.RefreshWarps();
+			AdminToolbox.logManager.ManageDatedATLogs();
 		}
 
 		public void OnAdminQuery(AdminQueryEvent ev)
 		{
 			if (ev.Query != "REQUEST_DATA PLAYER_LIST SILENT")
+			{
 				AdminToolbox.logManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, Managers.LogManager.ServerLogType.RemoteAdminActivity);
+			}
 		}
 
 		public void OnLure(PlayerLureEvent ev)
 		{
 			int[] TUTallowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
 			if ((AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && AdminToolbox.ATPlayerDict[ev.Player.SteamId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
+			{
 				ev.AllowContain = false;
+			}
 		}
 
 		public void OnContain106(PlayerContain106Event ev)
 		{
-			foreach (Player pl in ev.SCP106s)
-				if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && (AdminToolbox.ATPlayerDict[pl.SteamId].godMode || AdminToolbox.ATPlayerDict[ev.Player.SteamId].dmgOff))
+			foreach (Player scp106 in ev.SCP106s)
+			{
+				if (AdminToolbox.ATPlayerDict.ContainsKey(scp106.SteamId) && (AdminToolbox.ATPlayerDict[scp106.SteamId].godMode || AdminToolbox.ATPlayerDict[ev.Player.SteamId].dmgOff))
 				{
 					ev.ActivateContainment = false;
 					break;
 				}
+			}
 		}
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
@@ -208,7 +250,9 @@ namespace AdminToolbox
 				if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
 				{
 					if (AdminToolbox.ATPlayerDict[player.SteamId].overwatchMode)
+					{
 						ev.Player.OverwatchMode = true;
+					}
 					AdminToolbox.ATPlayerDict[player.SteamId].JoinTime = DateTime.Now;
 				}
 			}
@@ -262,9 +306,11 @@ namespace AdminToolbox
 			}
 			if (threeMinTimer <= DateTime.Now)
 			{
-				List<string> keys = AdminToolbox.ATPlayerDict.Keys.ToList();
-				if (keys?.Count > 0)
+				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
+				if (keys?.Length > 0)
+				{
 					AdminToolbox.atfileManager.PlayerStatsFileManager(keys, Managers.ATFileManager.PlayerFile.Write);
+				}
 				threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval);
 			}
 			//if (fiveMinTimer <= DateTime.Now)
@@ -293,15 +339,21 @@ namespace AdminToolbox
 			PlayerSettings playerSetting = Dict.ContainsKey(ev.Player.SteamId) ? Dict[ev.Player.SteamId] : null;
 
 			if (ev.Player.GetGodmode() || (playerSetting?.godMode ?? false))
+			{
 				ev.Handcuffed = false;
-			//else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
-			//	ev.Handcuffed = false;
+			}
+			else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+			{
+				ev.Handcuffed = false;
+			}
 		}
 
 		public void OnBan(BanEvent ev)
 		{
 			if (ev.Player != null && ev.Player is Player)
+			{
 				AdminToolbox.AddMissingPlayerVariables(ev.Player);
+			}
 
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
 			{

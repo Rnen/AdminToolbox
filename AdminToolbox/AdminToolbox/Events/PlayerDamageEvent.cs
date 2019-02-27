@@ -141,7 +141,7 @@ namespace AdminToolbox
 					}
 					else
 					{
-						plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1]);
+						plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1] + "\nSkipping entry...");
 						continue;
 					}
 				}
@@ -193,7 +193,7 @@ namespace AdminToolbox
 			{
 				playerSetting.DeathPos = ev.Player.GetPosition();
 			}
-			AdminToolbox.logManager.AddLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
+			AdminToolbox.logManager.WriteToLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}
 	}
 

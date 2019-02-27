@@ -96,6 +96,7 @@
     <Compile Include="API\ScheduledRestart.cs" />
     <Compile Include="API\SetPlayerVariables.cs" />
     <Compile Include="API\Utility.cs" />
+    <Compile Include="API\WarpPoint.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />

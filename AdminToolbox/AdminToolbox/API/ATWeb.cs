@@ -14,6 +14,8 @@ namespace AdminToolbox.API
 	/// </summary>
 	public static class ATWeb
 	{
+		static AdminToolbox Plugin => AdminToolbox.plugin; 
+
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
@@ -83,6 +85,19 @@ namespace AdminToolbox.API
 				return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			}
 			return new AT_LatestReleaseInfo(_title,_version,_author,_dllink);
+		}
+
+		internal static bool NewerVersionAvailable()
+		{
+			if (Plugin == null) return false;
+			string thisVersion = Plugin.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
+			string onlineVersion = Plugin.GetGitReleaseInfo().Version.Replace(".", string.Empty);
+
+			if (int.TryParse(thisVersion, out int thisV)
+				&& int.TryParse(onlineVersion, out int onlineV)
+				&& onlineV > thisV)
+				return true;
+			else return false;
 		}
 	}
 }

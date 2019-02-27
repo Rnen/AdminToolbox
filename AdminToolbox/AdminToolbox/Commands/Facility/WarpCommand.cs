@@ -47,9 +47,9 @@ namespace AdminToolbox.Command
 						case "H":
 							return GetHelpReturn();
 						case "LIST":
-							if (AdminToolbox.warpVectors.Count < 1) { return new string[] { "No warp points created yet!" }; }
+							if (AdminToolbox.WarpVectorDict.Count < 1) { return new string[] { "No warp points created yet!" }; }
 							string str = "\n" + "Warp Points:";
-							IEnumerable<WarpPoint> list = AdminToolbox.warpVectors.Values.OrderBy(s => s.Name);
+							IEnumerable<WarpPoint> list = AdminToolbox.WarpVectorDict.Values.OrderBy(s => s.Name);
 							int maxSize = list.Max(s => s.Name.Length);
 							bool toggle = false;
 							foreach (WarpPoint i in list)
@@ -66,9 +66,9 @@ namespace AdminToolbox.Command
 							return new string[] { "Refreshed warps!" };
 						case "REMOVE":
 						case "-":
-							if (AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
+							if (AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
 							{
-								AdminToolbox.warpVectors.Remove(args[1].ToLower());
+								AdminToolbox.WarpVectorDict.Remove(args[1].ToLower());
 								AdminToolbox.warpManager.WriteWarpsToFile();
 								return new string[] { "Warp point: " + args[1].ToLower() + " removed." };
 							}
@@ -78,7 +78,7 @@ namespace AdminToolbox.Command
 						case "+":
 							if (args.Length > 2)
 							{
-								if (!AdminToolbox.warpVectors.ContainsKey(args[2].ToLower()))
+								if (!AdminToolbox.WarpVectorDict.ContainsKey(args[2].ToLower()))
 								{
 									Player myPlayer = GetPlayerFromString.GetPlayer(args[1]);
 									if (myPlayer == null) { return new string[] { "Could not find player: " + args[1] }; ; }
@@ -87,7 +87,7 @@ namespace AdminToolbox.Command
 									if (args.Length >= 3)
 										for (int i = 3; i < args.Length; i++)
 											desc = args[i] + " ";
-									AdminToolbox.warpVectors.Add(args[2].ToLower(), new WarpPoint(args[2].ToLower(), desc, myvector));
+									AdminToolbox.WarpVectorDict.Add(args[2].ToLower(), new WarpPoint { Name = args[2].ToLower(), Description = desc, Vector = new ATVector(myvector) });
 									AdminToolbox.warpManager.WriteWarpsToFile();
 									return new string[] { "Warp point: " + args[2].ToLower() + " added." };
 								}
@@ -103,21 +103,21 @@ namespace AdminToolbox.Command
 								{
 									if (Server.GetPlayers().Count == 0)
 										return new string[] { "No players to teleport!" };
-									else if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
+									else if (!AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
 										return new string[] { "No warp point called: " + args[1] };
 									byte playerNum = 0;
 									foreach (Player pl in Server.GetPlayers())
 									{
-										pl.Teleport(AdminToolbox.warpVectors[args[1].ToLower()].Vector, true);
+										pl.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToVector(), true);
 										playerNum++;
 									}
 									return new string[] { "Teleported " + playerNum + " players to warp point: " + args[1] };
 								}
-								Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+								Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 								if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-								if (!AdminToolbox.warpVectors.ContainsKey(args[1].ToLower()))
+								if (!AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
 									return new string[] { "No warp point called: " + args[1] };
-								myPlayer.Teleport(AdminToolbox.warpVectors[args[1].ToLower()].Vector, true);
+								myPlayer.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToVector(), true);
 								return new string[] { "Teleported: " + myPlayer.Name + " to warp point: " + args[1] };
 							}
 							else

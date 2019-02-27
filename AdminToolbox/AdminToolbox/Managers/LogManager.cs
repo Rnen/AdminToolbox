@@ -17,25 +17,29 @@ namespace AdminToolbox.Managers
 	{
 		static IConfigFile Config => ConfigManager.Manager.Config;
 
+		public LogManager()
+		{
+			Awake();
+		}
+
 		internal class LogData
 		{
 			internal string Content;
-
 			internal string Type;
-
 			internal string Time;
-
 			internal bool Saved;
 		}
 
 		private readonly List<LogData> logs = new List<LogData>();
 
-		private static int _port => PluginManager.Manager.Server.Port;
+		private static int Port => PluginManager.Manager.Server.Port;
 
 		private int _maxlen;
 
-		private static string AppFolder => ATFileManager.appFolder;
+		internal string _logStartTime;
 
+		private static string 
+			AppFolder => ATFileManager.GetFolder(ATFileManager.Folder.AppData);
 		private static string
 			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
 		private static string
@@ -68,13 +72,15 @@ namespace AdminToolbox.Managers
 		};
 		private void Awake()
 		{
-			foreach(string txt in Txt.ToList())
+			SetLogStartTime();
+			foreach (string txt in Txt.ToList())
 			{
 				_maxlen = Math.Max(_maxlen, txt.Length);
 			}
+			WriteToLog(new string[] { "\"Plugin Started\"" }, ServerLogType.Misc);
 		}
 
-		internal void AddLog(string msg, ServerLogType type)
+		private void AddLog(string msg, ServerLogType type)
 		{
 			string time = TimeBehaviour.FormatTime("yyyy-MM-dd HH:mm:ss zzz");
 			logs.Add(new LogData
@@ -96,12 +102,17 @@ namespace AdminToolbox.Managers
 						text = text2 + log.Time + " | " + ToMax(log.Type, _maxlen) + " | " + log.Content + Environment.NewLine;
 					}
 				}
-				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Path.DirectorySeparatorChar + _port + Path.DirectorySeparatorChar + AdminToolbox._logStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
+				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Port + Path.DirectorySeparatorChar + _logStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
 				{
 					streamWriter.Write(text);
 					streamWriter.Close();
 				}
 			}
+		}
+
+		internal void SetLogStartTime()
+		{
+			_logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 		}
 
 		private bool CheckExistingFolders()
@@ -114,14 +125,14 @@ namespace AdminToolbox.Managers
 				if (!Directory.Exists(AdminToolboxLogs))
 					Directory.CreateDirectory(AdminToolboxLogs);
 				MoveOldFiles();
-				if (!Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port))
-					Directory.CreateDirectory(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
+				if (!Directory.Exists(AdminToolboxLogs + Port))
+					Directory.CreateDirectory(AdminToolboxLogs + Port);
 			}
 			catch (Exception)
 			{
 				return false;
 			}
-			return Directory.Exists(AppFolder) && Directory.Exists(AdminToolboxFolder) && Directory.Exists(AdminToolboxLogs) && Directory.Exists(AdminToolboxLogs + Path.DirectorySeparatorChar + _port);
+			return Directory.Exists(AppFolder) && Directory.Exists(AdminToolboxFolder) && Directory.Exists(AdminToolboxLogs) && Directory.Exists(AdminToolboxLogs + Port);
 		}
 
 		/// <summary>
@@ -130,11 +141,23 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public void ManageDatedATLogs(bool force = false)
 		{
-			int configInt = Config.GetIntValue("admintoolbox_logremover_hours_old", 48);
+			int configInt = Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
 
 			if (configInt > 0 || force)
 			{
-				Directory.GetFiles(AdminToolboxLogs).ToList().ForEach(path => { if ((DateTime.Now - File.GetCreationTime(path)).TotalHours > configInt) File.Delete(path); });
+				string[] files = Directory.GetFiles(AdminToolboxLogs + Port);
+				AdminToolbox.plugin.Info("Cnfig = " + configInt);
+				if (files.Length > 0)
+					foreach (string path in files)
+					{
+						int num = (int)(DateTime.Now - File.GetCreationTime(path)).TotalHours;
+						AdminToolbox.plugin.Debug(path + "\nHours Old: " + num);
+						if (num > configInt)
+						{
+							AdminToolbox.plugin.Debug("-----------Deleted--------------\n");
+							File.Delete(path);
+						}
+					}
 			}
 		}
 
@@ -146,11 +169,18 @@ namespace AdminToolbox.Managers
 			}
 			return text;
 		}
+		/// <summary>
+		/// Appends <see cref="string"/> to the <see cref="AdminToolbox"/> log.
+		/// </summary>
+		internal void WriteToLog(string str, ServerLogType logType = ServerLogType.Misc)
+		{
+			WriteToLog(new string[] { str }, logType);
+		}
 
 		/// <summary>
 		/// Appends <see cref="string"/> <see cref="Array"/> to the <see cref="AdminToolbox"/> log.
 		/// </summary>
-		public void WriteToLog(string[] str, LogManager.ServerLogType logType = LogManager.ServerLogType.Misc)
+		internal void WriteToLog(string[] str, ServerLogType logType = ServerLogType.Misc)
 		{
 			string str2 = string.Empty;
 			if (str.Length != 0)
@@ -158,19 +188,19 @@ namespace AdminToolbox.Managers
 					str2 += st;
 			switch (logType)
 			{
-				case LogManager.ServerLogType.TeamKill:
+				case ServerLogType.TeamKill:
 					if (Config.GetBoolValue("admintoolbox_log_teamkills", false, false))
 						AddLog(str2, logType);
 					break;
-				case LogManager.ServerLogType.KillLog:
+				case ServerLogType.KillLog:
 					if (Config.GetBoolValue("admintoolbox_log_kills", false, false))
 						AddLog(str2, logType);
 					break;
-				case LogManager.ServerLogType.RemoteAdminActivity:
+				case ServerLogType.RemoteAdminActivity:
 					if (Config.GetBoolValue("admintoolbox_log_commands", false, false))
 						AddLog(str2, logType);
 					break;
-				case LogManager.ServerLogType.PlayerDamage:
+				case ServerLogType.PlayerDamage:
 					if (Config.GetBoolValue("admintoolbox_log_damage", false, false))
 						AddLog(str2, logType);
 					break;
@@ -189,11 +219,12 @@ namespace AdminToolbox.Managers
 				{
 					if (!Directory.Exists(Path.DirectorySeparatorChar + path.Replace(AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty)))
 					{
-						Directory.Move(path, AdminToolboxLogs + Path.DirectorySeparatorChar + path.Replace(AppFolder + "ATServerLogs" + Path.DirectorySeparatorChar, string.Empty));
+						Directory.Move(path, path.Replace(AdminToolboxLogs, string.Empty));
 						infoString += "\n" + " - " + path.Replace(AppFolder, string.Empty);
 					}
 				}
-				if (infoString != string.Empty) AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(AppFolder, string.Empty));
+				if (infoString != string.Empty)
+					AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(AppFolder, string.Empty));
 				Directory.Delete(AppFolder + "ATServerLogs");
 			}
 		}

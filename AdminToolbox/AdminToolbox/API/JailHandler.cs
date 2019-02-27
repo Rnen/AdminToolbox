@@ -20,7 +20,7 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// <see cref ="AdminToolbox"/> jail <see cref="Vector"/> position
 		/// </summary>
-		public static Vector JailPos => AdminToolbox.JailPos;
+		public static Vector JailPos => AdminToolbox.WarpVectorDict?["jail"]?.Vector.ToVector() ?? new Vector(53, 1020, -44);
 
 		private static Server Server => PluginManager.Manager.Server;
 
