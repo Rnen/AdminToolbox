@@ -24,16 +24,18 @@ namespace AdminToolbox.Command
 			{
 				try
 				{
-					if (args.Length < 3) return new string[] { GetUsage() };
+					if (args.Length < 2) return new string[] { GetUsage() };
 
 					string IssuingPlayer = (sender is Player pl && !string.IsNullOrEmpty(pl.SteamId)) ? pl.Name : "Server";
 					string bannedPlayer = args[0];
 					string input = args[1];
-					int minutes = (int.TryParse(args[2], out int x)) ? x : 0;
-					string reason = (args.Length > 3) ? args[3] : "";
+					int minutes = ConfigManager.Manager.Config.GetIntValue("admintoolbox_atban_default_duration", 43800); //Default 4 weeks
+					if(args.Length > 2)
+						minutes = int.TryParse(args[2], out int x) ? x : 0;
+					string reason = (args.Length > 3) ? string.Join(" ", args, startIndex: 3, count: args.Length - 3) : "";
 
 					if (minutes < 1)
-						return new string[] { "Wrong time format: \"" + minutes + "\"" };
+						return new string[] { "Wrong time format: \"" + args[2] + "\"" };
 
 
 					if (input.Contains("."))
