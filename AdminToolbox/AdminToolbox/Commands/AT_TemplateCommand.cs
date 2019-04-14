@@ -8,12 +8,14 @@ namespace AdminToolbox.Command
 {
 	using API; //This is for accessing AT's API namespace
 	using API.Extentions;
-	class AT_TemplateCommand : ICommandHandler
+	public class AT_TemplateCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
+
 		public AT_TemplateCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "This is a description";

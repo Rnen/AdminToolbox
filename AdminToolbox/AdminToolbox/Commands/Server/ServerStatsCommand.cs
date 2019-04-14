@@ -10,12 +10,14 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class ServerStatsCommand : ICommandHandler
+	public class ServerStatsCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
+
 		public ServerStatsCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Gets the server's round stats since last server restart";

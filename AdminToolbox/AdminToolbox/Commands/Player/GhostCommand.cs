@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class GhostCommand : ICommandHandler
+	public class GhostCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
@@ -86,7 +86,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 								str += "\n - " + item;
 						}
 						else

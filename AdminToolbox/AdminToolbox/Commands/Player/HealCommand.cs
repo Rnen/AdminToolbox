@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class HealCommand : ICommandHandler
+	public class HealCommand : ICommandHandler
 	{
 		public string GetCommandDescription() =>"Heals player. Use int for spesific amount (optional)";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (Int32.TryParse(args[1], out int j))
+							if (int.TryParse(args[1], out int j))
 							{
 								int playerNum = 0;
 								foreach (Player pl in server.GetPlayers())
@@ -54,7 +54,7 @@ namespace AdminToolbox.Command
 					if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
 					if (args.Length > 1)
 					{
-						if (Int32.TryParse(args[1], out int j))
+						if (int.TryParse(args[1], out int j))
 						{
 							myPlayer.AddHealth(j);
 							return new string[] { "Added " + j + " HP " + " to " + myPlayer.Name };

@@ -8,10 +8,10 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class BreakDoorsCommand : ICommandHandler
+	public class BreakDoorsCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Toggles that players break doors when interacting with them";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [BOOLEAN]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER> <BOOLEAN>";
 
 		public static readonly string[] CommandAliases = new string[] { "BREAKDOORS", "BREAKDOOR", "BD" };
 
@@ -60,7 +60,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 								str += "\n - " + item;
 						}
 						else str = "No players with \"BreakDoors\" enabled!";

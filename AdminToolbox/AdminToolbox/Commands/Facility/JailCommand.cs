@@ -10,7 +10,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class JailCommand : ICommandHandler
+	public class JailCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Jails player for a <optional> specified time";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] <time>";

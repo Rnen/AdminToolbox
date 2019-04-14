@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class DoorCommand : ICommandHandler
+	public class DoorCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
@@ -31,13 +31,13 @@ namespace AdminToolbox.Command
 					{
 						if (args[1].ToLower() == "open")
 						{
-							foreach (var item in server.Map.GetDoors())
+							foreach (Smod2.API.Door item in server.Map.GetDoors())
 								item.Open = true;
 							return new string[] { "Door Opened" };
 						}
 						else if (args[1].ToLower() == "close")
 						{
-							foreach (var item in server.Map.GetDoors())
+							foreach (Smod2.API.Door item in server.Map.GetDoors())
 								item.Open = false;
 							return new string[] { "Door Closed" };
 						}

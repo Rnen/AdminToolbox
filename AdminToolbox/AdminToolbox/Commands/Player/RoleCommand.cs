@@ -7,7 +7,8 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class RoleCommand : ICommandHandler
+
+	public class RoleCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Sets player to specified (ROLE-ID)";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [ROLE-ID]";
@@ -25,30 +26,27 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (int.TryParse(args[1], out int j))
+							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Role spesifiedRole))
 							{
 								int playerNum = 0;
 								foreach (Player pl in server.GetPlayers())
 								{
 									Vector originalPos = pl.GetPosition();
 									if (pl.TeamRole.Role == Role.UNASSIGNED || pl.TeamRole.Role == Role.SPECTATOR)
-										pl.ChangeRole((Role)j, true, true);
+										pl.ChangeRole(spesifiedRole, true, true);
 									else
 									{
-										pl.ChangeRole((Role)j, true, false);
+										pl.ChangeRole(spesifiedRole, true, false);
 										pl.Teleport(originalPos, true);
 									}
 									pl.SetHealth(pl.TeamRole.MaxHP);
 									playerNum++;
 								}
-								if (playerNum > 1)
-									return new string[] { playerNum + " roles set to " + (Role)j };
-								else
-									return new string[] { playerNum + " role set to " + (Role)j };
+								return new string[] { playerNum + " " + (playerNum > 1 ? "roles" : "role") + " set to " + spesifiedRole };
 							}
 							else
 							{
-								return new string[] { "Not a valid ID number!" };
+								return new string[] { $"\"{args[1]}\" is not a valid role-ID number!" };
 							}
 						}
 						else
@@ -60,19 +58,16 @@ namespace AdminToolbox.Command
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
 					if (args.Length > 1)
 					{
-						if (int.TryParse(args[1], out int j))
+						if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Role spesifiedRole))
 						{
 							TeamRole oldRole = myPlayer.TeamRole;
 							Vector originalPos = myPlayer.GetPosition();
-							if (myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR)
-								myPlayer.ChangeRole((Role)j, true, true);
-							else
-							{
-								myPlayer.ChangeRole((Role)j, true, false);
+							bool tele = myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR;
+							myPlayer.ChangeRole(spesifiedRole, true, tele);
+							if(tele)
 								myPlayer.Teleport(originalPos, true);
-							}
 							myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
-							return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + (Role)j };
+							return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + spesifiedRole };
 						}
 						else
 							return new string[] { "Not a valid ID number!" };

@@ -4,7 +4,7 @@ using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class AT_HelpCommand : ICommandHandler
+	public class AT_HelpCommand : ICommandHandler
 	{
 		private static Server Server => PluginManager.Manager.Server;
 

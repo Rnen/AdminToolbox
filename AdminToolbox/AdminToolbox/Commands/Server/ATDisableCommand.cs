@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class ATDisableCommand : ICommandHandler
+	public class ATDisableCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 		public ATDisableCommand(AdminToolbox plugin) => this.plugin = plugin;

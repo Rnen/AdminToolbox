@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class SetHpCommand : ICommandHandler
+	public class SetHpCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Sets player HP. Use int for amount";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
@@ -25,7 +25,7 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (Int32.TryParse(args[1], out int j))
+							if (int.TryParse(args[1], out int j))
 							{
 								int playerNum = 0;
 								foreach (Player pl in server.GetPlayers())
@@ -53,7 +53,7 @@ namespace AdminToolbox.Command
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 					if (args.Length > 1)
 					{
-						if (Int32.TryParse(args[1], out int j))
+						if (int.TryParse(args[1], out int j))
 						{
 							myPlayer.SetHealth(j);
 							return new string[] { "Set " + myPlayer.Name + "'s HP to " + j + "HP" };

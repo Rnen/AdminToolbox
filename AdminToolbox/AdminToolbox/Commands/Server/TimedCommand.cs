@@ -9,12 +9,13 @@ using AdminToolbox.API;
 
 namespace AdminToolbox.Command
 {
-	class TimedCommand : ICommandHandler
+	public class TimedCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
 
 		public TimedCommand(AdminToolbox plugin) => this.plugin = plugin;
 

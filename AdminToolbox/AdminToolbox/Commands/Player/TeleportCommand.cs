@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class TeleportCommand : ICommandHandler
+	public class TeleportCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Teleports player to player2";
 		public string GetUsage() => "TPX [PLAYER] [PLAYER2]";

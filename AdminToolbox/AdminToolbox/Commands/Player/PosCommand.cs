@@ -13,14 +13,14 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class PosCommand : ICommandHandler
+	public class PosCommand : ICommandHandler
 	{
 		private const bool Unstuck = false;
 
 		public string GetCommandDescription() =>"Alters the player position";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (ADD/SET/GET) <x=> <y=> <z=>\nVisit the \"github.com/Rnen/AdminToolbox/Wiki\" for more info";
 
-		public static readonly string[] CommandAliases = new string[] { "POS", "POSITION" };
+		public static readonly string[] CommandAliases = new string[] { "POS", "ATPOS", "AT-POS" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
@@ -53,11 +53,13 @@ namespace AdminToolbox.Command
 									if (cordinates.Length < 2) { return new string[] { GetUsage() }; }
 									if (!charsAllowed.Any(cordinates[0].Contains))
 										return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
-									if (Int32.TryParse(cordinates[1], out int xyz))
+									if (int.TryParse(cordinates[1], out int xyz))
+									{
 										if (!myPos.ContainsKey(cordinates[0]))
 											myPos.Add(cordinates[0], xyz);
 										else
 											myPos[cordinates[0]] = xyz;
+									}
 									else
 										return new string[] { cordinates[1] + " is not a valid number" };
 								}
@@ -87,7 +89,7 @@ namespace AdminToolbox.Command
 									{
 										return new string[] { cordinates[0] + " is not a valid axis, use X, Y or Z" };
 									}
-									if (Int32.TryParse(cordinates[1], out int xyz))
+									if (int.TryParse(cordinates[1], out int xyz))
 									{
 										if (!myPos.ContainsKey(cordinates[0].ToLower()))
 										{

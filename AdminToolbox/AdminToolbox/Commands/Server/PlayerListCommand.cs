@@ -7,8 +7,10 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class PlayerListCommand : ICommandHandler
+	public class PlayerListCommand : ICommandHandler
 	{
+		private static Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() => "Lists current players to server console";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 
@@ -18,16 +20,17 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
-				if (server.NumPlayers - 1 < 1) { return new string[] { "No players" }; }
-				string str = server.NumPlayers - 1 + " - Players in server: \n";
+				Player[] players = Server.GetPlayers().ToArray();
+				
+				if (players.Length < 1) { return new string[] { "No players" }; }
+				string str = players.Length + " - Players in server: \n";
 				List<string> myPlayerList = new List<string>();
-				foreach (Player pl in server.GetPlayers())
+				foreach (Player pl in players)
 				{
 					myPlayerList.Add(pl.TeamRole.Role + "(" + (int)pl.TeamRole.Role + ")" + "  " + pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n");
 				}
 				myPlayerList.Sort();
-				foreach (var item in myPlayerList)
+				foreach (string item in myPlayerList)
 				{
 					str += "\n - " + item;
 				}

@@ -15,8 +15,9 @@ namespace AdminToolbox.API
 		public DateTime timeToExecute;
 		public bool hasExecuted = false;
 
-		ICommandManager CommandManager => PluginManager.Manager.CommandManager;
-		Server Server => PluginManager.Manager.Server;
+		private ICommandManager CommandManager => PluginManager.Manager.CommandManager;
+
+		private Server Server => PluginManager.Manager.Server;
 
 		public ScheduledCommandCall(string command)
 		{
@@ -24,10 +25,7 @@ namespace AdminToolbox.API
 			this.args = new string[] { };
 			this.timeToExecute = DateTime.Now;
 		}
-		protected ScheduledCommandCall()
-		{
-			AdminToolbox.plugin.Info("New ScheduledCommandCall class created");
-		}
+		protected ScheduledCommandCall() => AdminToolbox.plugin.Info("New ScheduledCommandCall class created");
 		~ScheduledCommandCall()
 		{
 			AdminToolbox.plugin.Info("ScheduledCommandCall class deleted!");
@@ -51,10 +49,7 @@ namespace AdminToolbox.API
 			this.timeToExecute = dateTime;
 		}
 
-		public string[] CallCommand()
-		{
-			return CommandManager.CallCommand(Server as ICommandSender, this.command, this.args);
-		}
+		public string[] CallCommand() => CommandManager.CallCommand(Server as ICommandSender, this.command, this.args);
 	}
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

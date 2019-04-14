@@ -10,10 +10,11 @@ namespace AdminToolbox.API
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public class ScheduledRestart
 	{
-		IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private IConfigFile Config => ConfigManager.Manager.Config;
 
-		readonly AdminToolbox plugin;
+		private Server Server => PluginManager.Manager.Server;
+
+		private readonly AdminToolbox plugin;
 
 		public bool enabled;
 		public DateTime restartTime;

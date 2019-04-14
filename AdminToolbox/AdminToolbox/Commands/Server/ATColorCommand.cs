@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class ATColorCommand : ICommandHandler
+	public class ATColorCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 

@@ -19,10 +19,13 @@ namespace AdminToolbox.Managers
 	/// </summary>
 	public class WarpManager
 	{
-		static AdminToolbox Plugin => AdminToolbox.plugin;
-		static int Port => PluginManager.Manager.Server.Port;
-		static string WarpPointsFolder => ATFileManager.GetFolder(ATFileManager.Folder.Warps);
-		static string WarpFilePath => WarpPointsFolder + "Global.txt";
+		private static AdminToolbox Plugin => AdminToolbox.plugin;
+
+		private static int Port => PluginManager.Manager.Server.Port;
+
+		private static string WarpPointsFolder => ATFileManager.GetFolder(ATFileManager.Folder.Warps);
+
+		private static string WarpFilePath => WarpPointsFolder + "Global.txt";
 
 		internal readonly Dictionary<string, WarpPoint> presetWarps = new Dictionary<string, WarpPoint>()
 			{
@@ -36,19 +39,13 @@ namespace AdminToolbox.Managers
 				{ "escape", new WarpPoint{ Name = "escape", Description = "The Escape area", Vector = new ATVector(179,996,27) } }
 		};
 
-		private void Debug(string message)
-		{
-			Plugin.Debug(message);
-		}
+		private void Debug(string message) => Plugin.Debug(message);
 
 
 		/// <summary>
 		/// Refreshing the <see cref="AdminToolbox.WarpVectorDict"/> from <see cref="File"/>
 		/// </summary>
-		public void RefreshWarps()
-		{
-			AdminToolbox.WarpVectorDict = this.ReadWarpsFromFile();
-		}
+		public void RefreshWarps() => AdminToolbox.WarpVectorDict = this.ReadWarpsFromFile();
 
 		/// <summary>
 		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.WarpVectorDict"/> dictionary to file

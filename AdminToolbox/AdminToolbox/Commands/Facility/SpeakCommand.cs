@@ -9,9 +9,9 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class SpeakCommand : ICommandHandler
+	public class SpeakCommand : ICommandHandler
 	{
-		Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Sets specified player as intercom speaker";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/STEAMID]";

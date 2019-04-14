@@ -35,7 +35,10 @@ namespace AdminToolbox.API
 			this.Y = vec.y;
 			this.Z = vec.z;
 		}
-		public Smod2.API.Vector ToVector()
+		/// <summary>
+		/// Converting the ATVector to <see cref="Smod2.API.Vector"/> because the SMod Vector is not JSON Serializable
+		/// </summary>
+		public Smod2.API.Vector ToSMVector()
 		{
 			return new Smod2.API.Vector(X, Y, Z);
 		}

@@ -10,13 +10,13 @@ using System.Linq;
 
 namespace AdminToolbox
 {
-	class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
+	internal class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
 	{
-		readonly AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
 
 		public LateOnCheckRoundEndEvent(AdminToolbox plugin) => this.plugin = plugin;
 
-		ATRoundStats roundstats => AdminToolbox.roundStats;
+		private ATRoundStats Roundstats => AdminToolbox.roundStats;
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
@@ -24,7 +24,7 @@ namespace AdminToolbox
 				if (!AdminToolbox.roundStatsRecorded && ev.Round.Duration >= 3)
 				{
 					AdminToolbox.roundStatsRecorded = true;
-					roundstats.AddPoint(ev.Status);
+					Roundstats.AddPoint(ev.Status);
 				}
 		}
 	}

@@ -10,16 +10,15 @@ namespace AdminToolbox.Command
 	using API;
 	using Managers;
 	using API.Extentions;
-	class WarpCommmand : ICommandHandler
+
+	public class WarpCommmand : ICommandHandler
 	{
-		Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "For the AT Warp system. Type WARP HELP for more info";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <HELP>";
 
-		string[] GetHelpReturn()
-		{
-			return new string[]
+		private string[] GetHelpReturn() => new string[]
 			{
 				"Current aliases: " + string.Join(" / ", CommandAliases),
 				"WARP [PlayerName] [WarpPointName]",
@@ -28,7 +27,6 @@ namespace AdminToolbox.Command
 				"WARP [REMOVE/-] [WarpPointName]",
 				"WARP REFRESH"
 			};
-		}
 
 		public static readonly string[] CommandAliases = new string[] { "WARP", "ATWARP", "AT-WARP" };
 
@@ -108,7 +106,7 @@ namespace AdminToolbox.Command
 									byte playerNum = 0;
 									foreach (Player pl in Server.GetPlayers())
 									{
-										pl.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToVector(), true);
+										pl.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToSMVector(), true);
 										playerNum++;
 									}
 									return new string[] { "Teleported " + playerNum + " players to warp point: " + args[1] };
@@ -117,7 +115,7 @@ namespace AdminToolbox.Command
 								if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 								if (!AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
 									return new string[] { "No warp point called: " + args[1] };
-								myPlayer.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToVector(), true);
+								myPlayer.Teleport(AdminToolbox.WarpVectorDict[args[1].ToLower()].Vector.ToSMVector(), true);
 								return new string[] { "Teleported: " + myPlayer.Name + " to warp point: " + args[1] };
 							}
 							else

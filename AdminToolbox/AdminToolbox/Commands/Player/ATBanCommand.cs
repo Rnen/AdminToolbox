@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
@@ -8,12 +8,15 @@ namespace AdminToolbox.Command
 	using API;
 	using API.Extentions;
 
-	class ATBanCommand : ICommandHandler
+	public class ATBanCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+		private static Server Server => PluginManager.Manager.Server;
+
 		public ATBanCommand(AdminToolbox plugin) => this.plugin = plugin;
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [NAME] [IP/SteamID] [MINUTES] <OPTIONAL REASON>";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [NAME] [IP/SteamID] <MINUTES> <OPTIONAL REASON>";
 		public string GetCommandDescription() => "Alternative ban for offline users";
 
 		public static readonly string[] CommandAliases = new string[] { "ATBAN", "OBAN", "OFFLINEBAN" };
@@ -29,9 +32,9 @@ namespace AdminToolbox.Command
 					string IssuingPlayer = (sender is Player pl && !string.IsNullOrEmpty(pl.SteamId)) ? pl.Name : "Server";
 					string bannedPlayer = args[0];
 					string input = args[1];
-					int minutes = ConfigManager.Manager.Config.GetIntValue("admintoolbox_atban_default_duration", 43800); //Default 4 weeks
+					int minutes = Config.GetIntValue("admintoolbox_atban_duration_default", 43800); //Default 4 weeks
 					if(args.Length > 2)
-						minutes = int.TryParse(args[2], out int x) ? x : 0;
+						int.TryParse(args[2], out minutes);
 					string reason = (args.Length > 3) ? string.Join(" ", args, startIndex: 3, count: args.Length - 3) : "";
 
 					if (minutes < 1)
@@ -41,9 +44,20 @@ namespace AdminToolbox.Command
 					if (input.Contains("."))
 					{
 						if (input.Split('.').Length != 4) return new string[] { "Invalid IP: " + input, GetUsage() };
-						string ip = (input.Contains("::ffff:")) ? input : "::ffff:" + input;
+						string ip = input.Contains("::ffff:") ? input : "::ffff:" + input;
 
-						PluginManager.Manager.Server.BanIpAddress(bannedPlayer, ip, minutes, reason, IssuingPlayer);
+						Player[] plist = Server.GetPlayers().ToArray();
+						foreach(Player player in plist)
+						{
+							if(player.IpAddress.Contains(input))
+							{
+								bannedPlayer = player.Name;
+								player.Ban(0, "You have been banned from this server!");
+								break;
+							}
+						}
+
+						Server.BanIpAddress(bannedPlayer, ip, minutes, reason, IssuingPlayer);
 
 						string response = "\n" +
 							"Player with name: " + bannedPlayer + "\n" +
@@ -57,7 +71,18 @@ namespace AdminToolbox.Command
 					}
 					else if (input.Trim().Length == 17 && long.TryParse(input.Trim(), out long sID))
 					{
-						PluginManager.Manager.Server.BanSteamId(bannedPlayer, input, minutes, reason, IssuingPlayer);
+						Player[] plist = Server.GetPlayers().ToArray();
+						foreach (Player player in plist)
+						{
+							if (player.SteamId == sID.ToString())
+							{
+								bannedPlayer = player.Name;
+								player.Ban(0, "You have been banned from this server!");
+								break;
+							}
+						}
+
+						Server.BanSteamId(bannedPlayer, input, minutes, reason, IssuingPlayer);
 
 						string response = "\n" +
 							"Player with name: " + bannedPlayer + "\n" +

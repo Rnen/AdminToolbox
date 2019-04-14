@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 	using API;
 	using API.Extentions;
 
-	class IntercomLockCommand : ICommandHandler
+	public class IntercomLockCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 

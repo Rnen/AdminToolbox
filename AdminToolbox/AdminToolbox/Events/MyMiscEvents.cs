@@ -5,9 +5,6 @@ using Smod2.EventHandlers;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using System.Text.RegularExpressions;
-using UnityEngine;
-using Unity;
 
 namespace AdminToolbox
 {
@@ -20,7 +17,8 @@ namespace AdminToolbox
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
+
+		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
 		public MyMiscEvents(AdminToolbox plugin) => this.plugin = plugin;
 
@@ -44,7 +42,7 @@ namespace AdminToolbox
 			string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
 			if (whitelistRanks.Length > 0)
 			{
-				foreach (var item in whitelistRanks)
+				foreach (string item in whitelistRanks)
 				{
 					string[] myKeyString = item.Split(':', '-', '_', '#');
 					if (myKeyString[0].ToLower().Trim() == ev.Player.GetRankName().ToLower().Trim() || myKeyString[0].ToLower().Trim() == ev.Player.GetUserGroup().Name.ToLower().Trim())
@@ -68,11 +66,11 @@ namespace AdminToolbox
 			string intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
 			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
 			{
-				if (ev.Player.GetRankName() != null)
-					intercomTransmit.Replace("$playerrank", ev.Player.GetRankName());
-				if (ev.Player.GetUserGroup().BadgeText != null)
-					intercomTransmit.Replace("$playerbadge", ev.Player.GetUserGroup().BadgeText);
-				intercomTransmit
+				if (ev.Player.GetRankName() != null && !ev.Player.GetUserGroup().Cover)
+					intercomTransmit = intercomTransmit.Replace("$playerrank", ev.Player.GetRankName());
+				if (ev.Player.GetUserGroup().BadgeText != null && !ev.Player.GetUserGroup().Cover)
+					intercomTransmit = intercomTransmit.Replace("$playerbadge", ev.Player.GetUserGroup().BadgeText);
+				intercomTransmit = intercomTransmit
 					.Replace("$playerid", ev.Player.PlayerId.ToString())
 					.Replace("$playerrole", ev.Player.TeamRole.Role.ToString())
 					.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
@@ -89,7 +87,7 @@ namespace AdminToolbox
 			if (ev.Player != null && ev.Player is Player player)
 			{
 				AdminToolbox.AddMissingPlayerVariables(player);
-				PlayerSettings playerSetting = (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) ? AdminToolbox.ATPlayerDict[player.SteamId] : null);
+				AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings playerSetting);
 
 				if (playerSetting != null)
 				{
@@ -155,10 +153,26 @@ namespace AdminToolbox
 			}
 		}
 
-		int checkNewVersion = 8;
+		private int checkNewVersion = 8;
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
+			if (AdminToolbox.DebugMode)
+			{
+#error Must finish OnBan webhook
+				API.Webhook.DiscordWebhook webH;
+				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
+
+				listOfFields.AddField("Playername: ", "SomePlayer");
+				listOfFields.AddField("Duration: ", "SomeDuration");
+				listOfFields.AddField("Reason: ", "SomeReason");
+				//listOfFields.AddField("v3", "Value3" , true);
+
+				webH = new API.Webhook.DiscordWebhook { embeds = new API.Webhook.EmbedData[] { new API.Webhook.EmbedData { author = new API.Webhook.Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
+
+				ATWeb.SendWebhook(webH);
+			}
+
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.isStarting)
 			{
@@ -167,8 +181,12 @@ namespace AdminToolbox
 
 			if (!Config.GetBoolValue("admintoolbox_enable", true, false))
 			{
-				this.plugin.pluginManager.DisablePlugin(plugin);
+				PluginManager.Manager.DisablePlugin(plugin);
 			}
+
+#if !DEBUG
+			AdminToolbox.DebugMode = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug", false);
+#endif
 
 			if (!AdminToolbox.isColoredCommand)
 			{
@@ -235,10 +253,10 @@ namespace AdminToolbox
 
 				if (Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
-					int bancount = (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId)) ? AdminToolbox.ATPlayerDict[player.SteamId].PlayerStats.BanCount : 0;
+					int bancount = AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) ? AdminToolbox.ATPlayerDict[player.SteamId].PlayerStats.BanCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + player.PlayerId + ")" + Environment.NewLine +
-						"From IP: " + (player.IpAddress).Replace("::ffff:",string.Empty) + Environment.NewLine +
+						"From IP: " + player.IpAddress.Replace("::ffff:",string.Empty) + Environment.NewLine +
 						"Using steamID: " + player.SteamId + Environment.NewLine;
 					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
 					plugin.Info(str);
@@ -258,7 +276,7 @@ namespace AdminToolbox
 			}
 		}
 
-		private readonly static int 
+		private static readonly int 
 			JailCheckInterval = Config.GetIntValue("admintoolbox_jailcheck_interval", 5),
 			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval",180),
 			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval",300);
@@ -331,7 +349,7 @@ namespace AdminToolbox
 		public void OnSetServerName(SetServerNameEvent ev)
 		{
 			ev.ServerName = ev.ServerName.Replace("$atversion", "AT:" + plugin.Details.version);
-			ev.ServerName = (Config.GetBoolValue("admintoolbox_tracking", true)) ? ev.ServerName += "<color=#ffffff00><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
+			ev.ServerName = Config.GetBoolValue("admintoolbox_tracking", true) ? ev.ServerName += "<color=#ffffff00><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
 		}
 
 		public void OnHandcuffed(PlayerHandcuffedEvent ev)

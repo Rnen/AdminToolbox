@@ -2,13 +2,16 @@
 using Smod2;
 using Smod2.API;
 using System;
+using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class TutorialCommand : ICommandHandler
+	public class TutorialCommand : ICommandHandler
 	{
+		private static Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() => "Sets player to TUTORIAL";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER / *]";
 
@@ -18,51 +21,27 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
-				if (args.Length > 0)
+				if (args.Length > 0 && (args[0].ToLower() == "all" || args[0].ToLower() == "*"))
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					Player[] players = Server.GetPlayers().ToArray();
+					foreach (Player pl in players)
 					{
-						if (args.Length > 1)
-						{
-							if (Int32.TryParse(args[1], out int j))
-							{
-								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
-								{
-									pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
-									playerNum++;
-								}
-								if (playerNum > 1)
-									return new string[] { playerNum + " roles set to " + Role.TUTORIAL };
-								else
-									return new string[] { playerNum + " role set to " + Role.TUTORIAL };
-							}
-							else
-								return new string[] { "Not a valid number!" };
-						}
-						else
-						{
-							foreach (Player pl in server.GetPlayers()) { pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true); }
-							return new string[] { "Changed all players to " + Role.TUTORIAL };
-						}
+						Vector originalPos2 = pl.GetPosition();
+						Vector newPos2 = pl.TeamRole.Role == Role.SPECTATOR ? AdminToolbox.WarpVectorDict.TryGetVector("tutorial", out Vector vector2) ? vector2 : Server.Map.GetSpawnPoints(pl.TeamRole.Role)?[0] : originalPos2;
+						pl.ChangeRole(Role.TUTORIAL, spawnTeleport: newPos2 == null, removeHandcuffs: true);
+						if (newPos2 != null)
+							AdminToolbox.waitForTeleports.Add(new WaitForTeleport(pl, newPos2));
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-					Vector originalPos = myPlayer.GetPosition();
-					myPlayer.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
-					myPlayer.Teleport(originalPos, true);
-					return new string[] { "Set " + myPlayer.Name + " to " + Role.TUTORIAL };
+					return new string[] { $"Changed all ({players.Length}) players roles to " + Role.TUTORIAL };
 				}
-				else if (sender is Player p)
-				{
-					Vector originalPos = p.GetPosition();
-					p.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
-					p.Teleport(originalPos, true);
-					return new string[] { "Set " + p.Name + " to " + Role.TUTORIAL };
-				}
-				else
-					return new string[] { GetUsage() };
+				Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : sender as Player;
+				if (myPlayer == null)
+				{ return new string[] { "Couldn't get player: " + args[0] }; }
+				Vector originalPos = myPlayer.GetPosition();
+				Vector newPos = myPlayer.TeamRole.Role == Role.SPECTATOR ? AdminToolbox.WarpVectorDict.TryGetVector("tutorial", out Vector vector) ? vector : Server.Map.GetSpawnPoints(myPlayer.TeamRole.Role)?[0] : originalPos;
+				myPlayer.ChangeRole(Role.TUTORIAL, spawnTeleport: newPos == null, removeHandcuffs: true);
+
+				return new string[] { "Set " + myPlayer.Name + "'s role to " + Role.TUTORIAL };
 			}
 			else
 				return deniedReply;

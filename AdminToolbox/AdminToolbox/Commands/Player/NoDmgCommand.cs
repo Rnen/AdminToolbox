@@ -7,7 +7,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class NoDmgCommand : ICommandHandler
+	public class NoDmgCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Switch on/off damageOutput for player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (BOOL)";
@@ -58,7 +58,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 							{
 								str += "\n - " + item;
 							}

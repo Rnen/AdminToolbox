@@ -1,4 +1,4 @@
-using Smod2.Commands;
+﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
 using System.Linq;
@@ -8,11 +8,13 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class KillCommand : ICommandHandler
+	public class KillCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
-		Server Server => PluginManager.Manager.Server;
-		IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
+
+		private IConfigFile Config => ConfigManager.Manager.Config;
 
 		public KillCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Kills the targeted player";

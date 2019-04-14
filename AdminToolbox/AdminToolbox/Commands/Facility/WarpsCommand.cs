@@ -4,7 +4,7 @@ using Smod2;
 namespace AdminToolbox.Command
 {
 	using API.Extentions;
-	class WarpsCommmand : ICommandHandler
+	public class WarpsCommmand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Returns a list of warps. Use arguement \"Refresh\" to reload warps from file";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <REFRESH / R>";

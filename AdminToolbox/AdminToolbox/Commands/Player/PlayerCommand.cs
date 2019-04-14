@@ -10,10 +10,11 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class PlayerCommand : ICommandHandler
+	public class PlayerCommand : ICommandHandler
 	{
-		const int LeftPadding = 3;
-		Server Server => PluginManager.Manager.Server;
+		private const int LeftPadding = 3;
+
+		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Gets toolbox info about spesific player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/STEAMID]";
 
@@ -25,44 +26,13 @@ namespace AdminToolbox.Command
 				text += ' ';
 			return text;
 		}
-		string BuildTwoLiner(string str1, string str2 = "")
+
+		private string BuildTwoLiner(string str1, string str2 = "")
 		{
 			if(!string.IsNullOrEmpty(str2))
 				return StringToMax(str1) + "|" + StringToMax(str2.PadLeft(LeftPadding));
 			else
 				return StringToMax(str1);
-		}
-
-		bool IsPlayer(ICommandSender sender)
-		{
-			if (sender is Player pl)
-				if (!string.IsNullOrEmpty(pl.SteamId))
-					return true;
-				else
-					return false;
-			else
-				return false;
-		}
-
-		string ColoredRole(Player player)
-		{
-			switch ((Team)player.TeamRole.Team)
-			{
-				case Team.SCP:
-					return "<color=red>" + player.TeamRole.Name + "</color>";
-				case Team.MTF:
-					return "<color=blue>" + player.TeamRole.Name + "</color>";
-				case Team.CHI:
-					return "<color=green>" + player.TeamRole.Name + "</color>";
-				case Team.RSC:
-					return "<color=silver>" + player.TeamRole.Name + "</color>";
-				case Team.CDP:
-					return "<color=orange>" + player.TeamRole.Name + "</color>";
-				case Team.TUT:
-					return "<color=lime>" + player.TeamRole.Name + "</color>";
-				default:
-					return player.TeamRole.Name;
-			}
 		}
 
 		public string[] OnCall(ICommandSender sender, string[] args)
@@ -83,7 +53,7 @@ namespace AdminToolbox.Command
 					//Handling player stats
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
 					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.SteamId, Managers.ATFileManager.PlayerFile.Write);
-					PlayerSettings playerDict = (AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) ? AdminToolbox.ATPlayerDict[myPlayer.SteamId] : new PlayerSettings(myPlayer.SteamId);
+					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId) ? AdminToolbox.ATPlayerDict[myPlayer.SteamId] : new PlayerSettings(myPlayer.SteamId);
 
 					//Inventory
 					string playerInv = string.Empty;
@@ -94,9 +64,9 @@ namespace AdminToolbox.Command
 					//Calculating remaining jail time
 					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
 
-					string _playerRole = (IsPlayer(sender)) ? ColoredRole(myPlayer) : myPlayer.TeamRole.Role + "";
-					string _roleColor = myPlayer.GetUserGroup().Color != null ? myPlayer.GetUserGroup().Color : "default";
-					string _serverRole = myPlayer.GetRankName() != null ? myPlayer.GetRankName() : "";
+					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : myPlayer.TeamRole.Role + "";
+					string _roleColor = myPlayer.GetUserGroup().Color ?? "default";
+					string _serverRole = myPlayer.GetRankName() ?? "";
 
 					//Building string
 					string playerInfoString = Environment.NewLine + Environment.NewLine +
@@ -105,11 +75,11 @@ namespace AdminToolbox.Command
 						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
 						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
 						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
-						BuildTwoLiner("   - Godmode: " + (playerDict.godMode), " - NoDmg: " + (playerDict.dmgOff)) + Environment.NewLine +
-						BuildTwoLiner("   - OverwatchMode: " + (myPlayer.OverwatchMode), " - KeepSettings: " + (playerDict.keepSettings)) + Environment.NewLine +
-						BuildTwoLiner("   - BreakDoors: " + (playerDict.destroyDoor), " - PlayerLockDown: " + (playerDict.lockDown)) + Environment.NewLine +
-						BuildTwoLiner("   - InstantKill: " + (playerDict.instantKill), " - GhostMode: " + myPlayer.GetGhostMode()) + Environment.NewLine +
-						BuildTwoLiner("   - IsJailed: " + (playerDict.isJailed), " - Released In: " + remainingJailTime) + Environment.NewLine +
+						BuildTwoLiner("   - Godmode: " + playerDict.godMode, " - NoDmg: " + playerDict.dmgOff) + Environment.NewLine +
+						BuildTwoLiner("   - OverwatchMode: " + myPlayer.OverwatchMode, " - KeepSettings: " + playerDict.keepSettings) + Environment.NewLine +
+						BuildTwoLiner("   - BreakDoors: " + playerDict.destroyDoor, " - PlayerLockDown: " + playerDict.lockDown) + Environment.NewLine +
+						BuildTwoLiner("   - InstantKill: " + playerDict.instantKill, " - GhostMode: " + myPlayer.GetGhostMode()) + Environment.NewLine +
+						BuildTwoLiner("   - IsJailed: " + playerDict.isJailed, " - Released In: " + remainingJailTime) + Environment.NewLine +
 						BuildTwoLiner(" - Stats:") + Environment.NewLine +
 						BuildTwoLiner("   - Kills: " + playerDict.PlayerStats.Kills, " - TeamKills: " + playerDict.PlayerStats.TeamKills) + Environment.NewLine +
 						BuildTwoLiner("   - Deaths: " + playerDict.PlayerStats.Deaths, " - Times Banned: " + playerDict.PlayerStats.BanCount) + Environment.NewLine +
@@ -117,7 +87,7 @@ namespace AdminToolbox.Command
 						BuildTwoLiner(" - Position:") + Environment.NewLine +
 						BuildTwoLiner("  - X:" + (int)myPlayer.GetPosition().x + " Y:" + (int)myPlayer.GetPosition().y + " Z:" + (int)myPlayer.GetPosition().z) + Environment.NewLine +
 						BuildTwoLiner(" - Inventory: " + playerInv) + Environment.NewLine;
-					if (IsPlayer(sender))
+					if (sender.IsPlayer())
 						return new string[] { playerInfoString.Replace("True ", "<color=green>" + "True" + " </color>").Replace("False", "<color=red>" + "False" + "</color>") };
 					else
 						return new string[] { playerInfoString };

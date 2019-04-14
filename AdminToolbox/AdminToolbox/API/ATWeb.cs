@@ -5,39 +5,38 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine.Networking;
-
+using UnityEngine;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace AdminToolbox.API
 {
+	using API.Extentions;
+	using API.Webhook;
 	/// <summary>
 	/// Static <see cref="AdminToolbox"/> class that contains all of the plugins web-based methods
 	/// </summary>
 	public static class ATWeb
 	{
-		static AdminToolbox Plugin => AdminToolbox.plugin; 
+		private static AdminToolbox Plugin => AdminToolbox.plugin; 
 
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
 		public class AT_LatestReleaseInfo
 		{
-			readonly string title;
-			readonly string version;
-			readonly string author;
-			readonly string downloadLink;
-
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-			public string Title => title;
-			public string Version => version;
-			public string Author => author;
-			public string DownloadLink => downloadLink;
+			public string Title { get; }
+			public string Version { get; }
+			public string Author { get; }
+			public string DownloadLink { get; }
 
 			public AT_LatestReleaseInfo(string Title, string Version, string Author, string DownloadLink)
 			{
-				this.title = Title;
-				this.version = Version;
-				this.author = Author;
-				this.downloadLink = DownloadLink;
+				this.Title = Title;
+				this.Version = Version;
+				this.Author = Author;
+				this.DownloadLink = DownloadLink;
 			}
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
@@ -59,16 +58,15 @@ namespace AdminToolbox.API
 				{
 					ww.SendWebRequest();
 					DateTime timer = DateTime.Now.AddSeconds(2);
-					while (!ww.isDone || !ww.downloadHandler.isDone && DateTime.Now < timer) { }
+					while (!ww.isDone || (!ww.downloadHandler.isDone && DateTime.Now < timer)) { }
 					rawResponse = ww.downloadHandler.text;
 					if (string.IsNullOrEmpty(rawResponse))
-						throw new Exception();
+						throw new Exception("[AdminToolbox]: GitHub web request response was NullOrEmpty!");
 					string FindValue(string key)
 					{
 						//plugin.Debug("Searched: " + key);
 						string str = rawResponse.Split(Environment.NewLine.ToCharArray()).Where(s => s.Trim().StartsWith("\"" + key)).FirstOrDefault().Split(new[] { ':' }, 2).Last().Replace("\"", string.Empty).Trim(',').Trim();
 						//plugin.Debug("Found: " + str);
-						if (key.ToLower() == "tag_name") return str.Split('-').FirstOrDefault();
 						return str;
 					}
 					_title = FindValue("name");
@@ -76,7 +74,7 @@ namespace AdminToolbox.API
 					_author = FindValue("login");
 					_dllink = FindValue("html_url"); //FindValue("browser_download_url");
 					if (string.IsNullOrEmpty(_version))
-						throw new Exception();
+						throw new Exception("[AdminToolbox]: GitHub version was NullOrEmpty!");
 				}
 			}
 			catch
@@ -91,13 +89,36 @@ namespace AdminToolbox.API
 		{
 			if (Plugin == null) return false;
 			string thisVersion = Plugin.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
-			string onlineVersion = Plugin.GetGitReleaseInfo().Version.Replace(".", string.Empty);
+			string onlineVersion = Plugin.GetGitReleaseInfo().Version.Split('-').FirstOrDefault().Replace(".", string.Empty);
 
 			if (int.TryParse(thisVersion, out int thisV)
 				&& int.TryParse(onlineVersion, out int onlineV)
 				&& onlineV > thisV)
 				return true;
 			else return false;
+		}
+
+
+		internal static string url = "";
+
+		internal static string SendWebhook(DiscordWebhook discordWebHook)
+		{
+			if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+			{
+				string jsonData = JsonConvert.SerializeObject(discordWebHook, Formatting.Indented);
+
+				return WebPost(uri, jsonData);
+			}
+			else
+				return "Failed to create Uri!";
+		}
+		private static string WebPost(Uri uri, string rawJsonData)
+		{
+			using (WebClient wb = new WebClient())
+			{
+				wb.Headers[HttpRequestHeader.ContentType] = "application/json";
+				return wb.UploadString(uri, "POST", rawJsonData);
+			}
 		}
 	}
 }

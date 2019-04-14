@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class InstantKillCommand : ICommandHandler
+	public class InstantKillCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Lets specified players instantly kill targets";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [BOOLEAN]";
@@ -69,7 +69,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 							{
 								str += "\n - " + item;
 							}

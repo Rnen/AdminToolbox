@@ -15,12 +15,9 @@ namespace AdminToolbox.Managers
 	/// </summary>
 	public class LogManager
 	{
-		static IConfigFile Config => ConfigManager.Manager.Config;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
 
-		public LogManager()
-		{
-			Awake();
-		}
+		public LogManager() => Awake();
 
 		internal class LogData
 		{
@@ -105,15 +102,11 @@ namespace AdminToolbox.Managers
 				using (StreamWriter streamWriter = new StreamWriter(AdminToolboxLogs + Port + Path.DirectorySeparatorChar + _logStartTime + "_Round-" + AdminToolbox.RoundCount + ".txt", true))
 				{
 					streamWriter.Write(text);
-					streamWriter.Close();
 				}
 			}
 		}
 
-		internal void SetLogStartTime()
-		{
-			_logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
-		}
+		internal void SetLogStartTime() => _logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
 
 		private bool CheckExistingFolders()
 		{
@@ -145,8 +138,8 @@ namespace AdminToolbox.Managers
 
 			if (configInt > 0 || force)
 			{
-				string[] files = Directory.GetFiles(AdminToolboxLogs + Port);
-				AdminToolbox.plugin.Info("Cnfig = " + configInt);
+				string[] files = Directory.GetFiles(AdminToolboxLogs + Port, "Round-*.txt", SearchOption.TopDirectoryOnly);
+				AdminToolbox.plugin.Debug("Cnfig = " + configInt);
 				if (files.Length > 0)
 					foreach (string path in files)
 					{
@@ -169,13 +162,6 @@ namespace AdminToolbox.Managers
 			}
 			return text;
 		}
-		/// <summary>
-		/// Appends <see cref="string"/> to the <see cref="AdminToolbox"/> log.
-		/// </summary>
-		internal void WriteToLog(string str, ServerLogType logType = ServerLogType.Misc)
-		{
-			WriteToLog(new string[] { str }, logType);
-		}
 
 		/// <summary>
 		/// Appends <see cref="string"/> <see cref="Array"/> to the <see cref="AdminToolbox"/> log.
@@ -186,26 +172,34 @@ namespace AdminToolbox.Managers
 			if (str.Length != 0)
 				foreach (string st in str)
 					str2 += st;
+			WriteToLog(str2, logType);
+		}
+
+		/// <summary>
+		/// Appends <see cref="string"/> to the <see cref="AdminToolbox"/> log.
+		/// </summary>
+		internal void WriteToLog(string str, ServerLogType logType = ServerLogType.Misc)
+		{
 			switch (logType)
 			{
 				case ServerLogType.TeamKill:
 					if (Config.GetBoolValue("admintoolbox_log_teamkills", false, false))
-						AddLog(str2, logType);
+						AddLog(str, logType);
 					break;
 				case ServerLogType.KillLog:
 					if (Config.GetBoolValue("admintoolbox_log_kills", false, false))
-						AddLog(str2, logType);
+						AddLog(str, logType);
 					break;
 				case ServerLogType.RemoteAdminActivity:
 					if (Config.GetBoolValue("admintoolbox_log_commands", false, false))
-						AddLog(str2, logType);
+						AddLog(str, logType);
 					break;
 				case ServerLogType.PlayerDamage:
 					if (Config.GetBoolValue("admintoolbox_log_damage", false, false))
-						AddLog(str2, logType);
+						AddLog(str, logType);
 					break;
 				default:
-					AddLog(str2, logType);
+					AddLog(str, logType);
 					break;
 			}
 		}

@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class SpectatorCommand : ICommandHandler
+	public class SpectatorCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Switch on/off always spectator for player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] <BOOL>";
@@ -64,7 +64,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 								str += "\n - " + item;
 						}
 						else str = "\nNo players with \"Overwatch\" enabled!";

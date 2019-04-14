@@ -8,7 +8,7 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class GodModeCommand : ICommandHandler
+	public class GodModeCommand : ICommandHandler
 	{
 		public bool noDmg = false;
 
@@ -75,7 +75,7 @@ namespace AdminToolbox.Command
 						if (myPlayerList.Count > 0)
 						{
 							myPlayerList.Sort();
-							foreach (var item in myPlayerList)
+							foreach (string item in myPlayerList)
 							{
 								str += "\n - " + item;
 							}

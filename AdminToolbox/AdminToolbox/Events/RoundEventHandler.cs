@@ -32,8 +32,8 @@ namespace AdminToolbox
 				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
-			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Server.GetPlayers(), Managers.ATFileManager.PlayerFile.Write);
+			AdminToolbox.AddMissingPlayerVariables(); 
+			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox.logManager.SetLogStartTime();
 			AdminToolbox.warpManager.RefreshWarps();
 

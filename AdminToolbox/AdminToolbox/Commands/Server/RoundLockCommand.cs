@@ -8,12 +8,14 @@ namespace AdminToolbox.Command
 {
 	using API;
 	using API.Extentions;
-	class RoundLockCommand : ICommandHandler
+	public class RoundLockCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
+
 		public RoundLockCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Forces the round to never end";

@@ -40,9 +40,7 @@ namespace AdminToolbox.API
 		/// <para>Returns false if <paramref name="player"/>'s steamID is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
-		{
-			return SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
-		}
+			=> SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> bools on a list of <see cref="Player"/>s
 		/// <para>Returns false if one or more of <paramref name="players"/> steamid's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
