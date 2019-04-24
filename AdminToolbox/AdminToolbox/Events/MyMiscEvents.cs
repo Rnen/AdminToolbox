@@ -364,9 +364,12 @@ namespace AdminToolbox
 				API.Webhook.DiscordWebhook webH;
 				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
 
-				listOfFields.AddField("Playername: ", "SomePlayer");
-				listOfFields.AddField("Duration: ", "SomeDuration");
-				listOfFields.AddField("Reason: ", "SomeReason");
+				listOfFields.AddField("Playername: ", ev.Player.Name);
+				listOfFields.AddField("Duration: ", (ev.Duration / 60) + " minutes");
+				if(!string.IsNullOrEmpty(ev.Reason))
+					listOfFields.AddField("Reason: ", ev.Reason);
+				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
+					listOfFields.AddField("Issued By: ", ev.Admin.Name ?? "Server");
 
 				webH = new API.Webhook.DiscordWebhook { embeds = new API.Webhook.EmbedData[] { new API.Webhook.EmbedData { author = new API.Webhook.Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
 
