@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 				string pJail = "No jailed players!";
 
 				Player[] players = Server.GetPlayers().ToArray();
-				Player[] jailedPlayers = Server.GetPlayers().JailedPlayers();
+				Player[] jailedPlayers = Server.GetPlayers().ToArray().JailedPlayers();
 				
 				if (jailedPlayers != null && jailedPlayers.Length > 0)
 				{

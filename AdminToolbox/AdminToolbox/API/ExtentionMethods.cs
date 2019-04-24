@@ -62,16 +62,6 @@ namespace AdminToolbox.API.Extentions
 				: (new Player[0]);
 		}
 
-		internal static List<Player> JailedPlayers(this List<Player> players)
-		{
-			if (players == null)
-			{
-				throw new ArgumentNullException(nameof(players));
-			}
-
-			return players.ToArray().JailedPlayers().ToList();
-		}
-
 		internal static List<Field> AddField(this List<Field> list, string title, string content, bool inline = false)
 		{
 			list.Add(new Field { name = title, value = content, inline = inline ? "true" : "false" });
@@ -134,7 +124,8 @@ namespace AdminToolbox.API.Extentions
 					if (configList.ContainsPlayer(pl))
 						return true;
 				}
-				denied = new string[] { "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!" };
+				string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
+				denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
 				return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
 					? false
 					: !(validConfigs > 0);

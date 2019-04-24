@@ -1,5 +1,6 @@
 ﻿using Smod2;
 using Smod2.API;
+using System.Linq;
 
 namespace AdminToolbox.API
 {
@@ -30,6 +31,7 @@ namespace AdminToolbox.API
 			}
 			else
 			{
+				return Server.GetPlayers(args.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
 				//Takes a string and finds the closest player from the playerlist
 				int maxNameLength = 31, LastnameDifference = 31;
 				string str1 = args.ToLower();

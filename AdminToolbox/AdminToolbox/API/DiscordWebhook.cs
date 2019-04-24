@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace AdminToolbox.API.Webhook
 {
-	internal class Image
+	public class Image
 	{
-		internal string url;
+		public string url;
 	}
-	internal class Author
+	public class Author
 	{
-		internal string name = "";
-		internal string url = "";
-		internal string icon_url = "";
+		public string name = "";
+		public string url = "";
+		public string icon_url = "";
 	}
-	internal class Field
+	public class Field
 	{
-		internal string name;
-		internal string value;
-		internal string inline = "false";
-		internal Field() { }
+		public string name;
+		public string value;
+		public string inline = "false";
+		public Field() { }
 
 		public Field(Field field)
 		{
@@ -32,27 +32,26 @@ namespace AdminToolbox.API.Webhook
 
 		public override string ToString()
 		{
-#pragma warning disable IDE0022 // Use expression body for methods
 			return "Name: " + this.name + " Value: " + this.value + " InLine: " + inline;
-#pragma warning restore IDE0022 // Use expression body for methods
 		}
 	}
-	internal class EmbedData
+	public class EmbedData
 	{
-		internal Author author = new Author();
-		internal string title = "";
-		internal string url = "";
-		internal string description = "";
-		internal int color = 12395008;
-		internal Field[] fields = new Field[] { };
-		internal Image image;
-		internal Image thumbnail;
+		public Author author = new Author();
+		public string title = "";
+		public string url = "";
+		public string description = "";
+		public int color = 12395008;
+		public Field[] fields = new Field[0];
+		public Image image;
+		public Image thumbnail;
 	}
-	internal class DiscordWebhook
+
+	public class DiscordWebhook
 	{
-		internal string username = "AdminToolbox";
-		internal string avatar_url = "https://puu.sh/D0DRU.png";
-		internal string content = "";
-		internal EmbedData[] embeds = new EmbedData[] { new EmbedData() };
+		public string username = "AdminToolbox";
+		public string avatar_url = "https://puu.sh/D0DRU.png";
+		public string content = "";
+		public EmbedData[] embeds = new EmbedData[1] { new EmbedData() };
 	}
 }

@@ -10,6 +10,8 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class BreakDoorsCommand : ICommandHandler
 	{
+		private static Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() => "Toggles that players break doors when interacting with them";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER> <BOOLEAN>";
 

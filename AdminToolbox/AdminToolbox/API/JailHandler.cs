@@ -30,7 +30,7 @@ namespace AdminToolbox.API
 		/// </summary>
 		internal static void CheckJailedPlayers()
 		{
-			Player[] jailedPlayers = Server.GetPlayers().JailedPlayers();
+			Player[] jailedPlayers = Server.GetPlayers().ToArray().JailedPlayers();
 			if (jailedPlayers.Length > 0)
 				foreach (Player pl in jailedPlayers)
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))

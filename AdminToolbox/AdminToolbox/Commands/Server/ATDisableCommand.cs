@@ -22,7 +22,7 @@ namespace AdminToolbox.Command
 			if (sender.IsPermitted(CommandAliases, true, out string[] deniedReply))
 			{
 				plugin.Info(sender + " ran the " + GetUsage() + " command!");
-				this.plugin.pluginManager.DisablePlugin(this.plugin);
+				PluginManager.Manager.DisablePlugin(plugin);
 				return new string[] { "AdminToolbox Disabled" };
 			}
 			else

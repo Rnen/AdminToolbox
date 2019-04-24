@@ -17,6 +17,7 @@ namespace AdminToolbox
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
+		private static Server Server => PluginManager.Manager.Server; 
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
@@ -100,6 +101,11 @@ namespace AdminToolbox
 					{
 						ev.Allow = false;
 					}
+
+					if (playerSetting.lockDoors)
+					{
+						ev.Door.Locked = !ev.Door.Locked;
+					}
 				}
 			}
 		}
@@ -157,22 +163,6 @@ namespace AdminToolbox
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
-			if (AdminToolbox.DebugMode)
-			{
-#error Must finish OnBan webhook
-				API.Webhook.DiscordWebhook webH;
-				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
-
-				listOfFields.AddField("Playername: ", "SomePlayer");
-				listOfFields.AddField("Duration: ", "SomeDuration");
-				listOfFields.AddField("Reason: ", "SomeReason");
-				//listOfFields.AddField("v3", "Value3" , true);
-
-				webH = new API.Webhook.DiscordWebhook { embeds = new API.Webhook.EmbedData[] { new API.Webhook.EmbedData { author = new API.Webhook.Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
-
-				ATWeb.SendWebhook(webH);
-			}
-
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.isStarting)
 			{
@@ -281,32 +271,32 @@ namespace AdminToolbox
 			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval",180),
 			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval",300);
 
-		private DateTime /*oneSecTimer = DateTime.Now,*/ 
+		private DateTime oneSecTimer = DateTime.Now,
 			fiveSecTimer = DateTime.Now.AddSeconds(5),
 			oneMinuteTimer = DateTime.Now.AddSeconds(30), 
 			threeMinTimer = DateTime.Now.AddMinutes(1)/*, 
 			fiveMinTimer = DateTime.Now.AddMinutes(2)*/;
 
 		public void OnUpdate(UpdateEvent ev)
-		{ /*
+		{ 
 			if (oneSecTimer < DateTime.Now)
 			{
-				if (plugin.scheduledCommands.Count > 0)
-					foreach (ScheduledCommandCall schm in plugin.scheduledCommands.Where(s => !s.hasExecuted && s.timeToExecute <= DateTime.Now))
+				if (AdminToolbox.waitForTeleports.Count > 0)
+				{
+					WaitForTeleport[] waitFors = AdminToolbox.waitForTeleports.ToArray();
+					foreach(WaitForTeleport wft in waitFors)
 					{
-						string[] rawResponse = schm.CallCommand();
-						string response = string.Empty;
-						if (rawResponse.Length > 0)
-							for (int i = 0; i < rawResponse.Length; i++)
-								response += rawResponse[i] + " ";
-						if (!string.IsNullOrEmpty(response))
-							plugin.Info("Scheduled " + schm.command + ": " + response);
-						schm.hasExecuted = true;
+						if (DateTime.Now > wft.DateTime)
+						{
+							wft.Player.Teleport(wft.Pos);
+							wft.Done = true;
+						}
 					}
-				//if (plugin.scheduledRestart.enabled && plugin.scheduledRestart.restartTime <= DateTime.Now)
-				//plugin.scheduledRestart.CallRestart();
+					AdminToolbox.waitForTeleports.RemoveAll(s => s.Done);
+				}
+
 				oneSecTimer = DateTime.Now.AddSeconds(1);
-			}*/
+			}
 			if (fiveSecTimer <= DateTime.Now)
 			{
 				if (plugin.Server.Round.Duration > 0)
@@ -368,6 +358,24 @@ namespace AdminToolbox
 
 		public void OnBan(BanEvent ev)
 		{
+			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0], false);
+			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick",false)))
+			{
+				API.Webhook.DiscordWebhook webH;
+				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
+
+				listOfFields.AddField("Playername: ", "SomePlayer");
+				listOfFields.AddField("Duration: ", "SomeDuration");
+				listOfFields.AddField("Reason: ", "SomeReason");
+
+				webH = new API.Webhook.DiscordWebhook { embeds = new API.Webhook.EmbedData[] { new API.Webhook.EmbedData { author = new API.Webhook.Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
+
+				foreach (string url in banWebhookUrls)
+					if(!string.IsNullOrEmpty(url))
+						plugin.Debug(ATWeb.SendWebhook(webH, url));
+				plugin.Info("Ban webhooks posted!");
+			}
+
 			if (ev.Player != null && ev.Player is Player)
 			{
 				AdminToolbox.AddMissingPlayerVariables(ev.Player);

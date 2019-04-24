@@ -98,10 +98,7 @@ namespace AdminToolbox.API
 			else return false;
 		}
 
-
-		internal static string url = "";
-
-		internal static string SendWebhook(DiscordWebhook discordWebHook)
+		internal static string SendWebhook(DiscordWebhook discordWebHook, string url)
 		{
 			if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
 			{
@@ -110,8 +107,9 @@ namespace AdminToolbox.API
 				return WebPost(uri, jsonData);
 			}
 			else
-				return "Failed to create Uri!";
+				return "Failed creating URI of WebHook link: " + url;
 		}
+
 		private static string WebPost(Uri uri, string rawJsonData)
 		{
 			using (WebClient wb = new WebClient())

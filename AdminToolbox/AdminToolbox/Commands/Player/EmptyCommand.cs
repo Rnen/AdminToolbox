@@ -24,42 +24,37 @@ namespace AdminToolbox.Command
 		private readonly string[] deleteAliases = { "DELETE", "DEL", "D" };
 		private readonly int[] enumValues = Enum.GetValues(typeof(ItemType)).Cast<int>().ToArray();
 
-#error Fix EmptyCommand
+#warning EmptyCommand needs proper testing
 		public string[] OnCall(ICommandSender sender, string[] args) //=> new string[] { GetUsage() };
 		{
-			
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				int itemNumber;
 				ItemType type = ItemType.NULL;
+				Player player = null;
+				bool delete = false;
 
-				switch (args.Length)
+				foreach(string arg in args)
 				{
-					case 0 when !(sender is Player):
-						return new string[] { GetUsage() };
-					case 0 when sender is Player p:
-						return DropItems(p);
-					case 1 when deleteAliases.Contains(args[0].ToUpper()):
-							return DropItems(sender as Player, delete: true);
-					case 1 when int.TryParse(args[0], out itemNumber) && Utility.TryParseItem(itemNumber, out type) && sender is Player:
-							return DropItems(sender as Player, type);
-					case 1 when GetPlayerFromString.GetPlayer(args[0]) is Player p2 && p2 != null:
-						return DropItems(p2);
-					case 2 when GetPlayerFromString.GetPlayer(args[0]) is Player p3 && p3 != null:
-						if (int.TryParse(args[1], out itemNumber) && Utility.TryParseItem(itemNumber, out type))
-							return DropItems(p3, type);
-						else if ()
-					default:
-						if (int.TryParse(args[0], out itemNumber) && Utility.TryParseItem(itemNumber, out type))
-							return DropItems(GetPlayerFromString.GetPlayer(args[0]), type, deleteAliases.Contains(args[2].ToUpper()));
-						else
-							return new string[] { GetUsage() };
+					if (player == null && GetPlayerFromString.GetPlayer(arg) is Player p && p != null)
+					{
+						player = p;
+						continue;
+					}
+					if (int.TryParse(arg, out int itemNumber))
+					{
+						Utility.TryParseItem(itemNumber, out type);
+						continue;
+					}
+					if (deleteAliases.Contains(arg.ToUpper()))
+					{
+						delete = true;
+						continue;
+					}
 				}
+				return DropItems(player ?? sender as Player, type, delete);
 			}
 			else
 				return deniedReply;
-
-			return new string[] { GetUsage() };
 		}
 
 
@@ -109,7 +104,7 @@ namespace AdminToolbox.Command
 					}
 				}
 			}
-			return new string[] { delete ? "Deleted " : "Dropped" + itemCount + " items from player " + player.Name + "'s inventory" };
+			return new string[] { delete ? "Deleted " : "Dropped (" + itemCount + ") items from player " + player.Name + "'s inventory" };
 		}
 	}
 }

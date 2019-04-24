@@ -139,7 +139,7 @@ namespace AdminToolbox.Managers
 			if (configInt > 0 || force)
 			{
 				string[] files = Directory.GetFiles(AdminToolboxLogs + Port, "Round-*.txt", SearchOption.TopDirectoryOnly);
-				AdminToolbox.plugin.Debug("Cnfig = " + configInt);
+				AdminToolbox.plugin.Debug("LogManager file age to keep: " + configInt);
 				if (files.Length > 0)
 					foreach (string path in files)
 					{

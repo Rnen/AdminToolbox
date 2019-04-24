@@ -13,10 +13,12 @@ namespace AdminToolbox
 	using API;
 	using API.Extentions;
 
-	class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
+	public class RoundEventHandler : IEventHandlerRoundStart, IEventHandlerRoundEnd, IEventHandlerRoundRestart, IEventHandlerCheckRoundEnd
 	{
 		private readonly AdminToolbox plugin;
-		static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
 		internal string 
 			intercomReady = Config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
 			intercomRestart = Config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
@@ -27,7 +29,7 @@ namespace AdminToolbox
 		public void OnRoundStart(RoundStartEvent ev)
 		{
 			AdminToolbox.isRoundFinished = false;
-			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
+			if (Config.GetBoolValue("admintoolbox_round_info", true, false))
 			{
 				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);

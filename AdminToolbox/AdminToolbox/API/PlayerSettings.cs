@@ -49,7 +49,8 @@ namespace AdminToolbox.API
 			keepSettings = false,
 			lockDown = false,
 			instantKill = false,
-			isJailed = false;
+			isJailed = false,
+			lockDoors = false;
 
 		public PlayerStats PlayerStats = new PlayerStats();
 		public PlayerInfo PlayerInfo = new PlayerInfo();
