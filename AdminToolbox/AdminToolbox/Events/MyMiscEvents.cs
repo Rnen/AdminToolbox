@@ -8,6 +8,7 @@ using System;
 
 namespace AdminToolbox
 {
+	using System.Globalization;
 	using API;
 	using API.Extentions;
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
@@ -365,7 +366,7 @@ namespace AdminToolbox
 				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
 
 				listOfFields.AddField("Playername: ", ev.Player.Name);
-				listOfFields.AddField("Duration: ", (ev.Duration / 60) + " minutes");
+				listOfFields.AddField("Duration: ", (ev.Duration / 60).ToString("0.0", CultureInfo.InvariantCulture) + " hours");
 				if(!string.IsNullOrEmpty(ev.Reason))
 					listOfFields.AddField("Reason: ", ev.Reason);
 				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
