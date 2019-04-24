@@ -100,6 +100,7 @@
     <Compile Include="API\Utility.cs" />
     <Compile Include="API\WaitForTeleport.cs" />
     <Compile Include="API\WarpPoint.cs" />
+    <Compile Include="Commands\Player\LockDoorsCommand.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="Commands\Player\InstantKillCommand.cs" />
     <Compile Include="Commands\Player\KillCommand.cs" />
     <Compile Include="Commands\Player\LockdownCommand.cs" />
-    <Compile Include="Commands\Facility\DoorCommand.cs" />
     <Compile Include="Commands\Server\ATColorCommand.cs" />
     <Compile Include="Commands\Facility\JailCommand.cs" />
     <Compile Include="Commands\Player\EmptyCommand.cs" />

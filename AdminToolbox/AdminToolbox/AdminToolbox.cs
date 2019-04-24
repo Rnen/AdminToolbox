@@ -176,6 +176,7 @@ namespace AdminToolbox
 			this.AddCommands(AT_HelpCommand.CommandAliases, new AT_HelpCommand());
 			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
 			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
+			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
 			//this.AddCommands(new string[] { "timedrestart", "trestart" }, new Command.TimedCommand(this));
 		}
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);//this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new ATCommand(this));
