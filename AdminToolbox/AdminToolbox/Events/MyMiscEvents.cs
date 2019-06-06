@@ -2,19 +2,21 @@
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventHandlers;
+using Smod2.EventSystem.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Globalization;
 
 namespace AdminToolbox
 {
-	using System.Globalization;
 	using API;
 	using API.Extentions;
+
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
 		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, 
 		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, 
-		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole
+		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole, IEventHandlerTeamRespawn
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
@@ -390,6 +392,12 @@ namespace AdminToolbox
 				AdminToolbox.ATPlayerDict[ev.Player.SteamId].PlayerStats.BanCount++;
 				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.SteamId);
 			}
+		}
+
+		public void OnTeamRespawn(TeamRespawnEvent ev)
+		{
+			if(AdminToolbox.respawnLock)
+				ev.PlayerList.Clear();
 		}
 	}
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

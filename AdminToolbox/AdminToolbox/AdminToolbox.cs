@@ -81,7 +81,8 @@ namespace AdminToolbox
 			isStarting = true;
 		public static bool
 			lockRound = false,
-			intercomLock = false;
+			intercomLock = false,
+			respawnLock = false;
 
 #if DEBUG
 		public static bool DebugMode { get; internal set; } = true;
@@ -177,6 +178,7 @@ namespace AdminToolbox
 			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
 			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
 			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
+			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
 			//this.AddCommands(new string[] { "timedrestart", "trestart" }, new Command.TimedCommand(this));
 		}
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);//this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new ATCommand(this));
@@ -229,7 +231,7 @@ namespace AdminToolbox
 
 			this.AddConfig(new ConfigSetting("admintoolbox_block_role_damage", new string[0], true, "What roles cannot attack other roles"));
 
-			this.AddConfig(new ConfigSetting("admintoolbox_wehbook_ban_links", new string[0], true, "Links to channel webhooks for bans"));
+			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 

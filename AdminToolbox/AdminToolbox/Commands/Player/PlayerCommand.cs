@@ -78,6 +78,7 @@ namespace AdminToolbox.Command
 						BuildTwoLiner("   - Godmode: " + playerDict.godMode, " - NoDmg: " + playerDict.dmgOff) + Environment.NewLine +
 						BuildTwoLiner("   - OverwatchMode: " + myPlayer.OverwatchMode, " - KeepSettings: " + playerDict.keepSettings) + Environment.NewLine +
 						BuildTwoLiner("   - BreakDoors: " + playerDict.destroyDoor, " - PlayerLockDown: " + playerDict.lockDown) + Environment.NewLine +
+						BuildTwoLiner("   - LockDoors: " + playerDict.lockDoors) + Environment.NewLine +
 						BuildTwoLiner("   - InstantKill: " + playerDict.instantKill, " - GhostMode: " + myPlayer.GetGhostMode()) + Environment.NewLine +
 						BuildTwoLiner("   - IsJailed: " + playerDict.isJailed, " - Released In: " + remainingJailTime) + Environment.NewLine +
 						BuildTwoLiner(" - Stats:") + Environment.NewLine +

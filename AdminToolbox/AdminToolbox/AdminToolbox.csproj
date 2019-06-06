@@ -116,6 +116,7 @@
     <Compile Include="Commands\Facility\SpeakCommand.cs" />
     <Compile Include="Commands\Server\AT_HelpCommand.cs" />
     <Compile Include="Commands\Server\ATCommand.cs" />
+    <Compile Include="Commands\Server\RespawnLockCommand.cs" />
     <Compile Include="Commands\Server\ServerStatsCommand.cs" />
     <Compile Include="Commands\Server\TimedCommand.cs" />
     <Compile Include="Commands\Server\ServerCommand.cs" />
