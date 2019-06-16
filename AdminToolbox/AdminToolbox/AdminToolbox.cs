@@ -23,14 +23,14 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.8-6",
+		version = "1.3.8-7",
 		SmodMajor = 3,
 		SmodMinor = 4,
 		SmodRevision = 0
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string AssemblyInfoVersion = "1.3.8.6";
+		internal const string AssemblyInfoVersion = "1.3.8.7";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;
@@ -48,11 +48,6 @@ namespace AdminToolbox
 			return LatestReleaseInfo;
 		}
 		#endregion
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-		public List<ScheduledCommandCall> scheduledCommands;
-		public ScheduledRestart scheduledRestart;
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/>s instance of <see cref="LogManager"/>
@@ -72,7 +67,6 @@ namespace AdminToolbox
 		internal static bool roundStatsRecorded = false;
 		internal static readonly ATRoundStats roundStats = new ATRoundStats();
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		internal static bool
 			isRoundFinished = false,
 			isColored = false,
@@ -84,12 +78,15 @@ namespace AdminToolbox
 			intercomLock = false,
 			respawnLock = false;
 
+		/// <summary>
+		/// <see cref="AdminToolbox"/> debug mode
+		/// </summary>
+		public static bool DebugMode { get; internal set; }
 #if DEBUG
-		public static bool DebugMode { get; internal set; } = true;
+			= true;
 #else
-		public static bool DebugMode { get; internal set; } = false;
+			= false;
 #endif
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary>
 		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
@@ -179,7 +176,6 @@ namespace AdminToolbox
 			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
 			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
 			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
-			//this.AddCommands(new string[] { "timedrestart", "trestart" }, new Command.TimedCommand(this));
 		}
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);//this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new ATCommand(this));
 		internal void RegisterConfigs()
@@ -234,10 +230,6 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-
-		}
-		internal void UnRegisterConfigs()
-		{
 
 		}
 

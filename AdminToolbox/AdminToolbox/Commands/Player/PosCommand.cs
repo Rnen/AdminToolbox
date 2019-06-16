@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
+				
 				if (args.Length > 0)
 				{
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);

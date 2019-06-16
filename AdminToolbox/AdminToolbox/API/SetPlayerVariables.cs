@@ -23,17 +23,20 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
-			PlayerSettings setting = AdminToolbox.ATPlayerDict[steamID];
-			setting.overwatchMode = spectatorOnly ?? setting.overwatchMode;
-			setting.godMode = godMode ?? setting.godMode;
-			setting.dmgOff = dmgOff ?? setting.dmgOff;
-			setting.destroyDoor = destroyDoor ?? setting.destroyDoor;
-			setting.lockDown = lockDown ?? setting.lockDown;
-			setting.instantKill = instantKill ?? setting.instantKill;
-			setting.isJailed = isJailed ?? setting.isJailed;
-			AdminToolbox.ATPlayerDict[steamID] = setting;
-			return true;
+			if (AdminToolbox.ATPlayerDict.TryGetValue(steamID, out PlayerSettings setting))
+			{
+				setting.overwatchMode = spectatorOnly ?? setting.overwatchMode;
+				setting.godMode = godMode ?? setting.godMode;
+				setting.dmgOff = dmgOff ?? setting.dmgOff;
+				setting.destroyDoor = destroyDoor ?? setting.destroyDoor;
+				setting.lockDown = lockDown ?? setting.lockDown;
+				setting.instantKill = instantKill ?? setting.instantKill;
+				setting.isJailed = isJailed ?? setting.isJailed;
+				return true;
+			}
+			else
+				return false;
+			
 		}
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> bools on a <see cref="Player"/>
@@ -59,15 +62,19 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return false;
-			PlayerStats stats = AdminToolbox.ATPlayerDict[steamID].PlayerStats;
-			stats.Kills = Kills ?? stats.Kills;
-			stats.TeamKills = TeamKills ?? stats.TeamKills;
-			stats.Deaths = Deaths ?? stats.Deaths;
-			stats.RoundsPlayed = RoundsPlayed ?? stats.RoundsPlayed;
-			stats.BanCount = BanCount ?? stats.BanCount;
-			AdminToolbox.ATPlayerDict[steamID].PlayerStats = stats;
-			return true;
+			if (AdminToolbox.ATPlayerDict.TryGetValue(steamID, out PlayerSettings settings))
+			{
+				PlayerStats stats = settings.PlayerStats;
+				stats.Kills = Kills ?? stats.Kills;
+				stats.TeamKills = TeamKills ?? stats.TeamKills;
+				stats.Deaths = Deaths ?? stats.Deaths;
+				stats.RoundsPlayed = RoundsPlayed ?? stats.RoundsPlayed;
+				stats.BanCount = BanCount ?? stats.BanCount;
+				settings.PlayerStats = stats;
+				return true;
+			}
+			else
+				return false;
 		}
 	}
 }

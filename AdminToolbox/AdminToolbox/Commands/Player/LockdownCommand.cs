@@ -9,6 +9,8 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class LockdownCommand : ICommandHandler
 	{
+		private Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() => "Locks all the doors for specified players";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [BOOLEAN]";
 
@@ -18,22 +20,24 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 0)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
 						if (args.Length > 1)
 						{
 							if (bool.TryParse(args[1], out bool j))
 							{
 								string outPut = null;
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
-									AdminToolbox.ATPlayerDict[pl.SteamId].lockDown = j;
-									playerNum++;
+									AdminToolbox.AddMissingPlayerVariables(pl);
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									{
+										ps.lockDown = j;
+										playerNum++;
+									}
 								}
 								outPut += "\nSet " + playerNum + " player's Lockdown to " + j;
 								return new string[] { outPut };
@@ -43,18 +47,22 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].lockDown = !AdminToolbox.ATPlayerDict[pl.SteamId].lockDown; }
+							foreach (Player pl in Server.GetPlayers())
+							{
+								AdminToolbox.AddMissingPlayerVariables(pl);
+								if(AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									ps.lockDown = !ps.lockDown;
+							}
 							return new string[] { "Toggled all players Lockdown" };
 						}
 					}
 					else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
 						string str = "\nPlayers with Lockdown enabled: \n";
 						List<string> myPlayerList = new List<string>();
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict[pl.SteamId].lockDown)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings pls) && pls.lockDown)
 							{
 								myPlayerList.Add(pl.Name);
 								//str += " - " +pl.Name + "\n";
@@ -71,22 +79,25 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"LockDown\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					if (args.Length > 1)
-					{
-						if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = g;
-						else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = true; }
-						else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = false; }
-						else return new string[] { GetUsage() };
-						return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown };
-					}
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings psetting))
+						if (args.Length > 1)
+						{
+							if (bool.TryParse(args[1], out bool g)) psetting.lockDown = g;
+							else if (args[1].ToLower() == "on") { psetting.lockDown = true; }
+							else if (args[1].ToLower() == "off") { psetting.lockDown = false; }
+							else return new string[] { GetUsage() };
+							return new string[] { myPlayer.Name + " Lockdown: " + psetting.lockDown };
+						}
+						else
+						{
+							psetting.lockDown = !psetting.lockDown;
+							return new string[] { myPlayer.Name + " Lockdown: " + psetting.lockDown };
+						}
 					else
-					{
-						AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown;
-						return new string[] { myPlayer.Name + " Lockdown: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].lockDown };
-					}
+						return new string[] { myPlayer.Name + " is not in the dictionary" };
 
 				}
 				return new string[] { GetUsage() };

@@ -29,7 +29,7 @@ namespace AdminToolbox.Command
 				if (Server.GetPlayers().Count < 1)
 					return new string[] { "The server is empty!" };
 
-				Player caller = (sender is Player send) ? send : null;
+				Player caller = sender as Player;
 				DamageType killType = (DamageType)Config.GetIntValue("admintoolbox_slaycommand_killtype", 0, true);
 
 				if (args.Length > 0)
@@ -37,10 +37,11 @@ namespace AdminToolbox.Command
 					if (args[0].ToLower() == "all" || args[0].StartsWith("*"))
 					{
 						int playerNum = 0;
+
 						foreach (Player p in Server.GetPlayers().Where(pl => pl.PlayerId != (caller != null ? caller.PlayerId : -1)
 						 && !pl.GetGodmode() &&
 						 (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) ? !AdminToolbox.ATPlayerDict[pl.SteamId].godMode : true)
-						 && pl.TeamRole.Team != Smod2.API.Team.SPECTATOR).ToList())
+						 && pl.TeamRole.Team != Smod2.API.Team.SPECTATOR))
 						{
 							p.Kill(killType);
 							playerNum++;

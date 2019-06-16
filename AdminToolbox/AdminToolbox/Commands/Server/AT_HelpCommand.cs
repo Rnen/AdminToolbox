@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 {
 	public class AT_HelpCommand : ICommandHandler
 	{
-		private static Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Opens the AdminToolbox GitHub page";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";

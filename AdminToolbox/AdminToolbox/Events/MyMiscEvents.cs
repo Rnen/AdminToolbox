@@ -12,6 +12,7 @@ namespace AdminToolbox
 {
 	using API;
 	using API.Extentions;
+	using API.Webhook;
 
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
 		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, 
@@ -20,7 +21,7 @@ namespace AdminToolbox
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		private static Server Server => PluginManager.Manager.Server; 
+		private Server Server => PluginManager.Manager.Server; 
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
@@ -43,7 +44,7 @@ namespace AdminToolbox
 					}
 			#endregion
 			#region IntercomWhitelist
-			string[] whitelistRanks = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
+			string[] whitelistRanks = Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
 			if (whitelistRanks.Length > 0)
 			{
 				foreach (string item in whitelistRanks)
@@ -178,7 +179,7 @@ namespace AdminToolbox
 			}
 
 #if !DEBUG
-			AdminToolbox.DebugMode = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug", false);
+			AdminToolbox.DebugMode = Config.GetBoolValue("admintoolbox_debug", false);
 #endif
 
 			if (!AdminToolbox.isColoredCommand)
@@ -217,7 +218,7 @@ namespace AdminToolbox
 
 		public void OnLure(PlayerLureEvent ev)
 		{
-			int[] TUTallowedDmg = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
+			int[] TUTallowedDmg = Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
 			if ((AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && AdminToolbox.ATPlayerDict[ev.Player.SteamId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
 			{
 				ev.AllowContain = false;
@@ -334,7 +335,7 @@ namespace AdminToolbox
 		{
 			if (Config.GetBoolValue("admintoolbox_custom_nuke_cards", false))
 			{
-				int[] allowedCards = ConfigManager.Manager.Config.GetIntListValue("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, false);
+				int[] allowedCards = Config.GetIntListValue("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, false);
 				ev.Cancel = !allowedCards.Contains((int)ev.Activator.GetCurrentItem().ItemType);
 			}
 		}
@@ -353,7 +354,7 @@ namespace AdminToolbox
 			{
 				ev.Handcuffed = false;
 			}
-			else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+			else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
 			{
 				ev.Handcuffed = false;
 			}
@@ -364,8 +365,8 @@ namespace AdminToolbox
 			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0], false);
 			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick",false)))
 			{
-				API.Webhook.DiscordWebhook webH;
-				List<API.Webhook.Field> listOfFields = new List<API.Webhook.Field>();
+				DiscordWebhook webH;
+				List<Field> listOfFields = new List<Field>();
 
 				listOfFields.AddField("Playername: ", ev.Player.Name);
 				listOfFields.AddField("Duration: ", (ev.Duration / 60).ToString("0.0", CultureInfo.InvariantCulture) + " hours");
@@ -374,7 +375,7 @@ namespace AdminToolbox
 				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
 					listOfFields.AddField("Issued By: ", ev.Admin.Name ?? "Server");
 
-				webH = new API.Webhook.DiscordWebhook { embeds = new API.Webhook.EmbedData[] { new API.Webhook.EmbedData { author = new API.Webhook.Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
+				webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
 
 				foreach (string url in banWebhookUrls)
 					if(!string.IsNullOrEmpty(url))

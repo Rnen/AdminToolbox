@@ -10,7 +10,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class TutorialCommand : ICommandHandler
 	{
-		private static Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Sets player to TUTORIAL";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER / *>";

@@ -53,7 +53,7 @@ namespace AdminToolbox.Command
 					//Handling player stats
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
 					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.SteamId, Managers.ATFileManager.PlayerFile.Write);
-					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId) ? AdminToolbox.ATPlayerDict[myPlayer.SteamId] : new PlayerSettings(myPlayer.SteamId);
+					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.SteamId);
 
 					//Inventory
 					string playerInv = string.Empty;

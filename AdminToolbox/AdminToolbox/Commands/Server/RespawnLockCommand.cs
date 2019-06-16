@@ -10,16 +10,13 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class RespawnLockCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
 		public string GetCommandDescription() => "Keeps players from spawning";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 		public static readonly string[] CommandAliases = new string[] { "RESPAWNLOCK", "RSL", "RSPL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			string[] denied;
-			if (sender.IsPermitted(CommandAliases, out denied))
+			if (sender.IsPermitted(CommandAliases, out string[] denied))
 				if (args.Length > 0)
 				{
 					if (bool.TryParse(args[0], out bool b))

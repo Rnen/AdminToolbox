@@ -14,9 +14,19 @@ using System.IO.Compression;
 namespace AdminToolbox.Managers
 {
 	using API;
+
+	internal enum Folder
+	{
+		AppData,
+		ATRoot,
+		PlayerFiles,
+		Logs,
+		Warps
+	}
 	/// <summary>
 	/// Contains all <see cref="File"/>-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
+	/// 
 	public partial class ATFileManager
 	{
 		private static IConfigFile Config => ConfigManager.Manager.Config;
@@ -26,16 +36,7 @@ namespace AdminToolbox.Managers
 
 		internal bool ProcessingCollection = false;
 
-		private static string AdmintoolboxFolderPath => Config.GetStringValue("admintoolbox_folder_path", string.Empty);
 
-		internal enum Folder
-		{
-			AppData,
-			ATFolder,
-			PlayerFiles,
-			Logs,
-			Warps
-		}
 
 		private static string GetATFolderPath()
 		{
@@ -55,7 +56,7 @@ namespace AdminToolbox.Managers
 			return cnfgpath;
 		}
 
-		internal static string GetFolder(Folder folder = Folder.ATFolder)
+		internal static string GetFolderPath(Folder folder = Folder.ATRoot)
 		{
 			
 			string ret = GetATFolderPath();
@@ -82,7 +83,7 @@ namespace AdminToolbox.Managers
 				case Folder.AppData:
 					return FileManager.GetAppFolder(shared: true, addseparator: true);
 
-				case Folder.ATFolder:
+				case Folder.ATRoot:
 				default:
 					break;
 			}
@@ -95,10 +96,10 @@ namespace AdminToolbox.Managers
 			GetATFolderPath();
 
 		internal static string AdminToolboxPlayerStats => 
-			GetFolder(Folder.PlayerFiles);
+			GetFolderPath(Folder.PlayerFiles);
 
 		internal static string AdminToolboxLogs =>
-			GetFolder(Folder.Logs);
+			GetFolderPath(Folder.Logs);
 
 		/// <summary>
 		/// Read/Writes <see cref ="Player"/> stats to/from <see cref="File"/>
@@ -171,7 +172,7 @@ namespace AdminToolbox.Managers
 					{
 						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID));
 						return;
-					};
+					}
 					switch (Operation)
 					{
 						case PlayerFile.Write:
@@ -352,7 +353,7 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public static void WriteVersionToFile()
 		{
-			string path = GetFolder(Folder.AppData);
+			string path = GetFolderPath(Folder.AppData);
 			if (Directory.Exists(path))
 			{
 				string text = "at_version=" + AdminToolbox.plugin.Details.version.Split('-').FirstOrDefault();

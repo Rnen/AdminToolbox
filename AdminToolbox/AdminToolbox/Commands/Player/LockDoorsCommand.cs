@@ -15,7 +15,7 @@ namespace AdminToolbox.Command
 		private readonly AdminToolbox plugin;
 
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		private static Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public LockDoorsCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <Player>";

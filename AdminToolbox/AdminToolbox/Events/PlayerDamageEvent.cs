@@ -27,7 +27,7 @@ namespace AdminToolbox
 			string _tutDefaultDmgAllowed = PluginManager.Manager.Plugins
 				.Any(p => p.Details.id.ToLower().Contains("serpents.hand")) ? "*" : ((int)DamageType.NONE).ToString();
 			string[] _allowedDmgConfig =
-				ConfigManager.Manager.Config.GetListValue(
+				Config.GetListValue(
 					"admintoolbox_tutorial_dmg_allowed",
 					new string[] { _tutDefaultDmgAllowed.ToString() },
 					false
@@ -80,7 +80,7 @@ namespace AdminToolbox
 			int[] DebugDmg = Config.GetIntListValue("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, false);
 
 			string _roleDamagesDefault = PluginManager.Manager.EnabledPlugins.Any(p => p.Details.id.ToLower() == "cyan.serpents.hand") ? "2:2" : "14:14";
-			string[] roleDamages = ConfigManager.Manager.Config.GetListValue("admintoolbox_block_role_damage", new string[] { _roleDamagesDefault }, false);
+			string[] roleDamages = Config.GetListValue("admintoolbox_block_role_damage", new string[] { _roleDamagesDefault }, false);
 			if (roleDamages.Length == 1 && roleDamages[0].ToUpper() == "DEFAULT")
 				roleDamages[0] = _roleDamagesDefault;
 
@@ -88,7 +88,7 @@ namespace AdminToolbox
 			if (ev.DamageType != DamageType.FRAG && (attackerSetting?.instantKill ?? false))
 				ev.Damage = ev.Player.GetHealth() + 1;
 
-			if (ev.Player.IsHandcuffed() && Utility.HumanDamageTypes.Contains((int)ev.DamageType) && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_nokill_captured", false))
+			if (ev.Player.IsHandcuffed() && Utility.HumanDamageTypes.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_nokill_captured", false))
 			{
 				if (!attackerSetting?.instantKill ?? true)
 				{
@@ -97,7 +97,7 @@ namespace AdminToolbox
 				}
 			}
 
-			if (AdminToolbox.isRoundFinished && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_roledamageblock_onroundend", true)) goto RoundEnd;
+			if (AdminToolbox.isRoundFinished && !Config.GetBoolValue("admintoolbox_roledamageblock_onroundend", true)) goto RoundEnd;
 			if (roleDamages.Length > 0 && ev.Attacker.PlayerId != ev.Player.PlayerId)
 			{
 				bool foundPlayer = false;
@@ -142,7 +142,7 @@ namespace AdminToolbox
 RoundEnd:;
 			if (AdminToolbox.isRoundFinished)
 			{
-				float enddamageMultiplier = ConfigManager.Manager.Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1f, true);
+				float enddamageMultiplier = Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1f, true);
 				if(!(attackerSetting?.instantKill ?? false))
 					ev.Damage = originalDamage * enddamageMultiplier;
 			}
@@ -151,9 +151,9 @@ RoundEnd:;
 				case Role.TUTORIAL:
 					if (allowedTutDmg.Contains((int)ev.DamageType) || allowedTutDmg.Contains(-2))
 						goto default;
-					if (DebugDmg.Contains((int)ev.DamageType) && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))
+					if (DebugDmg.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))
 						plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
-					if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Attacker.SteamId) && AdminToolbox.ATPlayerDict[ev.Attacker.SteamId].instantKill && ConfigManager.Manager.Config.GetBoolValue("admintoolbox_instantkill_affects_tutorials", true))
+					if ((attackerSetting?.instantKill ?? false) && Config.GetBoolValue("admintoolbox_instantkill_affects_tutorials", true))
 						goto default;
 					
 					ev.DamageType = DamageType.NONE;
@@ -161,18 +161,19 @@ RoundEnd:;
 					break;
 				default:
 					if (AdminToolbox.isRoundFinished) break;
-					ev.Damage = (ev.DamageType == DamageType.DECONT) ? originalDamage * ConfigManager.Manager.Config.GetFloatValue("admintoolbox_decontamination_damagemultiplier", 1f, true) : ev.Damage;
-					if ((ev.Attacker.Name == "Server" && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_server", false, false)) || (ev.Attacker.Name == "Spectator" && !ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_spectator", false, false))) return;
+					ev.Damage = (ev.DamageType == DamageType.DECONT) ? originalDamage * Config.GetFloatValue("admintoolbox_decontamination_damagemultiplier", 1f, true) : ev.Damage;
+					if ((ev.Attacker.Name == "Server" && !Config.GetBoolValue("admintoolbox_debug_server", false, false)) || (ev.Attacker.Name == "Spectator" &&
+						!Config.GetBoolValue("admintoolbox_debug_spectator", false, false))) return;
 					if (Utility.IsTeam(ev.Player, ev.Attacker))
 					{
-						if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
+						if (Config.GetBoolValue("admintoolbox_debug_friendly_damage", false, false))
 						{
-							ev.Damage = (ev.Damage >= 1) ? ConfigManager.Manager.Config.GetFloatValue("admintoolbox_friendlyfire_damagemultiplier", 1f) * originalDamage : ev.Damage;
+							ev.Damage = (ev.Damage >= 1) ? Config.GetFloatValue("admintoolbox_friendlyfire_damagemultiplier", 1f) * originalDamage : ev.Damage;
 							if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
 								plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + damage +^*/ " with " + ev.DamageType);
 						}
 					}
-					else if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_debug_player_damage", false, false))
+					else if (Config.GetBoolValue("admintoolbox_debug_player_damage", false, false))
 					{
 						if (DebugDmg.Contains((int)ev.DamageType) && !AdminToolbox.isRoundFinished)
 							plugin.Info(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + /*" for " + ev.Damage + " damage" +*/ " with: " + ev.DamageType);

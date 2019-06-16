@@ -12,6 +12,11 @@ namespace AdminToolbox.API
 {
 	public static class Utility
 	{
+		/// <summary>
+		/// Safely getting a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
+		/// <returns>Returns <see cref="bool"/> based on success</returns>
+		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.Role.UNASSIGNED"/></para>
+		/// </summary>
 		public static bool TryParseRole(int roleID, out Role role)
 		{
 			role = Role.UNASSIGNED;
@@ -25,6 +30,11 @@ namespace AdminToolbox.API
 			}
 		}
 
+		/// <summary>
+		/// Safely getting a <see cref="Smod2.API.ItemType"/> from an <see cref="int"/>. 
+		/// <returns>Returns <see cref="bool"/> based on success</returns>
+		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.ItemType.NULL"/></para>
+		/// </summary>
 		public static bool TryParseItem(int itemID, out ItemType itemType)
 		{
 			itemType = ItemType.NULL;
@@ -38,6 +48,9 @@ namespace AdminToolbox.API
 			}
 		}
 
+		/// <summary>
+		/// *, ALL, EVERY
+		/// </summary>
 		public static string[] AllAliasWords = { "*", "ALL", "EVERY" };
 
 		public static readonly int[]
@@ -66,9 +79,13 @@ namespace AdminToolbox.API
 				(int)Team.CDP
 			};
 
-		public static DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICER | DamageType.FRAG;
-		public static DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 | DamageType.SCP_106 | DamageType.SCP_173 | DamageType.SCP_939;
+		public static readonly DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICER | DamageType.FRAG;
+		public static readonly DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 | DamageType.SCP_106 | DamageType.SCP_173 | DamageType.SCP_939;
 
+
+		/// <summary>
+		/// Checks if two <see cref="Player"/>s are on the same team
+		/// </summary>
 		public static bool IsTeam(Player victim, Player attacker)
 		{
 			if (victim == null || attacker == null || victim.PlayerId == attacker.PlayerId)

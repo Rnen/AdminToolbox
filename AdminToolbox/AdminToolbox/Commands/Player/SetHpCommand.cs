@@ -9,6 +9,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class SetHpCommand : ICommandHandler
 	{
+		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Sets player HP. Use int for amount";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
 
@@ -18,7 +19,6 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 0)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
@@ -28,7 +28,7 @@ namespace AdminToolbox.Command
 							if (int.TryParse(args[1], out int j))
 							{
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
 									pl.SetHealth(j);
 									playerNum++;
@@ -45,11 +45,11 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player pl in server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
+							foreach (Player pl in Server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
 							return new string[] { "Set all players to their default max HP" };
 						}
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 					if (args.Length > 1)
 					{

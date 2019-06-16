@@ -13,8 +13,7 @@ namespace AdminToolbox.Command
 
 	public class EmptyCommand : ICommandHandler
 	{
-		private static Server Server => PluginManager.Manager.Server;
-		private static Map Map => Server.Map;
+		private static Map Map => PluginManager.Manager.Server.Map;
 
 		public string GetCommandDescription() => "Empties the player's inventory";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [Player] (ItemType Number / Delete) <Delete>";
@@ -22,7 +21,6 @@ namespace AdminToolbox.Command
 		public static readonly string[] CommandAliases = new string[] { "EMPTY", "E" };
 
 		private readonly string[] deleteAliases = { "DELETE", "DEL", "D" };
-		private readonly int[] enumValues = Enum.GetValues(typeof(ItemType)).Cast<int>().ToArray();
 
 #warning EmptyCommand needs proper testing
 		public string[] OnCall(ICommandSender sender, string[] args) //=> new string[] { GetUsage() };

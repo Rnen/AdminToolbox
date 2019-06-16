@@ -36,7 +36,7 @@ namespace AdminToolbox.Managers
 		internal string _logStartTime;
 
 		private static string 
-			AppFolder => ATFileManager.GetFolder(ATFileManager.Folder.AppData);
+			AppFolder => ATFileManager.GetFolderPath(Folder.AppData);
 		private static string
 			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
 		private static string
@@ -129,14 +129,17 @@ namespace AdminToolbox.Managers
 		}
 
 		/// <summary>
-		/// Manages <see cref ="AdminToolbox"/> logfiles. <para>Set <see cref="bool"/> 
-		/// <paramref name="force"/> to true to forcefully delete all </para>
+		/// Removes <see cref ="AdminToolbox"/> logfiles older than set config time.
 		/// </summary>
-		public void ManageDatedATLogs(bool force = false)
+		public void ManageDatedATLogs() => ManageDatedATLogs(0);
+		/// <summary>
+		/// Removes <see cref ="AdminToolbox"/> logfiles older than set time.
+		/// </summary>
+		public void ManageDatedATLogs(uint hoursOld)
 		{
-			int configInt = Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
+			uint configInt = hoursOld > 0 ? hoursOld : (uint)Config.GetIntValue("admintoolbox_logremover_hours_old", 0);
 
-			if (configInt > 0 || force)
+			if (configInt > 0)
 			{
 				string[] files = Directory.GetFiles(AdminToolboxLogs + Port, "Round-*.txt", SearchOption.TopDirectoryOnly);
 				AdminToolbox.plugin.Debug("LogManager file age to keep: " + configInt);

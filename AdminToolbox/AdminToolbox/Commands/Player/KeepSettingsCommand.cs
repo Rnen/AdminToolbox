@@ -10,6 +10,8 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class KeepSettingsCommand : ICommandHandler
 	{
+		private Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() =>"Toggles that players keeping settings on round restart";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [BOOLEAN]";
 
@@ -17,24 +19,23 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 0)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
 						if (args.Length > 1)
 						{
 							if (bool.TryParse(args[1], out bool j))
 							{
 								string outPut = null;
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
-									AdminToolbox.ATPlayerDict[pl.SteamId].keepSettings = j;
+									AdminToolbox.AddMissingPlayerVariables(pl);
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+										ps.keepSettings = j;
 									playerNum++;
 								}
 								outPut += "\nSet " + playerNum + " player's KeepSettings to " + j;
@@ -47,18 +48,22 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].keepSettings = !AdminToolbox.ATPlayerDict[pl.SteamId].keepSettings; }
+							foreach (Player pl in Server.GetPlayers())
+							{
+								AdminToolbox.AddMissingPlayerVariables(pl);
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									ps.keepSettings = !ps.keepSettings;
+							}
 							return new string[] { "Toggled all players KeepSettings" };
 						}
 					}
 					else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
 						string str = "\nPlayers with KeepSettings enabled: \n";
 						List<string> myPlayerList = new List<string>();
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict[pl.SteamId].keepSettings)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps) && ps.keepSettings)
 							{
 								myPlayerList.Add(pl.Name);
 							}
@@ -77,17 +82,20 @@ namespace AdminToolbox.Command
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					if (args.Length > 1)
-					{
-						if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings = true; }
-						else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings = false; }
-						return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings };
-					}
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings psett))
+						if (args.Length > 1)
+						{
+							if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { psett.keepSettings = true; }
+							else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { psett.keepSettings = false; }
+							return new string[] { myPlayer.Name + " KeepSettings: " + psett.keepSettings };
+						}
+						else
+						{
+							psett.keepSettings = !psett.keepSettings;
+							return new string[] { myPlayer.Name + " KeepSettings: " + psett.keepSettings };
+						}
 					else
-					{
-						AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings;
-						return new string[] { myPlayer.Name + " KeepSettings: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].keepSettings };
-					}
+						return new string[] { myPlayer.Name + " not in dictionary" };
 
 				}
 				return new string[] { GetUsage() };

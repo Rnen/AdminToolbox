@@ -23,7 +23,7 @@ namespace AdminToolbox.Managers
 
 		private static int Port => PluginManager.Manager.Server.Port;
 
-		private static string WarpPointsFolder => ATFileManager.GetFolder(ATFileManager.Folder.Warps);
+		private static string WarpPointsFolder => ATFileManager.GetFolderPath(Folder.Warps);
 
 		private static string WarpFilePath => WarpPointsFolder + "Global.txt";
 

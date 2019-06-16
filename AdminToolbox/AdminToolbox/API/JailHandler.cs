@@ -51,9 +51,8 @@ namespace AdminToolbox.API
 		public static bool SendToJail(Player player, DateTime? jailedToTime)
 		{
 			if (player.TeamRole.Role == Role.SPECTATOR || player.OverwatchMode) return false;
-			if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings psetting))
 			{
-				PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
 				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.Now) ? psetting.JailedToTime : DateTime.Now.AddYears(1));
 				//Saves original variables
 				psetting.originalPos = player.GetPosition();
@@ -87,9 +86,8 @@ namespace AdminToolbox.API
 		public static void ReturnFromJail(Player player)
 		{
 			if (player == null || string.IsNullOrEmpty(player.SteamId.Trim())) return;
-			if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings psetting))
 			{
-				PlayerSettings psetting = AdminToolbox.ATPlayerDict[player.SteamId];
 				psetting.isJailed = false;
 				psetting.JailedToTime = DateTime.Now;
 				player.ChangeRole(psetting.previousRole, true, false);

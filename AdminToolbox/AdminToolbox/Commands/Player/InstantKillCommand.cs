@@ -10,6 +10,8 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class InstantKillCommand : ICommandHandler
 	{
+		private Server Server => PluginManager.Manager.Server;
+
 		public string GetCommandDescription() => "Lets specified players instantly kill targets";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [BOOLEAN]";
 
@@ -19,7 +21,6 @@ namespace AdminToolbox.Command
 		{
 			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 0)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
@@ -31,11 +32,11 @@ namespace AdminToolbox.Command
 							{
 								string outPut = null;
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
-									if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
 									{
-										AdminToolbox.ATPlayerDict[pl.SteamId].instantKill = j;
+										ps.instantKill = j;
 										playerNum++;
 									}
 								}
@@ -49,7 +50,11 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].instantKill = !AdminToolbox.ATPlayerDict[pl.SteamId].instantKill; }
+							foreach (Player pl in Server.GetPlayers())
+							{
+								if(AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting))
+									psetting.instantKill = !psetting.instantKill;
+							}
 							return new string[] { "Toggled all players InstantKill" };
 						}
 					}
@@ -58,9 +63,9 @@ namespace AdminToolbox.Command
 						AdminToolbox.AddMissingPlayerVariables();
 						string str = "\nPlayers with InstantKill enabled: \n";
 						List<string> myPlayerList = new List<string>();
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) && AdminToolbox.ATPlayerDict[pl.SteamId].instantKill)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psett) && psett.instantKill)
 							{
 								myPlayerList.Add(pl.Name);
 								//str += " - " +pl.Name + "\n";
@@ -77,16 +82,21 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"InstantKill\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
 					if (args.Length > 1)
 					{
-						if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = g;
-						else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = true; }
-						else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = false; }
-						else return new string[] { GetUsage() };
-						return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill };
+						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings ps))
+						{
+							if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = g;
+							else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = true; }
+							else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill = false; }
+							else return new string[] { GetUsage() };
+							return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].instantKill };
+						}
+						else
+							return new string[] { myPlayer.Name + " not in dictionary" };
 					}
 					else
 					{

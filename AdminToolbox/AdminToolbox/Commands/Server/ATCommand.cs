@@ -33,6 +33,8 @@ namespace AdminToolbox.Command
 						case "H":
 							return CommandManager.CallCommand(sender, "athelp", new string[] { });
 
+						case "VERSION":
+						case "V":
 						case "INFO":
 						case "I":
 							return new string[] { "[AdminToolbox Info]", "Your Local Version: " + plugin.Details.version, "Latest GitHub Version: " + plugin.GetGitReleaseInfo().Version };
@@ -48,11 +50,13 @@ namespace AdminToolbox.Command
 							{
 								return new string[] { "Failed to open browser! Please visit GitHub or use \"AT_AutoUpdate.bat\" instead" };
 							}
+
 						case "DEBUG":
 							if (!sender.IsPermitted(new string[] { "ATDEBUG" }, true, out string[] denied))
 								return denied;
 							AdminToolbox.DebugMode = !AdminToolbox.DebugMode;
 							return new string[] { "AdminToolbox Debugmode: " +  AdminToolbox.DebugMode };
+
 						default:
 							return new string[] { args[0] + " is not a valid arguement!", GetUsage() };
 					}

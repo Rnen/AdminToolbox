@@ -10,7 +10,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class BreakDoorsCommand : ICommandHandler
 	{
-		private static Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Toggles that players break doors when interacting with them";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER> <BOOLEAN>";
@@ -22,7 +22,6 @@ namespace AdminToolbox.Command
 			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				AdminToolbox.AddMissingPlayerVariables();
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 0)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
@@ -33,10 +32,13 @@ namespace AdminToolbox.Command
 							{
 								string outPut = null;
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
-									AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor = j;
-									playerNum++;
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									{
+										ps.destroyDoor = j;
+										playerNum++;
+									}
 								}
 								outPut += "Set " + playerNum + " player's BreakDoors to " + j;
 								return new string[] { "Set " + playerNum + " player's BreakDoors to " + j };
@@ -46,7 +48,11 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player pl in server.GetPlayers()) { AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor = !AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor; }
+							foreach (Player pl in Server.GetPlayers())
+							{
+								if(AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									ps.destroyDoor = !ps.destroyDoor;
+							}
 							return new string[] { "Toggled all players BreakDoors" };
 						}
 					}
@@ -54,9 +60,9 @@ namespace AdminToolbox.Command
 					{
 						string str = "Players with BreakDoors enabled: \n";
 						List<string> myPlayerList = new List<string>();
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict[pl.SteamId].destroyDoor)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps) && ps.destroyDoor)
 								myPlayerList.Add(pl.Name);
 						}
 						if (myPlayerList.Count > 0)
@@ -68,26 +74,28 @@ namespace AdminToolbox.Command
 						else str = "No players with \"BreakDoors\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null && sender is Player sendingPlayer)
 						myPlayer = sendingPlayer;
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					if (args.Length > 1)
-					{
-						if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = true; }
-						else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = false; }
-						return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor };
-					}
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings psetting))
+						if (args.Length > 1)
+						{
+							if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { psetting.destroyDoor = true; }
+							else if (args[1].ToLower() == "off" || args[1].ToLower() == "false") { psetting.destroyDoor = false; }
+							return new string[] { myPlayer.Name + " BreakDoors: " + psetting.destroyDoor };
+						}
+						else
+						{
+							psetting.destroyDoor = !psetting.destroyDoor;
+							return new string[] { myPlayer.Name + " BreakDoors: " + psetting.destroyDoor };
+						}
 					else
-					{
-						AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor = !AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor;
-						return new string[] { myPlayer.Name + " BreakDoors: " + AdminToolbox.ATPlayerDict[myPlayer.SteamId].destroyDoor };
-					}
+						return new string[] { myPlayer.Name + " not in dictionary" };
 
 				}
-				else if (sender is Player p && AdminToolbox.ATPlayerDict.ContainsPlayer(p))
+				else if (sender is Player p && AdminToolbox.ATPlayerDict.TryGetValue(p.SteamId, out PlayerSettings ps))
 				{
-					PlayerSettings ps = AdminToolbox.ATPlayerDict[p.SteamId];
 					ps.destroyDoor = !ps.destroyDoor;
 					return new string[] { "Toggled BreakDoors! Currently: " + ps.destroyDoor };
 				}

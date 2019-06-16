@@ -11,6 +11,7 @@ namespace AdminToolbox.Command
 	public class GhostCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
+		private Server Server => PluginManager.Manager.Server;
 
 		public GhostCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Sets the player's visibility to other players";
@@ -23,8 +24,6 @@ namespace AdminToolbox.Command
 			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (!ConfigManager.Manager.Config.GetBoolValue("sm_enable_ghostmode", false)) return new string[] { "\"sm_enable_ghostmode\" needs to be set TRUE to use this!" };
-				AdminToolbox.AddMissingPlayerVariables();
-				Server server = PluginManager.Manager.Server;
 				if (args.Length == 0 && sender is Player p)
 				{
 					p.SetGhostMode(!p.GetGhostMode());
@@ -50,7 +49,7 @@ namespace AdminToolbox.Command
 								bool visibleTalking = (args.Length > 3 && bool.TryParse(args[3], out bool xtalk)) ? xtalk : true;
 								string outPut = string.Empty;
 								int playerNum = 0;
-								foreach (Player pl in server.GetPlayers())
+								foreach (Player pl in Server.GetPlayers())
 								{
 									pl.SetGhostMode(state, visibleTospec, visibleTalking);
 									playerNum++;
@@ -69,7 +68,7 @@ namespace AdminToolbox.Command
 						}
 						else
 						{
-							foreach (Player ply in server.GetPlayers())
+							foreach (Player ply in Server.GetPlayers())
 								ply.SetGhostMode(!ply.GetGhostMode());
 							return new string[] { "Toggled all players GhostMode!" };
 						}
@@ -79,7 +78,7 @@ namespace AdminToolbox.Command
 						string str = "\nPlayers with GhostMode enabled: \n";
 						List<string> myPlayerList = new List<string>();
 
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 							if (pl.GetGhostMode())
 								myPlayerList.Add(pl.Name);
 
@@ -93,7 +92,7 @@ namespace AdminToolbox.Command
 							str = "\nNo players with \"GhostMode\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					if (args.Length > 1)
 					{

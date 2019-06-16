@@ -9,7 +9,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class PlayerListCommand : ICommandHandler
 	{
-		private static Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Lists current players to server console";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";

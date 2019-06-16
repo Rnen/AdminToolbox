@@ -8,6 +8,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class TeleportCommand : ICommandHandler
 	{
+		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Teleports player to player2";
 		public string GetUsage() => "TPX [PLAYER] [PLAYER2]";
 
@@ -17,7 +18,6 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
 				if (args.Length > 1)
 				{
 					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 						Player myTpPlayer = GetPlayerFromString.GetPlayer(args[1]);
 						if (myTpPlayer == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
 						Vector pos = myTpPlayer.GetPosition();
-						foreach (Player pl in server.GetPlayers())
+						foreach (Player pl in Server.GetPlayers())
 						{
 							if (pl.PlayerId != myTpPlayer.PlayerId)
 							{
@@ -36,9 +36,9 @@ namespace AdminToolbox.Command
 						}
 						return new string[] { "Teleported " + playerNum + " players to " + myTpPlayer.Name };
 					}
-					Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; ; }
-					Player myPlayer2 = API.GetPlayerFromString.GetPlayer(args[1]);
+					Player myPlayer2 = GetPlayerFromString.GetPlayer(args[1]);
 					if (myPlayer2 == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
 					if (args[1] != null)
 					{

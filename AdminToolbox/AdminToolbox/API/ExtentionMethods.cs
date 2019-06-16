@@ -154,7 +154,7 @@ namespace AdminToolbox.API.Extentions
 
 		internal static bool TryGetVector(this Dictionary<string, WarpPoint> dict, string key, out Vector vector)
 		{
-			vector = null;
+			vector = Vector.Zero;
 			if (dict.TryGetValue(key, out WarpPoint wp))
 			{
 				vector = wp.Vector.ToSMVector();

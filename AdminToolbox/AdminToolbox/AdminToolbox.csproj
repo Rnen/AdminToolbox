@@ -36,6 +36,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>..\Builds\AdminToolbox.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -94,8 +95,6 @@
     <Compile Include="API\GetPlayerFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerSettings.cs" />
-    <Compile Include="API\ScheduledCommandCall.cs" />
-    <Compile Include="API\ScheduledRestart.cs" />
     <Compile Include="API\SetPlayerVariables.cs" />
     <Compile Include="API\Utility.cs" />
     <Compile Include="API\WaitForTeleport.cs" />
@@ -118,7 +117,6 @@
     <Compile Include="Commands\Server\ATCommand.cs" />
     <Compile Include="Commands\Server\RespawnLockCommand.cs" />
     <Compile Include="Commands\Server\ServerStatsCommand.cs" />
-    <Compile Include="Commands\Server\TimedCommand.cs" />
     <Compile Include="Commands\Server\ServerCommand.cs" />
     <Compile Include="Commands\Server\RoundLockCommand.cs" />
     <Compile Include="Commands\Facility\WarpsCommand.cs" />
