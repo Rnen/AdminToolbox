@@ -1,8 +1,6 @@
-﻿using Smod2;
-using Smod2.API;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Smod2.API;
 using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.API
@@ -50,7 +48,8 @@ namespace AdminToolbox.API
 			lockDown = false,
 			instantKill = false,
 			isJailed = false,
-			lockDoors = false;
+			lockDoors = false,
+			grenadeMode = false;
 
 		public PlayerStats PlayerStats = new PlayerStats();
 		public PlayerInfo PlayerInfo = new PlayerInfo();
@@ -65,9 +64,11 @@ namespace AdminToolbox.API
 		internal Role previousRole = Role.CLASSD;
 		internal List<SMItem> playerPrevInv = new List<SMItem>();
 
+		internal ItemType InfiniteItem = ItemType.NULL;
+
 		public DateTime JailedToTime { get; internal set; } = DateTime.Now;
 		public DateTime JoinTime { get; internal set; } = DateTime.Now;
-		
+
 
 		public PlayerSettings(string steamID) => this.PlayerInfo.SteamID = steamID;
 	}

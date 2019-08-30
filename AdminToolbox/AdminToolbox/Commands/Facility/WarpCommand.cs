@@ -1,14 +1,12 @@
-﻿using Smod2.Commands;
+using System.Collections.Generic;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System.Linq;
-using ServerMod2.API;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
 	using API;
-	using Managers;
 	using API.Extentions;
 
 	public class WarpCommmand : ICommandHandler
@@ -32,7 +30,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (sender != null && sender is Player p && p != null)
 					AdminToolbox.AddMissingPlayerVariables(p);

@@ -1,12 +1,8 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Smod2;
 
 namespace AdminToolbox.Managers
 {
@@ -35,7 +31,7 @@ namespace AdminToolbox.Managers
 
 		internal string _logStartTime;
 
-		private static string 
+		private static string
 			AppFolder => ATFileManager.GetFolderPath(Folder.AppData);
 		private static string
 			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
@@ -87,7 +83,7 @@ namespace AdminToolbox.Managers
 				Time = time
 			});
 			//string mystring = System.Reflection.Assembly.GetAssembly(this.GetType()).Location;
-			if(CheckExistingFolders())
+			if (CheckExistingFolders())
 			{
 				string text = string.Empty;
 				foreach (LogData log in logs)

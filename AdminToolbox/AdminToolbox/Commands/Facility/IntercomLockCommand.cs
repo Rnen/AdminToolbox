@@ -1,11 +1,7 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
-using System.Linq;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
 
 	public class IntercomLockCommand : ICommandHandler
@@ -16,11 +12,11 @@ namespace AdminToolbox.Command
 		public string GetCommandDescription() => "Enables/Disables the intercom for non-whitelisted players";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <bool>";
 
-		public static readonly string[] CommandAliases = new string[] { "INTERCOMLOCK", "INTERLOCK" , "ILOCK", "IL" };
+		public static readonly string[] CommandAliases = new string[] { "INTERCOMLOCK", "INTERLOCK", "ILOCK", "IL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (args.Length >= 1)
 				{

@@ -1,7 +1,7 @@
-﻿using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -22,7 +22,7 @@ namespace AdminToolbox.Command
 			{
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						if (args.Length > 1)
 						{
@@ -64,7 +64,7 @@ namespace AdminToolbox.Command
 							Vector originalPos = myPlayer.GetPosition();
 							bool tele = myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR;
 							myPlayer.ChangeRole(spesifiedRole, true, tele);
-							if(tele)
+							if (tele)
 								myPlayer.Teleport(originalPos, true);
 							myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
 							return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + spesifiedRole };

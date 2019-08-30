@@ -1,10 +1,9 @@
-﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
 	public class ServerCommand : ICommandHandler
 	{
@@ -12,7 +11,7 @@ namespace AdminToolbox.Command
 
 		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription() =>"Gets toolbox info about the server";
+		public string GetCommandDescription() => "Gets toolbox info about the server";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 
 		public static readonly string[] CommandAliases = new string[] { "SERVERINFO", "S", "SERVER", "SINFO" };
@@ -21,13 +20,13 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				int minutes = (int)(Server.Round.Duration / 60), duration = Server.Round.Duration;
+				int minutes = Server.Round.Duration / 60, duration = Server.Round.Duration;
 				string timeString = (duration < 60) ? duration + " seconds" : minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
 				string pJail = "No jailed players!";
 
 				Player[] players = Server.GetPlayers().ToArray();
 				Player[] jailedPlayers = Server.GetPlayers().ToArray().JailedPlayers();
-				
+
 				if (jailedPlayers != null && jailedPlayers.Length > 0)
 				{
 					pJail = string.Empty;

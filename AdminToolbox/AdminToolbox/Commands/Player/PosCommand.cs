@@ -1,13 +1,7 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
-using Smod2.EventHandlers;
-using System.Linq;
-using ServerMod2.API;
-using System;
 using System.Collections.Generic;
-using Unity;
-using UnityEngine;
+using System.Linq;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -17,7 +11,7 @@ namespace AdminToolbox.Command
 	{
 		private const bool Unstuck = false;
 
-		public string GetCommandDescription() =>"Alters the player position";
+		public string GetCommandDescription() => "Alters the player position";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (ADD/SET/GET) <x=> <y=> <z=>\nVisit the \"github.com/Rnen/AdminToolbox/Wiki\" for more info";
 
 		public static readonly string[] CommandAliases = new string[] { "POS", "ATPOS", "AT-POS" };
@@ -26,7 +20,7 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				
+
 				if (args.Length > 0)
 				{
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);

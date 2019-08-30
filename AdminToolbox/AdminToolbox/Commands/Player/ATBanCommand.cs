@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
-using System.Linq;
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
 
 	public class ATBanCommand : ICommandHandler
@@ -23,7 +21,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				try
 				{
@@ -33,7 +31,7 @@ namespace AdminToolbox.Command
 					string bannedPlayer = args[0];
 					string input = args[1];
 					int minutes = Config.GetIntValue("admintoolbox_atban_duration_default", 43800); //Default 4 weeks
-					if(args.Length > 2)
+					if (args.Length > 2)
 						int.TryParse(args[2], out minutes);
 					string reason = (args.Length > 3) ? string.Join(" ", args, startIndex: 3, count: args.Length - 3) : "";
 
@@ -47,9 +45,9 @@ namespace AdminToolbox.Command
 						string ip = input.Contains("::ffff:") ? input : "::ffff:" + input;
 
 						Player[] plist = Server.GetPlayers().ToArray();
-						foreach(Player player in plist)
+						foreach (Player player in plist)
 						{
-							if(player.IpAddress.Contains(input))
+							if (player.IpAddress.Contains(input))
 							{
 								bannedPlayer = player.Name;
 								player.Ban(0, "You have been banned from this server!");

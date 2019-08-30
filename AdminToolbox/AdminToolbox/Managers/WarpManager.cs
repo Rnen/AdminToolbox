@@ -1,15 +1,8 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
-using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Unity;
-using UnityEngine;
 using Newtonsoft.Json;
+using Smod2;
 
 namespace AdminToolbox.Managers
 {
@@ -29,14 +22,15 @@ namespace AdminToolbox.Managers
 
 		internal readonly Dictionary<string, WarpPoint> presetWarps = new Dictionary<string, WarpPoint>()
 			{
-				{ "mtf",	new WarpPoint{ Name = "mtf", Description = "The MTF Spawn", Vector = new ATVector(181,994,-61) } },
-				{ "grass",	new WarpPoint{ Name = "grass", Description = "Grasslands outside map", Vector = new ATVector(237,999,17) } },
-				{ "ci",		new WarpPoint{ Name = "ci",	Description = "The Chaos Spawn", Vector = new ATVector(10,989,-60) } },
-				{ "jail",	new WarpPoint{ Name = "jail", Description = "The AdminToolbox Jail", Vector = new ATVector(53,1020,-44) } },
-				{ "flat",	new WarpPoint{ Name = "flat", Description ="Unreachable grass flatlands", Vector = new ATVector(250,980,110) } },
-				{ "heli",	new WarpPoint{ Name = "heli", Description = "MTF Heli outside map", Vector = new ATVector(293,977,-62) } },
-				{ "car",	new WarpPoint{ Name = "car", Description = "Chaos Car outside map", Vector = new ATVector(-96,987,-59) } },
-				{ "escape", new WarpPoint{ Name = "escape", Description = "The Escape area", Vector = new ATVector(179,996,27) } }
+				{ "mtf",    new WarpPoint{ Name = "mtf", Description = "The MTF Spawn", Vector = new ATVector(181,994,-61) } },
+				{ "grass",  new WarpPoint{ Name = "grass", Description = "Grasslands outside map", Vector = new ATVector(237,999,17) } },
+				{ "ci",     new WarpPoint{ Name = "ci", Description = "The Chaos Spawn", Vector = new ATVector(10,989,-60) } },
+				{ "jail",   new WarpPoint{ Name = "jail", Description = "The AdminToolbox Jail", Vector = new ATVector(53,1020,-44) } },
+				{ "flat",   new WarpPoint{ Name = "flat", Description ="Unreachable grass flatlands", Vector = new ATVector(250,980,110) } },
+				{ "heli",   new WarpPoint{ Name = "heli", Description = "MTF Heli outside map", Vector = new ATVector(293,977,-62) } },
+				{ "car",    new WarpPoint{ Name = "car", Description = "Chaos Car outside map", Vector = new ATVector(-96,987,-59) } },
+				{ "escape", new WarpPoint{ Name = "escape", Description = "The Escape area", Vector = new ATVector(179,996,27) } },
+				{ "pocket", new WarpPoint{ Name = "pocket", Description = "The pocket dimention", Vector = new ATVector(0,-2000,0) } }
 		};
 
 		private void Debug(string message) => Plugin.Debug(message);
@@ -45,7 +39,34 @@ namespace AdminToolbox.Managers
 		/// <summary>
 		/// Refreshing the <see cref="AdminToolbox.WarpVectorDict"/> from <see cref="File"/>
 		/// </summary>
-		public void RefreshWarps() => AdminToolbox.WarpVectorDict = this.ReadWarpsFromFile();
+		public void RefreshWarps()
+		{
+			AdminToolbox.WarpVectorDict = this.ReadWarpsFromFile();
+			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warps_remove_underground", true))
+			{
+				RemoveUndergroundWarps();
+				WriteWarpsToFile();
+			}
+		}
+
+		/// <summary>
+		/// Removes any WarpPoint below surface level
+		/// <para>Does not affect pocket dimention</para>
+		/// </summary>
+		public void RemoveUndergroundWarps()
+		{
+			if (AdminToolbox.WarpVectorDict.Count < 1)
+				return;
+			List<string> keysToRemove = new List<string>();
+			foreach(KeyValuePair<string,WarpPoint> kp in AdminToolbox.WarpVectorDict)
+			{
+				if (kp.Value.Vector.Y < 900f && kp.Value.Vector.Y > -1900f)
+					keysToRemove.Add(kp.Key);
+			}
+			if (keysToRemove.Count > 0)
+				foreach (string key in keysToRemove)
+					AdminToolbox.WarpVectorDict.Remove(key);
+		}
 
 		/// <summary>
 		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.WarpVectorDict"/> dictionary to file
@@ -115,8 +136,12 @@ namespace AdminToolbox.Managers
 				}
 				else
 					return presetWarps;
+
 				if (!newDict.Any(p => p.Key.ToLower() == "jail"))
-					newDict.Add("jail", new WarpPoint { Name = "jail", Description = "AdminToolbox Jail", Vector = new ATVector(53, 1020, -44) });
+					newDict.Add("jail", presetWarps["jail"]);
+
+				if (!newDict.Any(p => p.Key.ToLower() == "pocket"))
+					newDict.Add("pocket",presetWarps["pocket"]);
 
 				return newDict;
 			}

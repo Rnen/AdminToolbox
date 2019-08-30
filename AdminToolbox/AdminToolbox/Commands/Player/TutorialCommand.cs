@@ -1,8 +1,8 @@
-﻿using Smod2.Commands;
+using System;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -22,7 +22,7 @@ namespace AdminToolbox.Command
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				Player[] players = new Player[0];
-				if (args.Length > 0 && (args[0].ToLower() == "all" || args[0].ToLower() == "*"))
+				if (args.Length > 0 && Utility.AllAliasWords.Contains(args[0].ToUpper()))
 				{
 					players = Server.GetPlayers().ToArray();
 					if (players.Length < 1)

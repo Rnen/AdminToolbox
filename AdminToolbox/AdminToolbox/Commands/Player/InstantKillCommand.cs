@@ -1,8 +1,8 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System.Collections.Generic;
 using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -19,11 +19,11 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						AdminToolbox.AddMissingPlayerVariables();
 						if (args.Length > 1)
@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								if(AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting))
 									psetting.instantKill = !psetting.instantKill;
 							}
 							return new string[] { "Toggled all players InstantKill" };

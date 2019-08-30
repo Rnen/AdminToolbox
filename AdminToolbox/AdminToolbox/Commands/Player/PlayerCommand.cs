@@ -1,9 +1,8 @@
-﻿using Smod2.Commands;
+using System;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Smod2.Commands;
 using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.Command
@@ -29,7 +28,7 @@ namespace AdminToolbox.Command
 
 		private string BuildTwoLiner(string str1, string str2 = "")
 		{
-			if(!string.IsNullOrEmpty(str2))
+			if (!string.IsNullOrEmpty(str2))
 				return StringToMax(str1) + "|" + StringToMax(str2.PadLeft(LeftPadding));
 			else
 				return StringToMax(str1);

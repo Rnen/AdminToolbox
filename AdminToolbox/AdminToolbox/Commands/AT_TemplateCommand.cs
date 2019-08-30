@@ -1,13 +1,11 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System.Collections.Generic;
 using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API; //This is for accessing AT's API namespace
-	using API.Extentions;
 	public class AT_TemplateCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;

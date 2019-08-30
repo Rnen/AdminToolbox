@@ -1,19 +1,17 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.Attributes;
 using Smod2.Config;
+using Smod2.EventHandlers;
+using Smod2.Events;
 
 namespace AdminToolbox
 {
-	using Command;
 	using API;
+	using Command;
 	using Managers;
-	using API.Extentions;
 
 	/// <summary>
 	/// The <see cref="AdminToolbox"/> <see cref="Plugin"/> main class
@@ -23,14 +21,14 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = "1.3.8-7",
+		version = "1.3.8-10",
 		SmodMajor = 3,
 		SmodMinor = 4,
-		SmodRevision = 0
+		SmodRevision = 1
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string AssemblyInfoVersion = "1.3.8.7";
+		internal const string AssemblyInfoVersion = "1.3.8.10";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;
@@ -176,8 +174,11 @@ namespace AdminToolbox
 			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
 			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
 			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
+			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand(this));
+			this.AddCommands(GrenadeModeCommand.CommandAliases, new GrenadeModeCommand(this));
+			this.AddCommands(InfiniteItemCommand.CommandAliases, new InfiniteItemCommand(this));
 		}
-		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);//this.AddCommands(new string[] { "at", "admintoolbox", "atb", "a-t", "admin-toolbox", "admin_toolbox" }, new ATCommand(this));
+		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);
 		internal void RegisterConfigs()
 		{
 			#region Core-configs
@@ -239,9 +240,9 @@ namespace AdminToolbox
 			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
 			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
 		}
-		internal static void AddMissingPlayerVariables(Player player) 
+		internal static void AddMissingPlayerVariables(Player player)
 			=> AddMissingPlayerVariables(new List<Player>() { player });
-		internal static void AddMissingPlayerVariables(List<Player> players) 
+		internal static void AddMissingPlayerVariables(List<Player> players)
 			=> AddMissingPlayerVariables(players.ToArray());
 		internal static void AddMissingPlayerVariables(Player[] players)
 		{

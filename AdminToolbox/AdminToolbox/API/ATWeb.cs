@@ -1,24 +1,19 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
-using System.Collections.Generic;
 using System;
 using System.Linq;
-using UnityEngine.Networking;
-using UnityEngine;
 using System.Net;
 using Newtonsoft.Json;
+using Smod2;
+using UnityEngine.Networking;
 
 namespace AdminToolbox.API
 {
-	using API.Extentions;
 	using API.Webhook;
 	/// <summary>
 	/// Static <see cref="AdminToolbox"/> class that contains all of the plugins web-based methods
 	/// </summary>
 	public static class ATWeb
 	{
-		private static AdminToolbox Plugin => AdminToolbox.plugin; 
+		private static AdminToolbox Plugin => AdminToolbox.plugin;
 
 		/// <summary>
 		/// Class for storing the latest GitHub release info
@@ -50,8 +45,8 @@ namespace AdminToolbox.API
 				|| ConfigManager.Manager.Config.GetBoolValue("admintoolbox_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			string rawResponse = string.Empty;
 			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
-			string _title = "", _version = "", _author = "", _dllink ="";
-		
+			string _title = "", _version = "", _author = "", _dllink = "";
+
 			try
 			{
 				using (UnityWebRequest ww = UnityWebRequest.Get(apiURL))
@@ -82,7 +77,7 @@ namespace AdminToolbox.API
 				plugin.Info(" \n\n - Downloading online version failed, skipping..." + "\n \n");
 				return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			}
-			return new AT_LatestReleaseInfo(_title,_version,_author,_dllink);
+			return new AT_LatestReleaseInfo(_title, _version, _author, _dllink);
 		}
 
 		internal static bool NewerVersionAvailable()

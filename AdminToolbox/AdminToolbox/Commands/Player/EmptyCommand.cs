@@ -1,9 +1,8 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System;
 using System.Linq;
-using System.Collections.Generic;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
 using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.Command
@@ -31,7 +30,7 @@ namespace AdminToolbox.Command
 				Player player = null;
 				bool delete = false;
 
-				foreach(string arg in args)
+				foreach (string arg in args)
 				{
 					if (player == null && GetPlayerFromString.GetPlayer(arg) is Player p && p != null)
 					{

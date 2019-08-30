@@ -1,9 +1,6 @@
-﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -20,7 +17,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 				if (Server.GetPlayers().Count > 0)
 				{
 					if (Server.Map.GetIntercomSpeaker() != null)

@@ -1,12 +1,12 @@
-﻿using Smod2;
-using Smod2.API;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.EventSystem.Events;
-using System.Collections.Generic;
-using System.Linq;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.EventHandlers;
+using Smod2.Events;
+using Smod2.EventSystem.Events;
 
 namespace AdminToolbox
 {
@@ -14,14 +14,15 @@ namespace AdminToolbox
 	using API.Extentions;
 	using API.Webhook;
 
-	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn, 
-		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106, 
-		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName, 
-		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole, IEventHandlerTeamRespawn
+	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn,
+		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106,
+		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName,
+		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole, IEventHandlerTeamRespawn, IEventHandlerThrowGrenade,
+		IEventHandlerPlayerDropItem, IEventHandlerReload
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		private Server Server => PluginManager.Manager.Server; 
+		private Server Server => PluginManager.Manager.Server;
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
@@ -250,7 +251,7 @@ namespace AdminToolbox
 					int bancount = AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) ? AdminToolbox.ATPlayerDict[player.SteamId].PlayerStats.BanCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + player.PlayerId + ")" + Environment.NewLine +
-						"From IP: " + player.IpAddress.Replace("::ffff:",string.Empty) + Environment.NewLine +
+						"From IP: " + player.IpAddress.Replace("::ffff:", string.Empty) + Environment.NewLine +
 						"Using steamID: " + player.SteamId + Environment.NewLine;
 					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
 					plugin.Info(str);
@@ -270,25 +271,25 @@ namespace AdminToolbox
 			}
 		}
 
-		private static readonly int 
+		private static readonly int
 			JailCheckInterval = Config.GetIntValue("admintoolbox_jailcheck_interval", 5),
-			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval",180),
-			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval",300);
+			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval", 180),
+			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval", 300);
 
 		private DateTime oneSecTimer = DateTime.Now,
 			fiveSecTimer = DateTime.Now.AddSeconds(5),
-			oneMinuteTimer = DateTime.Now.AddSeconds(30), 
+			oneMinuteTimer = DateTime.Now.AddSeconds(30),
 			threeMinTimer = DateTime.Now.AddMinutes(1)/*, 
 			fiveMinTimer = DateTime.Now.AddMinutes(2)*/;
 
 		public void OnUpdate(UpdateEvent ev)
-		{ 
+		{
 			if (oneSecTimer < DateTime.Now)
 			{
 				if (AdminToolbox.waitForTeleports.Count > 0)
 				{
 					WaitForTeleport[] waitFors = AdminToolbox.waitForTeleports.ToArray();
-					foreach(WaitForTeleport wft in waitFors)
+					foreach (WaitForTeleport wft in waitFors)
 					{
 						if (DateTime.Now > wft.DateTime)
 						{
@@ -308,10 +309,10 @@ namespace AdminToolbox
 					JailHandler.CheckJailedPlayers();
 				}
 				//if(plugin.scheduledCommands.Count > 0)
-					//plugin.scheduledCommands.RemoveAll(sch => sch.hasExecuted);
+				//plugin.scheduledCommands.RemoveAll(sch => sch.hasExecuted);
 				fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval);
 			}
-			if(oneMinuteTimer <= DateTime.Now)
+			if (oneMinuteTimer <= DateTime.Now)
 			{
 				AdminToolbox.ATPlayerDict.Cleanup();
 				oneMinuteTimer = DateTime.Now.AddMinutes(1);
@@ -363,14 +364,14 @@ namespace AdminToolbox
 		public void OnBan(BanEvent ev)
 		{
 			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0], false);
-			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick",false)))
+			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick", false)))
 			{
 				DiscordWebhook webH;
 				List<Field> listOfFields = new List<Field>();
 
 				listOfFields.AddField("Playername: ", ev.Player.Name);
 				listOfFields.AddField("Duration: ", (ev.Duration / 60).ToString("0.0", CultureInfo.InvariantCulture) + " hours");
-				if(!string.IsNullOrEmpty(ev.Reason))
+				if (!string.IsNullOrEmpty(ev.Reason))
 					listOfFields.AddField("Reason: ", ev.Reason);
 				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
 					listOfFields.AddField("Issued By: ", ev.Admin.Name ?? "Server");
@@ -378,7 +379,7 @@ namespace AdminToolbox
 				webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
 
 				foreach (string url in banWebhookUrls)
-					if(!string.IsNullOrEmpty(url))
+					if (!string.IsNullOrEmpty(url))
 						plugin.Debug(ATWeb.SendWebhook(webH, url));
 				plugin.Info("Ban webhooks posted!");
 			}
@@ -397,8 +398,44 @@ namespace AdminToolbox
 
 		public void OnTeamRespawn(TeamRespawnEvent ev)
 		{
-			if(AdminToolbox.respawnLock)
+			if (AdminToolbox.respawnLock)
 				ev.PlayerList.Clear();
+		}
+
+		public void OnThrowGrenade(PlayerThrowGrenadeEvent ev)
+		{
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps))
+			{
+				if (ps.isJailed || ps.lockDown)
+					ev.Allow = false;
+				else if (ps.grenadeMode || (ps.InfiniteItem == ItemType.FRAG_GRENADE || ps.InfiniteItem == ItemType.FLASHBANG))
+					ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? ItemType.FRAG_GRENADE : ItemType.FLASHBANG);
+			}
+		}
+
+		public void OnPlayerDropItem(PlayerDropItemEvent ev)
+		{
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps))
+			{
+				if (ps.isJailed || ps.lockDown)
+					ev.Allow = false;
+				else if (ps.InfiniteItem != ItemType.NULL && ev.Item.ItemType == ps.InfiniteItem)
+					ev.Player.GiveItem(ps.InfiniteItem);
+				else if (ps.grenadeMode && ev.Item.ItemType == ItemType.FRAG_GRENADE)
+					ev.Player.GiveItem(ItemType.FRAG_GRENADE);
+			}
+		}
+
+		public void OnReload(PlayerReloadEvent ev)
+		{
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps) && ps.InfiniteItem != ItemType.NULL)
+				if (ps.InfiniteItem.ToString().Contains("DROPPED"))
+					foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
+						if (ammo.ToString() == ps.InfiniteItem.ToString())
+						{
+							ev.Player.SetAmmo(ammo, ev.CurrentAmmoTotal + ev.NormalMaxClipSize);
+							break;
+						}
 		}
 	}
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

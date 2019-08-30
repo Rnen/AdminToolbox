@@ -1,8 +1,7 @@
-﻿using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System.Linq;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -20,7 +19,7 @@ namespace AdminToolbox.Command
 		public string GetCommandDescription() => "Kills the targeted player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER]";
 
-		public static readonly string[] CommandAliases = new string[] {  "SLAY", "KILL" };
+		public static readonly string[] CommandAliases = new string[] { "SLAY", "KILL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
@@ -34,7 +33,7 @@ namespace AdminToolbox.Command
 
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].StartsWith("*"))
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						int playerNum = 0;
 

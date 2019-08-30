@@ -7,10 +7,11 @@ root = true
 [*] 
 indent_style = tab
 # Code files 
-[*.cs] 
+[*.cs]
+charset = utf-8
 indent_size = 4 
 insert_final_newline = true 
-charset = utf-8-bom 
+trim_trailing_whitespaces = true
 ############################### 
 # .NET Coding Conventions     # 
 ############################### 

@@ -1,18 +1,12 @@
-﻿using Smod2;
-using Smod2.API;
-using Smod2.Events;
-using Smod2.EventHandlers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using UnityEngine;
-using Unity;
+using Smod2;
+using Smod2.API;
 using Smod2.Commands;
-
 
 namespace AdminToolbox.API.Extentions
 {
-	using Managers;
 	using API.Webhook;
 
 	public static class ExtentionMethods
@@ -21,12 +15,12 @@ namespace AdminToolbox.API.Extentions
 
 		private static AdminToolbox Plugin => AdminToolbox.plugin;
 
-		internal static bool GetIsJailed(this Player player) 
+		internal static bool GetIsJailed(this Player player)
 			=> AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) && AdminToolbox.ATPlayerDict[player.SteamId].isJailed;
 
 		public static bool IsInsideJail(this Player player)
 		{
-			Vector 
+			Vector
 				jail = JailHandler.JailPos,
 				playerPos = player.GetPosition();
 			float
@@ -118,7 +112,7 @@ namespace AdminToolbox.API.Extentions
 					command.Trim();
 					if (string.IsNullOrEmpty(command)) continue;
 					//Gets a array of whitelisted users (if any)
-					string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[] { });
+					string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
 					if (configList.Length > 0)
 						validConfigs++;
 					if (configList.ContainsPlayer(pl))
@@ -134,7 +128,7 @@ namespace AdminToolbox.API.Extentions
 				return true;
 		}
 
-		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player) 
+		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
 			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.SteamId) ?? false;
 
 		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)

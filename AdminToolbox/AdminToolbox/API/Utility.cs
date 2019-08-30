@@ -1,11 +1,6 @@
-﻿using Smod2;
-using Smod2.API;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using System.Linq;
-using System.Collections.Generic;
 using System;
-using AdminToolbox.API;
+using System.Linq;
+using Smod2.API;
 
 
 namespace AdminToolbox.API
@@ -49,7 +44,31 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// *, ALL, EVERY
+		/// Safely getting a <see cref="Smod2.API.ItemType"/> from a <see cref="string"/>. 
+		/// <returns>Returns <see cref="bool"/> based on success</returns>
+		/// <para>Tries to cast to <see cref="int"/> first, then compares names</para>
+		/// </summary>
+		public static bool TryParseItem(string item, out ItemType itemType)
+		{
+			if (int.TryParse(item, out int x))
+				return TryParseItem(x, out itemType);
+
+			itemType = ItemType.NULL;
+
+			foreach (ItemType i in Enum.GetValues(typeof(ItemType)))
+			{
+				if (i.ToString().ToUpper().Contains(item.ToUpper()))
+				{
+					itemType = i;
+					return true;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// <c>*, ALL, EVERY</c>
+		/// <para>Uses all-caps</para>
 		/// </summary>
 		public static string[] AllAliasWords = { "*", "ALL", "EVERY" };
 
@@ -85,14 +104,15 @@ namespace AdminToolbox.API
 
 		/// <summary>
 		/// Checks if two <see cref="Player"/>s are on the same team
+		/// <para>Returns False when both are the same player</para>
 		/// </summary>
-		public static bool IsTeam(Player victim, Player attacker)
+		public static bool IsTeam(Player player1, Player player2)
 		{
-			if (victim == null || attacker == null || victim.PlayerId == attacker.PlayerId)
+			if (player1 == null || player2 == null || player1.PlayerId == player2.PlayerId)
 				return false;
-			if (NineTailsTeam.Contains((int)victim.TeamRole.Team) && NineTailsTeam.Contains((int)attacker.TeamRole.Team))
+			if (NineTailsTeam.Contains((int)player1.TeamRole.Team) && NineTailsTeam.Contains((int)player2.TeamRole.Team))
 				return true;
-			else if (ChaosTeam.Contains((int)victim.TeamRole.Team) && ChaosTeam.Contains((int)attacker.TeamRole.Team))
+			else if (ChaosTeam.Contains((int)player1.TeamRole.Team) && ChaosTeam.Contains((int)player2.TeamRole.Team))
 				return true;
 			else
 				return false;

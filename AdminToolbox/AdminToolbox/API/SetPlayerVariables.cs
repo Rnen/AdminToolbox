@@ -1,14 +1,5 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
-using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using System.Globalization;
+using Smod2.API;
 
 namespace AdminToolbox.API
 {
@@ -36,7 +27,7 @@ namespace AdminToolbox.API
 			}
 			else
 				return false;
-			
+
 		}
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> bools on a <see cref="Player"/>

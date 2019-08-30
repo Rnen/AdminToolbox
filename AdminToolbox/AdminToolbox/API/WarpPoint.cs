@@ -1,4 +1,4 @@
-﻿using Smod2.API;
+using Smod2.API;
 
 namespace AdminToolbox.API
 {

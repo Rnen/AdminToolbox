@@ -1,8 +1,8 @@
-﻿using Smod2.Commands;
+using System.Collections.Generic;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -22,7 +22,7 @@ namespace AdminToolbox.Command
 			{
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						if (args.Length > 1)
 						{

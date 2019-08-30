@@ -1,8 +1,8 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System.Collections.Generic;
 using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -21,12 +21,12 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (sender is Player p) AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						if (args.Length > 1)
 						{

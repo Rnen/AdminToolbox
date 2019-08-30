@@ -1,6 +1,7 @@
-﻿using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -20,7 +21,7 @@ namespace AdminToolbox.Command
 			{
 				if (args.Length > 1)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						int playerNum = -1;
 						Player myTpPlayer = GetPlayerFromString.GetPlayer(args[1]);

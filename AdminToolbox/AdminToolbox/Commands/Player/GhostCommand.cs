@@ -1,8 +1,8 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System.Collections.Generic;
 using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -21,7 +21,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (!ConfigManager.Manager.Config.GetBoolValue("sm_enable_ghostmode", false)) return new string[] { "\"sm_enable_ghostmode\" needs to be set TRUE to use this!" };
 				if (args.Length == 0 && sender is Player p)
@@ -39,7 +39,7 @@ namespace AdminToolbox.Command
 				{
 					if (args[0].ToLower() == "help")
 						return new string[] { GetUsage() };
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						if (args.Length > 1)
 						{

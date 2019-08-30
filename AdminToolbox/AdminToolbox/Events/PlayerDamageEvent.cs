@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Smod2;
@@ -13,7 +13,7 @@ namespace AdminToolbox
 
 	internal class DamageDetect : IEventHandlerPlayerHurt
 	{
-		private static IConfigFile Config => ConfigManager.Manager.Config;
+		private IConfigFile Config => ConfigManager.Manager.Config;
 
 		private readonly AdminToolbox plugin;
 
@@ -32,7 +32,7 @@ namespace AdminToolbox
 					new string[] { _tutDefaultDmgAllowed.ToString() },
 					false
 				);
-			
+
 			if (_allowedDmgConfig.Count() > 0)
 			{
 				if (_allowedDmgConfig.Any(item => Utility.AllAliasWords.Contains(item.ToUpper())))
@@ -143,7 +143,7 @@ RoundEnd:;
 			if (AdminToolbox.isRoundFinished)
 			{
 				float enddamageMultiplier = Config.GetFloatValue("admintoolbox_endedRound_damageMultiplier", 1f, true);
-				if(!(attackerSetting?.instantKill ?? false))
+				if (!(attackerSetting?.instantKill ?? false))
 					ev.Damage = originalDamage * enddamageMultiplier;
 			}
 			switch (ev.Player.TeamRole.Role)
@@ -155,7 +155,7 @@ RoundEnd:;
 						plugin.Info(ev.Player.TeamRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
 					if ((attackerSetting?.instantKill ?? false) && Config.GetBoolValue("admintoolbox_instantkill_affects_tutorials", true))
 						goto default;
-					
+
 					ev.DamageType = DamageType.NONE;
 					ev.Damage = 0f;
 					break;
@@ -183,6 +183,8 @@ RoundEnd:;
 			if (ev.Damage >= ev.Player.GetHealth() && playerSetting != null)
 			{
 				playerSetting.DeathPos = ev.Player.GetPosition();
+				if (playerSetting.grenadeMode)
+					ev.Player.ThrowGrenade(GrenadeType.FRAG_GRENADE, true, Vector.Zero, false, ev.Player.GetPosition(), true, 0f, true);
 			}
 			AdminToolbox.logManager.WriteToLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}
@@ -192,7 +194,8 @@ RoundEnd:;
 	{
 		private readonly Plugin plugin;
 
-		private static IConfigFile Config => ConfigManager.Manager.Config;
+		private IConfigFile Config => ConfigManager.Manager.Config;
+		private Server Server => PluginManager.Manager.Server;
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 

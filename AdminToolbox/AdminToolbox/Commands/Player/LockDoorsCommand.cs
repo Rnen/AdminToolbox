@@ -1,9 +1,8 @@
-﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace AdminToolbox.Command
 {
@@ -25,7 +24,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (args.Length > 0 && (args[0].ToLower() == "list" || args[0].ToLower() == "get"))
 				{
@@ -33,7 +32,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in Server.GetPlayers())
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting) &&  psetting.lockDoors)
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting) && psetting.lockDoors)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -54,7 +53,7 @@ namespace AdminToolbox.Command
 				else if (args.Length > 1 && bool.TryParse(args[1], out bool b2))
 					enabled = b2;
 
-				if (args.Length > 0 && (args[0].ToLower() == "all" || args[0].ToLower() == "*"))
+				if (args.Length > 0 && Utility.AllAliasWords.Contains(args[0].ToUpper()))
 				{
 					players = Server.GetPlayers().ToArray();
 					if (players.Length < 1)
@@ -72,7 +71,7 @@ namespace AdminToolbox.Command
 					int pcount = 0;
 					foreach (Player pl in players)
 					{
-						if(AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
 						{
 							pcount++;
 							if (enabled.HasValue)

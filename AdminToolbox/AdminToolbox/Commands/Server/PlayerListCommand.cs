@@ -1,11 +1,10 @@
-﻿using Smod2.Commands;
+using System.Collections.Generic;
 using Smod2;
 using Smod2.API;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
 	public class PlayerListCommand : ICommandHandler
 	{
@@ -21,7 +20,7 @@ namespace AdminToolbox.Command
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				Player[] players = Server.GetPlayers().ToArray();
-				
+
 				if (players.Length < 1) { return new string[] { "No players" }; }
 				string str = players.Length + " - Players in server: \n";
 				List<string> myPlayerList = new List<string>();

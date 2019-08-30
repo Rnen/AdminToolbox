@@ -1,8 +1,7 @@
-﻿using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Linq;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -12,18 +11,18 @@ namespace AdminToolbox.Command
 	{
 		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription() =>"Heals player. Use int for spesific amount (optional)";
+		public string GetCommandDescription() => "Heals player. Use int for spesific amount (optional)";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
 
 		public static readonly string[] CommandAliases = new string[] { "ATHEAL", "AT-HEAL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (args.Length > 0)
 				{
-					if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						if (args.Length > 1)
 						{

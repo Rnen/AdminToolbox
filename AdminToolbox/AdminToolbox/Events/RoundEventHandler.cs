@@ -1,12 +1,9 @@
-﻿using Smod2;
-using Smod2.API;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using System.Collections.Generic;
 using System;
-using System.Collections;
-using UnityEngine;
 using System.Linq;
+using Smod2;
+using Smod2.API;
+using Smod2.EventHandlers;
+using Smod2.Events;
 
 namespace AdminToolbox
 {
@@ -19,7 +16,9 @@ namespace AdminToolbox
 
 		private static IConfigFile Config => ConfigManager.Manager.Config;
 
-		internal string 
+		private void Debug(string message) => plugin.Debug(message);
+
+		internal string
 			intercomReady = Config.GetStringValue("admintoolbox_intercomready_text", string.Empty),
 			intercomRestart = Config.GetStringValue("admintoolbox_intercomrestart_text", string.Empty),
 			intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
@@ -34,7 +33,7 @@ namespace AdminToolbox
 				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
-			AdminToolbox.AddMissingPlayerVariables(); 
+			AdminToolbox.AddMissingPlayerVariables();
 			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFileManager.PlayerFile.Write);
 			AdminToolbox.logManager.SetLogStartTime();
 			AdminToolbox.warpManager.RefreshWarps();
@@ -74,7 +73,7 @@ namespace AdminToolbox
 				if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_round_info", true, false))
 				{
 					plugin.Info("Round: " + AdminToolbox.RoundCount + " has ended.");
-					int minutes = (int)(ev.Round.Duration / 60), duration = ev.Round.Duration;
+					int minutes = ev.Round.Duration / 60, duration = ev.Round.Duration;
 					if (duration < 60)
 						plugin.Info("Round lasted for: " + duration + " sec");
 					else
@@ -84,15 +83,16 @@ namespace AdminToolbox
 				AdminToolbox.AddMissingPlayerVariables();
 
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
-				foreach (string key in keys)
-				{
-					if (AdminToolbox.ATPlayerDict.ContainsKey(key))
+				if (keys.Length > 0)
+					foreach (string key in keys)
 					{
-						PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
-						ps.PlayerStats.RoundsPlayed++;
-						AdminToolbox.ATPlayerDict[key] = ps;
+						if (AdminToolbox.ATPlayerDict.ContainsKey(key))
+						{
+							PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
+							ps.PlayerStats.RoundsPlayed++;
+							AdminToolbox.ATPlayerDict[key] = ps;
+						}
 					}
-				}
 			}
 
 		}
@@ -106,15 +106,16 @@ namespace AdminToolbox
 			}
 
 			string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
-			foreach (string key in keys)
-			{
-				if (AdminToolbox.ATPlayerDict.ContainsKey(key))
+			if (keys.Length > 0)
+				foreach (string key in keys)
 				{
-					PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
-					ps.PlayerStats.MinutesPlayed += DateTime.Now.Subtract(ps.JoinTime).TotalSeconds;
-					AdminToolbox.ATPlayerDict[key] = ps;
+					if (AdminToolbox.ATPlayerDict.ContainsKey(key))
+					{
+						PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
+						ps.PlayerStats.MinutesPlayed += DateTime.Now.Subtract(ps.JoinTime).TotalSeconds;
+						AdminToolbox.ATPlayerDict[key] = ps;
+					}
 				}
-			}
 
 			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFileManager.PlayerFile.Write);
 		}

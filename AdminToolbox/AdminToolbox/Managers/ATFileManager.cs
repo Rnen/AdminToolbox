@@ -1,15 +1,11 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using System.Globalization;
-using System.IO.Compression;
+using Smod2;
+using Smod2.API;
 
 namespace AdminToolbox.Managers
 {
@@ -58,7 +54,7 @@ namespace AdminToolbox.Managers
 
 		internal static string GetFolderPath(Folder folder = Folder.ATRoot)
 		{
-			
+
 			string ret = GetATFolderPath();
 			switch (folder)
 			{
@@ -69,7 +65,7 @@ namespace AdminToolbox.Managers
 					if (Config.GetBoolValue("admintoolbox_stats_unified", true))
 						ret += "Global" + Path.DirectorySeparatorChar;
 					else
-						ret += Port + Path.DirectorySeparatorChar; 
+						ret += Port + Path.DirectorySeparatorChar;
 					break;
 
 				case Folder.Logs:
@@ -77,7 +73,7 @@ namespace AdminToolbox.Managers
 					break;
 
 				case Folder.Warps:
-					ret +=  "WarpPoints" + Path.DirectorySeparatorChar;
+					ret += "WarpPoints" + Path.DirectorySeparatorChar;
 					break;
 
 				case Folder.AppData:
@@ -95,7 +91,7 @@ namespace AdminToolbox.Managers
 		internal static string AdminToolboxFolder =>
 			GetATFolderPath();
 
-		internal static string AdminToolboxPlayerStats => 
+		internal static string AdminToolboxPlayerStats =>
 			GetFolderPath(Folder.PlayerFiles);
 
 		internal static string AdminToolboxLogs =>
@@ -132,10 +128,10 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public void PlayerStatsFileManager(List<string> steamIdList, PlayerFile FileOperation = PlayerFile.Read)
 		{
-			if(steamIdList != null && steamIdList.Count > 0)
+			if (steamIdList != null && steamIdList.Count > 0)
 				PlayerStatsFileManager(steamIdList.ToArray(), FileOperation);
 			else
-				PlayerStatsFileManager(new string[] { }, FileOperation);
+				PlayerStatsFileManager(new string[0], FileOperation);
 		}
 
 		/// <summary>
@@ -304,9 +300,9 @@ namespace AdminToolbox.Managers
 						ps.Kills = (rawData.Length > 0 && int.TryParse(rawData[0], out int x0) && x0 > ps.Kills) ? x0 : ps.Kills;
 						ps.TeamKills = (rawData.Length > 1 && int.TryParse(rawData[1], out int x1) && x1 > ps.TeamKills) ? x1 : ps.TeamKills;
 						ps.Deaths = (rawData.Length > 2 && int.TryParse(rawData[2], out int x2) && x2 > ps.Deaths) ? x2 : ps.Deaths;
-						ps.MinutesPlayed = (rawData.Length > 3 && double.TryParse(rawData[3].Replace(",","."), NumberStyles.Number, CultureInfo.InvariantCulture, out double x3) && x3 > ps.MinutesPlayed && x3 < int.MaxValue) ? x3 : ps.MinutesPlayed;
+						ps.MinutesPlayed = (rawData.Length > 3 && double.TryParse(rawData[3].Replace(",", "."), NumberStyles.Number, CultureInfo.InvariantCulture, out double x3) && x3 > ps.MinutesPlayed && x3 < int.MaxValue) ? x3 : ps.MinutesPlayed;
 						ps.BanCount = (rawData.Length > 4 && int.TryParse(rawData[4], out int x4) && x4 > ps.BanCount) ? x4 : ps.BanCount;
-						
+
 						int subtractedMinutes = (ps.MinutesPlayed < 0) ? (int)ps.MinutesPlayed : (int)-ps.MinutesPlayed;
 
 						SerilizablePlayerClass playerClass = new SerilizablePlayerClass(ps);
@@ -318,7 +314,7 @@ namespace AdminToolbox.Managers
 						}
 						x++;
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
 						AdminToolbox.plugin.Debug("Failed during convertion of: " + path);
 						AdminToolbox.plugin.Debug(e.StackTrace);

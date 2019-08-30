@@ -1,14 +1,10 @@
-﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
-using System.Collections.Generic;
-using System.Linq;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
-	using System;
 
 	public class ATCommand : ICommandHandler
 	{
@@ -42,7 +38,7 @@ namespace AdminToolbox.Command
 						case "DOWNLOAD" when !(sender is Player) || (sender is Player p && p.IpAddress == plugin.Server.IpAddress):
 						case "DL" when !(sender is Player) || (sender is Player p2 && p2.IpAddress == plugin.Server.IpAddress):
 							try
-							{ 
+							{
 								System.Diagnostics.Process.Start(plugin.GetGitReleaseInfo().DownloadLink);
 								return new string[] { "Opening browser..." };
 							}
@@ -55,7 +51,7 @@ namespace AdminToolbox.Command
 							if (!sender.IsPermitted(new string[] { "ATDEBUG" }, true, out string[] denied))
 								return denied;
 							AdminToolbox.DebugMode = !AdminToolbox.DebugMode;
-							return new string[] { "AdminToolbox Debugmode: " +  AdminToolbox.DebugMode };
+							return new string[] { "AdminToolbox Debugmode: " + AdminToolbox.DebugMode };
 
 						default:
 							return new string[] { args[0] + " is not a valid arguement!", GetUsage() };

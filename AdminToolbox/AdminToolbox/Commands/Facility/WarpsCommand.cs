@@ -1,5 +1,5 @@
-﻿using Smod2.Commands;
 using Smod2;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
@@ -13,9 +13,8 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if(sender.IsPermitted(CommandAliases, out string[] deniedReply))
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-
 				if (args.Length >= 1 && (args[0].ToUpper() == "R" || args[0].ToUpper() == "REFRESH"))
 				{
 					AdminToolbox.warpManager.RefreshWarps();

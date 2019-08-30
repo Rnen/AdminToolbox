@@ -1,11 +1,8 @@
-﻿using Smod2.Commands;
 using Smod2;
-using Smod2.API;
-using System.IO;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API;
 	using API.Extentions;
 	public class ATDisableCommand : ICommandHandler
 	{
