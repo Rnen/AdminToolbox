@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Smod2;
 using Smod2.API;
 
@@ -310,7 +309,7 @@ namespace AdminToolbox.Managers
 
 						using (StreamWriter sw = new StreamWriter(path, false))
 						{
-							sw.WriteLine(JsonConvert.SerializeObject(playerClass, Formatting.Indented));
+							sw.WriteLine(UnityEngine.JsonUtility.ToJson(playerClass, true));
 						}
 						x++;
 					}

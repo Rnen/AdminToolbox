@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Smod2;
 
 namespace AdminToolbox.Managers
@@ -83,7 +82,7 @@ namespace AdminToolbox.Managers
 				{
 					string jsonData = "";
 					Debug("Attempting JSON Serialize " + warparray.Length + " array items!");
-					jsonData = JsonConvert.SerializeObject(warparray, Formatting.Indented);
+					jsonData = UnityEngine.JsonUtility.ToJson(warparray, true);
 					Debug("Finished JSON Serialize");
 					bool b1 = File.Exists(WarpFilePath);
 					Debug("File exists: " + b1);
@@ -128,7 +127,7 @@ namespace AdminToolbox.Managers
 				}
 				if (string.IsNullOrEmpty(jsonData) || !jsonData.StartsWith("["))
 					return presetWarps;
-				WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
+				WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
 				if (warpArray.Length > 0)
 				{
 					foreach (WarpPoint wp in warpArray)

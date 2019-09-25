@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using Newtonsoft.Json;
 using Smod2;
 using UnityEngine.Networking;
 
@@ -97,7 +96,7 @@ namespace AdminToolbox.API
 		{
 			if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
 			{
-				string jsonData = JsonConvert.SerializeObject(discordWebHook, Formatting.Indented);
+				string jsonData = UnityEngine.JsonUtility.ToJson(discordWebHook, true);
 
 				return WebPost(uri, jsonData);
 			}

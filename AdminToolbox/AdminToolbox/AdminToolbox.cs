@@ -138,7 +138,7 @@ namespace AdminToolbox
 			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
 			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
 		}
-		internal void UnRegisterEvents() => EventManager.RemoveEventHandlers(this);
+		internal void UnRegisterEvents() => EventManager.Manager.RemoveEventHandlers(this);
 		internal void RegisterCommands()
 		{
 			this.AddCommands(SpectatorCommand.CommandAliases, new SpectatorCommand());
