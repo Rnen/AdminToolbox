@@ -47,8 +47,6 @@
       <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Smod2.dll</HintPath>
