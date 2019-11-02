@@ -408,7 +408,7 @@ namespace AdminToolbox
 			{
 				if (ps.isJailed || ps.lockDown)
 					ev.Allow = false;
-				else if (ps.grenadeMode || (ps.InfiniteItem == ItemType.FRAG_GRENADE || ps.InfiniteItem == ItemType.FLASHBANG))
+				else if (ps.grenadeMode || ps.InfiniteItem == ItemType.FRAG_GRENADE || ps.InfiniteItem == ItemType.FLASHBANG)
 					ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? ItemType.FRAG_GRENADE : ItemType.FLASHBANG);
 			}
 		}

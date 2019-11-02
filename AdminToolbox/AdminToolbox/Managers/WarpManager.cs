@@ -2,10 +2,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Smod2;
+using Newtonsoft.Json;
 
 namespace AdminToolbox.Managers
 {
+	using System;
 	using API;
+
 	/// <summary>
 	/// Contains all Warp-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
@@ -32,7 +35,7 @@ namespace AdminToolbox.Managers
 				{ "pocket", new WarpPoint{ Name = "pocket", Description = "The pocket dimention", Vector = new ATVector(0,-2000,0) } }
 		};
 
-		private void Debug(string message) => Plugin.Debug(message);
+		private void Debug(string message) => Plugin.Debug("[WARPMANAGER]: " + message);
 
 
 		/// <summary>
@@ -60,11 +63,17 @@ namespace AdminToolbox.Managers
 			foreach(KeyValuePair<string,WarpPoint> kp in AdminToolbox.WarpVectorDict)
 			{
 				if (kp.Value.Vector.Y < 900f && kp.Value.Vector.Y > -1900f)
+				{
+					Debug($"Warp \"{kp.Value.Name} ({kp.Key})\" added to the delete queue.");
 					keysToRemove.Add(kp.Key);
+				}
 			}
 			if (keysToRemove.Count > 0)
 				foreach (string key in keysToRemove)
+				{
+					Debug($"{key} removed from warps due to being in the deletion zone.");
 					AdminToolbox.WarpVectorDict.Remove(key);
+				}
 		}
 
 		/// <summary>
@@ -74,15 +83,21 @@ namespace AdminToolbox.Managers
 		{
 			try
 			{
-				Plugin.Info("Entered WriteWarpsToFile");
+				Debug("Entered WriteToFile");
 				WarpPoint[] warparray = (warpPoints != null && warpPoints.Length > 0) ? warpPoints : AdminToolbox.WarpVectorDict.Values.ToArray();
 				if (warparray == null || warparray.Length < 1)
+				{
+					Debug("Warparray was null or empty, returning");
 					return false;
+				}
 				else
 				{
 					string jsonData = "";
 					Debug("Attempting JSON Serialize " + warparray.Length + " array items!");
-					jsonData = UnityEngine.JsonUtility.ToJson(warparray, true);
+					foreach (WarpPoint w in warparray)
+						Debug(w.Name);
+					jsonData = JsonConvert.SerializeObject(warparray, Formatting.Indented);
+					//jsonData = JsonUtility.ToJson(warparray, true);
 					Debug("Finished JSON Serialize");
 					bool b1 = File.Exists(WarpFilePath);
 					Debug("File exists: " + b1);
@@ -99,9 +114,10 @@ namespace AdminToolbox.Managers
 				}
 				return File.Exists(WarpFilePath);
 			}
-			catch
+			catch (Exception e)
 			{
-				AdminToolbox.plugin.Info("Failed during writing of warpfile!");
+				Plugin.Info("Failed during writing of warpfile!");
+				Debug("Error occured during writing to file: " + e.Message);
 				return false;
 			}
 		}
@@ -111,6 +127,7 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public Dictionary<string, WarpPoint> ReadWarpsFromFile()
 		{
+			Debug("Entered ReadFromFile");
 			try
 			{
 				Dictionary<string, WarpPoint> newDict = new Dictionary<string, WarpPoint>();
@@ -118,35 +135,53 @@ namespace AdminToolbox.Managers
 
 				if (!File.Exists(WarpFilePath))
 				{
+					Debug("File path not found, writing new file");
 					WriteWarpsToFile();
 					return presetWarps;
 				}
+				Debug("Reading file...");
 				using (StreamReader streamReader = new StreamReader(WarpFilePath))
 				{
 					jsonData = streamReader.ReadToEnd();
 				}
-				if (string.IsNullOrEmpty(jsonData) || !jsonData.StartsWith("["))
+				if (string.IsNullOrEmpty(jsonData) || (!jsonData.StartsWith("[")))
+				{
+					Debug("File data empty or not JSON");
 					return presetWarps;
-				WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
+				}
+				Debug("Converting JSON to array");
+				WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
+				//WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
 				if (warpArray.Length > 0)
 				{
+					Debug("Populating dict with json array");
 					foreach (WarpPoint wp in warpArray)
 						newDict.Add(wp.Name.ToLower(), wp);
 				}
 				else
+				{
+					Debug("Array empty, returning preset");
 					return presetWarps;
+				}
 
 				if (!newDict.Any(p => p.Key.ToLower() == "jail"))
+				{
+					Debug("Jail Warp not found, adding");
 					newDict.Add("jail", presetWarps["jail"]);
+				}
 
 				if (!newDict.Any(p => p.Key.ToLower() == "pocket"))
-					newDict.Add("pocket",presetWarps["pocket"]);
+				{
+					Debug("Pocket warp not found, adding");
+					newDict.Add("pocket", presetWarps["pocket"]);
+				}
 
 				return newDict;
 			}
-			catch
+			catch (Exception e)
 			{
 				Plugin.Info("Failed during reading of warpfiles!");
+				Debug("Error occured during reading of file: " + e.Message);
 				return presetWarps;
 			}
 		}

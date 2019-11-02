@@ -309,7 +309,7 @@ namespace AdminToolbox.Managers
 
 						using (StreamWriter sw = new StreamWriter(path, false))
 						{
-							sw.WriteLine(UnityEngine.JsonUtility.ToJson(playerClass, true));
+							//sw.WriteLine(UnityEngine.JsonUtility.ToJson(playerClass, true));
 						}
 						x++;
 					}

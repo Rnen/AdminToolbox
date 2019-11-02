@@ -51,7 +51,7 @@ namespace AdminToolbox.Command
 							foreach (WarpPoint i in list)
 							{
 								string name = i.Name;
-								int wordSize = (toggle) ? maxSize : maxSize + 1;
+								int wordSize = toggle ? maxSize : maxSize + 1;
 								while (name.Length < wordSize) name += " ";
 								str += "\n - " + name + (!string.IsNullOrEmpty(i.Description) ? " ---> " + i.Description : "");
 								toggle = !toggle;
