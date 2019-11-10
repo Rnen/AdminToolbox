@@ -108,7 +108,7 @@ namespace AdminToolbox
 		/// Called when <see cref="AdminToolbox"/> gets disabled
 		/// </summary>
 		public override void OnDisable()
-			=> this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
+			=> Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
 
 		/// <summary>
 		/// Called when <see cref="AdminToolbox"/> gets enabled
@@ -117,7 +117,7 @@ namespace AdminToolbox
 		{
 			plugin = this;
 			ATFileManager.WriteVersionToFile();
-			this.Info(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
+			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 		}
 
 		/// <summary>
