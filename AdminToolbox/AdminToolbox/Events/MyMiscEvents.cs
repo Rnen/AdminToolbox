@@ -353,11 +353,11 @@ namespace AdminToolbox
 
 			if (ev.Player.GetGodmode() || (playerSetting?.godMode ?? false))
 			{
-				ev.Handcuffed = false;
+				ev.Allow = false;
 			}
 			else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
 			{
-				ev.Handcuffed = false;
+				ev.Allow = false;
 			}
 		}
 
