@@ -14,7 +14,7 @@
 and more commands, and other features that do not exist in the base game (yet).
 This plugin is also beeing constantly updated with more features, so stay tuned!
 
-If you want to follow the development, take a look at the [AdminToolbox Trello Board](https://trello.com/b/NnNBzSX2/scpsl-admintoolbox-plugin)
+If you want to follow the development, take a look at the [AdminToolbox Progress Board!](https://github.com/Rnen/AdminToolbox/projects/1)
 ***
 ## Plugin Installation & Usage:
 [Visit the Wiki Pages to learn more!](https://github.com/Rnen/AdminToolbox/wiki)
