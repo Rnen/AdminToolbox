@@ -14,6 +14,8 @@ namespace AdminToolbox.API
 	{
 		private static AdminToolbox Plugin => AdminToolbox.plugin;
 
+		private static void Debug(string str) => Plugin.Debug("[ATWeb]: " + str);
+
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
@@ -71,8 +73,9 @@ namespace AdminToolbox.API
 						throw new Exception("[AdminToolbox]: GitHub version was NullOrEmpty!");
 				}
 			}
-			catch
+			catch (Exception e)
 			{
+				Debug("Exception: " + e.Message);
 				plugin.Info(" \n\n - Downloading online version failed, skipping..." + "\n \n");
 				return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
 			}

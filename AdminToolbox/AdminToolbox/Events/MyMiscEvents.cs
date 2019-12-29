@@ -28,10 +28,13 @@ namespace AdminToolbox
 
 		public MyMiscEvents(AdminToolbox plugin) => this.plugin = plugin;
 
+		private void Debug(string str) => plugin.Debug("[MiscEvents]: " + str);
+
 		public void OnIntercom(PlayerIntercomEvent ev)
 		{
 			if (AdminToolbox.intercomLock)
 			{
+				Debug("IntercomLock active, denied use.");
 				ev.SpeechTime = 0f;
 			}
 			#region Blacklist
@@ -40,6 +43,7 @@ namespace AdminToolbox
 				foreach (string item in blackListedSTEAMIDS)
 					if (item == ev.Player.SteamId)
 					{
+						Debug($"Player \"{ev.Player.Name}\" found in intercom blacklist, denied use.");
 						ev.SpeechTime = 0f;
 						break;
 					}
@@ -99,16 +103,19 @@ namespace AdminToolbox
 				{
 					if (playerSetting.destroyDoor)
 					{
+						Debug($"Player \"{ev.Player.Name}\" destroy-doors active, breaking door...");
 						ev.Destroy = true;
 					}
 
 					if (playerSetting.lockDown)
 					{
+						Debug($"Player \"{ev.Player.Name}\" lockdown active, denying door use.");
 						ev.Allow = false;
 					}
 
 					if (playerSetting.lockDoors)
 					{
+						Debug($"Player \"{ev.Player.Name}\" lock-doors active, {(ev.Door.Locked ? "unlocking" : "locking")} {(!string.IsNullOrEmpty(ev.Door.Name) ? ev.Door.Name : "door")}...");
 						ev.Door.Locked = !ev.Door.Locked;
 					}
 				}

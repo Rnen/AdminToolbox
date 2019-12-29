@@ -59,26 +59,27 @@ namespace AdminToolbox.Managers
 		{
 			if (AdminToolbox.WarpVectorDict.Count < 1)
 				return;
+			Debug("Removing underground warps");
 			List<string> keysToRemove = new List<string>();
 			foreach(KeyValuePair<string,WarpPoint> kp in AdminToolbox.WarpVectorDict)
 			{
 				if (kp.Value.Vector.Y < 900f && kp.Value.Vector.Y > -1900f)
 				{
-					Debug($"Warp \"{kp.Value.Name} ({kp.Key})\" added to the delete queue.");
 					keysToRemove.Add(kp.Key);
 				}
 			}
 			if (keysToRemove.Count > 0)
+			{
 				foreach (string key in keysToRemove)
-				{
-					Debug($"{key} removed from warps due to being in the deletion zone.");
 					AdminToolbox.WarpVectorDict.Remove(key);
-				}
+				Debug($"{string.Join(" ,", keysToRemove)} removed from warps due to being in the deletion zone.");
+			}
 		}
 
 		/// <summary>
 		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.WarpVectorDict"/> dictionary to file
 		/// </summary>
+		/// <param name="warpPoints">the array of WarpPoints to write, null writes the AT WarpVectorDict</param>
 		public bool WriteWarpsToFile(WarpPoint[] warpPoints = null)
 		{
 			try
@@ -123,7 +124,7 @@ namespace AdminToolbox.Managers
 		}
 
 		/// <summary>
-		/// Reads from file and returns <see cref ="Dictionary{String, Vector}"/>
+		/// Reads from file and returns <see cref ="Dictionary{String, WarpPoint}"/> of (<see cref="string"/>,<see cref="WarpPoint"/>)
 		/// </summary>
 		public Dictionary<string, WarpPoint> ReadWarpsFromFile()
 		{

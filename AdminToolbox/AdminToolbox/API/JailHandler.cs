@@ -18,6 +18,8 @@ namespace AdminToolbox.API
 
 		private static Server Server => PluginManager.Manager.Server;
 
+		private static void Debug(string message) => AdminToolbox.plugin.Debug("[JailHandler]: " + message);
+
 		/// <summary>
 		/// Checks the players marked as "Jailed" to see if they are at where they're supposed to be
 		/// <para> Gets run in the <see cref="MyMiscEvents"/>.cs Update event</para>
@@ -37,16 +39,18 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool SendToJail(Player player) => SendToJail(player, null);
 		/// <summary>
-		/// Sends <see cref="Player"/> to jail, with time overload
+		/// Sends <see cref="Player"/> to jail, with time overload. <returns> Returns bool of operation success </returns>
 		/// </summary>
-		/// <param name="player">The Player to send</param>
-		/// <param name="jailedToTime">The time to jail the player. Null sets the time to remaining time, or if thats null, one year</param>
-		/// <returns> Returns bool of operation success </returns>
+		/// <param name="player">the <see cref="Player"/> to send into jail</param>
+		/// <param name="jailedToTime">the time to jail the player. Null sets the time to remaining time, or if thats null, one year</param>
 		public static bool SendToJail(Player player, DateTime? jailedToTime)
 		{
-			if (player.TeamRole.Role == Role.SPECTATOR || player.OverwatchMode) return false;
+			if (player == null || player.TeamRole.Role == Role.SPECTATOR || player.OverwatchMode) return false;
+			Debug($"Attempting to jail {player.Name}");
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings psetting))
 			{
+				if (!jailedToTime.HasValue || jailedToTime < DateTime.Now)
+					Debug($"Jail time for \"{player.Name}\" not specified, jailing for a year.");
 				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.Now) ? psetting.JailedToTime : DateTime.Now.AddYears(1));
 				//Saves original variables
 				psetting.originalPos = player.GetPosition();
@@ -60,6 +64,7 @@ namespace AdminToolbox.API
 					psetting.prevAmmo9 = player.GetAmmo(AmmoType.DROPPED_9);
 				}
 				//Changes role to Tutorial, teleports to jail, removes inv.
+				Debug($"Variables stored, sending \"{player.Name}\" to jail");
 				player.ChangeRole(Role.TUTORIAL, true, false);
 				player.Teleport(JailPos, true);
 				foreach (SMItem item in player.GetInventory())
@@ -69,17 +74,24 @@ namespace AdminToolbox.API
 			}
 			else
 			{
-				AdminToolbox.plugin.Debug("Could not send player to jail! Player not in PlayerDict!");
+				Debug($"Could not send player to jail! Player \"{player.Name}\" not in AT-PlayerDict!");
 				return false;
 			}
 		}
 
 		/// <summary>
-		/// Returns <see cref="Player"/> from jail
+		/// Removes <see cref="Player"/> from jail and restored original values/position. 
+		/// <returns> Returns bool of operation success </returns>
 		/// </summary>
-		public static void ReturnFromJail(Player player)
+		/// <param name="player">the player to return</param>
+		public static bool ReturnFromJail(Player player)
 		{
-			if (player == null || string.IsNullOrEmpty(player.SteamId.Trim())) return;
+			if (player == null || string.IsNullOrEmpty(player.SteamId.Trim()))
+			{
+				Debug("Return: Player or SteamID null/empty");
+				return false;
+			}
+			Debug($"Attempting to unjail \"{player.Name}\"");
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings psetting))
 			{
 				psetting.isJailed = false;
@@ -98,9 +110,13 @@ namespace AdminToolbox.API
 				player.SetAmmo(AmmoType.DROPPED_7, psetting.prevAmmo7);
 				player.SetAmmo(AmmoType.DROPPED_9, psetting.prevAmmo9);
 				AdminToolbox.ATPlayerDict[player.SteamId].playerPrevInv = null;
+				return true;
 			}
 			else
+			{
 				AdminToolbox.plugin.Info("Could not return player from jail! Player not in PlayerDict!");
+				return false;
+			}
 		}
 	}
 }
