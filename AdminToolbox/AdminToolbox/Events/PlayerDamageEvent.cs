@@ -58,8 +58,8 @@ namespace AdminToolbox
 		{
 			AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Attacker, ev.Player });
 
-			Dict.TryGetValue(ev.Player.SteamId, out PlayerSettings playerSetting);
-			Dict.TryGetValue(ev.Attacker.SteamId, out PlayerSettings attackerSetting);
+			Dict.TryGetValue(ev.Player.UserId, out PlayerSettings playerSetting);
+			Dict.TryGetValue(ev.Attacker.UserId, out PlayerSettings attackerSetting);
 
 			float originalDamage = ev.Damage;
 			DamageType originalType = ev.DamageType;
@@ -74,7 +74,7 @@ namespace AdminToolbox
 
 
 			int[] allowedTutDmg = new int[] { -1 };
-			if (ev.Player.TeamRole.Role == Role.TUTORIAL)
+			if (ev.Player.TeamRole.Role == Smod2.API.RoleType.TUTORIAL)
 				allowedTutDmg = CalculateTutorialDamage();
 
 			int[] DebugDmg = Config.GetIntListValue("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, false);
@@ -104,14 +104,14 @@ namespace AdminToolbox
 				foreach (string item in roleDamages)
 				{
 					string[] myStringKey = item.Trim().Split(':');
-					if (int.TryParse(myStringKey[0], out int attackerIntRole) && Utility.TryParseRole(attackerIntRole, out Role attackerRole))
+					if (int.TryParse(myStringKey[0], out int attackerIntRole) && Utility.TryParseRole(attackerIntRole, out Smod2.API.RoleType attackerRole))
 					{
 						string[] myString = myStringKey[1].Split('.', '-', '#', '_', ',', '+', '@', '>', '<', ';');
 						if (myString.Length >= 1)
 						{
 							foreach (string item2 in myString)
 							{
-								if (int.TryParse(item2, out int victimIntRole) && Utility.TryParseRole(victimIntRole, out Role victimRole))
+								if (int.TryParse(item2, out int victimIntRole) && Utility.TryParseRole(victimIntRole, out Smod2.API.RoleType victimRole))
 								{
 									if (attackerRole == ev.Attacker.TeamRole.Role && victimRole == ev.Player.TeamRole.Role)
 									{
@@ -148,7 +148,7 @@ RoundEnd:;
 			}
 			switch (ev.Player.TeamRole.Role)
 			{
-				case Role.TUTORIAL:
+				case Smod2.API.RoleType.TUTORIAL:
 					if (allowedTutDmg.Contains((int)ev.DamageType) || allowedTutDmg.Contains(-2))
 						goto default;
 					if (DebugDmg.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))
@@ -204,8 +204,8 @@ RoundEnd:;
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
 			AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Player, ev.Killer });
-			Dict.TryGetValue(ev.Player.SteamId, out PlayerSettings playerSetting);
-			Dict.TryGetValue(ev.Killer.SteamId, out PlayerSettings killerSetting);
+			Dict.TryGetValue(ev.Player.UserId, out PlayerSettings playerSetting);
+			Dict.TryGetValue(ev.Killer.UserId, out PlayerSettings killerSetting);
 
 			switch ((int)ev.Player.TeamRole.Role)
 			{

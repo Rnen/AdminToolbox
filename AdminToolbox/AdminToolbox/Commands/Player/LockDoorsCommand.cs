@@ -32,7 +32,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in Server.GetPlayers())
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting) && psetting.lockDoors)
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings psetting) && psetting.lockDoors)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -71,7 +71,7 @@ namespace AdminToolbox.Command
 					int pcount = 0;
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 						{
 							pcount++;
 							if (enabled.HasValue)

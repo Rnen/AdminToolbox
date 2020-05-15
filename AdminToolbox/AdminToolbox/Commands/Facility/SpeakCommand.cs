@@ -11,7 +11,7 @@ namespace AdminToolbox.Command
 		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Sets specified player as intercom speaker";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/STEAMID]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserId]";
 
 		public static readonly string[] CommandAliases = new string[] { "ATSPEAK", "ATINTERCOM", "AT-SPEAK" };
 

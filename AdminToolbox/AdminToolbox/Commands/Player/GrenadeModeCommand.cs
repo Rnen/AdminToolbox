@@ -35,7 +35,7 @@ namespace AdminToolbox.Command
 						case "PLAYERS":
 							List<string> plNames = new List<string> { "Players with GRENADEMODE enabled:" };
 							foreach (Player p in Server.GetPlayers())
-								if (AdminToolbox.ATPlayerDict.TryGetValue(p.SteamId, out PlayerSettings ps) && ps.grenadeMode)
+								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserId, out PlayerSettings ps) && ps.grenadeMode)
 									plNames.Add(" - " + p.Name);
 							return plNames.ToArray();
 					}
@@ -59,7 +59,7 @@ namespace AdminToolbox.Command
 					bool? s = (args.Length > 1 && bool.TryParse(args[1], out bool b) ? (bool?)b : null);
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 						{
 							ps.grenadeMode = s.HasValue ? (bool)s : !ps.grenadeMode;
 						}

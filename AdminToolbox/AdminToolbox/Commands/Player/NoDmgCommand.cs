@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 								foreach (Player pl in Server.GetPlayers())
 								{
 									AdminToolbox.AddMissingPlayerVariables(pl);
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 									{
 										ps.dmgOff = j;
 										playerNum++;
@@ -50,7 +50,7 @@ namespace AdminToolbox.Command
 							foreach (Player pl in Server.GetPlayers())
 							{
 								AdminToolbox.AddMissingPlayerVariables(pl);
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 									ps.dmgOff = !ps.dmgOff;
 							}
 							return new string[] { "Toggled all player's \"No Dmg\"" };
@@ -62,7 +62,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings pls) && pls.dmgOff)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings pls) && pls.dmgOff)
 								myPlayerList.Add(pl.Name);
 						}
 						if (myPlayerList.Count > 0)
@@ -79,7 +79,7 @@ namespace AdminToolbox.Command
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings psetting))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{
 							bool changedValue = false;

@@ -138,15 +138,15 @@ namespace AdminToolbox.Managers
 			if (configInt > 0)
 			{
 				string[] files = Directory.GetFiles(AdminToolboxLogs + Port, "Round-*.txt", SearchOption.TopDirectoryOnly);
-				AdminToolbox.plugin.Debug("LogManager file age to keep: " + configInt);
+				AdminToolbox.singleton.Debug("LogManager file age to keep: " + configInt);
 				if (files.Length > 0)
 					foreach (string path in files)
 					{
 						int num = (int)(DateTime.Now - File.GetCreationTime(path)).TotalHours;
-						AdminToolbox.plugin.Debug(path + "\nHours Old: " + num);
+						AdminToolbox.singleton.Debug(path + "\nHours Old: " + num);
 						if (num > configInt)
 						{
-							AdminToolbox.plugin.Debug("-----------Deleted--------------\n");
+							AdminToolbox.singleton.Debug("-----------Deleted--------------\n");
 							File.Delete(path);
 						}
 					}
@@ -217,7 +217,7 @@ namespace AdminToolbox.Managers
 					}
 				}
 				if (infoString != string.Empty)
-					AdminToolbox.plugin.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(AppFolder, string.Empty));
+					AdminToolbox.singleton.Info(infoString + "\n\n New Path: " + AdminToolboxLogs.Replace(AppFolder, string.Empty));
 				Directory.Delete(AppFolder + "ATServerLogs");
 			}
 		}

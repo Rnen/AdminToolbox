@@ -13,6 +13,7 @@ namespace AdminToolbox
 	using API;
 	using API.Extentions;
 	using API.Webhook;
+	using Managers;
 
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn,
 		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106,
@@ -38,10 +39,10 @@ namespace AdminToolbox
 				ev.SpeechTime = 0f;
 			}
 			#region Blacklist
-			string[] blackListedSTEAMIDS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_steamid_blacklist", new string[] { string.Empty }, false);
-			if (blackListedSTEAMIDS.Length > 0)
-				foreach (string item in blackListedSTEAMIDS)
-					if (item == ev.Player.SteamId)
+			string[] blackListedUserIdS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_UserId_blacklist", new string[] { string.Empty }, false);
+			if (blackListedUserIdS.Length > 0)
+				foreach (string item in blackListedUserIdS)
+					if (item == ev.Player.UserId)
 					{
 						Debug($"Player \"{ev.Player.Name}\" found in intercom blacklist, denied use.");
 						ev.SpeechTime = 0f;
@@ -97,7 +98,7 @@ namespace AdminToolbox
 			if (ev.Player != null && ev.Player is Player player)
 			{
 				AdminToolbox.AddMissingPlayerVariables(player);
-				AdminToolbox.ATPlayerDict.TryGetValue(player.SteamId, out PlayerSettings playerSetting);
+				AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings playerSetting);
 
 				if (playerSetting != null)
 				{
@@ -155,15 +156,15 @@ namespace AdminToolbox
 				AdminToolbox.AddMissingPlayerVariables(ev.Player);
 			}
 
-			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
+			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId))
 			{
-				PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.SteamId];
+				PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.UserId];
 				if (pSettings.overwatchMode)
 				{
 					pSettings.DeathPos = ev.SpawnPos;
 					ev.Player.OverwatchMode = true;
 				}
-				else if (ev.Player.TeamRole.Role != Role.TUTORIAL
+				else if (ev.Player.TeamRole.Role != Smod2.API.RoleType.TUTORIAL
 					&& pSettings.isJailed && !ev.Player.IsInsideJail())
 				{
 					JailHandler.SendToJail(ev.Player, pSettings.JailedToTime);
@@ -172,9 +173,11 @@ namespace AdminToolbox
 		}
 
 		private int checkNewVersion = 8;
-
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
+			ATFileManager.ConvertOldFilesToNewUserID();
+
+
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.isStarting)
 			{
@@ -227,7 +230,7 @@ namespace AdminToolbox
 		public void OnLure(PlayerLureEvent ev)
 		{
 			int[] TUTallowedDmg = Config.GetIntListValue("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, false);
-			if ((AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && AdminToolbox.ATPlayerDict[ev.Player.SteamId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
+			if ((AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId) && AdminToolbox.ATPlayerDict[ev.Player.UserId].godMode) || (ev.Player.TeamRole.Team == Smod2.API.TeamType.TUTORIAL && !TUTallowedDmg.Contains((int)DamageType.LURE)))
 			{
 				ev.AllowContain = false;
 			}
@@ -237,7 +240,7 @@ namespace AdminToolbox
 		{
 			foreach (Player scp106 in ev.SCP106s)
 			{
-				if (AdminToolbox.ATPlayerDict.ContainsKey(scp106.SteamId) && (AdminToolbox.ATPlayerDict[scp106.SteamId].godMode || AdminToolbox.ATPlayerDict[ev.Player.SteamId].dmgOff))
+				if (AdminToolbox.ATPlayerDict.ContainsKey(scp106.UserId) && (AdminToolbox.ATPlayerDict[scp106.UserId].godMode || AdminToolbox.ATPlayerDict[ev.Player.UserId].dmgOff))
 				{
 					ev.ActivateContainment = false;
 					break;
@@ -255,11 +258,11 @@ namespace AdminToolbox
 
 				if (Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
-					int bancount = AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) ? AdminToolbox.ATPlayerDict[player.SteamId].PlayerStats.BanCount : 0;
+					int bancount = AdminToolbox.ATPlayerDict.ContainsKey(player.UserId) ? AdminToolbox.ATPlayerDict[player.UserId].PlayerStats.BanCount : 0;
 					string str = Environment.NewLine +
 						ev.Player.Name + " joined as player (" + player.PlayerId + ")" + Environment.NewLine +
 						"From IP: " + player.IpAddress.Replace("::ffff:", string.Empty) + Environment.NewLine +
-						"Using steamID: " + player.SteamId + Environment.NewLine;
+						"Using UserId: " + player.UserId + Environment.NewLine;
 					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
 					plugin.Info(str);
 				}
@@ -267,13 +270,13 @@ namespace AdminToolbox
 				{
 					plugin.Info(player.Name + " just joined the server!");
 				}
-				if (AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId))
+				if (AdminToolbox.ATPlayerDict.ContainsKey(player.UserId))
 				{
-					if (AdminToolbox.ATPlayerDict[player.SteamId].overwatchMode)
+					if (AdminToolbox.ATPlayerDict[player.UserId].overwatchMode)
 					{
 						ev.Player.OverwatchMode = true;
 					}
-					AdminToolbox.ATPlayerDict[player.SteamId].JoinTime = DateTime.Now;
+					AdminToolbox.ATPlayerDict[player.UserId].JoinTime = DateTime.Now;
 				}
 			}
 		}
@@ -356,13 +359,13 @@ namespace AdminToolbox
 
 		public void OnHandcuffed(PlayerHandcuffedEvent ev)
 		{
-			PlayerSettings playerSetting = Dict.ContainsKey(ev.Player.SteamId) ? Dict[ev.Player.SteamId] : null;
+			PlayerSettings playerSetting = Dict.ContainsKey(ev.Player.UserId) ? Dict[ev.Player.UserId] : null;
 
 			if (ev.Player.GetGodmode() || (playerSetting?.godMode ?? false))
 			{
 				ev.Allow = false;
 			}
-			else if (ev.Player.TeamRole.Role == Role.TUTORIAL && !Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
+			else if (ev.Player.TeamRole.Role == Smod2.API.RoleType.TUTORIAL && !Config.GetBoolValue("admintoolbox_tutorial_canbehandcuffed", false))
 			{
 				ev.Allow = false;
 			}
@@ -381,7 +384,7 @@ namespace AdminToolbox
 				if (!string.IsNullOrEmpty(ev.Reason))
 					listOfFields.AddField("Reason: ", ev.Reason);
 				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
-					listOfFields.AddField("Issued By: ", ev.Admin.Name ?? "Server");
+					listOfFields.AddField("Issued By: ", ev.Issuer ?? "Server");
 
 				webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
 
@@ -396,10 +399,10 @@ namespace AdminToolbox
 				AdminToolbox.AddMissingPlayerVariables(ev.Player);
 			}
 
-			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId) && ev.Duration > 1)
+			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId) && ev.Duration > 1)
 			{
-				AdminToolbox.ATPlayerDict[ev.Player.SteamId].PlayerStats.BanCount++;
-				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.SteamId);
+				AdminToolbox.ATPlayerDict[ev.Player.UserId].PlayerStats.BanCount++;
+				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.UserId);
 			}
 		}
 
@@ -411,31 +414,31 @@ namespace AdminToolbox
 
 		public void OnThrowGrenade(PlayerThrowGrenadeEvent ev)
 		{
-			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.UserId, out PlayerSettings ps))
 			{
 				if (ps.isJailed || ps.lockDown)
 					ev.Allow = false;
-				else if (ps.grenadeMode || ps.InfiniteItem == ItemType.FRAG_GRENADE || ps.InfiniteItem == ItemType.FLASHBANG)
-					ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? ItemType.FRAG_GRENADE : ItemType.FLASHBANG);
+				else if (ps.grenadeMode || ps.InfiniteItem == Smod2.API.ItemType.FRAG_GRENADE || ps.InfiniteItem == Smod2.API.ItemType.FLASHBANG)
+					ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? Smod2.API.ItemType.FRAG_GRENADE : Smod2.API.ItemType.FLASHBANG);
 			}
 		}
 
 		public void OnPlayerDropItem(PlayerDropItemEvent ev)
 		{
-			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.UserId, out PlayerSettings ps))
 			{
 				if (ps.isJailed || ps.lockDown)
 					ev.Allow = false;
-				else if (ps.InfiniteItem != ItemType.NULL && ev.Item.ItemType == ps.InfiniteItem)
+				else if (ps.InfiniteItem != Smod2.API.ItemType.NULL && ev.Item.ItemType == ps.InfiniteItem)
 					ev.Player.GiveItem(ps.InfiniteItem);
-				else if (ps.grenadeMode && ev.Item.ItemType == ItemType.FRAG_GRENADE)
-					ev.Player.GiveItem(ItemType.FRAG_GRENADE);
+				else if (ps.grenadeMode && ev.Item.ItemType == Smod2.API.ItemType.FRAG_GRENADE)
+					ev.Player.GiveItem(Smod2.API.ItemType.FRAG_GRENADE);
 			}
 		}
 
 		public void OnReload(PlayerReloadEvent ev)
 		{
-			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.SteamId, out PlayerSettings ps) && ps.InfiniteItem != ItemType.NULL)
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.UserId, out PlayerSettings ps) && ps.InfiniteItem != Smod2.API.ItemType.NULL)
 				if (ps.InfiniteItem.ToString().Contains("DROPPED"))
 					foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
 						if (ammo.ToString() == ps.InfiniteItem.ToString())
@@ -450,9 +453,9 @@ namespace AdminToolbox
 	{
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
-			if (ev.AllowEscape && AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.SteamId))
+			if (ev.AllowEscape && AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId))
 			{
-				AdminToolbox.ATPlayerDict[ev.Player.SteamId].PlayerStats.EscapeCount++;
+				AdminToolbox.ATPlayerDict[ev.Player.UserId].PlayerStats.EscapeCount++;
 			}
 		}
 	}

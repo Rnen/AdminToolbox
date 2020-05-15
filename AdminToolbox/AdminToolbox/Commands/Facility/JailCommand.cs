@@ -42,8 +42,8 @@ namespace AdminToolbox.Command
 					}
 					else if (args.Length == 1)
 					{
-						if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
-						if (AdminToolbox.ATPlayerDict[myPlayer.SteamId].isJailed)
+						if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.UserId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
+						if (AdminToolbox.ATPlayerDict[myPlayer.UserId].isJailed)
 						{
 							JailHandler.ReturnFromJail(myPlayer);
 							return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };

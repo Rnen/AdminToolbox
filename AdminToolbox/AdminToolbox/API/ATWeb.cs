@@ -12,7 +12,7 @@ namespace AdminToolbox.API
 	/// </summary>
 	public static class ATWeb
 	{
-		private static AdminToolbox Plugin => AdminToolbox.plugin;
+		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
 		private static void Debug(string str) => Plugin.Debug("[ATWeb]: " + str);
 

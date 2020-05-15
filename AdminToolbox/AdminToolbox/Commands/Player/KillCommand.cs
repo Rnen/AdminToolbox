@@ -39,8 +39,8 @@ namespace AdminToolbox.Command
 
 						foreach (Player p in Server.GetPlayers().Where(pl => pl.PlayerId != (caller != null ? caller.PlayerId : -1)
 						 && !pl.GetGodmode() &&
-						 (AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) ? !AdminToolbox.ATPlayerDict[pl.SteamId].godMode : true)
-						 && pl.TeamRole.Team != Smod2.API.Team.SPECTATOR))
+						 (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserId) ? !AdminToolbox.ATPlayerDict[pl.UserId].godMode : true)
+						 && pl.TeamRole.Team != Smod2.API.TeamType.SPECTATOR))
 						{
 							p.Kill(killType);
 							playerNum++;
@@ -50,7 +50,7 @@ namespace AdminToolbox.Command
 					}
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
-					if (myPlayer.TeamRole.Role != Role.SPECTATOR)
+					if (myPlayer.TeamRole.Role != Smod2.API.RoleType.SPECTATOR)
 					{
 						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
 						myPlayer.Kill(killType);

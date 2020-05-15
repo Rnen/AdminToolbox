@@ -44,7 +44,7 @@ namespace AdminToolbox.Managers
 			}
 			else
 			{
-				cnfgpath = FileManager.GetAppFolder(shared: true, addseparator: true) + "AdminToolbox" + Path.DirectorySeparatorChar;
+				cnfgpath = FileManager.GetAppFolder(addSeparator: true) + "AdminToolbox" + Path.DirectorySeparatorChar;
 			}
 			if (!Directory.Exists(cnfgpath))
 				Directory.CreateDirectory(cnfgpath);
@@ -76,7 +76,7 @@ namespace AdminToolbox.Managers
 					break;
 
 				case Folder.AppData:
-					return FileManager.GetAppFolder(shared: true, addseparator: true);
+					return FileManager.GetAppFolder(addSeparator: true);
 
 				case Folder.ATRoot:
 				default:
@@ -102,14 +102,14 @@ namespace AdminToolbox.Managers
 		public void PlayerStatsFileManager(PlayerFile FileOperation = PlayerFile.Read) => PlayerStatsFileManager(new string[] { }, FileOperation);
 
 		/// <summary>
-		/// Read/Writes the <paramref name="steamID"/>'s stats to/from <see cref="File"/>
+		/// Read/Writes the <paramref name="UserId"/>'s stats to/from <see cref="File"/>
 		/// </summary>
-		public void PlayerStatsFileManager(string steamID, PlayerFile FileOperation = PlayerFile.Write) => PlayerStatsFileManager(new string[] { steamID }, FileOperation);
+		public void PlayerStatsFileManager(string UserId, PlayerFile FileOperation = PlayerFile.Write) => PlayerStatsFileManager(new string[] { UserId }, FileOperation);
 
 		/// <summary>
 		/// Read/Writes <see cref ="Player"/> stats to/from <see cref="File"/>
 		/// </summary>
-		public void PlayerStatsFileManager(Player player, PlayerFile FileOperation = PlayerFile.Write) => PlayerStatsFileManager(new string[] { player.SteamId }, FileOperation);
+		public void PlayerStatsFileManager(Player player, PlayerFile FileOperation = PlayerFile.Write) => PlayerStatsFileManager(new string[] { player.UserId }, FileOperation);
 
 		/// <summary>
 		/// Read/Writes stats to/from <see cref="File"/> for each <see cref="Player"/> in the <see cref="List{T}"/>
@@ -117,27 +117,29 @@ namespace AdminToolbox.Managers
 		public void PlayerStatsFileManager(List<Player> playerList, PlayerFile FileOperation = PlayerFile.Read)
 		{
 			if (playerList != null && playerList.Count > 0)
-				PlayerStatsFileManager(playerList.Select(p => p.SteamId).ToArray(), FileOperation);
+				PlayerStatsFileManager(playerList.Select(p => p.UserId).ToArray(), FileOperation);
 			else
 				PlayerStatsFileManager(FileOperation);
 		}
 
 		/// <summary>
-		/// Read/Writes stats to/from <see cref="File"/> for each steamID in the <see cref="List{T}"/>
+		/// Read/Writes stats to/from <see cref="File"/> for each UserId in the <see cref="List{T}"/>
 		/// </summary>
-		public void PlayerStatsFileManager(List<string> steamIdList, PlayerFile FileOperation = PlayerFile.Read)
+		public void PlayerStatsFileManager(List<string> UserIdList, PlayerFile FileOperation = PlayerFile.Read)
 		{
-			if (steamIdList != null && steamIdList.Count > 0)
-				PlayerStatsFileManager(steamIdList.ToArray(), FileOperation);
+			if (UserIdList != null && UserIdList.Count > 0)
+				PlayerStatsFileManager(UserIdList.ToArray(), FileOperation);
 			else
 				PlayerStatsFileManager(new string[0], FileOperation);
 		}
 
 		/// <summary>
-		/// Read/Writes stats to/from <see cref="File"/> for each steamID in the <see cref="Array"/>
+		/// Read/Writes stats to/from <see cref="File"/> for each UserId in the <see cref="Array"/>
 		/// </summary>
-		public void PlayerStatsFileManager(string[] steamIdArray, PlayerFile FileOperation = PlayerFile.Read)
+		public void PlayerStatsFileManager(string[] UserIdArray, PlayerFile FileOperation = PlayerFile.Read)
 		{
+			if (!Config.GetBoolValue("admintoolbox_playerfiles", false))
+				return;
 			if (Directory.Exists(AdminToolboxFolder))
 			{
 				if (!Directory.Exists(AdminToolboxFolder))
@@ -147,51 +149,51 @@ namespace AdminToolbox.Managers
 
 				ProcessingCollection = true;
 
-				if (steamIdArray != null && steamIdArray.Length > 0)
-					foreach (string sid in steamIdArray)
+				if (UserIdArray != null && UserIdArray.Length > 0)
+					foreach (string sid in UserIdArray)
 						ReadWriteHandler(sid, FileOperation);
 				else
 				{
 					string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
-					foreach (string steamID in keys)
-						ReadWriteHandler(steamID, FileOperation);
+					foreach (string UserId in keys)
+						ReadWriteHandler(UserId, FileOperation);
 				}
 
 				ProcessingCollection = false;
 
 
-				void ReadWriteHandler(string steamID, PlayerFile Operation)
+				void ReadWriteHandler(string UserId, PlayerFile Operation)
 				{
-					if (string.IsNullOrEmpty(steamID)) return;
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID))
+					if (string.IsNullOrEmpty(UserId)) return;
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 					{
-						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID));
+						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId));
 						return;
 					}
 					switch (Operation)
 					{
 						case PlayerFile.Write:
-							WriteToFile(steamID);
+							WriteToFile(UserId);
 							break;
 						case PlayerFile.Read:
 						default:
-							ReadFromFile(steamID);
+							ReadFromFile(UserId);
 							break;
 					}
 				}
 
 				#region NewFilesStuff
 				/*
-				void NewWriteToFile(string steamID)
+				void NewWriteToFile(string UserId)
 				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
-					string playerFilePath = AdminToolboxPlayerStats + steamID + ".txt";
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
+					string playerFilePath = AdminToolboxPlayerStats + UserId + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
 
 					if (File.ReadAllLines(playerFilePath).Length <= 2)
 						ConvertOldFilesToJSON(playerFilePath);
-					SerilizablePlayerClass pl = new SerilizablePlayerClass(AdminToolbox.ATPlayerDict[steamID]);
+					SerilizablePlayerClass pl = new SerilizablePlayerClass(AdminToolbox.ATPlayerDict[UserId]);
 
 					if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
 						pl.PlayerInfo.FirstJoin = DateTime.Now.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
@@ -201,14 +203,14 @@ namespace AdminToolbox.Managers
 						sw.WriteLine(JsonConvert.SerializeObject(pl, Formatting.Indented));
 					}
 
-					NewReadFromFile(steamID);
+					NewReadFromFile(UserId);
 				}
-				void NewReadFromFile(string steamID)
+				void NewReadFromFile(string UserId)
 				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
-					string playerFilePath = AdminToolboxPlayerStats + steamID + ".txt";
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
+					string playerFilePath = AdminToolboxPlayerStats + UserId + ".txt";
 					if (!File.Exists(playerFilePath))
-						WriteToFile(steamID);
+						WriteToFile(UserId);
 
 					if (File.ReadAllLines(playerFilePath).FirstOrDefault().Split(splitChar).Length > 3)
 						ConvertOldFilesToJSON(playerFilePath);
@@ -216,7 +218,7 @@ namespace AdminToolbox.Managers
 					string rawJSON = File.ReadAllText(playerFilePath);
 					SerilizablePlayerClass pl = JsonConvert.DeserializeObject<SerilizablePlayerClass>(rawJSON);
 
-					PlayerSettings playersetting = AdminToolbox.ATPlayerDict[steamID];
+					PlayerSettings playersetting = AdminToolbox.ATPlayerDict[UserId];
 
 					if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
 						playersetting.PlayerInfo.FirstJoin = DateTime.Now.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
@@ -225,56 +227,107 @@ namespace AdminToolbox.Managers
 				*/
 				#endregion
 
-				void WriteToFile(string steamID)
+				void WriteToFile(string UserId)
 				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID))
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 					{
-						if (PluginManager.Manager.Server.GetPlayers(steamID).Count < 1) return;
-						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(steamID).FirstOrDefault());
+						if (PluginManager.Manager.Server.GetPlayers(UserId).Count < 1) return;
+						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId).FirstOrDefault());
 					}
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(steamID)) return;
-					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(steamID) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + steamID + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
+					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
+					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + UserId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
+					AdminToolbox.singleton.Debug("Writing: " + playerFilePath);
 
-					PlayerSettings setting = AdminToolbox.ATPlayerDict.ContainsKey(steamID) ? AdminToolbox.ATPlayerDict[steamID] : new API.PlayerSettings(steamID);
-					int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].PlayerStats.Kills > 0) ? AdminToolbox.ATPlayerDict[steamID].PlayerStats.Kills : 0;
-					int TeamKills = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].PlayerStats.TeamKills > 0) ? AdminToolbox.ATPlayerDict[steamID].PlayerStats.TeamKills : 0;
-					int Deaths = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].PlayerStats.Deaths > 0) ? AdminToolbox.ATPlayerDict[steamID].PlayerStats.Deaths : 0;
-					double minutesPlayed = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].PlayerStats.MinutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.ATPlayerDict[steamID].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[steamID].PlayerStats.MinutesPlayed : 0;
-					int BanCount = (AdminToolbox.ATPlayerDict.ContainsKey(steamID) && AdminToolbox.ATPlayerDict[steamID].PlayerStats.BanCount > 0) ? AdminToolbox.ATPlayerDict[steamID].PlayerStats.BanCount : 0;
-					if (AdminToolbox.ATPlayerDict.ContainsKey(steamID)) AdminToolbox.ATPlayerDict[steamID].JoinTime = DateTime.Now;
+					PlayerSettings setting = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolbox.ATPlayerDict[UserId] : new API.PlayerSettings(UserId);
+					int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills : 0;
+					int TeamKills = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills : 0;
+					int Deaths = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths : 0;
+					double minutesPlayed = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed > 0) ? DateTime.Now.Subtract(AdminToolbox.ATPlayerDict[UserId].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed : 0;
+					int BanCount = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount : 0;
+					if (AdminToolbox.ATPlayerDict.ContainsKey(UserId)) AdminToolbox.ATPlayerDict[UserId].JoinTime = DateTime.Now;
 					string str = string.Empty + Kills + SplitChar + TeamKills + SplitChar + Deaths + SplitChar + minutesPlayed + SplitChar + BanCount;
 					using (StreamWriter streamWriter = new StreamWriter(playerFilePath, false))
 					{
 						streamWriter.Write(str);
 						streamWriter.Close();
 					}
-					ReadFromFile(steamID);
+					ReadFromFile(UserId);
 				}
-				void ReadFromFile(string steamID)
+				void ReadFromFile(string UserId)
 				{
-					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(steamID) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + steamID + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
+					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + UserId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
-						PlayerStatsFileManager(new List<string> { steamID }, PlayerFile.Write);
+						PlayerStatsFileManager(new List<string> { UserId }, PlayerFile.Write);
+					AdminToolbox.singleton.Debug("Reading: " + playerFilePath);
 					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0;0;0" };
 					string[] playerStats = fileStrings.FirstOrDefault().Split(SplitChar);
-					if (AdminToolbox.ATPlayerDict.ContainsKey(steamID))
+					if (AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 					{
-						PlayerSettings setting = AdminToolbox.ATPlayerDict[steamID];
+						PlayerSettings setting = AdminToolbox.ATPlayerDict[UserId];
 						setting.PlayerStats.Kills = (playerStats.Length > 0 && int.TryParse(playerStats[0], out int x0) && x0 > setting.PlayerStats.Kills) ? x0 : setting.PlayerStats.Kills;
 						setting.PlayerStats.TeamKills = (playerStats.Length > 1 && int.TryParse(playerStats[1], out int x1) && x1 > setting.PlayerStats.TeamKills) ? x1 : setting.PlayerStats.TeamKills;
 						setting.PlayerStats.Deaths = (playerStats.Length > 2 && int.TryParse(playerStats[2], out int x2) && x2 > setting.PlayerStats.Deaths) ? x2 : setting.PlayerStats.Deaths;
 						setting.PlayerStats.MinutesPlayed = (playerStats.Length > 3 && double.TryParse(playerStats[3], out double x3) && x3 > setting.PlayerStats.MinutesPlayed) ? x3 : setting.PlayerStats.MinutesPlayed;
 						setting.PlayerStats.BanCount = (playerStats.Length > 4 && int.TryParse(playerStats[4], out int x4) && x4 > setting.PlayerStats.BanCount) ? x4 : setting.PlayerStats.BanCount;
-						AdminToolbox.ATPlayerDict[steamID] = setting;
+						AdminToolbox.ATPlayerDict[UserId] = setting;
 					}
 				}
 			}
 		}
 
+		public static void ConvertOldFilesToNewUserID()
+		{
+			if (!Config.GetBoolValue("admintoolbox_playerfiles", false))
+				return;
+			if (Config.GetBoolValue("admintoolbox_userfiles_convert", true))
+			{
+				string[] files = Directory.GetFiles(AdminToolboxPlayerStats);
+				if (files.Any(s => !s.Contains('@')))
+				{
+					int x = 0;
+					AdminToolbox.singleton.Info("(File Manager) - Converting old files to new UserID format");
+					if (files.Length > 5000)
+					{
+						AdminToolbox.singleton.Info("(File Manager) - Large amount of files detected, this may take a moment...");
+					}
+					for (int i = files.Length - 1; i > -1; i--)
+					{
+						if (!Path.GetFileName(files[i]).Contains('@'))
+						{
+							x++;
+							AdminToolbox.singleton.Debug(files[i].Substring(0, files[i].Length - 4) + "@steam.txt");
+							File.Move(files[i], files[i].Substring(0, files[i].Length - 4) + "@steam.txt");
+						}
+					}
+					AdminToolbox.singleton.Info($"(File Manager) - {x} files converted");
+				}
+			}
+			else if (Config.GetBoolValue("admintoolbox_userfiles_revert", false))
+			{
+				string[] files = Directory.GetFiles(AdminToolboxPlayerStats);
+				if (files.Any(s => s.Contains('@')))
+				{
+					int x = 0;
+					AdminToolbox.singleton.Info("(File Manager) - Reverting new files to old SteamID format");
+
+					for (int i = files.Length - 1; i > -1; i--)
+					{
+						if (Path.GetFileName(files[i]).Contains('@'))
+						{
+							x++;
+							AdminToolbox.singleton.Debug(files[i].Substring(0, files[i].Length - 4) + "@steam.txt");
+							File.Move(files[i], files[i].Substring(0, files[i].Length - 10) + ".txt");
+						}
+					}
+					AdminToolbox.singleton.Info($"(File Manager) - {x} files reverted");
+				}
+			}
+		}
+
 		/// <summary>
-		/// Read/Writes stats to/from <see cref="File"/> for each steamID in the <see cref="List{T}"/>
+		/// Read/Writes stats to/from <see cref="File"/> for each UserId in the <see cref="List{T}"/>
 		/// </summary>
 		public static void ConvertOldFilesToJSON(string file = "")
 		{
@@ -285,7 +338,7 @@ namespace AdminToolbox.Managers
 			string[] files = string.IsNullOrEmpty(file) ? Directory.GetFiles(AdminToolboxPlayerStats) : new string[] { file };
 			if (files.Where(f => !File.ReadAllText(f).StartsWith("{")).Count() >= 100)
 			{
-				AdminToolbox.plugin.Info("Warning: The plugin will be converting old playerfiles to a new format." + "\n" + "Beware that this might take some time");
+				AdminToolbox.singleton.Info("Warning: The plugin will be converting old playerfiles to a new format." + "\n" + "Beware that this might take some time");
 			}
 			if (files.Length > 0)
 				foreach (string path in files)
@@ -315,14 +368,14 @@ namespace AdminToolbox.Managers
 					}
 					catch (Exception e)
 					{
-						AdminToolbox.plugin.Debug("Failed during convertion of: " + path);
-						AdminToolbox.plugin.Debug(e.StackTrace);
+						AdminToolbox.singleton.Debug("Failed during convertion of: " + path);
+						AdminToolbox.singleton.Debug(e.StackTrace);
 						continue;
 					}
 					// Kills + TeamKills  + Deaths  + minutesPlayed  + BanCount;
 				}
 			if (x > 0)
-				AdminToolbox.plugin.Debug(x + " files converted to new JSON format!");
+				AdminToolbox.singleton.Debug(x + " files converted to new JSON format!");
 #pragma warning restore CS0162 // Unreachable code detected
 		}
 
@@ -351,7 +404,7 @@ namespace AdminToolbox.Managers
 			string path = GetFolderPath(Folder.AppData);
 			if (Directory.Exists(path))
 			{
-				string text = "at_version=" + AdminToolbox.plugin.Details.version.Split('-').FirstOrDefault();
+				string text = "at_version=" + AdminToolbox.singleton.Details.version.Split('-').FirstOrDefault();
 				using (StreamWriter streamWriter = new StreamWriter(path + "at_version.md", false))
 				{
 					streamWriter.Write(text);
@@ -360,7 +413,7 @@ namespace AdminToolbox.Managers
 					File.Delete(path + "n_at_version.md");
 			}
 			else
-				AdminToolbox.plugin.Info("Could not find SCP Secret Lab folder!");
+				AdminToolbox.singleton.Info("Could not find SCP Secret Lab folder!");
 		}
 	}
 }

@@ -15,7 +15,7 @@ namespace AdminToolbox.Command
 
 		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Gets toolbox info about spesific player";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/STEAMID]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserId]";
 
 		public static readonly string[] CommandAliases = new string[] { "PLAYER", "P", "PLAYERINFO", "PINFO" };
 
@@ -51,26 +51,26 @@ namespace AdminToolbox.Command
 
 					//Handling player stats
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.SteamId, Managers.ATFileManager.PlayerFile.Write);
-					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.SteamId);
+					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFileManager.PlayerFile.Write);
+					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.UserId);
 
 					//Inventory
 					string playerInv = string.Empty;
-					foreach (SMItem i in myPlayer.GetInventory().Where(i => i.ItemType != ItemType.NULL))
+					foreach (SMItem i in myPlayer.GetInventory().Where(i => i.ItemType != Smod2.API.ItemType.NULL))
 						playerInv += i.ItemType + ", ";
 					if (playerInv == string.Empty) playerInv = "Empty Inventory";
 
 					//Calculating remaining jail time
 					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
 
-					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : myPlayer.TeamRole.Role + "";
+					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : (myPlayer.TeamRole.Role == Smod2.API.RoleType.SCP_457 ? Smod2.API.RoleType.UNASSIGNED : myPlayer.TeamRole.Role) + "";
 					string _roleColor = myPlayer.GetUserGroup().Color ?? "default";
 					string _serverRole = myPlayer.GetRankName() ?? "";
 
 					//Building string
 					string playerInfoString = Environment.NewLine + Environment.NewLine +
 							"Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name + Environment.NewLine +
-						BuildTwoLiner(" - SteamID: " + myPlayer.SteamId, " - IP: " + myPlayer.IpAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
+						BuildTwoLiner(" - UserId: " + myPlayer.UserId, " - IP: " + myPlayer.IpAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
 						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
 						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
 						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +

@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 				List<string> myPlayerList = new List<string>();
 				foreach (Player pl in players)
 				{
-					myPlayerList.Add(pl.TeamRole.Role + "(" + (int)pl.TeamRole.Role + ")" + "  " + pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n");
+					myPlayerList.Add(pl.TeamRole.Role + "(" + (int)pl.TeamRole.Role + ")" + "  " + pl.Name + "  IP: " + pl.IpAddress + " USERID: " + pl.UserId + "\n");
 				}
 				myPlayerList.Sort();
 				foreach (string item in myPlayerList)

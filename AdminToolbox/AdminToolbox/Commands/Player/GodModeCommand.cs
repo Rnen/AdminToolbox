@@ -38,7 +38,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 									{
 										ps.godMode = j;
 										if (changedState)
@@ -59,7 +59,7 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings psetting))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings psetting))
 									psetting.godMode = !psetting.godMode;
 							}
 							return new string[] { "Toggled all players AT-Godmodes" };
@@ -71,7 +71,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings plsetting) && plsetting.godMode)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings plsetting) && plsetting.godMode)
 							{
 								myPlayerList.Add(pl.Name);
 								//str += " - " +pl.Name + "\n";
@@ -90,7 +90,7 @@ namespace AdminToolbox.Command
 					}
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.SteamId, out PlayerSettings pls))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings pls))
 					{
 						if (args.Length > 1)
 						{

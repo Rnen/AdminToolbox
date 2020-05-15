@@ -35,7 +35,7 @@ namespace AdminToolbox.Command
 						case "PLAYERS":
 							List<string> plNames = new List<string> { "Players with INFINITEITEM enabled:" };
 							foreach (Player p in Server.GetPlayers())
-								if (AdminToolbox.ATPlayerDict.TryGetValue(p.SteamId, out PlayerSettings ps) && ps.InfiniteItem != ItemType.NULL)
+								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserId, out PlayerSettings ps) && ps.InfiniteItem != Smod2.API.ItemType.NULL)
 									plNames.Add(" - " + p.Name + " -> + " + ps.InfiniteItem.ToString());
 							return plNames.ToArray();
 					}
@@ -56,10 +56,10 @@ namespace AdminToolbox.Command
 				}
 				if (players.Length > 0)
 				{
-					ItemType item = args.Length > 1 && Utility.TryParseItem(args[1], out ItemType i) ? i : ItemType.NULL;
+					Smod2.API.ItemType item = args.Length > 1 && Utility.TryParseItem(args[1], out Smod2.API.ItemType i) ? i : Smod2.API.ItemType.NULL;
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.SteamId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 						{
 							ps.InfiniteItem = item;
 						}

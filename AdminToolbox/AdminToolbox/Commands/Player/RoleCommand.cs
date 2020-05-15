@@ -26,13 +26,13 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Role spesifiedRole))
+							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType spesifiedRole))
 							{
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
 									Vector originalPos = pl.GetPosition();
-									if (pl.TeamRole.Role == Role.UNASSIGNED || pl.TeamRole.Role == Role.SPECTATOR)
+									if (pl.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
 										pl.ChangeRole(spesifiedRole, true, true);
 									else
 									{
@@ -58,11 +58,11 @@ namespace AdminToolbox.Command
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
 					if (args.Length > 1)
 					{
-						if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Role spesifiedRole))
+						if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType spesifiedRole))
 						{
 							TeamRole oldRole = myPlayer.TeamRole;
 							Vector originalPos = myPlayer.GetPosition();
-							bool tele = myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR;
+							bool tele = myPlayer.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || myPlayer.TeamRole.Role == Smod2.API.RoleType.SPECTATOR;
 							myPlayer.ChangeRole(spesifiedRole, true, tele);
 							if (tele)
 								myPlayer.Teleport(originalPos, true);

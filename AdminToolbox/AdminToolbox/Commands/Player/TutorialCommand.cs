@@ -41,12 +41,12 @@ namespace AdminToolbox.Command
 					{
 						if (pl == null) continue;
 						Vector originalPos2 = pl.GetPosition();
-						Vector newPos2 = pl.TeamRole.Role == Role.SPECTATOR ? AdminToolbox.WarpVectorDict.TryGetVector("tutorial", out Vector vector2) ? vector2 : null : originalPos2;
-						pl.ChangeRole(Role.TUTORIAL, spawnTeleport: newPos2 == null, removeHandcuffs: true);
+						Vector newPos2 = pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR ? AdminToolbox.WarpVectorDict.TryGetVector("tutorial", out Vector vector2) ? vector2 : null : originalPos2;
+						pl.ChangeRole(Smod2.API.RoleType.TUTORIAL, spawnTeleport: newPos2 == null, removeHandcuffs: true);
 						if (newPos2 != null)
 							AdminToolbox.waitForTeleports.Add(new WaitForTeleport { Player = pl, Pos = newPos2, DateTime = DateTime.Now.AddSeconds(1) });
 					}
-					return new string[] { $"Set {(players.Length > 1 ? players.Length.ToString() + " players roles " : (players?[0]?.Name ?? "1 player") + "'s role ")}) to {Role.TUTORIAL}" };
+					return new string[] { $"Set {(players.Length > 1 ? players.Length.ToString() + " players roles " : (players?[0]?.Name ?? "1 player") + "'s role ")}) to {Smod2.API.RoleType.TUTORIAL}" };
 				}
 				else
 					return new string[] { GetUsage() };

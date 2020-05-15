@@ -14,7 +14,7 @@ namespace AdminToolbox.Managers
 	/// </summary>
 	public class WarpManager
 	{
-		private static AdminToolbox Plugin => AdminToolbox.plugin;
+		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
 		private static int Port => PluginManager.Manager.Server.Port;
 
@@ -82,9 +82,12 @@ namespace AdminToolbox.Managers
 		/// <param name="warpPoints">the array of WarpPoints to write, null writes the AT WarpVectorDict</param>
 		public bool WriteWarpsToFile(WarpPoint[] warpPoints = null)
 		{
+			Debug("Entered WriteToFile");
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+				return false;
 			try
 			{
-				Debug("Entered WriteToFile");
+				
 				WarpPoint[] warparray = (warpPoints != null && warpPoints.Length > 0) ? warpPoints : AdminToolbox.WarpVectorDict.Values.ToArray();
 				if (warparray == null || warparray.Length < 1)
 				{
@@ -129,6 +132,8 @@ namespace AdminToolbox.Managers
 		public Dictionary<string, WarpPoint> ReadWarpsFromFile()
 		{
 			Debug("Entered ReadFromFile");
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+				return presetWarps;
 			try
 			{
 				Dictionary<string, WarpPoint> newDict = new Dictionary<string, WarpPoint>();

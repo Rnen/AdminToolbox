@@ -26,7 +26,7 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				ItemType type = ItemType.NULL;
+				Smod2.API.ItemType type = Smod2.API.ItemType.NULL;
 				Player player = null;
 				bool delete = false;
 
@@ -55,26 +55,26 @@ namespace AdminToolbox.Command
 		}
 
 
-		private string[] DropItems(Player player, ItemType itemFilter = ItemType.NULL, bool delete = false)
+		private string[] DropItems(Player player, Smod2.API.ItemType itemFilter = Smod2.API.ItemType.NULL, bool delete = false)
 		{
-			ItemType ammoFlag = ItemType.DROPPED_5 | ItemType.DROPPED_7 | ItemType.DROPPED_9;
+			Smod2.API.ItemType ammoFlag = Smod2.API.ItemType.DROPPED_5 | Smod2.API.ItemType.DROPPED_7 | Smod2.API.ItemType.DROPPED_9;
 
 			if (player == null)
 				return new string[] { "Player not spesified!" };
-			if (player.TeamRole.Role == Role.UNASSIGNED)
+			if (player.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED)
 				return new string[] { "Player not properly initialized!" };
-			if (player.TeamRole.Role == Role.SPECTATOR)
+			if (player.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
 				return new string[] { "This can not be used on spectators!" };
 
 			byte itemCount = 0;
 			Vector pos = player.GetPosition(), rot = player.GetRotation();
 
-			if (itemFilter == ItemType.NULL || !ammoFlag.HasFlag(itemFilter))
+			if (itemFilter == Smod2.API.ItemType.NULL || !ammoFlag.HasFlag(itemFilter))
 			{
 				foreach (SMItem playerItem in player.GetInventory())
 				{
-					if (playerItem.ItemType != ItemType.NULL)
-						if (itemFilter == ItemType.NULL || playerItem.ItemType == itemFilter)
+					if (playerItem.ItemType != Smod2.API.ItemType.NULL)
+						if (itemFilter == Smod2.API.ItemType.NULL || playerItem.ItemType == itemFilter)
 						{
 							if (delete)
 								playerItem.Remove();
@@ -87,13 +87,13 @@ namespace AdminToolbox.Command
 
 			}
 
-			if (itemFilter == ItemType.NULL || ammoFlag.HasFlag(itemFilter))
+			if (itemFilter == Smod2.API.ItemType.NULL || ammoFlag.HasFlag(itemFilter))
 			{
 				foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
 				{
-					ItemType ammoItem = ammo == AmmoType.DROPPED_5 ? ItemType.DROPPED_5 : ammo == AmmoType.DROPPED_7 ? ItemType.DROPPED_7 : ItemType.DROPPED_9;
+					Smod2.API.ItemType ammoItem = ammo == Smod2.API.AmmoType.DROPPED_5 ? Smod2.API.ItemType.DROPPED_5 : ammo == Smod2.API.AmmoType.DROPPED_7 ? Smod2.API.ItemType.DROPPED_7 : Smod2.API.ItemType.DROPPED_9;
 
-					if (itemFilter == ItemType.NULL || ammoItem == itemFilter)
+					if (itemFilter == Smod2.API.ItemType.NULL || ammoItem == itemFilter)
 					{
 						player.SetAmmo(ammo, 0);
 						if (!delete)

@@ -26,7 +26,7 @@ namespace AdminToolbox.API
 			else if (long.TryParse(args, out long sID))
 			{
 				foreach (Player pl in Server.GetPlayers())
-					if (pl.SteamId == sID.ToString())
+					if (pl.UserId == sID.ToString())
 						return pl;
 			}
 			else

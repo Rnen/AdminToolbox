@@ -9,12 +9,12 @@ namespace AdminToolbox.API
 	public static class SetPlayerVariables
 	{
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools by <paramref name="steamID"/>
-		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// For setting <see cref="API.PlayerSettings"/> bools by <paramref name="UserId"/>
+		/// <para>Returns false if <paramref name="UserId"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
-		public static bool SetPlayerBools(string steamID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
+		public static bool SetPlayerBools(string UserId, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
-			if (AdminToolbox.ATPlayerDict.TryGetValue(steamID, out PlayerSettings setting))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(UserId, out PlayerSettings setting))
 			{
 				setting.overwatchMode = spectatorOnly ?? setting.overwatchMode;
 				setting.godMode = godMode ?? setting.godMode;
@@ -31,29 +31,29 @@ namespace AdminToolbox.API
 		}
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> bools on a <see cref="Player"/>
-		/// <para>Returns false if <paramref name="player"/>'s steamID is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// <para>Returns false if <paramref name="player"/>'s UserId is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
-			=> SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
+			=> SetPlayerBools(player.UserId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
 		/// <summary>
 		/// For setting <see cref="API.PlayerSettings"/> bools on a list of <see cref="Player"/>s
-		/// <para>Returns false if one or more of <paramref name="players"/> steamid's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// <para>Returns false if one or more of <paramref name="players"/> UserId's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(List<Player> players, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			int failiures = 0;
 			foreach (Player player in players)
-				if (!SetPlayerBools(player.SteamId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed))
+				if (!SetPlayerBools(player.UserId, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed))
 					failiures++;
 			return !(failiures > 0);
 		}
 		/// <summary>
 		/// For setting <see cref="PlayerStats"/>
-		/// <para>Returns false if <paramref name="steamID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// <para>Returns false if <paramref name="UserId"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
-		public static bool SetPlayerStats(string steamID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
+		public static bool SetPlayerStats(string UserId, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
-			if (AdminToolbox.ATPlayerDict.TryGetValue(steamID, out PlayerSettings settings))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(UserId, out PlayerSettings settings))
 			{
 				PlayerStats stats = settings.PlayerStats;
 				stats.Kills = Kills ?? stats.Kills;

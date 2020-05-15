@@ -13,10 +13,10 @@ namespace AdminToolbox.API.Extentions
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
-		private static AdminToolbox Plugin => AdminToolbox.plugin;
+		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
 		internal static bool GetIsJailed(this Player player)
-			=> AdminToolbox.ATPlayerDict.ContainsKey(player.SteamId) && AdminToolbox.ATPlayerDict[player.SteamId].isJailed;
+			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserId) && AdminToolbox.ATPlayerDict[player.UserId].isJailed;
 
 		public static bool IsInsideJail(this Player player)
 		{
@@ -30,12 +30,12 @@ namespace AdminToolbox.API.Extentions
 			return x > 7 || y > 5 || z > 7 ? false : true;
 		}
 
-		internal static string[] SteamIDsToArray(this List<Player> players)
+		internal static string[] UserIdsToArray(this List<Player> players)
 		{
 			string[] newArray = new string[players.Count];
 			for (int i = 0; i < players.Count; i++)
 			{
-				newArray[i] = players[i].SteamId;
+				newArray[i] = players[i].UserId;
 			}
 			return newArray;
 		}
@@ -49,8 +49,8 @@ namespace AdminToolbox.API.Extentions
 
 			return players.Length > 0 && Server.Round.Duration > 0
 				? players
-					.Where(p => p.TeamRole.Role != Role.UNASSIGNED
-					&& p.TeamRole.Role != Role.SPECTATOR
+					.Where(p => p.TeamRole.Role != Smod2.API.RoleType.UNASSIGNED
+					&& p.TeamRole.Role != Smod2.API.RoleType.SPECTATOR
 					&& !p.OverwatchMode
 					&& p.GetIsJailed()).ToArray()
 				: (new Player[0]);
@@ -70,7 +70,7 @@ namespace AdminToolbox.API.Extentions
 				{
 					if (string.IsNullOrEmpty(str))
 						continue;
-					if (str == player.SteamId)
+					if (str == player.UserId)
 						return true;
 					else if (player.GetUserGroup().Name != null && str == player.GetUserGroup().Name.Trim().ToUpper())
 						return true;
@@ -87,7 +87,7 @@ namespace AdminToolbox.API.Extentions
 			}
 		}
 
-		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.SteamId);
+		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserId);
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out string[] reply);
 
@@ -129,7 +129,7 @@ namespace AdminToolbox.API.Extentions
 		}
 
 		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
-			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.SteamId) ?? false;
+			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.UserId) ?? false;
 
 		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)
 		{
@@ -163,7 +163,7 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		internal static void Cleanup(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().SteamIDsToArray();
+			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().UserIdsToArray();
 			Dictionary<string, PlayerSettings> newDict = new Dictionary<string, PlayerSettings>(dict);
 			if (newDict.Count > 0)
 			{

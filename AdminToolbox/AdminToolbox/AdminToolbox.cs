@@ -23,13 +23,13 @@ namespace AdminToolbox
 		id = "rnen.admin.toolbox",
 		version = AT_Version + "-" + AT_Revision,
 		SmodMajor = 3,
-		SmodMinor = 6,
+		SmodMinor = 7,
 		SmodRevision = 0
 		)]
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "12";
+		internal const string AT_Revision = "13";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;
@@ -49,17 +49,17 @@ namespace AdminToolbox
 		#endregion
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="LogManager"/>
+		/// The plugin's instance of <see cref="LogManager"/>
 		/// </summary>
 		public static readonly LogManager logManager = new LogManager();
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="WarpManager"/>
+		/// The plugin's instance instance of <see cref="WarpManager"/>
 		/// </summary>
 		public static readonly WarpManager warpManager = new WarpManager();
 
 		/// <summary>
-		/// <see cref="AdminToolbox"/>s instance of <see cref="ATFileManager"/>
+		/// The plugin's instance instance of <see cref="ATFileManager"/>
 		/// </summary>
 		public static readonly ATFileManager atfileManager = new ATFileManager();
 
@@ -88,7 +88,7 @@ namespace AdminToolbox
 #endif
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing <see cref="AdminToolbox"/> settings on all players. Uses <see cref="Player.SteamId"/> as KEY
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserId"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 
@@ -102,7 +102,7 @@ namespace AdminToolbox
 		/// </summary>
 		public static int RoundCount { get; internal set; } = 0;
 
-		internal static AdminToolbox plugin;
+		internal static AdminToolbox singleton;
 
 		/// <summary>
 		/// Called when <see cref="AdminToolbox"/> gets disabled
@@ -115,7 +115,7 @@ namespace AdminToolbox
 		/// </summary>
 		public override void OnEnable()
 		{
-			plugin = this;
+			singleton = this;
 			ATFileManager.WriteVersionToFile();
 			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 		}
@@ -132,10 +132,10 @@ namespace AdminToolbox
 
 		internal void RegisterEvents()
 		{
-			this.AddEventHandlers(new RoundEventHandler(this), Priority.Normal);
-			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this), Priority.Normal);
-			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this), Priority.Normal);
-			this.AddEventHandlers(new MyMiscEvents(this), Priority.Normal);
+			this.AddEventHandlers(new RoundEventHandler(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this));
+			this.AddEventHandlers(new MyMiscEvents(this));
 			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
 			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
 		}
@@ -223,7 +223,7 @@ namespace AdminToolbox
 			#endregion
 			#region Intercom
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What ServerRank can use the Intercom to your specified settings"));
-			this.AddConfig(new ConfigSetting("admintoolbox_intercom_steamid_blacklist", new string[0], true, "Blacklist of steamID's that cannot use the intercom"));
+			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserId_blacklist", new string[0], true, "Blacklist of UserId's that cannot use the intercom"));
 			this.AddConfig(new ConfigSetting("admintoolbox_intercomlock", false, true, "If set to true, locks the command for all non-whitelist players"));
 			#endregion
 
@@ -232,7 +232,6 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-
 		}
 
 
@@ -260,7 +259,7 @@ namespace AdminToolbox
 			{
 				foreach (Player player in players)
 				{
-					if (player != null && !string.IsNullOrEmpty(player.SteamId))
+					if (player != null && !string.IsNullOrEmpty(player.UserId))
 					{
 						AddToPlayerDict(player);
 					}
@@ -270,20 +269,21 @@ namespace AdminToolbox
 		private static void AddToPlayerDict(Player player)
 		{
 			if (player != null && player is Player p &&
-				!string.IsNullOrEmpty(p.SteamId) && !ATPlayerDict.ContainsKey(p.SteamId))
+				!string.IsNullOrEmpty(p.UserId) && !ATPlayerDict.ContainsKey(p.UserId))
 			{
-				ATPlayerDict.Add(p.SteamId, new PlayerSettings(p.SteamId));
+				ATPlayerDict.Add(p.UserId, new PlayerSettings(p.UserId));
 			}
 		}
 
 		/// <summary>
-		/// Debugs messages in <see cref="AdminToolbox"/> when DEBUG is defined
+		/// Debugs messages when <see cref="DebugMode"/> is enabled
 		/// </summary>
 		public new void Debug(string message)
 		{
 			if (DebugMode)
 				this.Info(message);
 		}
+
 	}
 
 }

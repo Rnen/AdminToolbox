@@ -8,7 +8,7 @@ namespace AdminToolbox.API
 	public class PlayerInfo
 	{
 		public string LastNickname { get; internal set; } = "Unknown";
-		public string SteamID { get; internal set; } = "00000000000000000";
+		public string UserId { get; internal set; } = "00000000000000000";
 		public bool DNT { get; internal set; } = false;
 
 		public string FirstJoin { get; set; } = "";
@@ -34,7 +34,7 @@ namespace AdminToolbox.API
 		public PlayerStats() { }
 	}
 	/// <summary>
-	/// <see cref ="PlayerSettings"/> is <see cref ="AdminToolbox"/>'s settings <see cref="Class"/>
+	/// <see cref ="PlayerSettings"/> is <see cref ="AdminToolbox"/>'s settings
 	/// <para>Used in <see cref="AdminToolbox.ATPlayerDict"/></para>
 	/// </summary>
 	public class PlayerSettings
@@ -54,22 +54,23 @@ namespace AdminToolbox.API
 		public PlayerStats PlayerStats = new PlayerStats();
 		public PlayerInfo PlayerInfo = new PlayerInfo();
 
-		internal int
-			previousHealth = 100,
+		internal float
+			previousHealth = 100;
+		internal int 
 			prevAmmo5 = 0,
 			prevAmmo7 = 0,
 			prevAmmo9 = 0;
 		public Vector DeathPos = Vector.Zero;
 		internal Vector originalPos = Vector.Zero;
-		internal Role previousRole = Role.CLASSD;
+		internal Smod2.API.RoleType previousRole = Smod2.API.RoleType.CLASSD;
 		internal List<SMItem> playerPrevInv = new List<SMItem>();
 
-		internal ItemType InfiniteItem = ItemType.NULL;
+		internal Smod2.API.ItemType InfiniteItem = Smod2.API.ItemType.NULL;
 
 		public DateTime JailedToTime { get; internal set; } = DateTime.Now;
 		public DateTime JoinTime { get; internal set; } = DateTime.Now;
 
 
-		public PlayerSettings(string steamID) => this.PlayerInfo.SteamID = steamID;
+		public PlayerSettings(string UserId) => this.PlayerInfo.UserId = UserId;
 	}
 }
