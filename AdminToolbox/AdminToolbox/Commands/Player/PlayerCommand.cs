@@ -63,7 +63,7 @@ namespace AdminToolbox.Command
 					//Calculating remaining jail time
 					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
 
-					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : (myPlayer.TeamRole.Role == Smod2.API.RoleType.SCP_457 ? Smod2.API.RoleType.UNASSIGNED : myPlayer.TeamRole.Role) + "";
+					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : Smod2.API.RoleType.UNASSIGNED + "";
 					string _roleColor = myPlayer.GetUserGroup().Color ?? "default";
 					string _serverRole = myPlayer.GetRankName() ?? "";
 
