@@ -29,7 +29,7 @@ namespace AdminToolbox
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "14";
+		internal const string AT_Revision = "15";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;

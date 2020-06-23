@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using Smod2.API;
 
+using SMRoleType = Smod2.API.RoleType;
+using SMItemType = Smod2.API.ItemType;
 
 namespace AdminToolbox.API
 {
@@ -12,15 +14,15 @@ namespace AdminToolbox.API
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
 		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.Role.UNASSIGNED"/></para>
 		/// </summary>
-		public static bool TryParseRole(int roleID, out Smod2.API.RoleType role)
+		public static bool TryParseRole(int roleID, out SMRoleType role)
 		{
-			role = Smod2.API.RoleType.UNASSIGNED;
-			int[] validRoles = Enum.GetValues(typeof(Role)).Cast<int>().ToArray();
+			role = SMRoleType.UNASSIGNED;
+			int[] validRoles = Enum.GetValues(typeof(RoleType)).Cast<int>().ToArray();
 			if (!validRoles.Contains(roleID))
 				return false;
 			else
 			{
-				role = (Smod2.API.RoleType)roleID;
+				role = (SMRoleType)roleID;
 				return true;
 			}
 		}
@@ -30,15 +32,15 @@ namespace AdminToolbox.API
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
 		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.ItemType.NULL"/></para>
 		/// </summary>
-		public static bool TryParseItem(int itemID, out Smod2.API.ItemType itemType)
+		public static bool TryParseItem(int itemID, out SMItemType itemType)
 		{
-			itemType = Smod2.API.ItemType.NULL;
-			int[] validItems = Enum.GetValues(typeof(Smod2.API.ItemType)).Cast<int>().ToArray();
+			itemType = SMItemType.NULL;
+			int[] validItems = Enum.GetValues(typeof(SMItemType)).Cast<int>().ToArray();
 			if (!validItems.Contains(itemID))
 				return false;
 			else
 			{
-				itemType = (Smod2.API.ItemType)itemID;
+				itemType = (SMItemType)itemID;
 				return true;
 			}
 		}
@@ -48,14 +50,14 @@ namespace AdminToolbox.API
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
 		/// <para>Tries to cast to <see cref="int"/> first, then compares names</para>
 		/// </summary>
-		public static bool TryParseItem(string item, out Smod2.API.ItemType itemType)
+		public static bool TryParseItem(string item, out SMItemType itemType)
 		{
 			if (int.TryParse(item, out int x))
 				return TryParseItem(x, out itemType);
 
-			itemType = Smod2.API.ItemType.NULL;
+			itemType = SMItemType.NULL;
 
-			foreach (Smod2.API.ItemType i in Enum.GetValues(typeof(Smod2.API.ItemType)))
+			foreach (SMItemType i in Enum.GetValues(typeof(SMItemType)))
 			{
 				if (i.ToString().ToUpper().Contains(item.ToUpper()))
 				{

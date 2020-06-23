@@ -26,23 +26,23 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType spesifiedRole))
+							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType specifiedRole))
 							{
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
 									Vector originalPos = pl.GetPosition();
 									if (pl.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
-										pl.ChangeRole(spesifiedRole, true, true);
+										pl.ChangeRole(specifiedRole, true, true);
 									else
 									{
-										pl.ChangeRole(spesifiedRole, true, false);
+										pl.ChangeRole(specifiedRole, true, false);
 										pl.Teleport(originalPos, true);
 									}
 									pl.SetHealth(pl.TeamRole.MaxHP);
 									playerNum++;
 								}
-								return new string[] { playerNum + " " + (playerNum > 1 ? "roles" : "role") + " set to " + spesifiedRole };
+								return new string[] { playerNum + " " + (playerNum > 1 ? "roles" : "role") + " set to " + specifiedRole };
 							}
 							else
 							{
