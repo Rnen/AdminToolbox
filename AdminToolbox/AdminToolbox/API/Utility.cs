@@ -8,20 +8,29 @@ namespace AdminToolbox.API
 	public static class Utility
 	{
 		/// <summary>
-		/// Safely getting a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
+		/// Safely getting a <see cref="Smod2.API.RoleType"/> from an <see cref="int"/>. 
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.Role.UNASSIGNED"/></para>
+		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.RoleType.UNASSIGNED"/></para>
 		/// </summary>
 		public static bool TryParseRole(int roleID, out Smod2.API.RoleType role)
 		{
 			role = Smod2.API.RoleType.UNASSIGNED;
-			int[] validRoles = Enum.GetValues(typeof(Role)).Cast<int>().ToArray();
-			if (!validRoles.Contains(roleID))
-				return false;
-			else
+			try
 			{
-				role = (Smod2.API.RoleType)roleID;
-				return true;
+				int[] validRoles = Enum.GetValues(typeof(Smod2.API.RoleType)).Cast<int>().ToArray();
+				if (!validRoles.Contains(roleID))
+					return false;
+				else
+				{
+					role = (Smod2.API.RoleType)roleID;
+					return true;
+				}
+			}
+			catch (Exception e)
+			{
+				AdminToolbox.singleton.Info("AT " + AdminToolbox.AT_Version + "-" + AdminToolbox.AT_Revision + 
+					"\nSMOD " + Smod2.PluginManager.GetSmodVersion() + "-" + Smod2.PluginManager.GetSmodBuild() + "\n" + e);
+				return false;
 			}
 		}
 
