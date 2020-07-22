@@ -1,62 +1,58 @@
-﻿using Smod2.Commands;
+using System;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class TutorialCommand : ICommandHandler
+	using API;
+	using API.Extentions;
+	public class TutorialCommand : ICommandHandler
 	{
-		public string GetCommandDescription()
-		{
-			return "Sets player to TUTORIAL";
-		}
+		private Server Server => PluginManager.Manager.Server;
 
-		public string GetUsage()
-		{
-			return "(TUT / TUTORIAL) [PLAYER / *]";
-		}
+		public string GetCommandDescription() => "Sets player to TUTORIAL";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER / *>";
+
+		public static readonly string[] CommandAliases = new string[] { "TUT", "TUTORIAL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Server server = PluginManager.Manager.Server;
-			if (args.Length > 0)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+				Player[] players = new Player[0];
+				if (args.Length > 0 && Utility.AllAliasWords.Contains(args[0].ToUpper()))
 				{
-					if (args.Length > 1)
-					{
-						if (Int32.TryParse(args[1], out int j))
-						{
-							int playerNum = 0;
-							foreach (Player pl in server.GetPlayers())
-							{
-								pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
-								playerNum++;
-							}
-							if (playerNum > 1)
-								return new string[] { playerNum + " roles set to " + Role.TUTORIAL };
-							else
-								return new string[] { playerNum + " role set to " + Role.TUTORIAL };
-						}
-						else
-							return new string[] { "Not a valid number!" };
-					}
-					else
-					{
-						foreach (Player pl in server.GetPlayers()) { pl.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true); }
-						return new string[] { "Changed all players to " + Role.TUTORIAL };
-					}
+					players = Server.GetPlayers().ToArray();
+					if (players.Length < 1)
+						return new string[] { "Server is empty!", GetUsage() };
 				}
-				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				Vector originalPos = myPlayer.GetPosition();
-				myPlayer.ChangeRole(Role.TUTORIAL, spawnTeleport: false, removeHandcuffs: true);
-				myPlayer.Teleport(originalPos, true);
-				return new string[] { "Set " + myPlayer.Name + " to " + Role.TUTORIAL };
+				else
+				{
+					Player p = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : sender as Player;
+					if (p == null)
+						return new string[] { "Couldn't get player: " + args[0] };
+					players = new Player[] { p };
+				}
+				if (players.Length > 0)
+				{
+					foreach (Player pl in players)
+					{
+						if (pl == null) continue;
+						Vector originalPos2 = pl.GetPosition();
+						Vector newPos2 = pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR ? AdminToolbox.WarpVectorDict.TryGetVector("tutorial", out Vector vector2) ? vector2 : null : originalPos2;
+						pl.ChangeRole(Smod2.API.RoleType.TUTORIAL, spawnTeleport: newPos2 == null, removeHandcuffs: true);
+						if (newPos2 != null)
+							AdminToolbox.waitForTeleports.Add(new WaitForTeleport { Player = pl, Pos = newPos2, DateTime = DateTime.Now.AddSeconds(1) });
+					}
+					return new string[] { $"Set {(players.Length > 1 ? players.Length.ToString() + " players roles " : (players?[0]?.Name ?? "1 player") + "'s role ")}) to {Smod2.API.RoleType.TUTORIAL}" };
+				}
+				else
+					return new string[] { GetUsage() };
 			}
 			else
-				return new string[] { GetUsage() };
+				return deniedReply;
 		}
 	}
 }

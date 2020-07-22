@@ -1,4 +1,4 @@
-﻿using System.Resources;
+using System.Resources;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -8,7 +8,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("AdminToolbox")]
 [assembly: AssemblyDescription("Advanced Admin tools")]
-[assembly: AssemblyConfiguration("")]
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug Version")]
+#else
+[assembly: AssemblyConfiguration("Release")]
+#endif
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AdminToolbox")]
 [assembly: AssemblyCopyright("Copyright Rnen ©  2018 (CC BY)")]
@@ -33,7 +37,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(AdminToolbox.AdminToolbox.assemblyInfoVersion)]
-[assembly: AssemblyFileVersion(AdminToolbox.AdminToolbox.assemblyInfoVersion)]
+[assembly: AssemblyVersion(AdminToolbox.AdminToolbox.AT_Version + "." + AdminToolbox.AdminToolbox.AT_Revision)]
+[assembly: AssemblyFileVersion(AdminToolbox.AdminToolbox.AT_Version + "." + AdminToolbox.AdminToolbox.AT_Revision)]
 [assembly: NeutralResourcesLanguage("en")]
 

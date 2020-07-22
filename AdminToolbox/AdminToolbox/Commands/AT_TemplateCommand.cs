@@ -1,36 +1,41 @@
-﻿using Smod2.Commands;
+using System.Collections.Generic;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class AT_TemplateCommand : ICommandHandler
+	public class AT_TemplateCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
 
 		public AT_TemplateCommand(AdminToolbox plugin) => this.plugin = plugin;
 
-		public string GetCommandDescription() => "";
-
-		public string GetUsage() => "";
+		public string GetCommandDescription() => "This is a description";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
+		public static readonly string[] CommandAliases = new string[] { "TEMPLATE", "TEMPLATE2" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Player caller = (sender is Player _p) ? _p : null;
+			// Gets the caller as a "Player" object
+			Player caller = sender as Player;
 
 			if (args.Length > 0)
 			{
 				//Get player from first arguement of OnCall
-				Player targetPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-				//If player could not be found, return
+				Player targetPlayer = Server.GetPlayers(args[0]).FirstOrDefault();
+
+				//If player could not be found, return reply to command user
 				if (targetPlayer == null) { return new string[] { "Could not find player: " + args[0] }; ; }
 
-				//Adds player(s) to the AdminToolbox settings
+				//Adds player(s) to the AdminToolbox player dictionary
 				AdminToolbox.AddMissingPlayerVariables(new List<Player> { targetPlayer, caller });
+
 				//Do whatever with the found player
 				return new string[] { "We did something to player: " + targetPlayer.Name + "!" };
 			}

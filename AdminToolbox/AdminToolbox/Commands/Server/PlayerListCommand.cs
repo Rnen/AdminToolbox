@@ -1,38 +1,42 @@
-﻿using Smod2.Commands;
+using System.Collections.Generic;
 using Smod2;
 using Smod2.API;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class PlayerListCommand : ICommandHandler
+	using API.Extentions;
+	public class PlayerListCommand : ICommandHandler
 	{
-		public string GetCommandDescription()
-		{
-			return "Lists current players to server console";
-		}
+		private Server Server => PluginManager.Manager.Server;
 
-		public string GetUsage()
-		{
-			return "PLAYERS";
-		}
+		public string GetCommandDescription() => "Lists current players to server console";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
+
+		public static readonly string[] CommandAliases = new string[] { "PLAYERS", "PLAYERLIST", "PLIST" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Server server = PluginManager.Manager.Server;
-			if (server.NumPlayers - 1 < 1) { return new string[] { "No players" }; }
-			string str = server.NumPlayers - 1 + " - Players in server: \n";
-			List<string> myPlayerList = new List<string>();
-			foreach (Player pl in server.GetPlayers())
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				myPlayerList.Add(pl.TeamRole.Role + "(" + (int)pl.TeamRole.Role + ")" + "  " + pl.Name + "  IP: " + pl.IpAddress + " STEAMID: " + pl.SteamId + "\n");
+				Player[] players = Server.GetPlayers().ToArray();
+
+				if (players.Length < 1) { return new string[] { "No players" }; }
+				string str = players.Length + " - Players in server: \n";
+				List<string> myPlayerList = new List<string>();
+				foreach (Player pl in players)
+				{
+					myPlayerList.Add(pl.TeamRole.Role + "(" + (int)pl.TeamRole.Role + ")" + "  " + pl.Name + "  IP: " + pl.IpAddress + " USERID: " + pl.UserId + "\n");
+				}
+				myPlayerList.Sort();
+				foreach (string item in myPlayerList)
+				{
+					str += "\n - " + item;
+				}
+				return new string[] { str };
 			}
-			myPlayerList.Sort();
-			foreach (var item in myPlayerList)
-			{
-				str += "\n - " + item;
-			}
-			return new string[] { str };
+			else
+				return deniedReply;
 		}
 	}
 }

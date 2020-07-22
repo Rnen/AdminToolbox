@@ -9,12 +9,13 @@ using AdminToolbox.API;
 
 namespace AdminToolbox.Command
 {
-	class TimedCommand : ICommandHandler
+	public class TimedCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
 
 		public TimedCommand(AdminToolbox plugin) => this.plugin = plugin;
 
@@ -54,7 +55,7 @@ namespace AdminToolbox.Command
 					value = Math.Abs(value);
 					valueType = Regex.Replace(arg, @"\d", string.Empty).ToUpper().Trim();
 
-					plugin.AtInfo("ValueType: " + valueType + " Value: " + value);
+					plugin.Debug("ValueType: " + valueType + " Value: " + value);
 
 					switch (valueType)
 					{
@@ -63,41 +64,41 @@ namespace AdminToolbox.Command
 						case "MILLISEC":
 						case "MILLISECOND":
 						case "MILLISECONDS":
-							plugin.AtInfo("Added: MS" + value);
+							plugin.Debug("Added: MS" + value);
 							restartTime = restartTime.AddMilliseconds(value);
 							break;
 						case "S":
 						case "SECOND":
 						case "SECONDS":
-							plugin.AtInfo("Added: S" + value);
+							plugin.Debug("Added: S" + value);
 							restartTime = restartTime.AddSeconds(value);
 							break;
 						case "M":
 						case "MINUTE":
 						case "MINUTES":
-							plugin.AtInfo("Added: M" + value);
+							plugin.Debug("Added: M" + value);
 							restartTime = restartTime.AddMinutes(value);
 							break;
 						case "H":
 						case "HOUR":
 						case "HOURS":
-							plugin.AtInfo("Added: H" + value);
+							plugin.Debug("Added: H" + value);
 							restartTime = restartTime.AddHours(value);
 							break;
 						case "D":
 						case "DAY":
 						case "DAYS":
-							plugin.AtInfo("Added: D" + value);
+							plugin.Debug("Added: D" + value);
 							restartTime = restartTime.AddDays(value);
 							break;
 						case "Y":
 						case "YEAR":
 						case "YEARS":
-							plugin.AtInfo("Added: Y" + value);
+							plugin.Debug("Added: Y" + value);
 							restartTime = restartTime.AddYears(value);
 							break;
 						default:
-							plugin.AtInfo("Default case for: " + valueType);
+							plugin.Debug("Default case for: " + valueType);
 							break;
 					}
 				}

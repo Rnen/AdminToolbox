@@ -1,4 +1,5 @@
-﻿using Smod2;
+using System.Linq;
+using Smod2;
 using Smod2.API;
 
 namespace AdminToolbox.API
@@ -25,11 +26,13 @@ namespace AdminToolbox.API
 			else if (long.TryParse(args, out long sID))
 			{
 				foreach (Player pl in Server.GetPlayers())
-					if (pl.SteamId == sID.ToString())
+					if (pl.UserId == sID.ToString())
 						return pl;
 			}
 			else
 			{
+				return Server.GetPlayers(args.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
+				/*
 				//Takes a string and finds the closest player from the playerlist
 				int maxNameLength = 31, LastnameDifference = 31;
 				string str1 = args.ToLower();
@@ -50,7 +53,7 @@ namespace AdminToolbox.API
 						{
 							str2 += "z";
 						}
-						int nameDifference = API.LevenshteinDistance.Compute(str1, str2);
+						int nameDifference = LevenshteinDistance.Compute(str1, str2);
 						if (nameDifference < LastnameDifference)
 						{
 							LastnameDifference = nameDifference;
@@ -58,6 +61,7 @@ namespace AdminToolbox.API
 						}
 					}
 				}
+				*/
 			}
 			return playerOut;
 		}

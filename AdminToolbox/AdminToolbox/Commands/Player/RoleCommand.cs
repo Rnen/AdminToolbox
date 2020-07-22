@@ -1,91 +1,87 @@
-﻿using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class RoleCommand : ICommandHandler
-	{
-		public string GetCommandDescription()
-		{
-			return "Sets player to (ROLEID)";
-		}
+	using API;
+	using API.Extentions;
 
-		public string GetUsage()
-		{
-			return "ROLE [PLAYER] [ROLEID]";
-		}
+	public class RoleCommand : ICommandHandler
+	{
+		private Server Server => PluginManager.Manager.Server;
+		public string GetCommandDescription() => "Sets player to specified (ROLE-ID)";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] [ROLE-ID]";
+
+		public static readonly string[] CommandAliases = new string[] { "ROLE", "ROLECHANGE" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			AdminToolbox.AddMissingPlayerVariables();
-			Server server = PluginManager.Manager.Server;
-			if (args.Length > 0)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (args[0].ToLower() == "all" || args[0].ToLower() == "*")
+				if (args.Length > 0)
 				{
-					if (args.Length > 1)
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
-						if (Int32.TryParse(args[1], out int j))
+						if (args.Length > 1)
 						{
-							int playerNum = 0;
-							foreach (Player pl in server.GetPlayers())
+							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType spesifiedRole))
 							{
-								Vector originalPos = pl.GetPosition();
-								if (pl.TeamRole.Role == Role.UNASSIGNED || pl.TeamRole.Role == Role.SPECTATOR)
-									pl.ChangeRole((Role)j, true, true);
-								else
+								int playerNum = 0;
+								foreach (Player pl in Server.GetPlayers())
 								{
-									pl.ChangeRole((Role)j, true, false);
-									pl.Teleport(originalPos,true);
+									Vector originalPos = pl.GetPosition();
+									if (pl.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
+										pl.ChangeRole(spesifiedRole, true, true);
+									else
+									{
+										pl.ChangeRole(spesifiedRole, true, false);
+										pl.Teleport(originalPos, true);
+									}
+									pl.SetHealth(pl.TeamRole.MaxHP);
+									playerNum++;
 								}
-								pl.SetHealth(pl.TeamRole.MaxHP);
-								playerNum++;
+								return new string[] { playerNum + " " + (playerNum > 1 ? "roles" : "role") + " set to " + spesifiedRole };
 							}
-							if (playerNum > 1)
-								return new string[] { playerNum + " roles set to " + (Role)j };
 							else
-								return new string[] { playerNum + " role set to " + (Role)j };
+							{
+								return new string[] { $"\"{args[1]}\" is not a valid role-ID number!" };
+							}
 						}
 						else
 						{
-							return new string[] { "Not a valid ID number!" };
+							return new string[] { GetUsage() };
 						}
+					}
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
+					if (args.Length > 1)
+					{
+						if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType spesifiedRole))
+						{
+							TeamRole oldRole = myPlayer.TeamRole;
+							Vector originalPos = myPlayer.GetPosition();
+							bool tele = myPlayer.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || myPlayer.TeamRole.Role == Smod2.API.RoleType.SPECTATOR;
+							myPlayer.ChangeRole(spesifiedRole, true, tele);
+							if (tele)
+								myPlayer.Teleport(originalPos, true);
+							myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
+							return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + spesifiedRole };
+						}
+						else
+							return new string[] { "Not a valid ID number!" };
 					}
 					else
 					{
 						return new string[] { GetUsage() };
 					}
 				}
-				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				if (args.Length > 1)
-				{
-					if (Int32.TryParse(args[1], out int j))
-					{
-						TeamRole oldRole = myPlayer.TeamRole;
-						Vector originalPos = myPlayer.GetPosition();
-						if (myPlayer.TeamRole.Role == Role.UNASSIGNED || myPlayer.TeamRole.Role == Role.SPECTATOR)
-							myPlayer.ChangeRole((Role)j, true, true);
-						else
-						{
-							myPlayer.ChangeRole((Role)j, true, false);
-							myPlayer.Teleport(originalPos,true);
-						}
-						myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
-						return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + (Role)j };
-					}
-					else
-						return new string[] { "Not a valid ID number!" };
-				}
 				else
-				{
 					return new string[] { GetUsage() };
-				}
 			}
 			else
-				return new string[] { GetUsage() };
+				return deniedReply;
 		}
 	}
 }

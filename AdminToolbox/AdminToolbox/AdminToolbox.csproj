@@ -24,6 +24,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>
     </DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -35,14 +36,15 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>..\Builds\AdminToolbox.xml</DocumentationFile>
     <DebugSymbols>false</DebugSymbols>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=11.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\Builds\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -50,9 +52,9 @@
       <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Smod2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Smod2, Version=3.6.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Smod2.dll</HintPath>
+      <HintPath>..\Builds\Smod2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -67,10 +69,6 @@
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.Networking.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
@@ -88,12 +86,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\ATWeb.cs" />
+    <Compile Include="API\DiscordWebhook.cs" />
     <Compile Include="API\ExtentionMethods.cs" />
     <Compile Include="API\GetPlayerFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerSettings.cs" />
-    <Compile Include="API\ScheduledCommandCall.cs" />
-    <Compile Include="API\ScheduledRestart.cs" />
+    <Compile Include="API\SetPlayerVariables.cs" />
+    <Compile Include="API\Utility.cs" />
+    <Compile Include="API\WaitForTeleport.cs" />
+    <Compile Include="API\WarpPoint.cs" />
+    <Compile Include="Commands\Facility\ClosestDoorCommand.cs" />
+    <Compile Include="Commands\Player\InfiniteItemCommand.cs" />
+    <Compile Include="Commands\Player\GrenadeModeCommand.cs" />
+    <Compile Include="Commands\Player\LockDoorsCommand.cs" />
     <Compile Include="Commands\Player\ATBanCommand.cs" />
     <Compile Include="Commands\Player\GhostCommand.cs" />
     <Compile Include="Commands\Facility\IntercomLockCommand.cs" />
@@ -103,15 +108,14 @@
     <Compile Include="Commands\Player\InstantKillCommand.cs" />
     <Compile Include="Commands\Player\KillCommand.cs" />
     <Compile Include="Commands\Player\LockdownCommand.cs" />
-    <Compile Include="Commands\Facility\DoorCommand.cs" />
     <Compile Include="Commands\Server\ATColorCommand.cs" />
     <Compile Include="Commands\Facility\JailCommand.cs" />
     <Compile Include="Commands\Player\EmptyCommand.cs" />
     <Compile Include="Commands\Facility\SpeakCommand.cs" />
     <Compile Include="Commands\Server\AT_HelpCommand.cs" />
     <Compile Include="Commands\Server\ATCommand.cs" />
+    <Compile Include="Commands\Server\RespawnLockCommand.cs" />
     <Compile Include="Commands\Server\ServerStatsCommand.cs" />
-    <Compile Include="Commands\Server\TimedCommand.cs" />
     <Compile Include="Commands\Server\ServerCommand.cs" />
     <Compile Include="Commands\Server\RoundLockCommand.cs" />
     <Compile Include="Commands\Facility\WarpsCommand.cs" />
@@ -136,11 +140,13 @@
     <Compile Include="Events\PlayerDamageEvent.cs" />
     <Compile Include="Events\RoundEventHandler.cs" />
     <Compile Include="AdminToolbox.cs" />
-    <Compile Include="Managers\PlayerFile.cs" />
+    <Compile Include="Managers\PlayerFileEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\WarpManager.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) D:\SCP_SL_SERVER\sm_plugins</PostBuildEvent>

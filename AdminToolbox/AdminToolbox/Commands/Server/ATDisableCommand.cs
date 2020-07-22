@@ -1,34 +1,29 @@
-﻿using Smod2.Commands;
 using Smod2;
-using Smod2.API;
-using System.IO;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class ATDisableCommand : ICommandHandler
+	using API.Extentions;
+	public class ATDisableCommand : ICommandHandler
 	{
-		private AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
+		public ATDisableCommand(AdminToolbox plugin) => this.plugin = plugin;
 
-		public ATDisableCommand(AdminToolbox plugin)
-		{
-			this.plugin = plugin;
-		}
+		public string GetCommandDescription() => "Disables Admintoolbox";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 
-		public string GetCommandDescription()
-		{
-			return "Disables Admintoolbox";
-		}
-
-		public string GetUsage()
-		{
-			return "ATDISABLE";
-		}
+		public static readonly string[] CommandAliases = new string[] { "ATDISABLE" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			plugin.Info(sender + " ran the " + GetUsage() + " command!");
-			this.plugin.pluginManager.DisablePlugin(this.plugin);
-			return new string[] { "AdminToolbox Disabled" };
+			if (sender.IsPermitted(CommandAliases, true, out string[] deniedReply))
+			{
+				plugin.Info(sender + " ran the " + GetUsage() + " command!");
+				PluginManager.Manager.DisablePlugin(plugin);
+				return new string[] { "AdminToolbox Disabled" };
+			}
+			else
+				return deniedReply;
 		}
 	}
 }

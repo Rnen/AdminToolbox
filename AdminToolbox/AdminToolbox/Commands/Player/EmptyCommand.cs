@@ -1,86 +1,107 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using AdminToolbox.API;
+using Smod2;
+using Smod2.API;
+using Smod2.Commands;
+using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.Command
 {
-	class EmptyCommand : ICommandHandler
+	using API;
+	using API.Extentions;
+
+	public class EmptyCommand : ICommandHandler
 	{
 		private static Map Map => PluginManager.Manager.Server.Map;
 
 		public string GetCommandDescription() => "Empties the player's inventory";
-		public string GetUsage() => "E / EMPTY [Player] (ItemType Number / Delete) (Delete)";
-		
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [Player] (ItemType Number / Delete) <Delete>";
 
-		public string[] OnCall(ICommandSender sender, string[] args)
+		public static readonly string[] CommandAliases = new string[] { "EMPTY", "E" };
+
+		private readonly string[] deleteAliases = { "DELETE", "DEL", "D" };
+
+#warning EmptyCommand needs proper testing
+		public string[] OnCall(ICommandSender sender, string[] args) //=> new string[] { GetUsage() };
 		{
-			Server server = PluginManager.Manager.Server;
-			int max = Enum.GetValues(typeof(ItemType)).Cast<int>().Max(), 
-				min = Enum.GetValues(typeof(ItemType)).Cast<int>().Min() + 1;
-			if (args.Length > 0)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				if (myPlayer.TeamRole.Role == Role.UNASSIGNED) return new string[] { "Player not properly initialized!" };
-				if (myPlayer.TeamRole.Role == Role.SPECTATOR) return new string[] { "This can not be used on spectators!" };
-				AdminToolbox.AddMissingPlayerVariables(myPlayer);
+				Smod2.API.ItemType type = Smod2.API.ItemType.NULL;
+				Player player = null;
+				bool delete = false;
 
-				byte itemNumber = 0;
-				Vector pos = myPlayer.GetPosition(), rot = myPlayer.GetRotation();
-				string[] deleteAliases = { "delete", "del", "d" };
-				if (args.Length > 1 && deleteAliases.Contains(args[1].ToLower()))
+				foreach (string arg in args)
 				{
-					foreach (Smod2.API.Item item in myPlayer.GetInventory().Where(i => i.ItemType != ItemType.NULL))
-						 { item.Remove(); itemNumber++; }
-					foreach (int a in Enum.GetValues(typeof(AmmoType)))
-						myPlayer.SetAmmo((AmmoType)a, 0);
-					return new string[] { "Deleted " + itemNumber + " items from player " + myPlayer.Name + "'s inventory" };
-				}
-				else if (args.Length > 1 && byte.TryParse(args[1], out byte itemInt) && itemInt <= max && itemInt >= min)
-					if (args.Length > 2 && deleteAliases.Contains(args[2].ToLower()))
+					if (player == null && GetPlayerFromString.GetPlayer(arg) is Player p && p != null)
 					{
-						foreach (Smod2.API.Item item in myPlayer.GetInventory())
-							if ((byte)item.ItemType == itemInt) { item.Remove(); itemNumber++; }
-						return new string[] { "Deleted all \"" + Enum.GetName(typeof(ItemType), itemInt) + "\" items from player " + myPlayer.Name + "'s inventory" };
+						player = p;
+						continue;
 					}
-					else
+					if (int.TryParse(arg, out int itemNumber))
 					{
-						foreach (Smod2.API.Item item in myPlayer.GetInventory())
-							if ((byte)item.ItemType == itemInt) { item.Drop(); itemNumber++; }
-						return new string[] { "Dropped all \"" + Enum.GetName(typeof(ItemType), itemInt) + "\" items from player " + myPlayer.Name + "'s inventory" };
+						Utility.TryParseItem(itemNumber, out type);
+						continue;
 					}
-				else
-				{
-
-					foreach (Smod2.API.Item item in myPlayer.GetInventory().Where(i => i.ItemType != ItemType.NULL))
-						 { item.Drop(); itemNumber++; }
-					Map.SpawnItem(ItemType.DROPPED_5, pos, rot);
-					Map.SpawnItem(ItemType.DROPPED_7, pos, rot);
-					Map.SpawnItem(ItemType.DROPPED_9, pos, rot);
-					foreach (int a in Enum.GetValues(typeof(AmmoType)))
-						myPlayer.SetAmmo((AmmoType)a, 0);
-					return new string[] { "Dropped " + itemNumber + " items from player " + myPlayer.Name + "'s inventory" };
+					if (deleteAliases.Contains(arg.ToUpper()))
+					{
+						delete = true;
+						continue;
+					}
 				}
-			}
-			else if(sender is Player p && p != null)
-			{
-				int itemNumber = 0;
-				Vector pos = p.GetPosition(), rot = p.GetRotation();
-				foreach (Smod2.API.Item item in p.GetInventory().Where(i => i.ItemType != ItemType.NULL))
-				{ item.Drop(); itemNumber++; }
-				Map.SpawnItem(ItemType.DROPPED_5, pos, rot);
-				Map.SpawnItem(ItemType.DROPPED_7, pos, rot);
-				Map.SpawnItem(ItemType.DROPPED_9, pos, rot);
-				foreach (int a in Enum.GetValues(typeof(AmmoType)))
-					p.SetAmmo((AmmoType)a, 0);
-				return new string[] { "Dropped " + itemNumber + " items from player " + p.Name + "'s inventory" };
+				return DropItems(player ?? sender as Player, type, delete);
 			}
 			else
-				return new string[] { GetUsage() };
+				return deniedReply;
+		}
+
+
+		private string[] DropItems(Player player, Smod2.API.ItemType itemFilter = Smod2.API.ItemType.NULL, bool delete = false)
+		{
+			Smod2.API.ItemType ammoFlag = Smod2.API.ItemType.DROPPED_5 | Smod2.API.ItemType.DROPPED_7 | Smod2.API.ItemType.DROPPED_9;
+
+			if (player == null)
+				return new string[] { "Player not spesified!" };
+			if (player.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED)
+				return new string[] { "Player not properly initialized!" };
+			if (player.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
+				return new string[] { "This can not be used on spectators!" };
+
+			byte itemCount = 0;
+			Vector pos = player.GetPosition(), rot = player.GetRotation();
+
+			if (itemFilter == Smod2.API.ItemType.NULL || !ammoFlag.HasFlag(itemFilter))
+			{
+				foreach (SMItem playerItem in player.GetInventory())
+				{
+					if (playerItem.ItemType != Smod2.API.ItemType.NULL)
+						if (itemFilter == Smod2.API.ItemType.NULL || playerItem.ItemType == itemFilter)
+						{
+							if (delete)
+								playerItem.Remove();
+							else
+								playerItem.Drop();
+							itemCount++;
+						}
+				}
+
+
+			}
+
+			if (itemFilter == Smod2.API.ItemType.NULL || ammoFlag.HasFlag(itemFilter))
+			{
+				foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
+				{
+					Smod2.API.ItemType ammoItem = ammo == Smod2.API.AmmoType.DROPPED_5 ? Smod2.API.ItemType.DROPPED_5 : ammo == Smod2.API.AmmoType.DROPPED_7 ? Smod2.API.ItemType.DROPPED_7 : Smod2.API.ItemType.DROPPED_9;
+
+					if (itemFilter == Smod2.API.ItemType.NULL || ammoItem == itemFilter)
+					{
+						player.SetAmmo(ammo, 0);
+						if (!delete)
+							Map.SpawnItem(ammoItem, pos, rot);
+					}
+				}
+			}
+			return new string[] { delete ? "Deleted " : "Dropped (" + itemCount + ") items from player " + player.Name + "'s inventory" };
 		}
 	}
 }

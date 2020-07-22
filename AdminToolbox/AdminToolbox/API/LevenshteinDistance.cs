@@ -2,12 +2,12 @@
 
 namespace AdminToolbox.API
 {
-	internal static class LevenshteinDistance
+	public static class LevenshteinDistance
 	{
 		/// <summary>
 		/// Compute the distance between two <see cref="string"/>s.
 		/// </summary>
-		internal static int Compute(string s, string t)
+		public static int Compute(string s, string t)
 		{
 			int n = s.Length;
 			int m = t.Length;

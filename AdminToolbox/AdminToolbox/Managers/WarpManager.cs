@@ -1,153 +1,196 @@
-﻿using Smod2;
-using Smod2.Attributes;
-using Smod2.Events;
-using Smod2.EventHandlers;
-using Smod2.API;
-using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Unity;
-using UnityEngine;
+using Smod2;
 using Newtonsoft.Json;
 
 namespace AdminToolbox.Managers
 {
+	using System;
+	using API;
+
 	/// <summary>
 	/// Contains all Warp-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
 	public class WarpManager
 	{
+		private static AdminToolbox Plugin => AdminToolbox.singleton;
+
+		private static int Port => PluginManager.Manager.Server.Port;
+
+		private static string WarpPointsFolder => ATFileManager.GetFolderPath(Folder.Warps);
+
+		private static string WarpFilePath => WarpPointsFolder + "Global.txt";
+
 		internal readonly Dictionary<string, WarpPoint> presetWarps = new Dictionary<string, WarpPoint>()
 			{
-				{ "mtf",new WarpPoint("mtf", "The MTF Spawn", new Vector(181,994,-61)) },
-				{ "grass",new WarpPoint("grass", "Grasslands outside map", new Vector(237,999,17)) },
-				{ "ci",new WarpPoint("ci", "The Chaos Spawn", new Vector(10,989,-60)) },
-				{ "jail",new WarpPoint("jail", "The AdminToolbox Jail", new Vector(53,1020,-44)) },
-				{ "flat",new WarpPoint("flat", "Unreachable grass flatlands", new Vector(250,980,110)) },
-				{ "heli",new WarpPoint("heli", "MTF Heli outside map", new Vector(293,977,-62)) },
-				{ "car",new WarpPoint("car", "Chaos Car outside map", new Vector(-96,987,-59)) },
-				{ "escape", new WarpPoint("escape", "The Escape area", new Vector(179,996,27)) }
-			};
-		static readonly bool globalFiles = ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles_global", true);
+				{ "mtf",    new WarpPoint{ Name = "mtf", Description = "The MTF Spawn", Vector = new ATVector(181,994,-61) } },
+				{ "grass",  new WarpPoint{ Name = "grass", Description = "Grasslands outside map", Vector = new ATVector(237,999,17) } },
+				{ "ci",     new WarpPoint{ Name = "ci", Description = "The Chaos Spawn", Vector = new ATVector(10,989,-60) } },
+				{ "jail",   new WarpPoint{ Name = "jail", Description = "The AdminToolbox Jail", Vector = new ATVector(53,1020,-44) } },
+				{ "flat",   new WarpPoint{ Name = "flat", Description ="Unreachable grass flatlands", Vector = new ATVector(250,980,110) } },
+				{ "heli",   new WarpPoint{ Name = "heli", Description = "MTF Heli outside map", Vector = new ATVector(293,977,-62) } },
+				{ "car",    new WarpPoint{ Name = "car", Description = "Chaos Car outside map", Vector = new ATVector(-96,987,-59) } },
+				{ "escape", new WarpPoint{ Name = "escape", Description = "The Escape area", Vector = new ATVector(179,996,27) } },
+				{ "pocket", new WarpPoint{ Name = "pocket", Description = "The pocket dimention", Vector = new ATVector(0,-2000,0) } }
+		};
 
-		static int _port => PluginManager.Manager.Server.Port;
+		private void Debug(string message) => Plugin.Debug("[WARPMANAGER]: " + message);
 
-		static string ATFolder => AdminToolbox.logManager.GetFolderLocation();
-		static readonly string WarpPointsFolder = ATFolder + Path.DirectorySeparatorChar + "WarpPoints";
-		static readonly string WarpFilePath = WarpPointsFolder + Path.DirectorySeparatorChar + (globalFiles ? "Global"  : _port.ToString()) + ".txt";
 
-		private const char splitChar = ';';
-
-		void CheckAndCreateFolders()
+		/// <summary>
+		/// Refreshing the <see cref="AdminToolbox.WarpVectorDict"/> from <see cref="File"/>
+		/// </summary>
+		public void RefreshWarps()
 		{
-			if (!Directory.Exists(WarpPointsFolder))
-				Directory.CreateDirectory(WarpPointsFolder);
-			if (!File.Exists(WarpFilePath))
-				File.Create(WarpFilePath);
+			AdminToolbox.WarpVectorDict = this.ReadWarpsFromFile();
+			if (ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warps_remove_underground", true))
+			{
+				RemoveUndergroundWarps();
+				WriteWarpsToFile();
+			}
 		}
 
 		/// <summary>
-		/// Refreshing the <see cref="AdminToolbox.warpVectors"/> from <see cref="File"/>
+		/// Removes any WarpPoint below surface level
+		/// <para>Does not affect pocket dimention</para>
 		/// </summary>
-		public bool RefreshWarps()
+		public void RemoveUndergroundWarps()
 		{
+			if (AdminToolbox.WarpVectorDict.Count < 1)
+				return;
+			Debug("Removing underground warps");
+			List<string> keysToRemove = new List<string>();
+			foreach(KeyValuePair<string,WarpPoint> kp in AdminToolbox.WarpVectorDict)
+			{
+				if (kp.Value.Vector.Y < 900f && kp.Value.Vector.Y > -1900f)
+				{
+					keysToRemove.Add(kp.Key);
+				}
+			}
+			if (keysToRemove.Count > 0)
+			{
+				foreach (string key in keysToRemove)
+					AdminToolbox.WarpVectorDict.Remove(key);
+				Debug($"{string.Join(" ,", keysToRemove)} removed from warps due to being in the deletion zone.");
+			}
+		}
+
+		/// <summary>
+		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.WarpVectorDict"/> dictionary to file
+		/// </summary>
+		/// <param name="warpPoints">the array of WarpPoints to write, null writes the AT WarpVectorDict</param>
+		public bool WriteWarpsToFile(WarpPoint[] warpPoints = null)
+		{
+			Debug("Entered WriteToFile");
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+				return false;
 			try
 			{
-				AdminToolbox.warpVectors = new Dictionary<string, WarpPoint>(this.ReadWarpsFromFile());
-				return true;
+				
+				WarpPoint[] warparray = (warpPoints != null && warpPoints.Length > 0) ? warpPoints : AdminToolbox.WarpVectorDict.Values.ToArray();
+				if (warparray == null || warparray.Length < 1)
+				{
+					Debug("Warparray was null or empty, returning");
+					return false;
+				}
+				else
+				{
+					string jsonData = "";
+					Debug("Attempting JSON Serialize " + warparray.Length + " array items!");
+					foreach (WarpPoint w in warparray)
+						Debug(w.Name);
+					jsonData = JsonConvert.SerializeObject(warparray, Formatting.Indented);
+					//jsonData = JsonUtility.ToJson(warparray, true);
+					Debug("Finished JSON Serialize");
+					bool b1 = File.Exists(WarpFilePath);
+					Debug("File exists: " + b1);
+					Debug("Opening streamwriter");
+					using (StreamWriter streamWriter = new StreamWriter(WarpFilePath, false))
+					{
+						Debug("Streamwriter open, writing");
+						streamWriter.Write(jsonData);
+						Debug("Streamwriter wrote!");
+					}
+					Debug("Closing streamwriter");
+					if (!b1 && File.Exists(WarpFilePath))
+						Plugin.Info("Created a Warps savefile located at: \n" + WarpFilePath);
+				}
+				return File.Exists(WarpFilePath);
 			}
-			catch
+			catch (Exception e)
 			{
+				Plugin.Info("Failed during writing of warpfile!");
+				Debug("Error occured during writing to file: " + e.Message);
 				return false;
 			}
 		}
 
 		/// <summary>
-		/// Writes the current <see cref="WarpPoint"/>s in the <see cref="AdminToolbox.warpVectors"/> dictionary to file
-		/// </summary>
-		public bool WriteWarpsToFile()
-		{
-			WarpPoint[] warparray = AdminToolbox.warpVectors.Select(s => s.Value).ToArray();
-			if (warparray.Length == 0)
-				warparray = presetWarps.Select(t => t.Value).ToArray();
-			string jsonData = "";
-			if (!Directory.Exists(ATFolder))
-				Directory.CreateDirectory(ATFolder);
-			if (!Directory.Exists(WarpPointsFolder))
-				Directory.CreateDirectory(WarpPointsFolder);
-			//AdminToolbox.plugin.Info("Warparray length: " + warparray.Length);
-			if (warparray.ToList().Count > 0)
-			{
-				//AdminToolbox.plugin.Info("WarpFile path: " + WarpFilePath);
-				jsonData = JsonConvert.SerializeObject(warparray, Formatting.Indented);
-				//AdminToolbox.plugin.Info("JsonData: \n" + jsonData);
-				bool b1 = File.Exists(WarpFilePath);
-				using (StreamWriter streamWriter = new StreamWriter(WarpFilePath, false))
-				{
-					streamWriter.Write(jsonData);
-				}
-				if (!b1 && File.Exists(WarpFilePath))
-					AdminToolbox.plugin.Info("Created a Warps savefile located at: \n" + WarpFilePath);
-			}
-			return File.Exists(WarpFilePath);
-		}
-
-		/// <summary>
-		/// Reads from file and returns <see cref ="Dictionary{String, Vector}"/>
+		/// Reads from file and returns <see cref ="Dictionary{String, WarpPoint}"/> of (<see cref="string"/>,<see cref="WarpPoint"/>)
 		/// </summary>
 		public Dictionary<string, WarpPoint> ReadWarpsFromFile()
 		{
-			Dictionary<string, WarpPoint> newDict = new Dictionary<string, WarpPoint>();
-			string jsonData = "";
-
-			if ((!Directory.Exists(WarpPointsFolder) || !File.Exists(WarpFilePath)))
+			Debug("Entered ReadFromFile");
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+				return presetWarps;
+			try
 			{
-				if (!WriteWarpsToFile())
+				Dictionary<string, WarpPoint> newDict = new Dictionary<string, WarpPoint>();
+				string jsonData = "";
+
+				if (!File.Exists(WarpFilePath))
 				{
-					AdminToolbox.plugin.Info("Failed finding warp file at " + WarpFilePath);
-					return newDict;
+					Debug("File path not found, writing new file");
+					WriteWarpsToFile();
+					return presetWarps;
 				}
-			}
-			using (StreamReader streamReader = new StreamReader(WarpFilePath))
-			{
-				jsonData = streamReader.ReadToEnd();
-			}
-			WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
-			if (warpArray.Length > 0)
-			{
-				foreach (WarpPoint wp in warpArray)
-					newDict.Add(wp.Name.ToLower(), wp);
-			}
-			if (!newDict.Any(p => p.Key.ToLower() == "jail"))
-				newDict.Add("jail", new WarpPoint("jail", "AdminToolbox Jail", new Vector(53, 1020, -44)));
+				Debug("Reading file...");
+				using (StreamReader streamReader = new StreamReader(WarpFilePath))
+				{
+					jsonData = streamReader.ReadToEnd();
+				}
+				if (string.IsNullOrEmpty(jsonData) || (!jsonData.StartsWith("[")))
+				{
+					Debug("File data empty or not JSON");
+					return presetWarps;
+				}
+				Debug("Converting JSON to array");
+				WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
+				//WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
+				if (warpArray.Length > 0)
+				{
+					Debug("Populating dict with json array");
+					foreach (WarpPoint wp in warpArray)
+						newDict.Add(wp.Name.ToLower(), wp);
+				}
+				else
+				{
+					Debug("Array empty, returning preset");
+					return presetWarps;
+				}
 
-			return newDict;
+				if (!newDict.Any(p => p.Key.ToLower() == "jail"))
+				{
+					Debug("Jail Warp not found, adding");
+					newDict.Add("jail", presetWarps["jail"]);
+				}
+
+				if (!newDict.Any(p => p.Key.ToLower() == "pocket"))
+				{
+					Debug("Pocket warp not found, adding");
+					newDict.Add("pocket", presetWarps["pocket"]);
+				}
+
+				return newDict;
+			}
+			catch (Exception e)
+			{
+				Plugin.Info("Failed during reading of warpfiles!");
+				Debug("Error occured during reading of file: " + e.Message);
+				return presetWarps;
+			}
 		}
 
-	}
-	/// <summary>
-	/// WarpPoint class thats used by the <see cref="AdminToolbox"/> warpmanager system
-	/// </summary>
-	public class WarpPoint
-	{
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-		public string Name { get; set; }
-		public string Description { get; set; } = "";
-		public Vector Vector { get; set; }
-		public WarpPoint() { }
-		public WarpPoint(string name, string desc, Vector vector)
-		{
-			this.Name = name; this.Description = desc; this.Vector = vector;
-		}
-		public WarpPoint(WarpPoint wp)
-		{
-			this.Name = wp.Name; this.Description = wp.Description; this.Vector = wp.Vector;
-		}
-		public override string ToString()
-		{
-			return Name + " - " + Description + " - (" + Vector + ")";
-		}
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 	}
 }

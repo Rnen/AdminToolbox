@@ -1,22 +1,16 @@
-﻿using Smod2;
 using Smod2.API;
-using Smod2.Events;
 using Smod2.EventHandlers;
-using System.Collections.Generic;
-using System;
-using System.Collections;
-using UnityEngine;
-using System.Linq;
+using Smod2.Events;
 
 namespace AdminToolbox
 {
-	class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
+	internal class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
 	{
-		readonly AdminToolbox plugin;
+		private readonly AdminToolbox plugin;
 
 		public LateOnCheckRoundEndEvent(AdminToolbox plugin) => this.plugin = plugin;
 
-		ATRoundStats roundstats => AdminToolbox.roundStats;
+		private ATRoundStats Roundstats => AdminToolbox.roundStats;
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
@@ -24,7 +18,7 @@ namespace AdminToolbox
 				if (!AdminToolbox.roundStatsRecorded && ev.Round.Duration >= 3)
 				{
 					AdminToolbox.roundStatsRecorded = true;
-					roundstats.AddPoint(ev.Status);
+					Roundstats.AddPoint(ev.Status);
 				}
 		}
 	}

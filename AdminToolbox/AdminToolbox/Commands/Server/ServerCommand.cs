@@ -1,71 +1,59 @@
-﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class ServerCommand : ICommandHandler
+	using API.Extentions;
+	public class ServerCommand : ICommandHandler
 	{
-		static IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
 
-		public string GetCommandDescription()
-		{
-			return "Gets toolbox info about the server";
-		}
+		private Server Server => PluginManager.Manager.Server;
 
-		public string GetUsage()
-		{
-			return "SERVER / S / SERVERINFO";
-		}
+		public string GetCommandDescription() => "Gets toolbox info about the server";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
+
+		public static readonly string[] CommandAliases = new string[] { "SERVERINFO", "S", "SERVER", "SINFO" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			int minutes = (int)(Server.Round.Duration / 60), duration = Server.Round.Duration;
-			string timeString = string.Empty;
-			if (duration < 60)
-				timeString = duration + " seconds";
-			else
-				timeString = minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
-			bool isPlayer()
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (sender is Player pl)
-					if (!string.IsNullOrEmpty(pl.SteamId))
-						return true;
-					else
-						return false;
-				else
-					return false;
-			}
-			string ColoredBools(bool input)
-			{
-				if (isPlayer() && input)
-					return "<color=green>" + input + "</color>";
-				else if (isPlayer() && !input)
-					return "<color=red>" + input + "</color>";
-				else
-					return input.ToString();
-			}
-			int pCount = Server.GetPlayers().Count;
-			string pJail = string.Empty;
-			foreach (Player pl in API.JailHandler.GetJailedPlayers())
-				pJail += pl.Name + ", ";
-			if (string.IsNullOrEmpty(pJail))
-				pJail = "No jailed players!";
+				int minutes = Server.Round.Duration / 60, duration = Server.Round.Duration;
+				string timeString = (duration < 60) ? duration + " seconds" : minutes + " minutes, " + (duration - (minutes * 60)) + " seconds";
+				string pJail = "No jailed players!";
 
-			string x = "Server info: \n " +
-				"\n Server Name: " + Server.Name +
-				"\n - Server IP: " + Server.IpAddress + ":" + Server.Port +
-				"\n - PlayerCount: " + pCount +
-				"\n - AdminToolbox Toggables: " +
-				"\n     - isColored: " + ColoredBools(AdminToolbox.isColored) +
-				"\n     - IntercomLock: " + ColoredBools(AdminToolbox.intercomLock) +
-				"\n     - LockRound: " + ColoredBools(AdminToolbox.lockRound) +
-				"\n     - Jailed Players: " + pJail +
-				"\n - Stats:" +
-				"\n     - Round Number: " + AdminToolbox.RoundCount +
-				"\n     - Round Duration: " + timeString;
-			return new string[] { x };
+				Player[] players = Server.GetPlayers().ToArray();
+				Player[] jailedPlayers = Server.GetPlayers().ToArray().JailedPlayers();
+
+				if (jailedPlayers != null && jailedPlayers.Length > 0)
+				{
+					pJail = string.Empty;
+					foreach (Player pl in jailedPlayers)
+						pJail += pl.Name + ", ";
+				}
+
+				string x = "Server info: \n " +
+					"\n Server Name: " + Server.Name +
+					"\n - Server IP: " + Server.IpAddress + ":" + Server.Port +
+					"\n - PlayerCount: " + Server.NumPlayers +
+					"\n - AdminToolbox Toggables: " +
+					"\n     - isColored: " + AdminToolbox.isColored +
+					"\n     - IntercomLock: " + AdminToolbox.intercomLock +
+					"\n     - LockRound: " + AdminToolbox.lockRound +
+					"\n     - Jailed Players: " + pJail +
+					"\n - Stats:" +
+					"\n     - Round Number: " + AdminToolbox.RoundCount +
+					"\n     - Round Duration: " + timeString;
+
+				if (sender.IsPlayer())
+					return new string[] { x.Replace("True ", "<color=green>" + "True" + " </color>").Replace("False", "<color=red>" + "False" + "</color>") };
+				else
+					return new string[] { x };
+			}
+			else
+				return deniedReply;
 		}
 	}
 }

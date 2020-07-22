@@ -1,71 +1,70 @@
-﻿using Smod2.Commands;
-using Smod2;
-using Smod2.API;
 using System;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Linq;
+using Smod2.API;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class JailCommand : ICommandHandler
+	using API;
+	using API.Extentions;
+	public class JailCommand : ICommandHandler
 	{
-		public string GetCommandDescription()
-		{
-			return "Jails player for a (optional) specified time";
-		}
+		public string GetCommandDescription() => "Jails player for a <optional> specified time";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] <time>";
 
-		public string GetUsage()
-		{
-			return "JAIL [PLAYER] (time)";
-		}
+		public static readonly string[] CommandAliases = new string[] { "JAIL", "J" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			Server server = PluginManager.Manager.Server;
-			if (args.Length > 0)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
-				AdminToolbox.AddMissingPlayerVariables(myPlayer);
-				if (args.Length > 1)
+				if (args.Length > 0)
 				{
-					if (Int32.TryParse(args[1], out int x))
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
+					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					if (args.Length > 1)
 					{
-						if (x > 0)
+						if (int.TryParse(args[1], out int x))
 						{
-							API.JailHandler.SendToJail(myPlayer, DateTime.Now.AddSeconds(x));
-							return new string[] { "\"" + myPlayer.Name + "\" sent to jail for: " + x + " seconds." };
+							if (x > 0)
+							{
+								JailHandler.SendToJail(myPlayer, DateTime.Now.AddSeconds(x));
+								return new string[] { "\"" + myPlayer.Name + "\" sent to jail for: " + x + " seconds." };
+							}
+							else
+							{
+								JailHandler.SendToJail(myPlayer);
+								return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
+							}
+						}
+						else
+							return new string[] { args[1] + " is not a valid number!" };
+					}
+					else if (args.Length == 1)
+					{
+						if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.UserId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
+						if (AdminToolbox.ATPlayerDict[myPlayer.UserId].isJailed)
+						{
+							JailHandler.ReturnFromJail(myPlayer);
+							return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
 						}
 						else
 						{
-							API.JailHandler.SendToJail(myPlayer);
+							JailHandler.SendToJail(myPlayer);
 							return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
 						}
 					}
 					else
-						return new string[] { args[1] + " is not a valid number!" };
-				}
-				else if (args.Length == 1)
-				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.SteamId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
-					if (AdminToolbox.ATPlayerDict[myPlayer.SteamId].isJailed)
-					{
-						API.JailHandler.ReturnFromJail(myPlayer);
-						return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
-					}
-					else
-					{
-						API.JailHandler.SendToJail(myPlayer);
-						return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
-					}
+						return new string[] { GetUsage() };
+
 				}
 				else
 					return new string[] { GetUsage() };
-
 			}
 			else
-				return new string[] { GetUsage() };
+			{
+				return deniedReply;
+			}
 		}
 	}
 }

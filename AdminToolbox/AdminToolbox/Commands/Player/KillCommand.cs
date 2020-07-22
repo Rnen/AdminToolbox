@@ -1,60 +1,71 @@
-using Smod2.Commands;
+using System.Linq;
 using Smod2;
 using Smod2.API;
-using System.Linq;
-using System.Collections.Generic;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class KillCommand : ICommandHandler
+	using API;
+	using API.Extentions;
+	public class KillCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
-		Server Server => PluginManager.Manager.Server;
-		IConfigFile Config => ConfigManager.Manager.Config;
+
+		private Server Server => PluginManager.Manager.Server;
+
+		private IConfigFile Config => ConfigManager.Manager.Config;
 
 		public KillCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Kills the targeted player";
-		public string GetUsage() => "(KILL / SLAY) [PLAYER]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER]";
+
+		public static readonly string[] CommandAliases = new string[] { "SLAY", "KILL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if (Server.GetPlayers().Count < 1)
-				return new string[] { "The server is empty!" };
-
-			Player caller = (sender is Player send) ? send : null;
-			DamageType killType = (DamageType)Config.GetIntValue("admintoolbox_slaycommand_killtype", 0, true);
-
-			if (args.Length > 0)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (args[0].ToLower() == "all" || args[0].StartsWith("*"))
+				if (Server.GetPlayers().Count < 1)
+					return new string[] { "The server is empty!" };
+
+				Player caller = sender as Player;
+				DamageType killType = (DamageType)Config.GetIntValue("admintoolbox_slaycommand_killtype", 0, true);
+
+				if (args.Length > 0)
 				{
-					int playerNum = 0;
-					foreach(Player p in Server.GetPlayers().Where(pl => pl.PlayerId != (caller != null ? caller.PlayerId : -1) 
-					&& !pl.GetGodmode() &&
-					(AdminToolbox.ATPlayerDict.ContainsKey(pl.SteamId) ? !AdminToolbox.ATPlayerDict[pl.SteamId].godMode : true) 
-					&& pl.TeamRole.Team != Smod2.API.Team.SPECTATOR).ToList())
+					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
-						p.Kill(killType);
-						playerNum++;
+						int playerNum = 0;
+
+						foreach (Player p in Server.GetPlayers().Where(pl => pl.PlayerId != (caller != null ? caller.PlayerId : -1)
+						 && !pl.GetGodmode() &&
+						 (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserId) ? !AdminToolbox.ATPlayerDict[pl.UserId].godMode : true)
+						 && pl.TeamRole.Team != Smod2.API.TeamType.SPECTATOR))
+						{
+							p.Kill(killType);
+							playerNum++;
+						}
+						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
+						return new string[] { playerNum + " players has been slain!" };
 					}
-					if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
-					return new string[] { playerNum + " players has been slain!" };
-				}
-				Player myPlayer = API.GetPlayerFromString.GetPlayer(args[0]);
-				if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
-				if (myPlayer.TeamRole.Role != Role.SPECTATOR)
-				{
-					if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
-					myPlayer.Kill(killType);
-					return new string[] { myPlayer.Name + " has been slain!" };
+					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
+					if (myPlayer.TeamRole.Role != Smod2.API.RoleType.SPECTATOR)
+					{
+						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
+						myPlayer.Kill(killType);
+						return new string[] { myPlayer.Name + " has been slain!" };
+					}
+					else
+						return new string[] { myPlayer.Name + " is already dead!" };
 				}
 				else
-					return new string[] { myPlayer.Name + " is already dead!" };
+				{
+					return new string[] { GetUsage() };
+				}
 			}
 			else
-			{
-				return new string[] { GetUsage() };
-			}
+				return deniedReply;
 		}
 	}
 }

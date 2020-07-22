@@ -10,10 +10,11 @@ namespace AdminToolbox.API
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public class ScheduledRestart
 	{
-		IConfigFile Config => ConfigManager.Manager.Config;
-		Server Server => PluginManager.Manager.Server;
+		private IConfigFile Config => ConfigManager.Manager.Config;
 
-		readonly AdminToolbox plugin;
+		private Server Server => PluginManager.Manager.Server;
+
+		private readonly AdminToolbox plugin;
 
 		public bool enabled;
 		public DateTime restartTime;
@@ -51,9 +52,9 @@ namespace AdminToolbox.API
 			catch { throw new Exception(this.plugin.Details.name + " failed to save files!"); }
 			try
 			{
-				if (PlayerManager.singleton.players.Length > 0)
-					foreach (PlayerStats ps in PlayerManager.singleton.players.Where(p => p.GetComponent<PlayerStats>()).Select(s => s.GetComponent<PlayerStats>()))
-						ps.CallRpcRoundrestart();
+				//if (PlayerManager.singleton.players.Length > 0)
+					//foreach (PlayerStats ps in PlayerManager.singleton.players.Where(p => p.GetComponent<PlayerStats>()).Select(s => s.GetComponent<PlayerStats>()))
+						//ps.CallRpcRoundrestart();
 
 				foreach(Plugin pl in PluginManager.Manager.Plugins.Where(i => i.Details.id != this.plugin.Details.id))
 					PluginManager.Manager.DisablePlugin(pl);

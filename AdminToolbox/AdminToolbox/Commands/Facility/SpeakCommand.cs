@@ -1,53 +1,50 @@
-﻿using Smod2.Commands;
 using Smod2;
 using Smod2.API;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	class SpeakCommand : ICommandHandler
+	using API;
+	using API.Extentions;
+	public class SpeakCommand : ICommandHandler
 	{
-		Server Server => PluginManager.Manager.Server;
+		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription()
-		{
-			return "Sets specified player as intercom speaker";
-		}
+		public string GetCommandDescription() => "Sets specified player as intercom speaker";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserId]";
 
-		public string GetUsage()
-		{
-			return "SPEAK [PLAYERNAME/ID/STEAMID]";
-		}
+		public static readonly string[] CommandAliases = new string[] { "ATSPEAK", "ATINTERCOM", "AT-SPEAK" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if (Server.GetPlayers().Count > 0)
-			{
-				if (Server.Map.GetIntercomSpeaker() != null)
+			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
+				if (Server.GetPlayers().Count > 0)
 				{
-					Server.Map.SetIntercomSpeaker(null);
-					return new string[] { "Stopped Broadcast" };
-				}
-				Player myPlayer = (args.Length > 0) ? API.GetPlayerFromString.GetPlayer(args[0]) : null;
-				if (myPlayer == null && sender is Player sendingPlayer)
-					myPlayer = sendingPlayer;
-				if (myPlayer == null)
-					if (args.Length > 0)
-						return new string[] { "Couldn't get player: " + args[0] };
+					if (Server.Map.GetIntercomSpeaker() != null)
+					{
+						Server.Map.SetIntercomSpeaker(null);
+						return new string[] { "Stopped Broadcast" };
+					}
+					Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
+					if (myPlayer == null && sender is Player sendingPlayer)
+						myPlayer = sendingPlayer;
+					if (myPlayer == null)
+						if (args.Length > 0)
+							return new string[] { "Couldn't get player: " + args[0] };
+						else
+							return new string[] { GetUsage() };
+					if (myPlayer != null)
+					{
+						Server.Map.SetIntercomSpeaker(myPlayer);
+						return new string[] { "Intercom speaker set to " + myPlayer.Name };
+					}
 					else
 						return new string[] { GetUsage() };
-				if (myPlayer != null)
-				{
-					Server.Map.SetIntercomSpeaker(myPlayer);
-					return new string[] { "Intercom speaker set to " + myPlayer.Name };
 				}
 				else
-					return new string[] { GetUsage() };
-			}
+					return new string[] { "Server is empty!" };
 			else
-				return new string[] { "Server is empty!" };
+				return deniedReply;
 		}
 	}
 }
