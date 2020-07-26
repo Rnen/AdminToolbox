@@ -297,8 +297,11 @@ namespace AdminToolbox.Managers
 						if (!Path.GetFileName(files[i]).Contains('@'))
 						{
 							x++;
-							AdminToolbox.singleton.Debug(files[i].Substring(0, files[i].Length - 4) + "@steam.txt");
-							File.Move(files[i], files[i].Substring(0, files[i].Length - 4) + "@steam.txt");
+							string _newpath = files[i].Substring(0, files[i].Length - 4) + "@steam.txt";
+							AdminToolbox.singleton.Debug(_newpath);
+							if (File.Exists(_newpath)) //At rare occations this file already exists
+								File.Delete(_newpath);
+							File.Move(files[i], _newpath);
 						}
 					}
 					AdminToolbox.singleton.Info($"(File Manager) - {x} files converted");

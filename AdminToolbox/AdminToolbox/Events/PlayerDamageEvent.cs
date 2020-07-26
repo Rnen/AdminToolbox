@@ -71,6 +71,8 @@ namespace AdminToolbox
 				ev.Damage = 0f;
 			else if ((attackerSetting?.isJailed ?? false) || (attackerSetting?.dmgOff ?? false))
 				ev.Damage = 0f;
+			else if (ev.DamageType == DamageType.FLYING && Config.GetBoolValue("admintoolbox_antifly_disable", false))
+				ev.Damage = 0f;
 
 
 			int[] allowedTutDmg = new int[] { -1 };

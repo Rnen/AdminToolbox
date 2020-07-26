@@ -23,13 +23,13 @@ namespace AdminToolbox
 		id = "rnen.admin.toolbox",
 		version = AT_Version + "-" + AT_Revision,
 		SmodMajor = 3,
-		SmodMinor = 7,
-		SmodRevision = 0
+		SmodMinor = 8,
+		SmodRevision = 1
 		)]
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "15";
+		internal const string AT_Revision = "16";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;

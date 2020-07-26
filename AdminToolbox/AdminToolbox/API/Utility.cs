@@ -17,6 +17,19 @@ namespace AdminToolbox.API
 		public static bool TryParseRole(int roleID, out SMRoleType role)
 		{
 			role = SMRoleType.UNASSIGNED;
+
+			try
+			{
+				role = (SMRoleType)roleID;
+			}
+			catch
+			{
+				role = SMRoleType.UNASSIGNED;
+				return false;
+			}
+			return true;
+
+
 			int[] validRoles = Enum.GetValues(typeof(RoleType)).Cast<int>().ToArray();
 			if (!validRoles.Contains(roleID))
 				return false;
@@ -35,6 +48,18 @@ namespace AdminToolbox.API
 		public static bool TryParseItem(int itemID, out SMItemType itemType)
 		{
 			itemType = SMItemType.NULL;
+
+			try
+			{
+				itemType = (SMItemType)itemID;
+			}
+			catch
+			{
+				itemType = SMItemType.NULL;
+				return false;
+			}
+			return true;
+
 			int[] validItems = Enum.GetValues(typeof(SMItemType)).Cast<int>().ToArray();
 			if (!validItems.Contains(itemID))
 				return false;
