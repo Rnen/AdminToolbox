@@ -71,7 +71,7 @@ namespace AdminToolbox
 				ev.Damage = 0f;
 			else if ((attackerSetting?.isJailed ?? false) || (attackerSetting?.dmgOff ?? false))
 				ev.Damage = 0f;
-			else if (ev.DamageType == DamageType.FLYING && Config.GetBoolValue("admintoolbox_antifly_disable", false))
+			else if (ev.DamageType == DamageType.FLYING_DETECTION && Config.GetBoolValue("admintoolbox_antifly_disable", false))
 				ev.Damage = 0f;
 
 
@@ -87,7 +87,7 @@ namespace AdminToolbox
 				roleDamages[0] = _roleDamagesDefault;
 
 
-			if (ev.DamageType != DamageType.FRAG && (attackerSetting?.instantKill ?? false))
+			if (ev.DamageType != DamageType.GRENADE && (attackerSetting?.instantKill ?? false))
 				ev.Damage = ev.Player.GetHealth() + 1;
 
 			if (ev.Player.IsHandcuffed() && Utility.HumanDamageTypes.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_nokill_captured", false))
@@ -224,7 +224,7 @@ RoundEnd:;
 						return;
 					if (Utility.IsTeam(ev.Player, ev.Killer))
 					{
-						string keyWord = (ev.DamageTypeVar == DamageType.FRAG) ? "granaded" : "killed";
+						string keyWord = (ev.DamageTypeVar == DamageType.GRENADE) ? "granaded" : "killed";
 						if (killerSetting != null && ev.Killer.PlayerId != ev.Player.PlayerId) killerSetting.PlayerStats.TeamKills++;
 						if (Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
 							if (AdminToolbox.isColored)

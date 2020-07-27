@@ -24,12 +24,12 @@ namespace AdminToolbox
 		version = AT_Version + "-" + AT_Revision,
 		SmodMajor = 3,
 		SmodMinor = 8,
-		SmodRevision = 1
+		SmodRevision = 2
 		)]
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "16";
+		internal const string AT_Revision = "17";
 
 		#region GitHub release info
 		private DateTime LastOnlineCheck = DateTime.Now;
