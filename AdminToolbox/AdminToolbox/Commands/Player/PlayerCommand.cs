@@ -51,7 +51,7 @@ namespace AdminToolbox.Command
 
 					//Handling player stats
 					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFileManager.PlayerFile.Write);
+					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFile.PlayerFile.Write);
 					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.UserId);
 
 					//Inventory

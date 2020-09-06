@@ -201,7 +201,7 @@ namespace AdminToolbox
 		private int checkNewVersion = 8;
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
-			ATFileManager.ConvertOldFilesToNewUserID();
+			ATFile.ConvertOldFilesToNewUserID();
 
 
 			AdminToolbox.lockRound = false;
@@ -280,7 +280,7 @@ namespace AdminToolbox
 			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player player)
 			{
 				AdminToolbox.AddMissingPlayerVariables(player);
-				AdminToolbox.atfileManager.PlayerStatsFileManager(player, Managers.ATFileManager.PlayerFile.Read);
+				AdminToolbox.atfileManager.PlayerStatsFileManager(player, Managers.ATFile.PlayerFile.Read);
 
 				if (Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
@@ -358,7 +358,7 @@ namespace AdminToolbox
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
 				if (keys?.Length > 0)
 				{
-					AdminToolbox.atfileManager.PlayerStatsFileManager(keys, Managers.ATFileManager.PlayerFile.Write);
+					AdminToolbox.atfileManager.PlayerStatsFileManager(keys, Managers.ATFile.PlayerFile.Write);
 				}
 				threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval);
 			}

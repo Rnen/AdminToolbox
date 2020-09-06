@@ -34,7 +34,7 @@ namespace AdminToolbox
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
 			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFileManager.PlayerFile.Write);
+			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFile.PlayerFile.Write);
 			AdminToolbox.logManager.SetLogStartTime();
 			AdminToolbox.warpManager.RefreshWarps();
 
@@ -117,7 +117,7 @@ namespace AdminToolbox
 					}
 				}
 
-			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFileManager.PlayerFile.Write);
+			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFile.PlayerFile.Write);
 		}
 	}
 }

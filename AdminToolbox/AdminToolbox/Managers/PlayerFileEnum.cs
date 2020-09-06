@@ -1,9 +1,9 @@
 namespace AdminToolbox.Managers
 {
-	public partial class ATFileManager
+	public partial class ATFile
 	{
 		/// <summary>
-		/// <see cref="PlayerFile"/> <see cref="System.Enum"/> for <see cref="ATFileManager"/>
+		/// <see cref="PlayerFile"/> <see cref="System.Enum"/> for <see cref="ATFile"/>
 		/// </summary>
 		public enum PlayerFile
 		{

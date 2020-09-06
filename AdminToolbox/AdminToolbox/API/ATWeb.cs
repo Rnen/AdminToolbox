@@ -100,7 +100,9 @@ namespace AdminToolbox.API
 			if (!string.IsNullOrEmpty(url) && Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
 			{
 				//string jsonData = UnityEngine.JsonUtility.ToJson(discordWebHook, true);
-				string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(discordWebHook);
+				//string jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(discordWebHook);
+				string jsonData = Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(discordWebHook));
+				Debug("WebHook sent: \n" + jsonData);
 				return WebPost(uri, jsonData);
 			}
 			else

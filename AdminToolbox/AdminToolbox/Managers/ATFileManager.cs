@@ -22,10 +22,13 @@ namespace AdminToolbox.Managers
 	/// Contains all <see cref="File"/>-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
 	/// 
-	public partial class ATFileManager
+	public partial class ATFile
 	{
 		private static IConfigFile Config => ConfigManager.Manager.Config;
 		private static int Port => PluginManager.Manager.Server.Port;
+		private static AdminToolbox Plugin => AdminToolbox.singleton;
+		private static void Debug(string str) => Plugin.Debug($"[{typeof(ATFile).Name}]: " + str);
+		private static void Info(string str) => Plugin.Info($"[{typeof(ATFile).Name}]: " + str);
 
 		internal const char SplitChar = ';';
 
@@ -200,7 +203,7 @@ namespace AdminToolbox.Managers
 
 					using (StreamWriter sw = new StreamWriter(playerFilePath, false))
 					{
-						sw.WriteLine(JsonConvert.SerializeObject(pl, Formatting.Indented));
+						sw.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(pl)));
 					}
 
 					NewReadFromFile(UserId);
@@ -212,19 +215,19 @@ namespace AdminToolbox.Managers
 					if (!File.Exists(playerFilePath))
 						WriteToFile(UserId);
 
-					if (File.ReadAllLines(playerFilePath).FirstOrDefault().Split(splitChar).Length > 3)
+					if (File.ReadAllLines(playerFilePath).FirstOrDefault().Split(ATFileManager.SplitChar).Length > 3)
 						ConvertOldFilesToJSON(playerFilePath);
 
 					string rawJSON = File.ReadAllText(playerFilePath);
-					SerilizablePlayerClass pl = JsonConvert.DeserializeObject<SerilizablePlayerClass>(rawJSON);
+					SerilizablePlayerClass pl = Utf8Json.JsonSerializer.Deserialize<SerilizablePlayerClass>(rawJSON);
 
 					PlayerSettings playersetting = AdminToolbox.ATPlayerDict[UserId];
 
 					if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
 						playersetting.PlayerInfo.FirstJoin = DateTime.Now.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
 					playersetting.PlayerStats = pl.PlayerStats;
-				}
-				*/
+				}*/
+				
 				#endregion
 
 				void WriteToFile(string UserId)
@@ -238,7 +241,7 @@ namespace AdminToolbox.Managers
 					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + UserId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						File.Create(playerFilePath).Dispose();
-					AdminToolbox.singleton.Debug("Writing: " + playerFilePath);
+					Debug("Writing: " + playerFilePath);
 
 					PlayerSettings setting = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolbox.ATPlayerDict[UserId] : new API.PlayerSettings(UserId);
 					int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills : 0;
@@ -260,7 +263,7 @@ namespace AdminToolbox.Managers
 					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + UserId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
 					if (!File.Exists(playerFilePath))
 						PlayerStatsFileManager(new List<string> { UserId }, PlayerFile.Write);
-					AdminToolbox.singleton.Debug("Reading: " + playerFilePath);
+					Debug("Reading: " + playerFilePath);
 					string[] fileStrings = (File.ReadAllLines(playerFilePath).Length > 0) ? File.ReadAllLines(playerFilePath) : new string[] { "0;0;0;0;0" };
 					string[] playerStats = fileStrings.FirstOrDefault().Split(SplitChar);
 					if (AdminToolbox.ATPlayerDict.ContainsKey(UserId))
@@ -287,10 +290,10 @@ namespace AdminToolbox.Managers
 				if (files.Any(s => !s.Contains('@')))
 				{
 					int x = 0;
-					AdminToolbox.singleton.Info("(File Manager) - Converting old files to new UserID format");
+					Info("- Converting old files to new UserID format");
 					if (files.Length > 5000)
 					{
-						AdminToolbox.singleton.Info("(File Manager) - Large amount of files detected, this may take a moment...");
+						Info("- Large amount of files detected, this may take a moment...");
 					}
 					for (int i = files.Length - 1; i > -1; i--)
 					{
@@ -298,13 +301,13 @@ namespace AdminToolbox.Managers
 						{
 							x++;
 							string _newpath = files[i].Substring(0, files[i].Length - 4) + "@steam.txt";
-							AdminToolbox.singleton.Debug(_newpath);
+							Debug(_newpath);
 							if (File.Exists(_newpath)) //At rare occations this file already exists
 								File.Delete(_newpath);
 							File.Move(files[i], _newpath);
 						}
 					}
-					AdminToolbox.singleton.Info($"(File Manager) - {x} files converted");
+					Info($"- {x} files converted");
 				}
 			}
 			else if (Config.GetBoolValue("admintoolbox_userfiles_revert", false))
@@ -313,7 +316,7 @@ namespace AdminToolbox.Managers
 				if (files.Any(s => s.Contains('@')))
 				{
 					int x = 0;
-					AdminToolbox.singleton.Info("(File Manager) - Reverting new files to old SteamID format");
+					Info("- Reverting new files to old SteamID format");
 
 					for (int i = files.Length - 1; i > -1; i--)
 					{
@@ -324,7 +327,7 @@ namespace AdminToolbox.Managers
 							File.Move(files[i], files[i].Substring(0, files[i].Length - 10) + ".txt");
 						}
 					}
-					AdminToolbox.singleton.Info($"(File Manager) - {x} files reverted");
+					Info($"- {x} files reverted");
 				}
 			}
 		}
@@ -334,14 +337,12 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public static void ConvertOldFilesToJSON(string file = "")
 		{
-			return;
-#pragma warning disable CS0162 // Unreachable code detected
 			int x = 0;
 
 			string[] files = string.IsNullOrEmpty(file) ? Directory.GetFiles(AdminToolboxPlayerStats) : new string[] { file };
 			if (files.Where(f => !File.ReadAllText(f).StartsWith("{")).Count() >= 100)
 			{
-				AdminToolbox.singleton.Info("Warning: The plugin will be converting old playerfiles to a new format." + "\n" + "Beware that this might take some time");
+				Info("!Warning! The plugin will be converting old playerfiles to a new format, this might take some time");
 			}
 			if (files.Length > 0)
 				foreach (string path in files)
@@ -360,39 +361,38 @@ namespace AdminToolbox.Managers
 
 						int subtractedMinutes = (ps.MinutesPlayed < 0) ? (int)ps.MinutesPlayed : (int)-ps.MinutesPlayed;
 
-						SerilizablePlayerClass playerClass = new SerilizablePlayerClass(ps);
+						SerializablePlayerClass playerClass = new SerializablePlayerClass(ps);
 						playerClass.PlayerInfo.FirstJoin = DateTime.Now.Add(TimeSpan.FromMinutes(subtractedMinutes)).ToString(CultureInfo.InvariantCulture);
 
 						using (StreamWriter sw = new StreamWriter(path, false))
 						{
-							//sw.WriteLine(UnityEngine.JsonUtility.ToJson(playerClass, true));
+							sw.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(playerClass)));
 						}
 						x++;
 					}
 					catch (Exception e)
 					{
-						AdminToolbox.singleton.Debug("Failed during convertion of: " + path);
-						AdminToolbox.singleton.Debug(e.StackTrace);
+						Debug("Failed during convertion of: " + path);
+						Debug(e.StackTrace);
 						continue;
 					}
 					// Kills + TeamKills  + Deaths  + minutesPlayed  + BanCount;
 				}
 			if (x > 0)
-				AdminToolbox.singleton.Debug(x + " files converted to new JSON format!");
-#pragma warning restore CS0162 // Unreachable code detected
+				Debug(x + " files converted to new JSON format!");
 		}
 
 		/// <summary>
 		/// The class <see cref="AdminToolbox"/> uses for JSON Serialize/Deserialize operations
 		/// </summary>
-		public class SerilizablePlayerClass
+		public class SerializablePlayerClass
 		{
 			public PlayerInfo PlayerInfo = new PlayerInfo();
 			public PlayerStats PlayerStats = new PlayerStats();
 
-			public SerilizablePlayerClass() { }
-			public SerilizablePlayerClass(PlayerStats stats) => this.PlayerStats = stats;
-			public SerilizablePlayerClass(PlayerSettings setting)
+			public SerializablePlayerClass() { }
+			public SerializablePlayerClass(PlayerStats stats) => this.PlayerStats = stats;
+			public SerializablePlayerClass(PlayerSettings setting)
 			{
 				this.PlayerInfo = setting.PlayerInfo;
 				this.PlayerStats = setting.PlayerStats;
@@ -416,7 +416,7 @@ namespace AdminToolbox.Managers
 					File.Delete(path + "n_at_version.md");
 			}
 			else
-				AdminToolbox.singleton.Info("Could not find SCP Secret Lab folder!");
+				Info("Could not find SCP Secret Lab folder!");
 		}
 	}
 }

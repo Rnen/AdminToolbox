@@ -59,9 +59,9 @@ namespace AdminToolbox
 		public static readonly WarpManager warpManager = new WarpManager();
 
 		/// <summary>
-		/// The plugin's instance instance of <see cref="ATFileManager"/>
+		/// The plugin's instance instance of <see cref="ATFile"/>
 		/// </summary>
-		public static readonly ATFileManager atfileManager = new ATFileManager();
+		public static readonly ATFile atfileManager = new ATFile();
 
 		internal static bool roundStatsRecorded = false;
 		internal static readonly ATRoundStats roundStats = new ATRoundStats();
@@ -116,7 +116,7 @@ namespace AdminToolbox
 		public override void OnEnable()
 		{
 			singleton = this;
-			ATFileManager.WriteVersionToFile();
+			ATFile.WriteVersionToFile();
 			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 		}
 

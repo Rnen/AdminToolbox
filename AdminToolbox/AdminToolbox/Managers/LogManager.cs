@@ -32,11 +32,11 @@ namespace AdminToolbox.Managers
 		internal string _logStartTime;
 
 		private static string
-			AppFolder => ATFileManager.GetFolderPath(Folder.AppData);
+			AppFolder => ATFile.GetFolderPath(Folder.AppData);
 		private static string
-			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
+			AdminToolboxFolder => ATFile.AdminToolboxFolder;
 		private static string
-			AdminToolboxLogs => ATFileManager.AdminToolboxLogs;
+			AdminToolboxLogs => ATFile.AdminToolboxLogs;
 
 		/// <summary>
 		/// Enum used by <see cref="WriteToLog(string[], ServerLogType)"/>
