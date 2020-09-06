@@ -28,16 +28,6 @@ namespace AdminToolbox.API
 				return false;
 			}
 			return true;
-
-
-			int[] validRoles = Enum.GetValues(typeof(RoleType)).Cast<int>().ToArray();
-			if (!validRoles.Contains(roleID))
-				return false;
-			else
-			{
-				role = (SMRoleType)roleID;
-				return true;
-			}
 		}
 
 		/// <summary>
@@ -59,15 +49,6 @@ namespace AdminToolbox.API
 				return false;
 			}
 			return true;
-
-			int[] validItems = Enum.GetValues(typeof(SMItemType)).Cast<int>().ToArray();
-			if (!validItems.Contains(itemID))
-				return false;
-			else
-			{
-				itemType = (SMItemType)itemID;
-				return true;
-			}
 		}
 
 		/// <summary>
