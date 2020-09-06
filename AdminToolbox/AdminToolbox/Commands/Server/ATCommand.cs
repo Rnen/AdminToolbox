@@ -9,12 +9,16 @@ using SMItemType = Smod2.API.ItemType;
 
 namespace AdminToolbox.Command
 {
+	using API;
 	using API.Extentions;
+	using API.Webhook;
 
 	public class ATCommand : ICommandHandler
 	{
 		private readonly AdminToolbox plugin;
 		private static ICommandManager CommandManager => PluginManager.Manager.CommandManager;
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+		private Server Server => PluginManager.Manager.Server;
 
 		public ATCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Command with sub-commands";
@@ -51,6 +55,28 @@ namespace AdminToolbox.Command
 							{
 								return new string[] { "Failed to open browser! Please visit GitHub or use \"AT_AutoUpdate.bat\" instead" };
 							}
+						case "WEBH":
+						case "WEBHOOK":
+							string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0]);
+							if (banWebhookUrls.Length > 0)
+							{
+								DiscordWebhook webH;
+								List<Field> listOfFields = new List<Field>();
+
+								listOfFields.AddField("Playername: ", "TEST");
+								listOfFields.AddField("Duration: ", "0 hours");
+								listOfFields.AddField("Reason: ", "TEST");
+								listOfFields.AddField("Issued By: ", "Server");
+
+								webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
+
+								string x = "Webhook reply: \n";
+								foreach (string url in banWebhookUrls)
+									if (!string.IsNullOrEmpty(url))
+										x += ATWeb.SendWebhook(webH, url) + "\n";
+								return x.Split('\n');
+							}
+							return new string[] { "admintoolbox_ban_webhooks config empty!" };
 
 						case "DEBUG":
 							if (!sender.IsPermitted(new string[] { "ATDEBUG" }, true, out string[] denied))
@@ -72,7 +98,7 @@ namespace AdminToolbox.Command
 							return new string[] { str };
 						case "ROLES":
 							Dictionary<int, string> dict2 = new Dictionary<int, string>();
-							string str2 = "Items:";
+							string str2 = "Roles:";
 							foreach (SMRoleType i in Enum.GetValues(typeof(SMRoleType)))
 							{
 								if (!dict2.ContainsKey((int)i))
@@ -83,6 +109,14 @@ namespace AdminToolbox.Command
 							foreach (KeyValuePair<int, string> kvp in dict2.OrderBy(s => s.Key))
 								str2 += "\n" + kvp.Key + " - " + kvp.Value;
 							return new string[] { str2 };
+
+						case "ROOMS":
+							string res = "Room IDs: ";
+							foreach(string s in UnityEngine.GameObject.FindGameObjectsWithTag("RoomID").Select(s => s.GetComponent<Rid>().id))
+							{
+								res += "\n - " + s;
+							}
+							return new string[] { res };
 						default:
 							return new string[] { args[0] + " is not a valid arguement!", GetUsage() };
 					}
