@@ -38,58 +38,84 @@ namespace AdminToolbox
 				Debug("IntercomLock active, denied use.");
 				ev.SpeechTime = 0f;
 			}
+			if (ev == null || ev.Player == null)
+			{
+				Debug("Intercom event or event-player was null!");
+				return;
+			}
 			#region Blacklist
-			string[] blackListedUserIdS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_UserId_blacklist", new string[] { string.Empty }, false);
-			if (blackListedUserIdS.Length > 0)
-				foreach (string item in blackListedUserIdS)
-					if (item == ev.Player.UserId)
-					{
-						Debug($"Player \"{ev.Player.Name}\" found in intercom blacklist, denied use.");
-						ev.SpeechTime = 0f;
-						break;
-					}
+			try
+			{
+				string[] blackListedUserIdS = ConfigManager.Manager.Config.GetListValue("admintoolbox_intercom_UserId_blacklist", new string[0], false);
+				if (blackListedUserIdS.Length > 0)
+					foreach (string item in blackListedUserIdS)
+						if (item == ev.Player.UserId)
+						{
+							Debug($"Player \"{ev.Player.Name}\" found in intercom blacklist, denied use.");
+							ev.SpeechTime = 0f;
+							break;
+						}
+			} 
+			catch (Exception e)
+			{
+				plugin.Info($"Exception during Intercom Blacklist: " + e);
+			}
 			#endregion
 			#region IntercomWhitelist
-			string[] whitelistRanks = Config.GetListValue("admintoolbox_intercom_whitelist", new string[] { string.Empty }, false);
-			if (whitelistRanks.Length > 0)
+			try
 			{
-				foreach (string item in whitelistRanks)
+				string[] whitelistRanks = Config.GetListValue("admintoolbox_intercom_whitelist", new string[0], false);
+				if (whitelistRanks.Length > 0)
 				{
-					string[] myKeyString = item.Split(':', '-', '_', '#');
-					if (myKeyString[0].ToLower().Trim() == ev.Player.GetRankName().ToLower().Trim() || myKeyString[0].ToLower().Trim() == ev.Player.GetUserGroup().Name.ToLower().Trim())
+					foreach (string item in whitelistRanks)
 					{
-						if (myKeyString.Length >= 2)
+						string[] myKeyString = item.Split(':', '-', '_', '#');
+						if (myKeyString[0].ToLower().Trim() == ev.Player.GetRankName().ToLower().Trim() || myKeyString[0].ToLower().Trim() == ev.Player.GetUserGroup().Name.ToLower().Trim())
 						{
-							if (float.TryParse(myKeyString[1], out float x))
-								ev.SpeechTime = (x <= 0) ? 300 : x;
-							else plugin.Info(myKeyString[1] + " is not a valid speakTime number in: " + myKeyString[0]);
-							if (myKeyString.Length == 3)
-								if (float.TryParse(myKeyString[2], out float z))
-									ev.CooldownTime = z;
-								else plugin.Info(myKeyString[2] + " is not a cooldown number in: " + myKeyString[0]);
-							else if (myKeyString.Length > 3)
-								plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + item + "\", skipping...");
+							if (myKeyString.Length >= 2)
+							{
+								if (float.TryParse(myKeyString[1], out float x))
+									ev.SpeechTime = (x <= 0) ? 300 : x;
+								else plugin.Info(myKeyString[1] + " is not a valid speakTime number in: " + myKeyString[0]);
+								if (myKeyString.Length == 3)
+									if (float.TryParse(myKeyString[2], out float z))
+										ev.CooldownTime = z;
+									else plugin.Info(myKeyString[2] + " is not a cooldown number in: " + myKeyString[0]);
+								else if (myKeyString.Length > 3)
+									plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + item + "\", skipping...");
+							}
 						}
 					}
 				}
 			}
-			#endregion
-			string intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
-			if (intercomTransmit != string.Empty && ev.SpeechTime > 0f)
+			catch (Exception e)
 			{
-				if (ev.Player.GetRankName() != null && !ev.Player.GetUserGroup().Cover)
-					intercomTransmit = intercomTransmit.Replace("$playerrank", ev.Player.GetRankName());
-				if (ev.Player.GetUserGroup().BadgeText != null && !ev.Player.GetUserGroup().Cover)
-					intercomTransmit = intercomTransmit.Replace("$playerbadge", ev.Player.GetUserGroup().BadgeText);
-				intercomTransmit = intercomTransmit
-					.Replace("$playerid", ev.Player.PlayerId.ToString())
-					.Replace("$playerrole", ev.Player.TeamRole.Role.ToString())
-					.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
-					.Replace("$playerhp", ev.Player.GetHealth().ToString())
-					.Replace("$playerhealth", ev.Player.GetHealth().ToString())
-					.Replace("$player", ev.Player.Name)
-					.Replace("\n", Environment.NewLine);
-				plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
+				plugin.Info($"Exception during Intercom Whitelist: " + e);
+			}
+			#endregion
+			try
+			{
+				string intercomTransmit = Config.GetStringValue("admintoolbox_intercomtransmit_text", string.Empty);
+				if (!string.IsNullOrEmpty(intercomTransmit) && ev.SpeechTime > 0f)
+				{
+					if (ev.Player.GetRankName() != null && !ev.Player.GetUserGroup().Cover)
+						intercomTransmit = intercomTransmit.Replace("$playerrank", ev.Player.GetRankName());
+					if (ev.Player.GetUserGroup().BadgeText != null && !ev.Player.GetUserGroup().Cover)
+						intercomTransmit = intercomTransmit.Replace("$playerbadge", ev.Player.GetUserGroup().BadgeText);
+					intercomTransmit = intercomTransmit
+						.Replace("$playerid", ev.Player.PlayerId.ToString())
+						.Replace("$playerrole", ev.Player.TeamRole.Role.ToString())
+						.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
+						.Replace("$playerhp", ev.Player.GetHealth().ToString())
+						.Replace("$playerhealth", ev.Player.GetHealth().ToString())
+						.Replace("$player", ev.Player.Name)
+						.Replace("\n", Environment.NewLine);
+					plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
+				}
+			}
+			catch (Exception e)
+			{
+				plugin.Info($"Exception during Intercom Transmit Text: " + e);
 			}
 		}
 
@@ -373,7 +399,7 @@ namespace AdminToolbox
 
 		public void OnBan(BanEvent ev)
 		{
-			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0], false);
+			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0]);
 			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick", false)))
 			{
 				DiscordWebhook webH;
@@ -384,7 +410,7 @@ namespace AdminToolbox
 				if (!string.IsNullOrEmpty(ev.Reason))
 					listOfFields.AddField("Reason: ", ev.Reason);
 				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
-					listOfFields.AddField("Issued By: ", ev.Issuer ?? "Server");
+					listOfFields.AddField("Issued By: ", string.IsNullOrEmpty(ev.Issuer) ? "Server" : ev.Issuer);
 
 				webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
 
