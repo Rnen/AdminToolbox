@@ -42,7 +42,10 @@ namespace AdminToolbox.Command
 						case "V":
 						case "INFO":
 						case "I":
-							return new string[] { "[AdminToolbox Info]", "Your Local Version: " + plugin.Details.version, "Latest GitHub Version: " + plugin.GetGitReleaseInfo().Version };
+							return new string[] { "[AdminToolbox Info]", 
+								"Your Local Version: " + plugin.Details.version, 
+								"Latest GitHub Version: " + plugin.GetGitReleaseInfo().Version, 
+								"Your SMod Version: " + PluginManager.GetSmodVersion() };
 
 						case "DOWNLOAD" when !(sender is Player) || (sender is Player p && p.IpAddress == plugin.Server.IpAddress):
 						case "DL" when !(sender is Player) || (sender is Player p2 && p2.IpAddress == plugin.Server.IpAddress):
