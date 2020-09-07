@@ -30,6 +30,7 @@ namespace AdminToolbox
 		public MyMiscEvents(AdminToolbox plugin) => this.plugin = plugin;
 
 		private void Debug(string str) => plugin.Debug("[MiscEvents]: " + str);
+		private void Info(string str) => plugin.Info("[MiscEvents]: " + str);
 
 		public void OnIntercom(PlayerIntercomEvent ev)
 		{
@@ -399,25 +400,23 @@ namespace AdminToolbox
 
 		public void OnBan(BanEvent ev)
 		{
+			if (Config.GetBoolValue("admintoolbox_ban_console_info", true))
+				Info($"\nPlayer \"{ev.Player.Name}\" banned.\n" +
+					$"ID: {ev.Player.UserId}" +
+					$"Duration: {ev.Duration / 60} minutes\n" +
+					$"Reason: {(string.IsNullOrEmpty(ev.Reason) ? "Unspecified" : ev.Reason)}\n" +
+					$"Issuer: {(string.IsNullOrEmpty(ev.Issuer) ? "Unspecified" : ev.Issuer)}\n");
+			
+
 			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0]);
 			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick", false)))
 			{
-				DiscordWebhook webH;
-				List<Field> listOfFields = new List<Field>();
-
-				listOfFields.AddField("Playername: ", ev.Player.Name);
-				listOfFields.AddField("Duration: ", (ev.Duration / 60).ToString("0.0", CultureInfo.InvariantCulture) + " hours");
-				if (!string.IsNullOrEmpty(ev.Reason))
-					listOfFields.AddField("Reason: ", ev.Reason);
-				if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
-					listOfFields.AddField("Issued By: ", string.IsNullOrEmpty(ev.Issuer) ? "Server" : ev.Issuer);
-
-				webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
-
+				DiscordWebhook webH = Utility.BuildBanWebhook(ev.Player, ev.Duration, ev.Reason, ev.Issuer);
+				
 				foreach (string url in banWebhookUrls)
 					if (!string.IsNullOrEmpty(url))
 						plugin.Debug(ATWeb.SendWebhook(webH, url));
-				plugin.Info("Ban webhooks posted!");
+				Debug($"Player \"{ev.Player.Name}\" banned, Webhook posted.");
 			}
 
 			if (ev.Player != null && ev.Player is Player)

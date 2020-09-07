@@ -44,7 +44,7 @@ namespace AdminToolbox.API.Webhook
 	public class DiscordWebhook
 	{
 		public string username = "AdminToolbox";
-		public string avatar_url = "https://puu.sh/D0DRU.png";
+		public string avatar_url = "https://i.imgur.com/nQpIuUT.png";
 		public string content = "";
 		public EmbedData[] embeds = new EmbedData[1] { new EmbedData() };
 	}

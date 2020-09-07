@@ -1,14 +1,20 @@
 using System;
-using System.Linq;
+using Smod2;
 using Smod2.API;
+using System.Collections.Generic;
+using System.Globalization;
 
 using SMRoleType = Smod2.API.RoleType;
 using SMItemType = Smod2.API.ItemType;
 
 namespace AdminToolbox.API
 {
+	using API.Extentions;
+	using Webhook;
 	public static class Utility
 	{
+		private static IConfigFile Config => ConfigManager.Manager.Config;
+
 		/// <summary>
 		/// Safely getting a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
@@ -126,5 +132,23 @@ namespace AdminToolbox.API
 				return false;
 		}
 
+
+		internal static DiscordWebhook BuildBanWebhook(Player player, int duration, string reason = "", string issuer = "")
+		{
+			DiscordWebhook webH;
+			List<Field> listOfFields = new List<Field>();
+			CultureInfo timeFormat = new CultureInfo("ja-JP");
+			listOfFields.AddField("Playername: ", player?.Name ?? "TEST", true);
+			listOfFields.AddField("Duration: ", (duration / 60).ToString("0", CultureInfo.InvariantCulture) + " minutes", true);
+			listOfFields.AddField("Timespan: ", $"[{DateTime.UtcNow.ToString(timeFormat)}] -> [{DateTime.UtcNow.AddSeconds(duration).ToString(timeFormat)}]");
+			if (!string.IsNullOrEmpty(reason))
+				listOfFields.AddField("Reason: ", reason, true);
+			if (Config.GetBoolValue("admintoolbox_ban_webhook_include_admin", false))
+				listOfFields.AddField("Issued By: ", string.IsNullOrEmpty(issuer) ? "Server" : issuer, true);
+
+			webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
+
+			return webH;
+		}
 	}
 }

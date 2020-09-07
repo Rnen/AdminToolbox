@@ -63,21 +63,18 @@ namespace AdminToolbox.Command
 							string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0]);
 							if (banWebhookUrls.Length > 0)
 							{
-								DiscordWebhook webH;
-								List<Field> listOfFields = new List<Field>();
+								List<string> x = new List<string>();
+								foreach (string url in banWebhookUrls) 
+								{
+									string st = ATWeb.SendWebhook(Utility.BuildBanWebhook(null, 0, "TEST", sender is Player p ? p.Name : "Server"), url);
+										if (!string.IsNullOrEmpty(st))
+											x.Add(st);
+								}
 
-								listOfFields.AddField("Playername: ", "TEST");
-								listOfFields.AddField("Duration: ", "0 hours");
-								listOfFields.AddField("Reason: ", "TEST");
-								listOfFields.AddField("Issued By: ", "Server");
-
-								webH = new DiscordWebhook { embeds = new EmbedData[] { new EmbedData { author = new Author { name = "User Banned: " }, title = "", fields = listOfFields.ToArray() } } };
-
-								string x = "Webhook reply: \n";
-								foreach (string url in banWebhookUrls)
-									if (!string.IsNullOrEmpty(url))
-										x += ATWeb.SendWebhook(webH, url) + "\n";
-								return x.Split('\n');
+								if (x.Count > 0)
+									return x.Prepend("Webhook reply: ").ToArray();
+								else
+									return new string[] { "Webhook sent!" };
 							}
 							return new string[] { "admintoolbox_ban_webhooks config empty!" };
 
