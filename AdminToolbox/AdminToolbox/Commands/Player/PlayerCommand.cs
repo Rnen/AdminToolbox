@@ -72,7 +72,7 @@ namespace AdminToolbox.Command
 							"Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name + Environment.NewLine +
 						BuildTwoLiner(" - UserId: " + myPlayer.UserId, " - IP: " + myPlayer.IpAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
 						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
-						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
+						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.HP) + Environment.NewLine +
 						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
 						BuildTwoLiner("   - Godmode: " + playerDict.godMode, " - NoDmg: " + playerDict.dmgOff) + Environment.NewLine +
 						BuildTwoLiner("   - OverwatchMode: " + myPlayer.OverwatchMode, " - KeepSettings: " + playerDict.keepSettings) + Environment.NewLine +

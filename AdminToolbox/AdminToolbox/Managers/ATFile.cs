@@ -18,11 +18,12 @@ namespace AdminToolbox.Managers
 		Logs,
 		Warps
 	}
+	
 	/// <summary>
 	/// Contains all <see cref="File"/>-related <see cref ="AdminToolbox"/> functionality
 	/// </summary>
 	/// 
-	public partial class ATFile
+	public class ATFile
 	{
 		private static IConfigFile Config => ConfigManager.Manager.Config;
 		private static int Port => PluginManager.Manager.Server.Port;
@@ -34,6 +35,14 @@ namespace AdminToolbox.Managers
 
 		internal bool ProcessingCollection = false;
 
+		/// <summary>
+		/// <see cref="PlayerFile"/> <see cref="System.Enum"/> for <see cref="ATFile"/>
+		/// </summary>
+		public enum PlayerFile
+		{
+			Read = 0,
+			Write = 1
+		}
 
 
 		private static string GetATFolderPath()

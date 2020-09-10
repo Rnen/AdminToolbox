@@ -125,7 +125,7 @@
     <Compile Include="Commands\Player\HealCommand.cs" />
     <Compile Include="Commands\Player\GodModeCommand.cs" />
     <Compile Include="Events\LateOnCheckRoundEndEvent.cs" />
-    <Compile Include="Managers\ATFileManager.cs" />
+    <Compile Include="Managers\ATFile.cs" />
     <Compile Include="API\JailHandler.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Events\MyMiscEvents.cs" />
@@ -135,7 +135,6 @@
     <Compile Include="Events\PlayerDamageEvent.cs" />
     <Compile Include="Events\RoundEventHandler.cs" />
     <Compile Include="AdminToolbox.cs" />
-    <Compile Include="Managers\PlayerFileEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\WarpManager.cs" />
   </ItemGroup>

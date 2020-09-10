@@ -31,7 +31,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									pl.AddHealth(j);
+									pl.HP += j;
 									playerNum++;
 								}
 								if (playerNum > 1)
@@ -56,7 +56,7 @@ namespace AdminToolbox.Command
 					{
 						if (int.TryParse(args[1], out int j))
 						{
-							myPlayer.AddHealth(j);
+							myPlayer.HP += j;
 							return new string[] { "Added " + j + " HP " + " to " + myPlayer.Name };
 						}
 						else

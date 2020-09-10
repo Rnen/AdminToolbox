@@ -58,7 +58,7 @@ namespace AdminToolbox.API
 				{
 					psetting.previousRole = player.TeamRole.Role;
 					psetting.playerPrevInv = player.GetInventory();
-					psetting.previousHealth = player.GetHealth();
+					psetting.previousHealth = player.HP;
 					psetting.prevAmmo5 = player.GetAmmo(AmmoType.DROPPED_5);
 					psetting.prevAmmo7 = player.GetAmmo(AmmoType.DROPPED_7);
 					psetting.prevAmmo9 = player.GetAmmo(AmmoType.DROPPED_9);

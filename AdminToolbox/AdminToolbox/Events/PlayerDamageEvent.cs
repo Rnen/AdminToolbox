@@ -88,7 +88,7 @@ namespace AdminToolbox
 
 
 			if (ev.DamageType != DamageType.GRENADE && (attackerSetting?.instantKill ?? false))
-				ev.Damage = ev.Player.GetHealth() + 1;
+				ev.Damage = ev.Player.HP + ev.Player.AHP + 1;
 
 			if (ev.Player.IsHandcuffed() && Utility.HumanDamageTypes.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_nokill_captured", false))
 			{
@@ -182,11 +182,11 @@ RoundEnd:;
 					}
 					break;
 			}
-			if (ev.Damage >= ev.Player.GetHealth() && playerSetting != null)
+			if (ev.Damage >= (ev.Player.HP + ev.Player.AHP) && playerSetting != null)
 			{
 				playerSetting.DeathPos = ev.Player.GetPosition();
 				if (playerSetting.grenadeMode)
-					ev.Player.ThrowGrenade(GrenadeType.FRAG_GRENADE, true, Vector.Zero, false, ev.Player.GetPosition(), true, 0f, true);
+					ev.Player.ThrowGrenade(GrenadeType.FRAG_GRENADE, Vector.Zero, throwForce: 0f, slowThrow: true);
 			}
 			AdminToolbox.logManager.WriteToLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}

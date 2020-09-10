@@ -18,7 +18,7 @@ namespace AdminToolbox
 	internal class MyMiscEvents : IEventHandlerIntercom, IEventHandlerDoorAccess, IEventHandlerSpawn,
 		IEventHandlerWaitingForPlayers, IEventHandlerAdminQuery, IEventHandlerLure, IEventHandlerContain106,
 		IEventHandlerPlayerJoin, IEventHandlerUpdate, IEventHandlerWarheadStartCountdown, IEventHandlerSetServerName,
-		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerSetRole, IEventHandlerTeamRespawn, IEventHandlerThrowGrenade,
+		IEventHandlerHandcuffed, IEventHandlerBan, IEventHandlerTeamRespawn, IEventHandlerThrowGrenade,
 		IEventHandlerPlayerDropItem, IEventHandlerReload
 	{
 		private readonly AdminToolbox plugin;
@@ -107,8 +107,8 @@ namespace AdminToolbox
 						.Replace("$playerid", ev.Player.PlayerId.ToString())
 						.Replace("$playerrole", ev.Player.TeamRole.Role.ToString())
 						.Replace("$playerteam", ev.Player.TeamRole.Team.ToString())
-						.Replace("$playerhp", ev.Player.GetHealth().ToString())
-						.Replace("$playerhealth", ev.Player.GetHealth().ToString())
+						.Replace("$playerhp", ev.Player.HP.ToString())
+						.Replace("$playerhealth", ev.Player.HP.ToString())
 						.Replace("$player", ev.Player.Name)
 						.Replace("\n", Environment.NewLine);
 					plugin.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
@@ -149,30 +149,6 @@ namespace AdminToolbox
 				}
 			}
 		}
-
-		public void OnSetRole(PlayerSetRoleEvent ev)
-		{
-			//if (ev.Player.TeamRole.Role == Role.TUTORIAL)
-			//{
-			//	Vector ppos = ev.Player.GetPosition();
-			//	if (Physics.Raycast(new Vector3(ppos.x + 3, ppos.y - 3, ppos.z), Vector3.down, out RaycastHit hitInfo))
-			//	{
-			//		plugin.Info(string.Format("X: {0}, Y: {1}, Z: {2}", hitInfo.transform.position.x, hitInfo.transform.position.y, hitInfo.transform.position.z));
-			//		if (hitInfo.collider.gameObject.name.ToLower() == "classname=brush.003")
-			//		{
-			//			Vector3 hitPos = hitInfo.transform.position;
-
-			//			Vector newPos = new ServerMod2.API.SmodVector(hitPos.x, hitPos.y + 10, hitPos.z);
-
-			//			ev.Player.Teleport(newPos);
-			//		}
-			//		else
-			//			plugin.Info(hitInfo.collider.gameObject.name);
-			//	}
-			//	else
-			//		plugin.Info("No hit!");
-			//}
-		} //Currently not used
 
 		public void OnSpawn(PlayerSpawnEvent ev)
 		{
