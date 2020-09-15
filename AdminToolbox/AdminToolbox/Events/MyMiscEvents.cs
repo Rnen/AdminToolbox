@@ -23,7 +23,6 @@ namespace AdminToolbox
 	{
 		private readonly AdminToolbox plugin;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		private Server Server => PluginManager.Manager.Server;
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
@@ -286,8 +285,8 @@ namespace AdminToolbox
 
 		private static readonly int
 			JailCheckInterval = Config.GetIntValue("admintoolbox_jailcheck_interval", 5),
-			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval", 180),
-			DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval", 300);
+			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval", 180);
+			//DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval", 300);
 
 		private DateTime oneSecTimer = DateTime.Now,
 			fiveSecTimer = DateTime.Now.AddSeconds(5),

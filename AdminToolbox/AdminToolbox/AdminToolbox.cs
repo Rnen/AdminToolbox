@@ -49,7 +49,7 @@ namespace AdminToolbox
 		public static readonly ATFile FileManager = new ATFile();
 
 		internal static bool roundStatsRecorded = false;
-		internal static readonly ATRoundStats roundStats = new ATRoundStats();
+		internal static readonly RoundStats RoundStats = new RoundStats();
 
 		internal static bool
 			isRoundFinished = false,
@@ -120,7 +120,7 @@ namespace AdminToolbox
 			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this));
 			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this));
 			this.AddEventHandlers(new MyMiscEvents(this));
-			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
+			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(), Priority.Highest);
 			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
 		}
 		internal void UnRegisterEvents() => EventManager.Manager.RemoveEventHandlers(this);
@@ -156,7 +156,7 @@ namespace AdminToolbox
 			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand(this));
 			this.AddCommands(AT_HelpCommand.CommandAliases, new AT_HelpCommand());
 			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
-			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
+			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand());
 			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
 			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
 			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand(this));

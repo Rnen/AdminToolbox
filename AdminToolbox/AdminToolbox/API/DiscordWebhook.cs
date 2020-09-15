@@ -1,21 +1,20 @@
 namespace AdminToolbox.API.Webhook
 {
-	public class Image
+	public struct Image
 	{
 		public string url;
 	}
-	public class Author
+	public struct Author
 	{
-		public string name = "";
-		public string url = "";
-		public string icon_url = "";
+		public string name;
+		public string url;
+		public string icon_url;
 	}
-	public class Field
+	public struct Field
 	{
 		public string name;
 		public string value;
-		public string inline = "false";
-		public Field() { }
+		public bool inline;
 
 		public Field(Field field)
 		{
@@ -24,10 +23,7 @@ namespace AdminToolbox.API.Webhook
 			this.inline = field.inline;
 		}
 
-		public override string ToString()
-		{
-			return "Name: " + this.name + " Value: " + this.value + " InLine: " + inline;
-		}
+		public override string ToString() => "Name: " + this.name + " Value: " + this.value + " InLine: " + inline;
 	}
 	public class EmbedData
 	{

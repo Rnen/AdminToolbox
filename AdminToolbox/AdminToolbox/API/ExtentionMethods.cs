@@ -13,8 +13,6 @@ namespace AdminToolbox.API.Extentions
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
-		private static AdminToolbox Plugin => AdminToolbox.singleton;
-
 		internal static bool GetIsJailed(this Player player)
 			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserId) && AdminToolbox.ATPlayerDict[player.UserId].isJailed;
 
@@ -58,7 +56,7 @@ namespace AdminToolbox.API.Extentions
 
 		internal static List<Field> AddField(this List<Field> list, string title, string content, bool inline = false)
 		{
-			list.Add(new Field { name = title, value = content, inline = inline ? "true" : "false" });
+			list.Add(new Field { name = title, value = content, inline = inline });
 			return list;
 		}
 
@@ -89,9 +87,9 @@ namespace AdminToolbox.API.Extentions
 
 		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserId);
 
-		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out string[] reply);
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out _);
 
-		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed) => sender.IsPermitted(commandKey, mustBeListed, out string[] reply);
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed) => sender.IsPermitted(commandKey, mustBeListed, out _);
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, out string[] denied) => sender.IsPermitted(commandKey, false, out denied);
 
@@ -129,7 +127,7 @@ namespace AdminToolbox.API.Extentions
 		}
 
 		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
-			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.UserId) ?? false;
+			=> dict?.ContainsKey(player?.UserId) ?? false;
 
 		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)
 		{
