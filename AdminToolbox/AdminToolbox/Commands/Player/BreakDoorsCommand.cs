@@ -21,7 +21,7 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				AdminToolbox.AddMissingPlayerVariables();
+				Managers.ATFile.AddMissingPlayerVariables();
 				if (args.Length > 0)
 				{
 					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))

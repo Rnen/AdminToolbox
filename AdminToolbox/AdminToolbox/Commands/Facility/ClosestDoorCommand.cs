@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 					return new string[] { "Could not find player" };
 
 				//Adds player(s) to the AdminToolbox player dictionary
-				AdminToolbox.AddMissingPlayerVariables(targetPlayer);
+				Managers.ATFile.AddMissingPlayerVariables(targetPlayer);
 
 				SMDoor closestDoor = null;
 				float dist = float.MaxValue;

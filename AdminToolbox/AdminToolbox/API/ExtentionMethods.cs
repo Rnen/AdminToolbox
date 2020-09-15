@@ -171,7 +171,7 @@ namespace AdminToolbox.API.Extentions
 				{
 					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.Now - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
 					{
-						AdminToolbox.atfileManager.PlayerStatsFileManager(kp.Key, Managers.ATFile.PlayerFile.Write);
+						AdminToolbox.FileManager.PlayerStatsFileManager(kp.Key, Managers.ATFile.PlayerFile.Write);
 						dict.Remove(kp.Key);
 					}
 				}

@@ -50,8 +50,8 @@ namespace AdminToolbox.Command
 							return new string[] { GetUsage() };
 
 					//Handling player stats
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFile.PlayerFile.Write);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
+					AdminToolbox.FileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFile.PlayerFile.Write);
 					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.UserId);
 
 					//Inventory

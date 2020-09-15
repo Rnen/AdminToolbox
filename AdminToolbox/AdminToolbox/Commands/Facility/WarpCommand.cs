@@ -33,7 +33,7 @@ namespace AdminToolbox.Command
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
 				if (sender != null && sender is Player p && p != null)
-					AdminToolbox.AddMissingPlayerVariables(p);
+					Managers.ATFile.AddMissingPlayerVariables(p);
 
 				if (args.Length > 0)
 				{
@@ -58,14 +58,14 @@ namespace AdminToolbox.Command
 							}
 							return new string[] { str };
 						case "REFRESH":
-							AdminToolbox.warpManager.RefreshWarps();
+							AdminToolbox.WarpManager.RefreshWarps();
 							return new string[] { "Refreshed warps!" };
 						case "REMOVE":
 						case "-":
 							if (AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
 							{
 								AdminToolbox.WarpVectorDict.Remove(args[1].ToLower());
-								AdminToolbox.warpManager.WriteWarpsToFile();
+								AdminToolbox.WarpManager.WriteWarpsToFile();
 								return new string[] { "Warp point: " + args[1].ToLower() + " removed." };
 							}
 							else
@@ -84,7 +84,7 @@ namespace AdminToolbox.Command
 										for (int i = 3; i < args.Length; i++)
 											desc = args[i] + " ";
 									AdminToolbox.WarpVectorDict.Add(args[2].ToLower(), new WarpPoint { Name = args[2].ToLower(), Description = desc, Vector = new ATVector(myvector) });
-									AdminToolbox.warpManager.WriteWarpsToFile();
+									AdminToolbox.WarpManager.WriteWarpsToFile();
 									return new string[] { "Warp point: " + args[2].ToLower() + " added." };
 								}
 								else

@@ -44,14 +44,14 @@ namespace AdminToolbox.Command
 						case "I":
 							return new string[] { "[AdminToolbox Info]", 
 								"Your Local Version: " + plugin.Details.version, 
-								"Latest GitHub Version: " + plugin.GetGitReleaseInfo().Version, 
+								"Latest GitHub Version: " + ATWeb.LatestRelease.Version, 
 								"Your SMod Version: " + PluginManager.GetSmodVersion() };
 
 						case "DOWNLOAD" when !(sender is Player) || (sender is Player p && p.IpAddress == plugin.Server.IpAddress):
 						case "DL" when !(sender is Player) || (sender is Player p2 && p2.IpAddress == plugin.Server.IpAddress):
 							try
 							{
-								System.Diagnostics.Process.Start(plugin.GetGitReleaseInfo().DownloadLink);
+								System.Diagnostics.Process.Start(ATWeb.LatestRelease.DownloadLink);
 								return new string[] { "Opening browser..." };
 							}
 							catch

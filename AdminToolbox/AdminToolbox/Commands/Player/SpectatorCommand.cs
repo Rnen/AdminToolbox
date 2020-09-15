@@ -31,7 +31,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player player in Server.GetPlayers())
 								{
-									AdminToolbox.AddMissingPlayerVariables(player);
+									Managers.ATFile.AddMissingPlayerVariables(player);
 									if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings ps))
 									{
 										ps.overwatchMode = j;
@@ -82,7 +82,7 @@ namespace AdminToolbox.Command
 					}
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{

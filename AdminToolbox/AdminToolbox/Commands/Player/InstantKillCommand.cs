@@ -25,7 +25,7 @@ namespace AdminToolbox.Command
 				{
 					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
-						AdminToolbox.AddMissingPlayerVariables();
+						Managers.ATFile.AddMissingPlayerVariables();
 						if (args.Length > 1)
 						{
 							if (bool.TryParse(args[1], out bool j))
@@ -60,7 +60,7 @@ namespace AdminToolbox.Command
 					}
 					else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
+						Managers.ATFile.AddMissingPlayerVariables();
 						string str = "\nPlayers with InstantKill enabled: \n";
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
@@ -84,7 +84,7 @@ namespace AdminToolbox.Command
 					}
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (args.Length > 1)
 					{
 						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps))

@@ -23,7 +23,7 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (sender is Player p) AdminToolbox.AddMissingPlayerVariables(new List<Player> { p });
+				if (sender is Player p) Managers.ATFile.AddMissingPlayerVariables(new List<Player> { p });
 				if (args.Length > 0)
 				{
 					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))

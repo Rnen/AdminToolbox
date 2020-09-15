@@ -179,7 +179,7 @@ namespace AdminToolbox.Managers
 					if (string.IsNullOrEmpty(UserId)) return;
 					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 					{
-						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId));
+						Managers.ATFile.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId));
 						return;
 					}
 					switch (Operation)
@@ -244,7 +244,7 @@ namespace AdminToolbox.Managers
 					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 					{
 						if (PluginManager.Manager.Server.GetPlayers(UserId).Count < 1) return;
-						AdminToolbox.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId).FirstOrDefault());
+						Managers.ATFile.AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId).FirstOrDefault());
 					}
 					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
 					string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolboxPlayerStats + Path.DirectorySeparatorChar + UserId + ".txt" : AdminToolboxPlayerStats + Path.DirectorySeparatorChar + "server" + ".txt";
@@ -426,6 +426,46 @@ namespace AdminToolbox.Managers
 			}
 			else
 				Info("Could not find SCP Secret Lab folder!");
+		}
+
+		internal static void AddMissingPlayerVariables()
+		{
+			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
+			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
+		}
+		internal static void AddMissingPlayerVariables(Player player)
+			=> AddMissingPlayerVariables(new List<Player>() { player });
+		internal static void AddMissingPlayerVariables(List<Player> players)
+			=> AddMissingPlayerVariables(players.ToArray());
+		internal static void AddMissingPlayerVariables(Player[] players)
+		{
+			Player[] allPlayers = PluginManager.Manager.Server.GetPlayers().ToArray();
+			if (allPlayers.Length == 0)
+			{
+				return;
+			}
+			else if (players == null || players.Length < 1)
+			{
+				players = allPlayers;
+			}
+			if (players.Length > 0)
+			{
+				foreach (Player player in players)
+				{
+					if (player != null && !string.IsNullOrEmpty(player.UserId))
+					{
+						AddToPlayerDict(player);
+					}
+				}
+			}
+		}
+		private static void AddToPlayerDict(Player player)
+		{
+			if (player != null && player is Player p &&
+				!string.IsNullOrEmpty(p.UserId) && !AdminToolbox.ATPlayerDict.ContainsKey(p.UserId))
+			{
+				AdminToolbox.ATPlayerDict.Add(p.UserId, new PlayerSettings(p.UserId));
+			}
 		}
 	}
 }

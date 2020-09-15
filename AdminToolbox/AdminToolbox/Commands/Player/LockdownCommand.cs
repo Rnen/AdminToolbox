@@ -33,7 +33,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									AdminToolbox.AddMissingPlayerVariables(pl);
+									Managers.ATFile.AddMissingPlayerVariables(pl);
 									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 									{
 										ps.lockDown = j;
@@ -50,7 +50,7 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								AdminToolbox.AddMissingPlayerVariables(pl);
+								Managers.ATFile.AddMissingPlayerVariables(pl);
 								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
 									ps.lockDown = !ps.lockDown;
 							}
@@ -82,7 +82,7 @@ namespace AdminToolbox.Command
 					}
 					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{

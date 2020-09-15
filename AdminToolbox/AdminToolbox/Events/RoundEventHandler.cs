@@ -33,10 +33,10 @@ namespace AdminToolbox
 				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
-			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFile.PlayerFile.Write);
-			AdminToolbox.logManager.SetLogStartTime();
-			AdminToolbox.warpManager.RefreshWarps();
+			Managers.ATFile.AddMissingPlayerVariables();
+			AdminToolbox.FileManager.PlayerStatsFileManager(Managers.ATFile.PlayerFile.Write);
+			AdminToolbox.LogManager.SetLogStartTime();
+			AdminToolbox.WarpManager.RefreshWarps();
 
 			AdminToolbox.roundStatsRecorded = false;
 
@@ -80,7 +80,7 @@ namespace AdminToolbox
 						plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
 				}
 
-				AdminToolbox.AddMissingPlayerVariables();
+				Managers.ATFile.AddMissingPlayerVariables();
 
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
 				if (keys.Length > 0)
@@ -117,7 +117,7 @@ namespace AdminToolbox
 					}
 				}
 
-			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFile.PlayerFile.Write);
+			AdminToolbox.FileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFile.PlayerFile.Write);
 		}
 	}
 }

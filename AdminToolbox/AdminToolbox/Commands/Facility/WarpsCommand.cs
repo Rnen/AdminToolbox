@@ -17,7 +17,7 @@ namespace AdminToolbox.Command
 			{
 				if (args.Length >= 1 && (args[0].ToUpper() == "R" || args[0].ToUpper() == "REFRESH"))
 				{
-					AdminToolbox.warpManager.RefreshWarps();
+					AdminToolbox.WarpManager.RefreshWarps();
 					return new string[] { "Warps was refreshed!" };
 				}
 				else

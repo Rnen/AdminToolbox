@@ -56,7 +56,7 @@ namespace AdminToolbox
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Attacker, ev.Player });
+			Managers.ATFile.AddMissingPlayerVariables(new Player[] { ev.Attacker, ev.Player });
 
 			Dict.TryGetValue(ev.Player.UserId, out PlayerSettings playerSetting);
 			Dict.TryGetValue(ev.Attacker.UserId, out PlayerSettings attackerSetting);
@@ -188,7 +188,7 @@ RoundEnd:;
 				if (playerSetting.grenadeMode)
 					ev.Player.ThrowGrenade(GrenadeType.FRAG_GRENADE, Vector.Zero, throwForce: 0f, slowThrow: true);
 			}
-			AdminToolbox.logManager.WriteToLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
+			AdminToolbox.LogManager.WriteToLog(ev.Attacker.TeamRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.TeamRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}
 	}
 
@@ -205,7 +205,7 @@ RoundEnd:;
 
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
-			AdminToolbox.AddMissingPlayerVariables(new Player[] { ev.Player, ev.Killer });
+			Managers.ATFile.AddMissingPlayerVariables(new Player[] { ev.Player, ev.Killer });
 			Dict.TryGetValue(ev.Player.UserId, out PlayerSettings playerSetting);
 			Dict.TryGetValue(ev.Killer.UserId, out PlayerSettings killerSetting);
 
@@ -231,7 +231,7 @@ RoundEnd:;
 								plugin.Info(ev.Killer.ToColoredMultiAdminTeam() + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=DarkRed; " + keyWord + " fellow @#fg=Default;" + ev.Player.ToColoredMultiAdminTeam() + "@#fg=Yellow; " + ev.Player.Name + "@#fg=Default;");
 							else
 								plugin.Info(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name);
-						AdminToolbox.logManager.WriteToLog(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name, Managers.LogManager.ServerLogType.TeamKill);
+						AdminToolbox.LogManager.WriteToLog(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " " + keyWord + " fellow " + ev.Player.TeamRole.Name + " " + ev.Player.Name, Managers.LogManager.ServerLogType.TeamKill);
 					}
 					else
 					{
@@ -239,7 +239,7 @@ RoundEnd:;
 							plugin.Info(ev.Killer.Name + " killed: " + ev.Player.Name);
 						if (killerSetting != null && ev.Killer.PlayerId != ev.Player.PlayerId)
 							killerSetting.PlayerStats.Kills++;
-						AdminToolbox.logManager.WriteToLog(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed " + ev.Player.TeamRole.Name + " " + ev.Player.Name, Managers.LogManager.ServerLogType.KillLog);
+						AdminToolbox.LogManager.WriteToLog(ev.Killer.TeamRole.Name + " " + ev.Killer.Name + " killed " + ev.Player.TeamRole.Name + " " + ev.Player.Name, Managers.LogManager.ServerLogType.KillLog);
 					}
 					break;
 			}

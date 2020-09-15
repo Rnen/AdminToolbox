@@ -124,7 +124,7 @@ namespace AdminToolbox
 		{
 			if (ev.Player != null && ev.Player is Player player)
 			{
-				AdminToolbox.AddMissingPlayerVariables(player);
+				ATFile.AddMissingPlayerVariables(player);
 				AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings playerSetting);
 
 				if (playerSetting != null)
@@ -156,7 +156,7 @@ namespace AdminToolbox
 
 			if (ev.Player != null && ev.Player is Player)
 			{
-				AdminToolbox.AddMissingPlayerVariables(ev.Player);
+				ATFile.AddMissingPlayerVariables(ev.Player);
 			}
 
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId))
@@ -211,22 +211,22 @@ namespace AdminToolbox
 				checkNewVersion = 0;
 				if (ATWeb.NewerVersionAvailable())
 				{
-					plugin.Info("\n\n [New Version of AdminToolbox avaiable for download!] [V:" + this.plugin.GetGitReleaseInfo().Version + "]\n " + " Either update via \"AT_AutoUpdate.bat\" or write \"AT DOWNLOAD\"" + "\n\n");
+					plugin.Info("\n\n [New Version of AdminToolbox avaiable for download!] [V:" + ATWeb.LatestRelease.Version + "]\n " + " Either update via \"AT_AutoUpdate.bat\" or write \"AT DOWNLOAD\"" + "\n\n");
 				}
 			}
 			else
 			{
 				checkNewVersion++;
 			}
-			AdminToolbox.warpManager.RefreshWarps();
-			AdminToolbox.logManager.ManageDatedATLogs();
+			AdminToolbox.WarpManager.RefreshWarps();
+			AdminToolbox.LogManager.ManageDatedATLogs();
 		}
 
 		public void OnAdminQuery(AdminQueryEvent ev)
 		{
 			if (ev.Query != "REQUEST_DATA PLAYER_LIST SILENT")
 			{
-				AdminToolbox.logManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, Managers.LogManager.ServerLogType.RemoteAdminActivity);
+				AdminToolbox.LogManager.WriteToLog(new string[] { ev.Admin.Name + " used command: \"" + ev.Query + "\"" }, Managers.LogManager.ServerLogType.RemoteAdminActivity);
 			}
 		}
 
@@ -256,8 +256,8 @@ namespace AdminToolbox
 			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghostmode
 			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player player)
 			{
-				AdminToolbox.AddMissingPlayerVariables(player);
-				AdminToolbox.atfileManager.PlayerStatsFileManager(player, Managers.ATFile.PlayerFile.Read);
+				ATFile.AddMissingPlayerVariables(player);
+				AdminToolbox.FileManager.PlayerStatsFileManager(player, Managers.ATFile.PlayerFile.Read);
 
 				if (Config.GetBoolValue("admintoolbox_player_join_info_extended", true, false))
 				{
@@ -335,7 +335,7 @@ namespace AdminToolbox
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
 				if (keys?.Length > 0)
 				{
-					AdminToolbox.atfileManager.PlayerStatsFileManager(keys, Managers.ATFile.PlayerFile.Write);
+					AdminToolbox.FileManager.PlayerStatsFileManager(keys, Managers.ATFile.PlayerFile.Write);
 				}
 				threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval);
 			}
@@ -397,13 +397,13 @@ namespace AdminToolbox
 
 			if (ev.Player != null && ev.Player is Player)
 			{
-				AdminToolbox.AddMissingPlayerVariables(ev.Player);
+				ATFile.AddMissingPlayerVariables(ev.Player);
 			}
 
 			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId) && ev.Duration > 1)
 			{
 				AdminToolbox.ATPlayerDict[ev.Player.UserId].PlayerStats.BanCount++;
-				AdminToolbox.atfileManager.PlayerStatsFileManager(ev.Player.UserId);
+				AdminToolbox.FileManager.PlayerStatsFileManager(ev.Player.UserId);
 			}
 		}
 

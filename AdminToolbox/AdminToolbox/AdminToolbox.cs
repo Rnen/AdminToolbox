@@ -21,47 +21,32 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = AT_Version + "-" + AT_Revision,
+		version = AT_Version + "-" + AT_Revision, 
 		SmodMajor = 3,
-		SmodMinor = 8,
-		SmodRevision = 2
+		SmodMinor = 9,
+		SmodRevision = 0
 		)]
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "19";
-
-		#region GitHub release info
-		private DateTime LastOnlineCheck = DateTime.Now;
-		private ATWeb.AT_LatestReleaseInfo LatestReleaseInfo;
+		internal const string AT_Revision = "20";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 
-		internal ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
-		{
-			if (LastOnlineCheck.AddMinutes(5) < DateTime.Now || LatestReleaseInfo == null)
-			{
-				LatestReleaseInfo = ATWeb.GetOnlineInfo(this);
-				LastOnlineCheck = DateTime.Now;
-			}
-			return LatestReleaseInfo;
-		}
-		#endregion
+		/// <summary>
+		/// The plugin's instance of <see cref="Managers.LogManager"/>
+		/// </summary>
+		public static readonly LogManager LogManager = new LogManager();
 
 		/// <summary>
-		/// The plugin's instance of <see cref="LogManager"/>
+		/// The plugin's instance instance of <see cref="Managers.WarpManager"/>
 		/// </summary>
-		public static readonly LogManager logManager = new LogManager();
+		public static readonly WarpManager WarpManager = new WarpManager();
 
 		/// <summary>
-		/// The plugin's instance instance of <see cref="WarpManager"/>
+		/// The plugin's instance instance of <see cref="Managers.ATFile"/>
 		/// </summary>
-		public static readonly WarpManager warpManager = new WarpManager();
-
-		/// <summary>
-		/// The plugin's instance instance of <see cref="ATFile"/>
-		/// </summary>
-		public static readonly ATFile atfileManager = new ATFile();
+		public static readonly ATFile FileManager = new ATFile();
 
 		internal static bool roundStatsRecorded = false;
 		internal static readonly ATRoundStats roundStats = new ATRoundStats();
@@ -95,7 +80,7 @@ namespace AdminToolbox
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
-		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
+		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(WarpManager.presetWarps);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
@@ -129,7 +114,6 @@ namespace AdminToolbox
 			this.RegisterCommands();
 			this.RegisterConfigs();
 		}
-
 		internal void RegisterEvents()
 		{
 			this.AddEventHandlers(new RoundEventHandler(this));
@@ -232,47 +216,6 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-		}
-
-
-		internal static void AddMissingPlayerVariables()
-		{
-			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
-			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
-		}
-		internal static void AddMissingPlayerVariables(Player player)
-			=> AddMissingPlayerVariables(new List<Player>() { player });
-		internal static void AddMissingPlayerVariables(List<Player> players)
-			=> AddMissingPlayerVariables(players.ToArray());
-		internal static void AddMissingPlayerVariables(Player[] players)
-		{
-			Player[] allPlayers = PluginManager.Manager.Server.GetPlayers().ToArray();
-			if (allPlayers.Length == 0)
-			{
-				return;
-			}
-			else if (players == null || players.Length < 1)
-			{
-				players = allPlayers;
-			}
-			if (players.Length > 0)
-			{
-				foreach (Player player in players)
-				{
-					if (player != null && !string.IsNullOrEmpty(player.UserId))
-					{
-						AddToPlayerDict(player);
-					}
-				}
-			}
-		}
-		private static void AddToPlayerDict(Player player)
-		{
-			if (player != null && player is Player p &&
-				!string.IsNullOrEmpty(p.UserId) && !ATPlayerDict.ContainsKey(p.UserId))
-			{
-				ATPlayerDict.Add(p.UserId, new PlayerSettings(p.UserId));
-			}
 		}
 
 		/// <summary>

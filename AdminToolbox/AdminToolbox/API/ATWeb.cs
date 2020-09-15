@@ -15,11 +15,12 @@ namespace AdminToolbox.API
 		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
 		private static void Debug(string str) => Plugin.Debug("[ATWeb]: " + str);
+		private static void Info(string str) => Plugin.Info("[ATWeb]: " + str);
 
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
-		public class AT_LatestReleaseInfo
+		public class ATReleaseInfo
 		{
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			public string Title { get; }
@@ -27,7 +28,7 @@ namespace AdminToolbox.API
 			public string Author { get; }
 			public string DownloadLink { get; }
 
-			public AT_LatestReleaseInfo(string Title, string Version, string Author, string DownloadLink)
+			public ATReleaseInfo(string Title, string Version, string Author, string DownloadLink)
 			{
 				this.Title = Title;
 				this.Version = Version;
@@ -37,13 +38,32 @@ namespace AdminToolbox.API
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 
+		private static DateTime _lastVersionCheck = DateTime.Now;
+		private static ATReleaseInfo _latestReleaseInfo;
+
 		/// <summary>
-		/// Returns a <see cref="AT_LatestReleaseInfo"/> class containing info about the latest GitHub release
+		/// Returns a <see cref="ATReleaseInfo"/> class containing info about the latest GitHub release
 		/// </summary>
-		public static AT_LatestReleaseInfo GetOnlineInfo(AdminToolbox plugin)
+		/// <remarks>Only updates every 5 minutes to avoid rate limits</remarks>
+		public static ATReleaseInfo LatestRelease
 		{
+			get
+			{
+				if (_lastVersionCheck.AddMinutes(5) < DateTime.Now || _latestReleaseInfo == null)
+				{
+					_latestReleaseInfo = GetOnlineInfo();
+					_lastVersionCheck = DateTime.Now;
+				}
+				return _latestReleaseInfo;
+			}
+		}
+
+		private static ATReleaseInfo GetOnlineInfo()
+		{
+			Smod2.Attributes.PluginDetails Details = AdminToolbox.singleton.Details;
 			if (ConfigManager.Manager.Config.GetBoolValue("atb_disable_networking", false)
-				|| ConfigManager.Manager.Config.GetBoolValue("admintoolbox_disable_networking", false)) return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
+				|| ConfigManager.Manager.Config.GetBoolValue("admintoolbox_disable_networking", false))
+				return new ATReleaseInfo(Details.name, Details.version, Details.author, "");
 			string rawResponse = string.Empty;
 			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
 			string _title = "", _version = "", _author = "", _dllink = "";
@@ -76,17 +96,17 @@ namespace AdminToolbox.API
 			catch (Exception e)
 			{
 				Debug("Exception: " + e.Message);
-				plugin.Info(" \n\n - Downloading online version failed, skipping..." + "\n \n");
-				return new AT_LatestReleaseInfo(plugin.Details.name, plugin.Details.version, plugin.Details.author, "");
+				Info(" \n\n - Downloading online version failed, skipping..." + "\n \n");
+				return new ATReleaseInfo(Details.name, Details.version, Details.author, "");
 			}
-			return new AT_LatestReleaseInfo(_title, _version, _author, _dllink);
+			return new ATReleaseInfo(_title, _version, _author, _dllink);
 		}
 
 		internal static bool NewerVersionAvailable()
 		{
 			if (Plugin == null) return false;
 			string thisVersion = Plugin.Details.version.Split('-').FirstOrDefault().Replace(".", string.Empty);
-			string onlineVersion = Plugin.GetGitReleaseInfo().Version.Split('-').FirstOrDefault().Replace(".", string.Empty);
+			string onlineVersion = LatestRelease.Version.Split('-').FirstOrDefault().Replace(".", string.Empty);
 
 			if (int.TryParse(thisVersion, out int thisV)
 				&& int.TryParse(onlineVersion, out int onlineV)
