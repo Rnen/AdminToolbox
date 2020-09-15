@@ -20,7 +20,7 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
-		public class ATReleaseInfo
+		public struct ATReleaseInfo
 		{
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 			public string Title { get; }
@@ -39,7 +39,7 @@ namespace AdminToolbox.API
 		}
 
 		private static DateTime _lastVersionCheck = DateTime.Now;
-		private static ATReleaseInfo _latestReleaseInfo;
+		private static ATReleaseInfo _latestReleaseInfo = new ATReleaseInfo();
 
 		/// <summary>
 		/// Returns a <see cref="ATReleaseInfo"/> class containing info about the latest GitHub release
@@ -49,10 +49,11 @@ namespace AdminToolbox.API
 		{
 			get
 			{
-				if (_lastVersionCheck.AddMinutes(5) < DateTime.Now || _latestReleaseInfo == null)
+				if (_lastVersionCheck.AddMinutes(5) < DateTime.Now || _latestReleaseInfo.Equals(default(ATReleaseInfo)))
 				{
 					_latestReleaseInfo = GetOnlineInfo();
 					_lastVersionCheck = DateTime.Now;
+					Debug("Refreshed online version!");
 				}
 				return _latestReleaseInfo;
 			}
