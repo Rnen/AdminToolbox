@@ -278,7 +278,7 @@ namespace AdminToolbox
 					{
 						ev.Player.OverwatchMode = true;
 					}
-					AdminToolbox.ATPlayerDict[player.UserId].JoinTime = DateTime.Now;
+					AdminToolbox.ATPlayerDict[player.UserId].JoinTime = DateTime.UtcNow;
 				}
 			}
 		}
@@ -288,22 +288,22 @@ namespace AdminToolbox
 			WritePlayerFileInterval = Config.GetIntValue("admintoolbox_writeplayerfile_interval", 180);
 			//DictCleanupInterval = Config.GetIntValue("admintoolbox_dictcleanup_interval", 300);
 
-		private DateTime oneSecTimer = DateTime.Now,
-			fiveSecTimer = DateTime.Now.AddSeconds(5),
-			oneMinuteTimer = DateTime.Now.AddSeconds(30),
-			threeMinTimer = DateTime.Now.AddMinutes(1)/*, 
-			fiveMinTimer = DateTime.Now.AddMinutes(2)*/;
+		private DateTime oneSecTimer = DateTime.UtcNow,
+			fiveSecTimer = DateTime.UtcNow.AddSeconds(5),
+			oneMinuteTimer = DateTime.UtcNow.AddSeconds(30),
+			threeMinTimer = DateTime.UtcNow.AddMinutes(1)/*, 
+			fiveMinTimer = DateTime.UtcNow.AddMinutes(2)*/;
 
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (oneSecTimer < DateTime.Now)
+			if (oneSecTimer < DateTime.UtcNow)
 			{
 				if (AdminToolbox.waitForTeleports.Count > 0)
 				{
 					WaitForTeleport[] waitFors = AdminToolbox.waitForTeleports.ToArray();
 					foreach (WaitForTeleport wft in waitFors)
 					{
-						if (DateTime.Now > wft.DateTime)
+						if (DateTime.UtcNow > wft.DateTime)
 						{
 							wft.Player.Teleport(wft.Pos);
 							wft.Done = true;
@@ -312,9 +312,9 @@ namespace AdminToolbox
 					AdminToolbox.waitForTeleports.RemoveAll(s => s.Done);
 				}
 
-				oneSecTimer = DateTime.Now.AddSeconds(1);
+				oneSecTimer = DateTime.UtcNow.AddSeconds(1);
 			}
-			if (fiveSecTimer <= DateTime.Now)
+			if (fiveSecTimer <= DateTime.UtcNow)
 			{
 				if (plugin.Server.Round.Duration > 0)
 				{
@@ -322,23 +322,23 @@ namespace AdminToolbox
 				}
 				//if(plugin.scheduledCommands.Count > 0)
 				//plugin.scheduledCommands.RemoveAll(sch => sch.hasExecuted);
-				fiveSecTimer = DateTime.Now.AddSeconds(JailCheckInterval);
+				fiveSecTimer = DateTime.UtcNow.AddSeconds(JailCheckInterval);
 			}
-			if (oneMinuteTimer <= DateTime.Now)
+			if (oneMinuteTimer <= DateTime.UtcNow)
 			{
 				AdminToolbox.ATPlayerDict.Cleanup();
-				oneMinuteTimer = DateTime.Now.AddMinutes(1);
+				oneMinuteTimer = DateTime.UtcNow.AddMinutes(1);
 			}
-			if (threeMinTimer <= DateTime.Now)
+			if (threeMinTimer <= DateTime.UtcNow)
 			{
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
 				if (keys?.Length > 0)
 				{
 					AdminToolbox.FileManager.PlayerStatsFileManager(keys, Managers.ATFile.PlayerFile.Write);
 				}
-				threeMinTimer = DateTime.Now.AddSeconds(WritePlayerFileInterval);
+				threeMinTimer = DateTime.UtcNow.AddSeconds(WritePlayerFileInterval);
 			}
-			//if (fiveMinTimer <= DateTime.Now)
+			//if (fiveMinTimer <= DateTime.UtcNow)
 			//{
 
 			//}
@@ -348,7 +348,10 @@ namespace AdminToolbox
 		{
 			if (Config.GetBoolValue("admintoolbox_custom_nuke_cards", false))
 			{
-				int[] allowedCards = Config.GetIntListValue("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, false);
+				int[] allowedCards = Config.GetIntListValue("admintoolbox_nuke_card_list", new int[] { 
+					(int)ItemType.KeycardContainmentEngineer, 
+					(int)ItemType.KeycardFacilityManager, 
+					(int)ItemType.KeycardO5}, false);
 				ev.Cancel = !allowedCards.Contains((int)ev.Activator.GetCurrentItem().ItemType);
 			}
 		}
@@ -385,12 +388,10 @@ namespace AdminToolbox
 
 			string[] banWebhookUrls = Config.GetListValue("admintoolbox_ban_webhooks", new string[0]);
 			if (banWebhookUrls.Length > 0 && (ev.Duration > 0 || Config.GetBoolValue("admintoolbox_ban_webhook_onkick", false)))
-			{
-				DiscordWebhook webH = Utility.BuildBanWebhook(ev.Player, ev.Duration, ev.Reason, ev.Issuer);
-				
+			{	
 				foreach (string url in banWebhookUrls)
 					if (!string.IsNullOrEmpty(url))
-						plugin.Debug(ATWeb.SendWebhook(webH, url));
+						plugin.Debug(ATWeb.SendWebhook(Utility.BuildBanWebhook(ev.Player, ev.Duration, ev.Reason, ev.Issuer), url));
 				Debug($"Player \"{ev.Player.Name}\" banned, Webhook posted.");
 			}
 

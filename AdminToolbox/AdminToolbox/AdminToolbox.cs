@@ -117,8 +117,8 @@ namespace AdminToolbox
 		internal void RegisterEvents()
 		{
 			this.AddEventHandlers(new RoundEventHandler(this));
-			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this));
-			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new PlayerDamageEvent(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new PlayerDieEvent(this));
 			this.AddEventHandlers(new MyMiscEvents(this));
 			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(), Priority.Highest);
 			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);

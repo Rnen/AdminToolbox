@@ -17,6 +17,8 @@ namespace AdminToolbox.API
 		private static void Debug(string str) => Plugin.Debug("[ATWeb]: " + str);
 		private static void Info(string str) => Plugin.Info("[ATWeb]: " + str);
 
+		private const string ApiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
+
 		/// <summary>
 		/// Class for storing the latest GitHub release info
 		/// </summary>
@@ -38,7 +40,7 @@ namespace AdminToolbox.API
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 
-		private static DateTime _lastVersionCheck = DateTime.Now;
+		private static DateTime _lastVersionCheck = DateTime.UtcNow;
 		private static ATReleaseInfo _latestReleaseInfo = new ATReleaseInfo();
 
 		/// <summary>
@@ -49,10 +51,10 @@ namespace AdminToolbox.API
 		{
 			get
 			{
-				if (_lastVersionCheck.AddMinutes(5) < DateTime.Now || _latestReleaseInfo.Equals(default(ATReleaseInfo)))
+				if (_lastVersionCheck.AddMinutes(5) < DateTime.UtcNow || _latestReleaseInfo.Equals(default(ATReleaseInfo)))
 				{
 					_latestReleaseInfo = GetOnlineInfo();
-					_lastVersionCheck = DateTime.Now;
+					_lastVersionCheck = DateTime.UtcNow;
 					Debug("Refreshed online version!");
 				}
 				return _latestReleaseInfo;
@@ -66,16 +68,15 @@ namespace AdminToolbox.API
 				|| ConfigManager.Manager.Config.GetBoolValue("admintoolbox_disable_networking", false))
 				return new ATReleaseInfo(Details.name, Details.version, Details.author, "");
 			string rawResponse = string.Empty;
-			string apiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
 			string _title = "", _version = "", _author = "", _dllink = "";
 
 			try
 			{
-				using (UnityWebRequest ww = UnityWebRequest.Get(apiURL))
+				using (UnityWebRequest ww = UnityWebRequest.Get(ApiURL))
 				{
 					ww.SendWebRequest();
-					DateTime timer = DateTime.Now.AddSeconds(2);
-					while (!ww.isDone || (!ww.downloadHandler.isDone && DateTime.Now < timer)) { }
+					DateTime timer = DateTime.UtcNow.AddSeconds(2);
+					while (!ww.isDone || (!ww.downloadHandler.isDone && DateTime.UtcNow < timer)) { }
 					rawResponse = ww.downloadHandler.text;
 					if (string.IsNullOrEmpty(rawResponse))
 						throw new Exception("[AdminToolbox]: GitHub web request response was NullOrEmpty!");

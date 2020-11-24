@@ -40,15 +40,15 @@ namespace AdminToolbox
 
 			AdminToolbox.roundStatsRecorded = false;
 
-			if (intercomReady != string.Empty)
+			if (!string.IsNullOrEmpty(intercomReady))
 			{
 				ev.Server.Map.SetIntercomContent(IntercomStatus.Ready, intercomReady);
 			}
-			if (intercomRestart != string.Empty)
+			if (!string.IsNullOrEmpty(intercomRestart))
 			{
 				ev.Server.Map.SetIntercomContent(IntercomStatus.Restarting, intercomRestart);
 			}
-			if (intercomTransmit != string.Empty)
+			if (!string.IsNullOrEmpty(intercomTransmit))
 			{
 				ev.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
 			}
@@ -102,7 +102,7 @@ namespace AdminToolbox
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.ATPlayerDict.Count > 0)
 			{
-				AdminToolbox.ATPlayerDict.Keys.ResetPlayerBools();
+				AdminToolbox.ATPlayerDict.ResetPlayerBools();
 			}
 
 			string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
@@ -112,7 +112,7 @@ namespace AdminToolbox
 					if (AdminToolbox.ATPlayerDict.ContainsKey(key))
 					{
 						PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
-						ps.PlayerStats.MinutesPlayed += DateTime.Now.Subtract(ps.JoinTime).TotalSeconds;
+						ps.PlayerStats.MinutesPlayed += DateTime.UtcNow.Subtract(ps.JoinTime).TotalSeconds;
 						AdminToolbox.ATPlayerDict[key] = ps;
 					}
 				}

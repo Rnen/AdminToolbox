@@ -28,7 +28,7 @@ namespace AdminToolbox.Command
 						{
 							if (x > 0)
 							{
-								JailHandler.SendToJail(myPlayer, DateTime.Now.AddSeconds(x));
+								JailHandler.SendToJail(myPlayer, DateTime.UtcNow.AddSeconds(x));
 								return new string[] { "\"" + myPlayer.Name + "\" sent to jail for: " + x + " seconds." };
 							}
 							else
@@ -42,17 +42,19 @@ namespace AdminToolbox.Command
 					}
 					else if (args.Length == 1)
 					{
-						if (!AdminToolbox.ATPlayerDict.ContainsKey(myPlayer.UserId)) return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
-						if (AdminToolbox.ATPlayerDict[myPlayer.UserId].isJailed)
-						{
-							JailHandler.ReturnFromJail(myPlayer);
-							return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
-						}
-						else
-						{
-							JailHandler.SendToJail(myPlayer);
-							return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
-						}
+						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings playersetting))
+							if (playersetting.isJailed)
+							{
+								JailHandler.ReturnFromJail(myPlayer);
+								return new string[] { "\"" + myPlayer.Name + "\" returned from jail" };
+							}
+							else
+							{
+								JailHandler.SendToJail(myPlayer);
+								return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
+							}
+						else 
+							return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
 					}
 					else
 						return new string[] { GetUsage() };

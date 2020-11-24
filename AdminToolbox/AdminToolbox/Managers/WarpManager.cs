@@ -121,7 +121,7 @@ namespace AdminToolbox.Managers
 			catch (Exception e)
 			{
 				Plugin.Info("Failed during writing of warpfile!");
-				Debug("Error occured during writing to file: " + e.Message);
+				Debug("Error occured during writing to file: " + e);
 				return false;
 			}
 		}

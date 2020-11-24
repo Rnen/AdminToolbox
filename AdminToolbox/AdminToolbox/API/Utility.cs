@@ -64,10 +64,10 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool TryParseItem(string item, out SMItemType itemType)
 		{
+			itemType = SMItemType.NULL;
+
 			if (int.TryParse(item, out int x))
 				return TryParseItem(x, out itemType);
-
-			itemType = SMItemType.NULL;
 
 			foreach (SMItemType i in Enum.GetValues(typeof(SMItemType)))
 			{

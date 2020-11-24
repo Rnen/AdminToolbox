@@ -1,14 +1,23 @@
 using System;
 using System.Collections.Generic;
 using Smod2.API;
-using SMItem = Smod2.API.Item;
 
 namespace AdminToolbox.API
 {
 	public class PlayerInfo
 	{
+		/// <summary>
+		/// Last known nickname of the player
+		/// </summary>
 		public string LastNickname { get; internal set; } = "Unknown";
+		/// <summary>
+		/// The player's UserId
+		/// </summary>
 		public string UserId { get; internal set; } = "00000000000000000";
+
+		/// <summary>
+		/// The last known instance of the player's DNT setting
+		/// </summary>
 		public bool DNT { get; internal set; } = false;
 
 		public string FirstJoin { get; set; } = "";
@@ -30,8 +39,6 @@ namespace AdminToolbox.API
 		public int EscapeCount { get; set; } = 0;
 
 		public double MinutesPlayed { get; set; } = 0.1;
-
-		public PlayerStats() { }
 	}
 	/// <summary>
 	/// <see cref ="PlayerSettings"/> is <see cref ="AdminToolbox"/>'s settings
@@ -63,12 +70,12 @@ namespace AdminToolbox.API
 		public Vector DeathPos = Vector.Zero;
 		internal Vector originalPos = Vector.Zero;
 		internal Smod2.API.RoleType previousRole = Smod2.API.RoleType.CLASSD;
-		internal List<SMItem> playerPrevInv = new List<SMItem>();
+		internal List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
 
 		internal Smod2.API.ItemType InfiniteItem = Smod2.API.ItemType.NULL;
 
-		public DateTime JailedToTime { get; internal set; } = DateTime.Now;
-		public DateTime JoinTime { get; internal set; } = DateTime.Now;
+		public DateTime JailedToTime { get; internal set; } = DateTime.UtcNow;
+		public DateTime JoinTime { get; internal set; } = DateTime.UtcNow;
 
 
 		public PlayerSettings(string UserId) => this.PlayerInfo.UserId = UserId;

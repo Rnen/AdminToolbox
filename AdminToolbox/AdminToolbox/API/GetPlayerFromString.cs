@@ -7,63 +7,58 @@ namespace AdminToolbox.API
 	/// <summary>
 	/// Class containing the <see cref="GetPlayer(string)"/> constructor
 	/// </summary>
-	public class GetPlayerFromString
+	public static class GetPlayerFromString
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
 		/// <summary>
-		/// Returns <see cref ="Player"/> from <see cref ="string"/>
+		/// Returns <see cref ="Player"/> from <see cref="string"/> <paramref name="arg"/>
 		/// </summary>
-		public static Player GetPlayer(string args)
+		public static Player GetPlayer(string arg)
 		{
 			Player playerOut = null;
-			if (short.TryParse(args, out short pID))
+			if (string.IsNullOrEmpty(arg))
+				return null;
+			try
 			{
-				foreach (Player pl in Server.GetPlayers())
-					if (pl.PlayerId == pID)
-						return pl;
-			}
-			else if (long.TryParse(args, out long sID))
-			{
-				foreach (Player pl in Server.GetPlayers())
-					if (pl.UserId == sID.ToString())
-						return pl;
-			}
-			else
-			{
-				return Server.GetPlayers(args.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
-				/*
-				//Takes a string and finds the closest player from the playerlist
-				int maxNameLength = 31, LastnameDifference = 31;
-				string str1 = args.ToLower();
-				foreach (Player pl in Server.GetPlayers(str1))
+				if (short.TryParse(arg, out short pID))
 				{
-					if (!pl.Name.ToLower().Contains(args.ToLower()))
-						continue;
-					if (str1.Length < maxNameLength)
-					{
-						int x = maxNameLength - str1.Length;
-						int y = maxNameLength - pl.Name.Length;
-						string str2 = pl.Name;
-						for (int i = 0; i < x; i++)
+					foreach (Player pl in Server.GetPlayers())
+						if (pl.PlayerId == pID)
 						{
-							str1 += "z";
-						}
-						for (int i = 0; i < y; i++)
-						{
-							str2 += "z";
-						}
-						int nameDifference = LevenshteinDistance.Compute(str1, str2);
-						if (nameDifference < LastnameDifference)
-						{
-							LastnameDifference = nameDifference;
 							playerOut = pl;
+							break;
 						}
-					}
 				}
-				*/
+				else if (long.TryParse(arg, out long ID))
+				{
+					foreach (Player pl in Server.GetPlayers())
+						if (pl.UserId.Contains(ID.ToString()))
+						{
+							playerOut = pl;
+							break;
+						}
+				}
+				else
+				{
+					playerOut =  Server.GetPlayers(arg.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
+				}
+			}
+			catch (System.Exception e)
+			{
+				AdminToolbox.singleton.Debug($"[GetPlayer Exception]: " + e);
 			}
 			return playerOut;
+		}
+
+		/// <summary>
+		/// Attempts to get player from <see cref="GetPlayer(string)"/>. 
+		/// <returns>Returns <see cref ="bool"/> based on success</returns> 
+		/// </summary>
+		public static bool TryGetPlayer(string arg, out Player player)
+		{
+			player = GetPlayer(arg);
+			return player != null;
 		}
 	}
 }

@@ -14,11 +14,21 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// <see cref ="AdminToolbox"/> jail <see cref="Vector"/> position
 		/// </summary>
-		public static Vector JailPos => AdminToolbox.WarpVectorDict?["jail"]?.Vector.ToSMVector() ?? new Vector(53, 1020, -44);
+		public static Vector JailPos
+		{
+			get
+			{
+				if (AdminToolbox.WarpVectorDict.TryGetValue("jail", out WarpPoint wp))
+					return wp.Vector.ToSMVector();
+				else
+					return new Vector(53, 1020, -44);
+			}
+		}
 
 		private static Server Server => PluginManager.Manager.Server;
 
 		private static void Debug(string message) => AdminToolbox.singleton.Debug("[JailHandler]: " + message);
+		private static void Info(string message) => AdminToolbox.singleton.Info("[JailHandler]: " + message);
 
 		/// <summary>
 		/// Checks the players marked as "Jailed" to see if they are at where they're supposed to be
@@ -31,7 +41,8 @@ namespace AdminToolbox.API
 				foreach (Player pl in jailedPlayers)
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserId))
 						if (!pl.IsInsideJail()) SendToJail(pl);
-						else if (AdminToolbox.ATPlayerDict[pl.UserId].JailedToTime <= DateTime.Now) ReturnFromJail(pl);
+						else if (AdminToolbox.ATPlayerDict[pl.UserId].JailedToTime <= DateTime.UtcNow) 
+							ReturnFromJail(pl);
 		}
 
 		/// <summary>
@@ -49,9 +60,9 @@ namespace AdminToolbox.API
 			Debug($"Attempting to jail {player.Name}");
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings psetting))
 			{
-				if (!jailedToTime.HasValue || jailedToTime < DateTime.Now)
+				if (!jailedToTime.HasValue || jailedToTime < DateTime.UtcNow)
 					Debug($"Jail time for \"{player.Name}\" not specified, jailing for a year.");
-				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.Now) ? psetting.JailedToTime : DateTime.Now.AddYears(1));
+				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.UtcNow) ? psetting.JailedToTime : DateTime.UtcNow.AddYears(1));
 				//Saves original variables
 				psetting.originalPos = player.GetPosition();
 				if (!psetting.isJailed)
@@ -95,7 +106,7 @@ namespace AdminToolbox.API
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings psetting))
 			{
 				psetting.isJailed = false;
-				psetting.JailedToTime = DateTime.Now;
+				psetting.JailedToTime = DateTime.UtcNow;
 				player.ChangeRole(psetting.previousRole, true, false);
 				player.Teleport(psetting.originalPos, true);
 				player.SetHealth(psetting.previousHealth);
@@ -114,7 +125,7 @@ namespace AdminToolbox.API
 			}
 			else
 			{
-				AdminToolbox.singleton.Info("Could not return player from jail! Player not in PlayerDict!");
+				Info("Could not return player from jail! Player not in PlayerDict!");
 				return false;
 			}
 		}

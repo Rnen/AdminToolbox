@@ -22,18 +22,13 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			// Gets the caller as a "Player" object
-
 			if (args.Length > 0)
 			{
-				//Get player from first arguement of OnCall
 				Player targetPlayer = args.Length > 1 ? Server.GetPlayers(args[0]).FirstOrDefault() : sender as Player;
 
-				//If player could not be found, return reply to command user
 				if (targetPlayer == null)
 					return new string[] { "Could not find player" };
 
-				//Adds player(s) to the AdminToolbox player dictionary
 				Managers.ATFile.AddMissingPlayerVariables(targetPlayer);
 
 				SMDoor closestDoor = null;
@@ -50,14 +45,13 @@ namespace AdminToolbox.Command
 					}
 				}
 
-				string arg = args.Length > 1 ? args[1].ToUpper() : args[0].ToUpper();
-
-				switch (arg)
+				switch ((args.Length > 1 ? args[1] : args[0]).ToUpper())
 				{
 					case "BREAK":
 					case "DESTROY":
 					case "DESTR":
 					case "BRK":
+					case "BR":
 						closestDoor.Destroyed = true;
 						return new string[] { "Closest door broken." };
 					case "LOCK":
@@ -71,14 +65,16 @@ namespace AdminToolbox.Command
 						return new string[] { "Closest door unlocked." };
 					case "OPEN":
 					case "OP":
+					case "O":
 						closestDoor.Open = true;
 						return new string[] { "Closest door opened." };
 					case "CLOSE":
 					case "CL":
+					case "C":
 						closestDoor.Open = false;
 						return new string[] { "Closest door closed." };
 					default:
-						return new string[] { "Word: " + arg + " is not recognized" };
+						return new string[] { "Arguements: \"" + string.Join(" ", args) + "\" is not recognized" };
 				}
 			}
 			else

@@ -4,6 +4,7 @@ using System.Linq;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
+using System.Reflection;
 
 namespace AdminToolbox.API.Extentions
 {
@@ -21,11 +22,9 @@ namespace AdminToolbox.API.Extentions
 			Vector
 				jail = JailHandler.JailPos,
 				playerPos = player.GetPosition();
-			float
-				x = Math.Abs(playerPos.x - jail.x),
-				y = Math.Abs(playerPos.y - jail.y),
-				z = Math.Abs(playerPos.z - jail.z);
-			return x > 7 || y > 5 || z > 7 ? false : true;
+			return Math.Abs(playerPos.x - jail.x) <= 7 
+				&& Math.Abs(playerPos.y - jail.y) <= 5 
+				&& Math.Abs(playerPos.z - jail.z) <= 7;
 		}
 
 		internal static string[] UserIdsToArray(this List<Player> players)
@@ -70,11 +69,11 @@ namespace AdminToolbox.API.Extentions
 						continue;
 					if (str == player.UserId)
 						return true;
-					else if (player.GetUserGroup().Name != null && str == player.GetUserGroup().Name.Trim().ToUpper())
+					else if (player.GetUserGroup()?.Name != null && str == player.GetUserGroup()?.Name.Trim().ToUpper())
 						return true;
-					else if (player.GetUserGroup().BadgeText != null && str == player.GetUserGroup().BadgeText.Trim().ToUpper())
+					else if (player.GetUserGroup()?.BadgeText != null && str == player.GetUserGroup()?.BadgeText.Trim().ToUpper())
 						return true;
-					else if (player.GetRankName() != null && str == player.GetRankName().Trim().ToUpper())
+					else if (player.GetRankName() != null && str == player.GetRankName()?.Trim().ToUpper())
 						return true;
 				}
 				return false;
@@ -95,50 +94,60 @@ namespace AdminToolbox.API.Extentions
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed, out string[] denied)
 		{
-			denied = new string[] { "Error during command whitelist calculation!" };
-			if (sender is Player pl)
+			denied = new string[0];
+			try
 			{
-				if (commandKey.Length < 1)
-					return true;
-				string[] masterWhitelist = ConfigManager.Manager.Config.GetListValue("admintoolbox_master_whitelist", new string[] { });
-				if (masterWhitelist.ContainsPlayer(pl))
-					return true;
-
-				int validConfigs = 0;
-				foreach (string command in commandKey)
+				if (sender is Player pl)
 				{
-					command.Trim();
-					if (string.IsNullOrEmpty(command)) continue;
-					//Gets a array of whitelisted users (if any)
-					string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
-					if (configList.Length > 0)
-						validConfigs++;
-					if (configList.ContainsPlayer(pl))
+					if (commandKey.Length < 1)
 						return true;
+					string[] masterWhitelist = ConfigManager.Manager.Config.GetListValue("admintoolbox_master_whitelist", new string[] { });
+					if (masterWhitelist.ContainsPlayer(pl))
+						return true;
+
+					int validConfigs = 0;
+					foreach (string command in commandKey)
+					{
+						command.Trim();
+						if (string.IsNullOrEmpty(command)) continue;
+						//Gets a array of whitelisted users (if any)
+						string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
+						if (configList.Length > 0)
+							validConfigs++;
+						if (configList.ContainsPlayer(pl))
+							return true;
+					}
+					string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
+					denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
+					return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
+						? false
+						: !(validConfigs > 0);
 				}
-				string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
-				denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
-				return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
-					? false
-					: !(validConfigs > 0);
+				else
+					return true;
 			}
-			else
-				return true;
+			catch
+			{
+				denied = new string[] { "Error during command whitelist calculation!" };
+				return false;
+			}
 		}
 
 		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
 			=> dict?.ContainsKey(player?.UserId) ?? false;
 
-		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)
+		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] keys = dict.ToArray();
+			string[] keys = dict.Keys.ToArray();
 			if (keys.Length > 0)
 			{
 				foreach (string key in keys)
 				{
 					if (AdminToolbox.ATPlayerDict.ContainsKey(key) && !AdminToolbox.ATPlayerDict[key].keepSettings)
 					{
-						SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+						foreach (var field in typeof(PlayerSettings).GetFields().Where(p => p.FieldType == typeof(bool)))
+							field.SetValue(AdminToolbox.ATPlayerDict[key], false);
+						//SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 					}
 				}
 			}
@@ -167,7 +176,7 @@ namespace AdminToolbox.API.Extentions
 			{
 				foreach (KeyValuePair<string, PlayerSettings> kp in newDict)
 				{
-					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.Now - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
+					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.UtcNow - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
 					{
 						AdminToolbox.FileManager.PlayerStatsFileManager(kp.Key, Managers.ATFile.PlayerFile.Write);
 						dict.Remove(kp.Key);
@@ -181,7 +190,8 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		public static string ToColoredMultiAdminTeam(this Player player)
 		{
-			if (!AdminToolbox.isColored) return player.TeamRole.Name;
+			if (!AdminToolbox.isColored) 
+				return player.TeamRole.Name;
 			switch ((Team)player.TeamRole.Team)
 			{
 				case Team.SCP:

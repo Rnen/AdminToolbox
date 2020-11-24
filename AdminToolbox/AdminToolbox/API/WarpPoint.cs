@@ -5,12 +5,11 @@ namespace AdminToolbox.API
 	/// <summary>
 	/// The class <see cref="AdminToolbox"/> uses for warp-points
 	/// </summary>
-	public class WarpPoint
+	public struct WarpPoint
 	{
 		public string Name { get; set; }
-		public string Description { get; set; } = "";
+		public string Description { get; set; } 
 		public ATVector Vector { get; set; }
-		public WarpPoint() { }
 	}
 
 	/// <summary>

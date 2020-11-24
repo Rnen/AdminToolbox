@@ -11,7 +11,7 @@ namespace AdminToolbox
 	using API;
 	using API.Extentions;
 
-	internal class DamageDetect : IEventHandlerPlayerHurt
+	internal class PlayerDamageEvent : IEventHandlerPlayerHurt
 	{
 		private IConfigFile Config => ConfigManager.Manager.Config;
 
@@ -19,7 +19,7 @@ namespace AdminToolbox
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
-		public DamageDetect(AdminToolbox plugin) => this.plugin = plugin;
+		public PlayerDamageEvent(AdminToolbox plugin) => this.plugin = plugin;
 
 		private int[] CalculateTutorialDamage()
 		{
@@ -192,7 +192,7 @@ RoundEnd:;
 		}
 	}
 
-	public class DieDetect : IEventHandlerPlayerDie
+	public class PlayerDieEvent : IEventHandlerPlayerDie
 	{
 		private readonly Plugin plugin;
 
@@ -201,7 +201,7 @@ RoundEnd:;
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 
-		public DieDetect(Plugin plugin) => this.plugin = plugin;
+		public PlayerDieEvent(Plugin plugin) => this.plugin = plugin;
 
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
@@ -212,8 +212,11 @@ RoundEnd:;
 			switch ((int)ev.Player.TeamRole.Role)
 			{
 				case 3:
-					if (ev.DamageTypeVar == DamageType.LURE || ev.DamageTypeVar == DamageType.CONTAIN)
+					if (ev.DamageTypeVar == DamageType.CONTAIN)
+					{
 						ev.SpawnRagdoll = false;
+						ev.DamageTypeVar = DamageType.RAGDOLLLESS;
+					}
 					goto default;
 				default:
 					if (AdminToolbox.isRoundFinished)
@@ -225,7 +228,8 @@ RoundEnd:;
 					if (Utility.IsTeam(ev.Player, ev.Killer))
 					{
 						string keyWord = (ev.DamageTypeVar == DamageType.GRENADE) ? "granaded" : "killed";
-						if (killerSetting != null && ev.Killer.PlayerId != ev.Player.PlayerId) killerSetting.PlayerStats.TeamKills++;
+						if (killerSetting != null && ev.Killer.PlayerId != ev.Player.PlayerId) 
+							killerSetting.PlayerStats.TeamKills++;
 						if (Config.GetBoolValue("admintoolbox_debug_friendly_kill", true, false))
 							if (AdminToolbox.isColored)
 								plugin.Info(ev.Killer.ToColoredMultiAdminTeam() + " @#fg=Yellow;" + ev.Killer.Name + "@#fg=DarkRed; " + keyWord + " fellow @#fg=Default;" + ev.Player.ToColoredMultiAdminTeam() + "@#fg=Yellow; " + ev.Player.Name + "@#fg=Default;");

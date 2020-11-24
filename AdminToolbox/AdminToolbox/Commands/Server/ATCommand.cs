@@ -30,6 +30,8 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
+				if (sender != null && sender is Player pl)
+					plugin.Info($"Player \"{pl.Name}\" used the command: " + CommandAliases[0] + " " + (args.Length > 0 ? string.Join(" ", args) : ""));
 				if (args.Length > 0)
 				{
 					switch (args[0].ToUpper())
