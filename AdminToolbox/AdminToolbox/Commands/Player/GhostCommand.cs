@@ -10,10 +10,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class GhostCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
 		private Server Server => PluginManager.Manager.Server;
-
-		public GhostCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Sets the player's visibility to other players";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <PLAYER> <BOOL: ENABLED> <BOOL: VISIBLE TO SPECATOR> <BOOL: VISIBLE WHEN TALKING>";
 

@@ -93,7 +93,8 @@ namespace AdminToolbox.API
 				(int)DamageType.P90,
 				(int)DamageType.MP7,
 				(int)DamageType.LOGICIER,
-				(int)DamageType.GRENADE
+				(int)DamageType.GRENADE, 
+				(int)DamageType.MICROHID
 			},
 			ScpDamagesTypes = {
 				(int)DamageType.SCP_049,
@@ -112,7 +113,7 @@ namespace AdminToolbox.API
 				(int)Team.CDP
 			};
 
-		public static readonly DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICIER | DamageType.GRENADE;
+		public static readonly DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICIER | DamageType.GRENADE | DamageType.MICROHID;
 		public static readonly DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 | DamageType.SCP_106 | DamageType.SCP_173 | DamageType.SCP_939;
 
 

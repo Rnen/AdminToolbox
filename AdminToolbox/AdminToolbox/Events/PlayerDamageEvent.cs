@@ -197,7 +197,6 @@ RoundEnd:;
 		private readonly Plugin plugin;
 
 		private IConfigFile Config => ConfigManager.Manager.Config;
-		private Server Server => PluginManager.Manager.Server;
 
 		private Dictionary<string, PlayerSettings> Dict => AdminToolbox.ATPlayerDict;
 

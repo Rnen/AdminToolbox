@@ -11,12 +11,8 @@ namespace AdminToolbox.Command
 
 	public class LockDoorsCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
-		private static IConfigFile Config => ConfigManager.Manager.Config;
 		private Server Server => PluginManager.Manager.Server;
 
-		public LockDoorsCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <Player>";
 		public string GetCommandDescription() => "Makes the user able to lock doors interacted with";
 
@@ -45,7 +41,9 @@ namespace AdminToolbox.Command
 					return new string[] { str };
 				}
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 				Player[] players = new Player[0];
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 				bool? enabled = null;
 
 				if (args.Length > 0 && bool.TryParse(args[0], out bool b1))

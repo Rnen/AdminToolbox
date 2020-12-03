@@ -8,13 +8,7 @@ namespace AdminToolbox.Command
 {
 	public class ClosestDoorCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
-		private static IConfigFile Config => ConfigManager.Manager.Config;
-
 		private Server Server => PluginManager.Manager.Server;
-
-		public ClosestDoorCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "This is a description";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";

@@ -10,13 +10,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class GrenadeModeCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
-		private static IConfigFile Config => ConfigManager.Manager.Config;
-
 		private Server Server => PluginManager.Manager.Server;
-
-		public GrenadeModeCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Enableds/Disables grenademode";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
@@ -40,7 +34,9 @@ namespace AdminToolbox.Command
 							return plNames.ToArray();
 					}
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 				Player[] players = new Player[0];
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 				if (args.Length > 0 && Utility.AllAliasWords.Contains(args[0].ToUpper()))
 				{
 					players = Server.GetPlayers().ToArray();

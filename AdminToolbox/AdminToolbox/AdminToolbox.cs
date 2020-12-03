@@ -93,7 +93,11 @@ namespace AdminToolbox
 		/// Called when <see cref="AdminToolbox"/> gets disabled
 		/// </summary>
 		public override void OnDisable()
-			=> Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
+		{
+			UnRegisterCommands();
+			UnRegisterEvents();
+			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
+		}
 
 		/// <summary>
 		/// Called when <see cref="AdminToolbox"/> gets enabled
@@ -153,15 +157,15 @@ namespace AdminToolbox
 			this.AddCommands(ATBanCommand.CommandAliases, new ATBanCommand(this));
 			this.AddCommands(KillCommand.CommandAliases, new KillCommand(this));
 			this.AddCommands(SpeakCommand.CommandAliases, new SpeakCommand());
-			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand(this));
+			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand());
 			this.AddCommands(AT_HelpCommand.CommandAliases, new AT_HelpCommand());
 			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
 			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand());
-			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
+			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand());
 			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
-			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand(this));
-			this.AddCommands(GrenadeModeCommand.CommandAliases, new GrenadeModeCommand(this));
-			this.AddCommands(InfiniteItemCommand.CommandAliases, new InfiniteItemCommand(this));
+			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand());
+			this.AddCommands(GrenadeModeCommand.CommandAliases, new GrenadeModeCommand());
+			this.AddCommands(InfiniteItemCommand.CommandAliases, new InfiniteItemCommand());
 		}
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);
 		internal void RegisterConfigs()
@@ -175,7 +179,7 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, true, "What (int)damagetypes TUTORIAL is allowed to take"));
 
 			#region Debug
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, true, "What (int)damagetypes to debug"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, true, "What (int)damagetypes to debug"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_server", false, true, "Debugs damage dealt by server"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator", false, true, "Debugs damage done to/by spectators"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial", false, true, "Debugs damage done to tutorial"));
@@ -195,7 +199,7 @@ namespace AdminToolbox
 			#endregion
 			#region Cards
 			this.AddConfig(new ConfigSetting("admintoolbox_custom_nuke_cards", false, true, "Enables the use of custom keycards for the activation of the nuke"));
-			this.AddConfig(new ConfigSetting("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, true, "List of all cards that can enable the nuke"));
+			this.AddConfig(new ConfigSetting("admintoolbox_nuke_card_list", new int[] { (int)ItemType.KeycardContainmentEngineer, (int)ItemType.KeycardFacilityManager, (int)ItemType.KeycardO5 }, true, "List of all cards that can enable the nuke"));
 			#endregion
 			#region Log-Stuff
 			this.AddConfig(new ConfigSetting("admintoolbox_log_teamkills", false, true, "Writing logfiles for teamkills"));

@@ -15,8 +15,6 @@ namespace AdminToolbox.Managers
 	{
 		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
-		private static int Port => PluginManager.Manager.Server.Port;
-
 		private static string WarpPointsFolder => ATFile.GetFolderPath(Folder.Warps);
 
 		private static string WarpFilePath => WarpPointsFolder + "Global.txt";
@@ -158,8 +156,7 @@ namespace AdminToolbox.Managers
 				Debug("Converting JSON to array");
 
 				WarpPoint[] warpArray = Utf8Json.JsonSerializer.Deserialize<WarpPoint[]>(jsonData);
-				//WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
-				//WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
+
 				if (warpArray.Length > 0)
 				{
 					Debug("Populating dict with json array");

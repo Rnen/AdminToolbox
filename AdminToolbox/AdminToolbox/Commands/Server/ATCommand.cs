@@ -18,7 +18,6 @@ namespace AdminToolbox.Command
 		private readonly AdminToolbox plugin;
 		private static ICommandManager CommandManager => PluginManager.Manager.CommandManager;
 		private static IConfigFile Config => ConfigManager.Manager.Config;
-		private Server Server => PluginManager.Manager.Server;
 
 		public ATCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetCommandDescription() => "Command with sub-commands";

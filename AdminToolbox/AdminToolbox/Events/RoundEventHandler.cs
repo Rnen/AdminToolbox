@@ -30,7 +30,7 @@ namespace AdminToolbox
 			AdminToolbox.isRoundFinished = false;
 			if (Config.GetBoolValue("admintoolbox_round_info", true, false))
 			{
-				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
+				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " start");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
 			Managers.ATFile.AddMissingPlayerVariables();
