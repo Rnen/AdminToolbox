@@ -27,11 +27,10 @@ namespace AdminToolbox.Command
 
 				SMDoor closestDoor = null;
 				float dist = float.MaxValue;
-				float newDist = float.MaxValue;
-
+				
 				foreach (SMDoor d in Server.Map.GetDoors())
 				{
-					newDist = Vector.Distance(d.Position, targetPlayer.GetPosition());
+					float newDist = Vector.Distance(d.Position, targetPlayer.GetPosition());
 					if (newDist < dist)
 					{
 						closestDoor = d;

@@ -29,7 +29,7 @@ namespace AdminToolbox
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "20";
+		internal const string AT_Revision = "21";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 
@@ -73,7 +73,7 @@ namespace AdminToolbox
 #endif
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserId"/> as KEY
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserId"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 
@@ -218,8 +218,6 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_block_role_damage", new string[0], true, "What roles cannot attack other roles"));
 
 			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
-			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
 		}
 
 		/// <summary>

@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 	public class RespawnLockCommand : ICommandHandler
 	{
 		public string GetCommandDescription() => "Keeps players from spawning";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
+		public string GetUsage() => $"({string.Join(" / ", CommandAliases)})";
 		public static readonly string[] CommandAliases = new string[] { "RESPAWNLOCK", "RSL", "RSPL" };
 
 		public string[] OnCall(ICommandSender sender, string[] args)

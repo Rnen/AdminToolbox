@@ -32,9 +32,6 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				if (sender != null && sender is Player p && p != null)
-					Managers.ATFile.AddMissingPlayerVariables(p);
-
 				if (args.Length > 0)
 				{
 					switch (args[0].ToUpper())
@@ -62,22 +59,24 @@ namespace AdminToolbox.Command
 							return new string[] { "Refreshed warps!" };
 						case "REMOVE":
 						case "-":
-							if (AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
-							{
-								AdminToolbox.WarpVectorDict.Remove(args[1].ToLower());
-								AdminToolbox.WarpManager.WriteWarpsToFile();
-								return new string[] { "Warp point: " + args[1].ToLower() + " removed." };
-							}
-							else
-								return new string[] { "Warp point " + args[1].ToLower() + " does not exist!" };
+							if (args.Length > 1)
+								if (AdminToolbox.WarpVectorDict.ContainsKey(args[1].ToLower()))
+								{
+									AdminToolbox.WarpVectorDict.Remove(args[1].ToLower());
+									AdminToolbox.WarpManager.WriteWarpsToFile();
+									return new string[] { "Warp point: " + args[1].ToLower() + " removed." };
+								}
+								else
+									return new string[] { "Warp point " + args[1].ToLower() + " does not exist!" };
+							return new string[] { GetUsage() };
 						case "ADD":
 						case "+":
 							if (args.Length > 2)
 							{
 								if (!AdminToolbox.WarpVectorDict.ContainsKey(args[2].ToLower()))
 								{
-									Player myPlayer = GetPlayerFromString.GetPlayer(args[1]);
-									if (myPlayer == null) { return new string[] { "Could not find player: " + args[1] }; ; }
+									if (!GetPlayerFromString.TryGetPlayer(args[1], out Player myPlayer))
+										return new string[] { "Could not find player: " + args[1] };
 									Vector myvector = myPlayer.GetPosition();
 									string desc = "";
 									if (args.Length >= 3)

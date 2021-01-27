@@ -57,7 +57,7 @@ namespace AdminToolbox.Command
 							}
 							catch
 							{
-								return new string[] { "Failed to open browser! Please visit GitHub or use \"AT_AutoUpdate.bat\" instead" };
+								return new string[] { $"Failed to open browser! Please run \"AT_AutoUpdate.bat\" or visit GitHub: {ATWeb.LatestRelease.DownloadLink}" };
 							}
 						case "WEBH":
 						case "WEBHOOK":

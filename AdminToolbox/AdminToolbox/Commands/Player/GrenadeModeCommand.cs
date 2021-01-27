@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 				}
 				if (players.Length > 0)
 				{
-					bool? s = (args.Length > 1 && bool.TryParse(args[1], out bool b) ? (bool?)b : null);
+					bool? s = (args.Length > 1 && bool.TryParse(args[1], out bool b)) ? (bool?)b : null;
 					foreach (Player pl in players)
 					{
 						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))

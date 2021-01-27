@@ -22,8 +22,6 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool TryParseRole(int roleID, out SMRoleType role)
 		{
-			role = SMRoleType.UNASSIGNED;
-
 			try
 			{
 				role = (SMRoleType)roleID;
@@ -43,8 +41,6 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool TryParseItem(int itemID, out SMItemType itemType)
 		{
-			itemType = SMItemType.NULL;
-
 			try
 			{
 				itemType = (SMItemType)itemID;
@@ -66,18 +62,26 @@ namespace AdminToolbox.API
 		{
 			itemType = SMItemType.NULL;
 
-			if (int.TryParse(item, out int x))
-				return TryParseItem(x, out itemType);
-
-			foreach (SMItemType i in Enum.GetValues(typeof(SMItemType)))
+			try
 			{
-				if (i.ToString().ToUpper().Contains(item.ToUpper()))
+				if (int.TryParse(item, out int x))
+					return TryParseItem(x, out itemType);
+
+				foreach (SMItemType i in Enum.GetValues(typeof(SMItemType)))
 				{
-					itemType = i;
-					return true;
+					if (i.ToString().ToUpper().Contains(item.ToUpper()))
+					{
+						itemType = i;
+						return true;
+					}
 				}
+				return true;
 			}
-			return true;
+			catch
+			{
+				itemType = SMItemType.NULL;
+				return false;
+			}
 		}
 
 		/// <summary>

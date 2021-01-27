@@ -78,8 +78,7 @@ namespace AdminToolbox.API
 				Debug($"Variables stored, sending \"{player.Name}\" to jail");
 				player.ChangeRole(Smod2.API.RoleType.TUTORIAL, true, false);
 				player.Teleport(JailPos, true);
-				foreach (SMItem item in player.GetInventory())
-					item.Remove();
+				player.ClearInventory();
 				psetting.isJailed = true;
 				return true;
 			}
@@ -109,11 +108,10 @@ namespace AdminToolbox.API
 				psetting.JailedToTime = DateTime.UtcNow;
 				player.ChangeRole(psetting.previousRole, true, false);
 				player.Teleport(psetting.originalPos, true);
-				player.SetHealth(psetting.previousHealth);
+				player.HP = psetting.previousHealth;
 				if (psetting.playerPrevInv != null)
 				{
-					foreach (SMItem item in player.GetInventory())
-						item.Remove();
+					player.ClearInventory();
 					foreach (SMItem item in psetting.playerPrevInv)
 						player.GiveItem(item.ItemType);
 				}

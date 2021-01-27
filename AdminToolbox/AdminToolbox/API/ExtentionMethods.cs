@@ -145,7 +145,7 @@ namespace AdminToolbox.API.Extentions
 				{
 					if (AdminToolbox.ATPlayerDict.ContainsKey(key) && !AdminToolbox.ATPlayerDict[key].keepSettings)
 					{
-						foreach (var field in typeof(PlayerSettings).GetFields().Where(p => p.FieldType == typeof(bool)))
+						foreach (FieldInfo field in typeof(PlayerSettings).GetFields().Where(p => p.FieldType == typeof(bool)))
 							field.SetValue(AdminToolbox.ATPlayerDict[key], false);
 						//SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 					}

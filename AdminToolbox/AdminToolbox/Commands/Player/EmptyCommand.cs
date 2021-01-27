@@ -32,12 +32,12 @@ namespace AdminToolbox.Command
 
 				foreach (string arg in args)
 				{
-					if (player == null && GetPlayerFromString.GetPlayer(arg) is Player p && p != null)
+					if (player == null && GetPlayerFromString.TryGetPlayer(arg, out Player p))
 					{
 						player = p;
 						continue;
 					}
-					if (int.TryParse(arg, out int itemNumber))
+					if (type == Smod2.API.ItemType.NULL && int.TryParse(arg, out int itemNumber))
 					{
 						Utility.TryParseItem(itemNumber, out type);
 						continue;

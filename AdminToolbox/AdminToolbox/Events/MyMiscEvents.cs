@@ -124,9 +124,8 @@ namespace AdminToolbox
 			if (ev.Player != null && ev.Player is Player player)
 			{
 				ATFile.AddMissingPlayerVariables(player);
-				AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings playerSetting);
 
-				if (playerSetting != null)
+				if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings playerSetting))
 				{
 					if (playerSetting.destroyDoor)
 					{
@@ -158,9 +157,8 @@ namespace AdminToolbox
 				ATFile.AddMissingPlayerVariables(ev.Player);
 			}
 
-			if (AdminToolbox.ATPlayerDict.ContainsKey(ev.Player.UserId))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(ev.Player.UserId, out PlayerSettings pSettings))
 			{
-				PlayerSettings pSettings = AdminToolbox.ATPlayerDict[ev.Player.UserId];
 				if (pSettings.overwatchMode)
 				{
 					pSettings.DeathPos = ev.SpawnPos;
@@ -177,8 +175,10 @@ namespace AdminToolbox
 		private int checkNewVersion = 8;
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
 		{
-			ATFile.ConvertOldFilesToNewUserID();
+			Debug($"Entered {System.Reflection.MethodBase.GetCurrentMethod().Name} method");
 
+
+			ATFile.RenameOldFilesToNewUserID();
 
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.isStarting)
@@ -204,13 +204,13 @@ namespace AdminToolbox
 			{
 				AdminToolbox.intercomLock = Config.GetBoolValue("admintoolbox_intercomlock", false);
 			}
-			//this.plugin.Info(System.Reflection.Assembly.GetExecutingAssembly().Location);
-			if (checkNewVersion >= 8)
+			if (checkNewVersion >= 15)
 			{
 				checkNewVersion = 0;
 				if (ATWeb.NewerVersionAvailable())
 				{
-					plugin.Info("\n\n [New Version of AdminToolbox avaiable for download!] [V:" + ATWeb.LatestRelease.Version + "]\n " + " Either update via \"AT_AutoUpdate.bat\" or write \"AT DOWNLOAD\"" + "\n\n");
+					plugin.Info($"\n\nNew Version of \"{AdminToolbox.singleton.Details.name}\" avaiable for download! [CURRENT:{AdminToolbox.AT_Version}][NEW:{ATWeb.LatestRelease.Version}]\n" +
+						$"Either update via \"AT_AutoUpdate.bat\" or use the commmand: \"AT DOWNLOAD\"\n\n");
 				}
 			}
 			else
@@ -265,12 +265,13 @@ namespace AdminToolbox
 						ev.Player.Name + " joined as player (" + player.PlayerId + ")" + Environment.NewLine +
 						"From IP: " + player.IpAddress.Replace("::ffff:", string.Empty) + Environment.NewLine +
 						"Using UserId: " + player.UserId + Environment.NewLine;
-					if (bancount > 0) str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
+					if (bancount > 0) 
+						str += "Player has: \"" + bancount + "\" ban(s) on record" + Environment.NewLine;
 					plugin.Info(str);
 				}
 				else if (Config.GetBoolValue("admintoolbox_player_join_info", true, false))
 				{
-					plugin.Info(player.Name + " just joined the server!");
+					plugin.Info($"\"{player.Name}\" joined the server!");
 				}
 				if (AdminToolbox.ATPlayerDict.ContainsKey(player.UserId))
 				{
@@ -359,14 +360,15 @@ namespace AdminToolbox
 		public void OnSetServerName(SetServerNameEvent ev)
 		{
 			ev.ServerName = ev.ServerName.Replace("$atversion", "AT:" + plugin.Details.version);
-			ev.ServerName = Config.GetBoolValue("admintoolbox_tracking", true) ? ev.ServerName += "<color=#ffffff00><size=1>AT:" + plugin.Details.version + "</size></color>" : ev.ServerName;
+			if (Config.GetBoolValue("admintoolbox_tracking", true) && !ev.ServerName.Contains("AT:" + plugin.Details.version))
+				ev.ServerName += "<color=#ffffff00><size=1>AT:" + plugin.Details.version + "</size></color>";
 		}
 
 		public void OnHandcuffed(PlayerHandcuffedEvent ev)
 		{
 			PlayerSettings playerSetting = Dict.ContainsKey(ev.Player.UserId) ? Dict[ev.Player.UserId] : null;
 
-			if (ev.Player.GetGodmode() || (playerSetting?.godMode ?? false))
+			if (ev.Player.GodMode || (playerSetting?.godMode ?? false))
 			{
 				ev.Allow = false;
 			}
@@ -420,7 +422,7 @@ namespace AdminToolbox
 				if (ps.isJailed || ps.lockDown)
 					ev.Allow = false;
 				else if (ps.grenadeMode || ps.InfiniteItem == Smod2.API.ItemType.FRAG_GRENADE || ps.InfiniteItem == Smod2.API.ItemType.FLASHBANG)
-					ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? Smod2.API.ItemType.FRAG_GRENADE : Smod2.API.ItemType.FLASHBANG);
+					ev.RemoveItem = false; //ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? Smod2.API.ItemType.FRAG_GRENADE : Smod2.API.ItemType.FLASHBANG);
 			}
 		}
 
@@ -449,8 +451,9 @@ namespace AdminToolbox
 						}
 		}
 	}
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public class LateEscapeEventCheck : IEventHandlerCheckEscape
+
+
+	internal class LateEscapeEventCheck : IEventHandlerCheckEscape
 	{
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
@@ -460,5 +463,4 @@ namespace AdminToolbox
 			}
 		}
 	}
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Smod2;
 using Smod2.API;
+using System.Text.RegularExpressions;
 
 namespace AdminToolbox.Managers
 {
@@ -154,7 +155,7 @@ namespace AdminToolbox.Managers
 		/// </summary>
 		public void PlayerStatsFileManager(string[] UserIdArray, PlayerFile FileOperation = PlayerFile.Read)
 		{
-			if (!Config.GetBoolValue("admintoolbox_playerfiles", false))
+			if (!Config.GetBoolValue("admintoolbox_playerfiles", true))
 				return;
 			if (Directory.Exists(MainPath))
 			{
@@ -189,82 +190,83 @@ namespace AdminToolbox.Managers
 				}
 
 				ProcessingCollection = false;
-
-				#region NewFilesStuff
-				/*
-				void NewWriteToFile(string UserId)
-				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
-					string playerFilePath = AdminToolboxPlayerStats + UserId + ".txt";
-					if (!File.Exists(playerFilePath))
-						File.Create(playerFilePath).Dispose();
-
-					if (File.ReadAllLines(playerFilePath).Length <= 2)
-						ConvertOldFilesToJSON(playerFilePath);
-					SerilizablePlayerClass pl = new SerilizablePlayerClass(AdminToolbox.ATPlayerDict[UserId]);
-
-					if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
-						pl.PlayerInfo.FirstJoin = DateTime.UtcNow.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
-
-					using (StreamWriter sw = new StreamWriter(playerFilePath, false))
-					{
-						sw.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(pl)));
-					}
-
-					NewReadFromFile(UserId);
-				}
-				void NewReadFromFile(string UserId)
-				{
-					if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
-					string playerFilePath = AdminToolboxPlayerStats + UserId + ".txt";
-					if (!File.Exists(playerFilePath))
-						WriteToFile(UserId);
-
-					if (File.ReadAllLines(playerFilePath).FirstOrDefault().Split(ATFileManager.SplitChar).Length > 3)
-						ConvertOldFilesToJSON(playerFilePath);
-
-					string rawJSON = File.ReadAllText(playerFilePath);
-					SerilizablePlayerClass pl = Utf8Json.JsonSerializer.Deserialize<SerilizablePlayerClass>(rawJSON);
-
-					PlayerSettings playersetting = AdminToolbox.ATPlayerDict[UserId];
-
-					if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
-						playersetting.PlayerInfo.FirstJoin = DateTime.UtcNow.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
-					playersetting.PlayerStats = pl.PlayerStats;
-				}*/
-				
-				#endregion
-
 			}
 		}
+
+		#region NewFilesStuff -The new JSON stuff
+#pragma warning disable IDE0051 // Remove unused private members
+		private void NewWriteToFile(string UserId)
+		{
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) 
+				return;
+			string playerFilePath = PlayerStatsPath + UserId + ".txt";
+			if (!File.Exists(playerFilePath))
+				File.Create(playerFilePath).Dispose();
+
+			if (File.ReadAllLines(playerFilePath).Length <= 2)
+				ConvertOldFilesToJSON(playerFilePath);
+
+			SerializablePlayerClass pl = new SerializablePlayerClass(AdminToolbox.ATPlayerDict[UserId]);
+
+			if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
+				pl.PlayerInfo.FirstJoin = DateTime.UtcNow.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
+
+			using (StreamWriter sw = new StreamWriter(playerFilePath, false))
+			{
+				sw.WriteLine(Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(pl)));
+			}
+		}
+		private void NewReadFromFile(string UserId)
+		{
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) 
+				return;
+			string playerFilePath = PlayerStatsPath + UserId + ".txt";
+			if (!File.Exists(playerFilePath))
+				WriteToFile(UserId);
+
+			if (File.ReadAllLines(playerFilePath).Length <= 2)
+				ConvertOldFilesToJSON(playerFilePath);
+
+			string rawJSON = File.ReadAllText(playerFilePath);
+			SerializablePlayerClass pl = Utf8Json.JsonSerializer.Deserialize<SerializablePlayerClass>(rawJSON);
+
+			PlayerSettings playersetting = AdminToolbox.ATPlayerDict[UserId];
+
+			if (string.IsNullOrEmpty(pl.PlayerInfo.FirstJoin))
+				playersetting.PlayerInfo.FirstJoin = DateTime.UtcNow.AddMinutes(-pl.PlayerStats.MinutesPlayed).ToString(CultureInfo.InvariantCulture);
+			playersetting.PlayerStats = pl.PlayerStats;
+		}
+#pragma warning restore IDE0051 // Remove unused private members
+		#endregion
 
 		private void WriteToFile(string UserId)
 		{
 			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId))
 			{
-				if (PluginManager.Manager.Server.GetPlayers(UserId).Count < 1) return;
-				AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId).FirstOrDefault());
+				if (PluginManager.Manager.Server.GetPlayers(UserId).Count < 1) 
+					return;
+				AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId));
 			}
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) return;
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) 
+				return;
 			string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? PlayerStatsPath + Path.DirectorySeparatorChar + UserId + ".txt" : PlayerStatsPath + Path.DirectorySeparatorChar + "server" + ".txt";
 			if (!File.Exists(playerFilePath))
 				File.Create(playerFilePath).Dispose();
 			Debug("Writing: " + playerFilePath);
 
-			PlayerSettings setting = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? AdminToolbox.ATPlayerDict[UserId] : new PlayerSettings(UserId);
-			int Kills = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills : 0;
-			int TeamKills = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills : 0;
-			int Deaths = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths : 0;
-			double minutesPlayed = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed > 0) ? DateTime.UtcNow.Subtract(AdminToolbox.ATPlayerDict[UserId].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed : 0;
-			int BanCount = (AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount : 0;
-			if (AdminToolbox.ATPlayerDict.ContainsKey(UserId)) AdminToolbox.ATPlayerDict[UserId].JoinTime = DateTime.UtcNow;
-			string str = string.Empty + Kills + SplitChar + TeamKills + SplitChar + Deaths + SplitChar + minutesPlayed + SplitChar + BanCount;
+			string Kills = ((AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Kills : 0).ToString(CultureInfo.InvariantCulture);
+			string TeamKills = ((AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.TeamKills : 0).ToString(CultureInfo.InvariantCulture);
+			string Deaths = ((AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.Deaths : 0).ToString(CultureInfo.InvariantCulture);
+			string minutesPlayed = ((AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed > 0) ? DateTime.UtcNow.Subtract(AdminToolbox.ATPlayerDict[UserId].JoinTime).TotalMinutes + AdminToolbox.ATPlayerDict[UserId].PlayerStats.MinutesPlayed : 0).ToString(CultureInfo.InvariantCulture);
+			string BanCount = ((AdminToolbox.ATPlayerDict.ContainsKey(UserId) && AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount > 0) ? AdminToolbox.ATPlayerDict[UserId].PlayerStats.BanCount : 0).ToString(CultureInfo.InvariantCulture);
+			if (AdminToolbox.ATPlayerDict.ContainsKey(UserId)) 
+				AdminToolbox.ATPlayerDict[UserId].JoinTime = DateTime.UtcNow;
+			string str = string.Join(SplitChar.ToString(), new string[] { Kills, TeamKills, Deaths, minutesPlayed, BanCount });
 			using (StreamWriter streamWriter = new StreamWriter(playerFilePath, false))
 			{
 				streamWriter.Write(str);
 				streamWriter.Close();
 			}
-			ReadFromFile(UserId);
 		}
 		private void ReadFromFile(string UserId)
 		{
@@ -286,21 +288,31 @@ namespace AdminToolbox.Managers
 			}
 		}
 
-		public static void ConvertOldFilesToNewUserID()
+		public static void RenameOldFilesToNewUserID()
 		{
-			if (!Config.GetBoolValue("admintoolbox_playerfiles", false))
+			Info($"Entered {System.Reflection.MethodBase.GetCurrentMethod().Name} method");
+
+			if (!Config.GetBoolValue("admintoolbox_playerfiles", true))
+			{
+				Info("PlayerfilesConfig was " + Config.GetBoolValue("admintoolbox_playerfiles", true) + ", returning");
 				return;
+			}
 			if (Config.GetBoolValue("admintoolbox_userfiles_convert", true))
 			{
-				string[] files = Directory.GetFiles(PlayerStatsPath);
-				if (files.Any(s => !s.Contains('@')))
+				Info("Checking path: " + PlayerStatsPath);
+				
+				string[] files = Directory.GetFiles(PlayerStatsPath, "*.txt").Where(n => !n.Contains("@")).ToArray();
+
+				Info("PlayerFiles count: " + files.Length);
+				
+				if (files.Length > 0)
 				{
-					int fileCount = 0;
-					Info("- Converting old file(s) to new UserID format");
-					if (files.Length > 5000)
+					Info($"Files to convert: {files.Length}\n - Converting old file(s) to new UserID format");
+					if (files.Length > 2000)
 					{
-						Info("- Large amount of files detected, this may take a moment...");
+						Info(" - Large amount of files detected, this may take a moment...");
 					}
+					int fileCount = 0;
 					for (int i = files.Length - 1; i > -1; i--)
 					{
 						if (!Path.GetFileName(files[i]).Contains('@'))
@@ -314,6 +326,10 @@ namespace AdminToolbox.Managers
 						}
 					}
 					Info($"- {fileCount} file(s) converted");
+				}
+				else
+				{
+					Debug("No files to convert!");
 				}
 			}
 			else if (Config.GetBoolValue("admintoolbox_userfiles_revert", false))
@@ -353,7 +369,8 @@ namespace AdminToolbox.Managers
 			if (statsFiles.Length > 0)
 				foreach (string path in statsFiles)
 				{
-					if (!File.Exists(path) || File.ReadAllLines(path).FirstOrDefault().StartsWith("{")) continue;
+					if (!File.Exists(path) || File.ReadAllLines(path).FirstOrDefault().StartsWith("{")) 
+						continue;
 					try
 					{
 						string[] rawData = File.ReadAllText(path).Split(';');

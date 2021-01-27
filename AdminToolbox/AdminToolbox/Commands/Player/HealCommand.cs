@@ -26,46 +26,51 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (int.TryParse(args[1], out int j))
+							if (int.TryParse(args[1], out int amount))
 							{
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									pl.HP += j;
+									pl.HP += amount;
 									playerNum++;
 								}
-								if (playerNum > 1)
-									return new string[] { "Added " + j + " HP to " + playerNum + " player(s)" };
-								else
-									return new string[] { "Added " + j + " HP to " + playerNum + " player" };
+								return new string[] { "Added " + amount + " HP to " + playerNum + " player" + (playerNum > 1 ? "s" : "") };
 							}
 							else
 							{
-								return new string[] { "Not a valid number!" };
+								return new string[] { args[1] + " : Not a valid number!" };
 							}
 						}
 						else
 						{
-							foreach (Player pl in Server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
-							return new string[] { "Set all players to their default max HP" };
+							int count = 0;
+							foreach (Player pl in Server.GetPlayers())
+							{
+								pl.HP = pl.TeamRole.MaxHP;
+								count++;
+							}
+							return new string[] { $"Set {count} player{(count > 1 ? "s" : "")} to their default max HP" };
 						}
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
-					if (myPlayer == null) return new string[] { "Couldn't find player: " + args[0] };
-					if (args.Length > 1)
-					{
-						if (int.TryParse(args[1], out int j))
-						{
-							myPlayer.HP += j;
-							return new string[] { "Added " + j + " HP " + " to " + myPlayer.Name };
-						}
-						else
-							return new string[] { "Not a valid number!" };
-					}
+					if (!GetPlayerFromString.TryGetPlayer(args[0], out Player myPlayer))
+						return new string[] { "Couldn't find player: " + args[0] };
 					else
 					{
-						myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
-						return new string[] { "Set " + myPlayer.Name + " to full HP" };
+						if (args.Length > 1)
+						{
+							if (int.TryParse(args[1], out int amount))
+							{
+								myPlayer.HP += amount;
+								return new string[] { "Added " + amount + " HP " + " to " + myPlayer.Name };
+							}
+							else
+								return new string[] { "Not a valid number!" };
+						}
+						else
+						{
+							myPlayer.HP = myPlayer.TeamRole.MaxHP;
+							return new string[] { "Set " + myPlayer.Name + " to full HP" };
+						}
 					}
 				}
 				else
