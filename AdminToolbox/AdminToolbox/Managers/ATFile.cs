@@ -247,7 +247,7 @@ namespace AdminToolbox.Managers
 					return;
 				AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers(UserId));
 			}
-			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId)) 
+			if (!AdminToolbox.ATPlayerDict.ContainsKey(UserId) || UserId == "----------------------------------------") 
 				return;
 			string playerFilePath = AdminToolbox.ATPlayerDict.ContainsKey(UserId) ? PlayerStatsPath + Path.DirectorySeparatorChar + UserId + ".txt" : PlayerStatsPath + Path.DirectorySeparatorChar + "server" + ".txt";
 			if (!File.Exists(playerFilePath))
@@ -290,24 +290,22 @@ namespace AdminToolbox.Managers
 
 		public static void RenameOldFilesToNewUserID()
 		{
-			Info($"Entered {System.Reflection.MethodBase.GetCurrentMethod().Name} method");
+			Debug($"Entered {System.Reflection.MethodBase.GetCurrentMethod().Name} method");
 
 			if (!Config.GetBoolValue("admintoolbox_playerfiles", true))
 			{
-				Info("PlayerfilesConfig was " + Config.GetBoolValue("admintoolbox_playerfiles", true) + ", returning");
+				Debug("PlayerfilesConfig was " + Config.GetBoolValue("admintoolbox_playerfiles", true) + ", returning");
 				return;
 			}
 			if (Config.GetBoolValue("admintoolbox_userfiles_convert", true))
 			{
-				Info("Checking path: " + PlayerStatsPath);
+				Debug("Checking path: " + PlayerStatsPath);
 				
 				string[] files = Directory.GetFiles(PlayerStatsPath, "*.txt").Where(n => !n.Contains("@")).ToArray();
-
-				Info("PlayerFiles count: " + files.Length);
 				
 				if (files.Length > 0)
 				{
-					Info($"Files to convert: {files.Length}\n - Converting old file(s) to new UserID format");
+					Info($"Files to rename: {files.Length}\n - Re-naming old file(s) to new UserID format");
 					if (files.Length > 2000)
 					{
 						Info(" - Large amount of files detected, this may take a moment...");
@@ -325,11 +323,11 @@ namespace AdminToolbox.Managers
 							File.Move(files[i], _newpath);
 						}
 					}
-					Info($"- {fileCount} file(s) converted");
+					Info($"- {fileCount} file(s) renamed to new UserID format");
 				}
 				else
 				{
-					Debug("No files to convert!");
+					Debug("No files to rename!");
 				}
 			}
 			else if (Config.GetBoolValue("admintoolbox_userfiles_revert", false))
