@@ -109,12 +109,12 @@ namespace AdminToolbox.API
 				(int)DamageType.SCP_939
 			},
 			NineTailsTeam = {
-				(int)Team.MTF,
-				(int)Team.RSC
+				(int)TeamType.NINETAILFOX,
+				(int)TeamType.SCIENTIST
 			},
 			ChaosTeam = {
-				(int)Team.CHI,
-				(int)Team.CDP
+				(int)TeamType.CHAOS_INSURGENCY,
+				(int)TeamType.CLASSD
 			};
 
 		public static readonly DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICIER | DamageType.GRENADE | DamageType.MICROHID;
