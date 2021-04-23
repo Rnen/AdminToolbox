@@ -29,7 +29,7 @@ namespace AdminToolbox
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "21";
+		internal const string AT_Revision = "22";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 
