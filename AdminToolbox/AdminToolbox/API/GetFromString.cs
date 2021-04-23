@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using Smod2;
 using Smod2.API;
 
@@ -14,6 +15,7 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// Returns <see cref ="Player"/> from <see cref="string"/> <paramref name="arg"/>
 		/// </summary>
+		/// <returns><see cref="Player"/></returns>
 		public static Player GetPlayer(string arg)
 		{
 			Player playerOut = null;
@@ -21,7 +23,7 @@ namespace AdminToolbox.API
 				return null;
 			try
 			{
-				if (short.TryParse(arg, out short pID))
+				if (byte.TryParse(arg, out byte pID))
 				{
 					foreach (Player pl in Server.GetPlayers())
 						if (pl.PlayerId == pID)
@@ -41,7 +43,7 @@ namespace AdminToolbox.API
 				}
 				else
 				{
-					playerOut =  Server.GetPlayers(arg.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
+					playerOut = Server.GetPlayers(arg.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
 				}
 			}
 			catch (System.Exception e)
@@ -52,9 +54,54 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Attempts to get player from <see cref="GetPlayer(string)"/>. 
-		/// <returns>Returns <see cref ="bool"/> based on success</returns> 
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
 		/// </summary>
+		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		public static Player[] GetGroup(string name)
+		{
+			if (!name.StartsWith("#"))
+				name = name.TrimStart(new char[] { '#' }).ToLower();
+			if (!string.IsNullOrEmpty(name))
+			{
+				return Server.GetPlayers().Where(n => n.GetUserGroup().Name.ToLower().Contains(name) || n.GetRankName().ToLower().Contains(name) || n.GetUserGroup().BadgeText.ToLower().Contains(name)).ToArray();
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
+		/// </summary>
+		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		public static Player[] GetRole(string name)
+		{
+			if (!name.StartsWith("$"))
+				name = name.TrimStart(new char[] { '$' }).ToLower();
+			if (!string.IsNullOrEmpty(name))
+			{
+				return Server.GetPlayers().Where(n => n.TeamRole.Role.ToString().ToLower().Contains(name)).ToArray();
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
+		/// </summary>
+		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		public static Player[] GetTeam(string name)
+		{
+			if (!name.StartsWith("$"))
+				name = name.TrimStart(new char[] { '$' }).ToLower();
+			if (!string.IsNullOrEmpty(name))
+			{
+				return Server.GetPlayers().Where(n => n.TeamRole.Team.ToString().ToLower().Contains(name)).ToArray();
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Attempts to get player from <see cref="GetPlayer(string)"/>. 
+		/// </summary>
+		/// <returns><see cref ="bool"/> based on success</returns> 
 		public static bool TryGetPlayer(string arg, out Player player)
 		{
 			player = GetPlayer(arg);
