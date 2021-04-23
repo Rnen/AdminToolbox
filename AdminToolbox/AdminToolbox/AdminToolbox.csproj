@@ -81,7 +81,7 @@
     <Compile Include="API\ATWeb.cs" />
     <Compile Include="API\DiscordWebhook.cs" />
     <Compile Include="API\ExtentionMethods.cs" />
-    <Compile Include="API\GetPlayerFromString.cs" />
+    <Compile Include="API\GetFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="API\SetPlayerVariables.cs" />

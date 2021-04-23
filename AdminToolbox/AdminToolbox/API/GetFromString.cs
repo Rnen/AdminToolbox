@@ -7,7 +7,7 @@ namespace AdminToolbox.API
 	/// <summary>
 	/// Class containing the <see cref="GetPlayer(string)"/> constructor
 	/// </summary>
-	public static class GetPlayerFromString
+	public static class GetFromString
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
