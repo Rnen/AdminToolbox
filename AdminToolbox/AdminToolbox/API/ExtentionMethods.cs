@@ -15,7 +15,7 @@ namespace AdminToolbox.API.Extentions
 		private static Server Server => PluginManager.Manager.Server;
 
 		internal static bool GetIsJailed(this Player player)
-			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserId) && AdminToolbox.ATPlayerDict[player.UserId].isJailed;
+			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserID) && AdminToolbox.ATPlayerDict[player.UserID].isJailed;
 
 		public static bool IsInsideJail(this Player player)
 		{
@@ -27,12 +27,12 @@ namespace AdminToolbox.API.Extentions
 				&& Math.Abs(playerPos.z - jail.z) <= 7;
 		}
 
-		internal static string[] UserIdsToArray(this List<Player> players)
+		internal static string[] UserIDsToArray(this List<Player> players)
 		{
 			string[] newArray = new string[players.Count];
 			for (int i = 0; i < players.Count; i++)
 			{
-				newArray[i] = players[i].UserId;
+				newArray[i] = players[i].UserID;
 			}
 			return newArray;
 		}
@@ -46,8 +46,8 @@ namespace AdminToolbox.API.Extentions
 
 			return players.Length > 0 && Server.Round.Duration > 0
 				? players
-					.Where(p => p.TeamRole.Role != Smod2.API.RoleType.UNASSIGNED
-					&& p.TeamRole.Role != Smod2.API.RoleType.SPECTATOR
+					.Where(p => p.PlayerRole.RoleID != Smod2.API.RoleType.NONE
+					&& p.PlayerRole.RoleID != Smod2.API.RoleType.SPECTATOR
 					&& !p.OverwatchMode
 					&& p.GetIsJailed()).ToArray()
 				: (new Player[0]);
@@ -67,7 +67,7 @@ namespace AdminToolbox.API.Extentions
 				{
 					if (string.IsNullOrEmpty(str))
 						continue;
-					if (str == player.UserId)
+					if (str == player.UserID)
 						return true;
 					else if (player.GetUserGroup()?.Name != null && str == player.GetUserGroup()?.Name.Trim().ToUpper())
 						return true;
@@ -84,7 +84,7 @@ namespace AdminToolbox.API.Extentions
 			}
 		}
 
-		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserId);
+		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserID);
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out _);
 
@@ -134,7 +134,7 @@ namespace AdminToolbox.API.Extentions
 		}
 
 		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
-			=> dict?.ContainsKey(player?.UserId) ?? false;
+			=> dict?.ContainsKey(player?.UserID) ?? false;
 
 		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings> dict)
 		{
@@ -170,7 +170,7 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		internal static void Cleanup(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().UserIdsToArray();
+			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().UserIDsToArray();
 			Dictionary<string, PlayerSettings> newDict = new Dictionary<string, PlayerSettings>(dict);
 			if (newDict.Count > 0)
 			{
@@ -191,23 +191,23 @@ namespace AdminToolbox.API.Extentions
 		public static string ToColoredMultiAdminTeam(this Player player)
 		{
 			if (!AdminToolbox.isColored) 
-				return player.TeamRole.Name;
-			switch ((Team)player.TeamRole.Team)
+				return player.PlayerRole.Name;
+			switch ((Team)player.PlayerRole.Team)
 			{
 				case Team.SCP:
-					return "@#fg=Red;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Red;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.MTF:
-					return "@#fg=Blue;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Blue;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.CHI:
-					return "@#fg=Green;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Green;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.RSC:
-					return "@#fg=Yellow;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Yellow;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.CDP:
-					return "@#fg=Orange;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Orange;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.TUT:
-					return "@#fg=Green;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Green;" + player.PlayerRole.Name + "@#fg=Default;";
 				default:
-					return player.TeamRole.Name;
+					return player.PlayerRole.Name;
 			}
 		}
 
@@ -216,22 +216,22 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		public static string ToColoredRichTextRole(this Player player)
 		{
-			switch ((Team)player.TeamRole.Team)
+			switch ((Team)player.PlayerRole.Team)
 			{
 				case Team.SCP:
-					return "<color=red>" + player.TeamRole.Name + "</color>";
+					return "<color=red>" + player.PlayerRole.Name + "</color>";
 				case Team.MTF:
-					return "<color=blue>" + player.TeamRole.Name + "</color>";
+					return "<color=blue>" + player.PlayerRole.Name + "</color>";
 				case Team.CHI:
-					return "<color=green>" + player.TeamRole.Name + "</color>";
+					return "<color=green>" + player.PlayerRole.Name + "</color>";
 				case Team.RSC:
-					return "<color=silver>" + player.TeamRole.Name + "</color>";
+					return "<color=silver>" + player.PlayerRole.Name + "</color>";
 				case Team.CDP:
-					return "<color=orange>" + player.TeamRole.Name + "</color>";
+					return "<color=orange>" + player.PlayerRole.Name + "</color>";
 				case Team.TUT:
-					return "<color=lime>" + player.TeamRole.Name + "</color>";
+					return "<color=lime>" + player.PlayerRole.Name + "</color>";
 				default:
-					return player.TeamRole.Name;
+					return player.PlayerRole.Name;
 			}
 		}
 	}

@@ -24,12 +24,12 @@ namespace AdminToolbox.Command
 					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
 						int playerNum = -1;
-						Player myTpPlayer = GetPlayerFromString.GetPlayer(args[1]);
+						Player myTpPlayer = GetFromString.GetPlayer(args[1]);
 						if (myTpPlayer == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
 						Vector pos = myTpPlayer.GetPosition();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (pl.PlayerId != myTpPlayer.PlayerId)
+							if (pl.PlayerID != myTpPlayer.PlayerID)
 							{
 								pl.Teleport(pos, true);
 								playerNum++;
@@ -37,9 +37,9 @@ namespace AdminToolbox.Command
 						}
 						return new string[] { "Teleported " + playerNum + " players to " + myTpPlayer.Name };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; ; }
-					Player myPlayer2 = GetPlayerFromString.GetPlayer(args[1]);
+					Player myPlayer2 = GetFromString.GetPlayer(args[1]);
 					if (myPlayer2 == null) { return new string[] { "Couldn't find player: " + args[1] }; ; }
 					if (args[1] != null)
 					{

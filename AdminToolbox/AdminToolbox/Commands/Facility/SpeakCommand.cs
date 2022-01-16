@@ -11,7 +11,7 @@ namespace AdminToolbox.Command
 		private Server Server => PluginManager.Manager.Server;
 
 		public string GetCommandDescription() => "Sets specified player as intercom speaker";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserId]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserID]";
 
 		public static readonly string[] CommandAliases = new string[] { "ATSPEAK", "ATINTERCOM", "AT-SPEAK" };
 
@@ -25,7 +25,7 @@ namespace AdminToolbox.Command
 						Server.Map.SetIntercomSpeaker(null);
 						return new string[] { "Stopped Broadcast" };
 					}
-					Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
+					Player myPlayer = (args.Length > 0) ? GetFromString.GetPlayer(args[0]) : null;
 					if (myPlayer == null && sender is Player sendingPlayer)
 						myPlayer = sendingPlayer;
 					if (myPlayer == null)

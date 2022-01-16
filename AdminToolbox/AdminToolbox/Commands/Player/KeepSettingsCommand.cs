@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 								foreach (Player pl in Server.GetPlayers())
 								{
 									Managers.ATFile.AddMissingPlayerVariables(pl);
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 										ps.keepSettings = j;
 									playerNum++;
 								}
@@ -51,7 +51,7 @@ namespace AdminToolbox.Command
 							foreach (Player pl in Server.GetPlayers())
 							{
 								Managers.ATFile.AddMissingPlayerVariables(pl);
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									ps.keepSettings = !ps.keepSettings;
 							}
 							return new string[] { "Toggled all players KeepSettings" };
@@ -63,7 +63,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps) && ps.keepSettings)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps) && ps.keepSettings)
 							{
 								myPlayerList.Add(pl.Name);
 							}
@@ -79,10 +79,10 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"KeepSettings\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psett))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings psett))
 						if (args.Length > 1)
 						{
 							if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { psett.keepSettings = true; }

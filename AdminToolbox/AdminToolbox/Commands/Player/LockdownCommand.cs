@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 								foreach (Player pl in Server.GetPlayers())
 								{
 									Managers.ATFile.AddMissingPlayerVariables(pl);
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									{
 										ps.lockDown = j;
 										playerNum++;
@@ -51,7 +51,7 @@ namespace AdminToolbox.Command
 							foreach (Player pl in Server.GetPlayers())
 							{
 								Managers.ATFile.AddMissingPlayerVariables(pl);
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									ps.lockDown = !ps.lockDown;
 							}
 							return new string[] { "Toggled all players Lockdown" };
@@ -63,7 +63,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings pls) && pls.lockDown)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings pls) && pls.lockDown)
 							{
 								myPlayerList.Add(pl.Name);
 								//str += " - " +pl.Name + "\n";
@@ -80,10 +80,10 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"LockDown\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{
 							if (bool.TryParse(args[1], out bool g)) psetting.lockDown = g;

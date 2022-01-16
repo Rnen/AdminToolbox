@@ -30,7 +30,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									pl.HP = amount;
+									pl.Health = amount;
 									playerNum++;
 								}
 								return new string[] { $"Set {playerNum} player{(playerNum > 1 ? "s" : "")} HP to {amount}HP" };
@@ -45,19 +45,19 @@ namespace AdminToolbox.Command
 							int count = 0;
 							foreach (Player pl in Server.GetPlayers())
 							{
-								pl.HP = pl.TeamRole.MaxHP;
+								pl.Health = pl.PlayerRole.MaxHP;
 								count++;
 							}
 							return new string[] { $"Set {count} player{(count > 1 ? "s" : "")} to their default max HP" };
 						}
 					}
-					if (!GetPlayerFromString.TryGetPlayer(args[0], out Player myPlayer)) 
+					if (!GetFromString.TryGetPlayer(args[0], out Player myPlayer)) 
 						return new string[] { "Couldn't get player: " + args[0] }; 
 					if (args.Length > 1)
 					{
 						if (int.TryParse(args[1], out int amount))
 						{
-							myPlayer.HP = amount;
+							myPlayer.Health = amount;
 							return new string[] { $"Set {myPlayer.Name}'s HP to {amount}HP" };
 						}
 						else
@@ -65,8 +65,8 @@ namespace AdminToolbox.Command
 					}
 					else
 					{
-						myPlayer.HP = myPlayer.TeamRole.MaxHP;
-						return new string[] { $"Set {myPlayer.Name} to default ({myPlayer.TeamRole.MaxHP }) HP" };
+						myPlayer.Health = myPlayer.PlayerRole.MaxHP;
+						return new string[] { $"Set {myPlayer.Name} to default ({myPlayer.PlayerRole.MaxHP }) HP" };
 					}
 				}
 				else

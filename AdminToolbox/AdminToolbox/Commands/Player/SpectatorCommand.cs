@@ -32,7 +32,7 @@ namespace AdminToolbox.Command
 								foreach (Player player in Server.GetPlayers())
 								{
 									Managers.ATFile.AddMissingPlayerVariables(player);
-									if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings ps))
 									{
 										ps.overwatchMode = j;
 										player.OverwatchMode = j;
@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 							int playerNum = 0;
 							foreach (Player pl in Server.GetPlayers())
 							{
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings plsett))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings plsett))
 								{
 									plsett.overwatchMode = !plsett.overwatchMode;
 									pl.OverwatchMode = !pl.OverwatchMode;
@@ -68,7 +68,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings plsett) && plsett.overwatchMode)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings plsett) && plsett.overwatchMode)
 								myPlayerList.Add(pl.Name);
 						}
 						if (myPlayerList.Count > 0)
@@ -80,10 +80,10 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"Overwatch\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
 					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{
 							if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { psetting.overwatchMode = true; myPlayer.OverwatchMode = true; }

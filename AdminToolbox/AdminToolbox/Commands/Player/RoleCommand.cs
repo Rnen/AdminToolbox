@@ -32,14 +32,14 @@ namespace AdminToolbox.Command
 								foreach (Player pl in Server.GetPlayers())
 								{
 									Vector originalPos = pl.GetPosition();
-									if (pl.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || pl.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
+									if (pl.PlayerRole.RoleID == Smod2.API.RoleType.NONE || pl.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR)
 										pl.ChangeRole(specifiedRole, true, true);
 									else
 									{
 										pl.ChangeRole(specifiedRole, true, false);
 										pl.Teleport(originalPos, true);
 									}
-									pl.HP = pl.TeamRole.MaxHP;
+									pl.Health = pl.PlayerRole.MaxHP;
 									playerNum++;
 								}
 								return new string[] { playerNum + " " + (playerNum > 1 ? "roles" : "role") + " set to " + specifiedRole };
@@ -54,7 +54,7 @@ namespace AdminToolbox.Command
 							return new string[] { GetUsage() };
 						}
 					}
-					if (!GetPlayerFromString.TryGetPlayer(args[0], out Player myPlayer))
+					if (!GetFromString.TryGetPlayer(args[0], out Player myPlayer))
 						return new string[] { "Couldn't get player: " + args[0] };
 					else
 					{
@@ -62,13 +62,13 @@ namespace AdminToolbox.Command
 						{
 							if (int.TryParse(args[1], out int j) && Utility.TryParseRole(j, out Smod2.API.RoleType targetRole))
 							{
-								TeamRole oldRole = myPlayer.TeamRole;
+								Smod2.API.Role oldRole = myPlayer.PlayerRole;
 								Vector originalPos = myPlayer.GetPosition();
-								bool isDead = myPlayer.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED || myPlayer.TeamRole.Role == Smod2.API.RoleType.SPECTATOR;
+								bool isDead = myPlayer.PlayerRole.RoleID == Smod2.API.RoleType.NONE || myPlayer.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR;
 								myPlayer.ChangeRole(targetRole, true, spawnTeleport: isDead);
 								if (!isDead)
 									myPlayer.Teleport(originalPos, true);
-								myPlayer.HP = myPlayer.TeamRole.MaxHP;
+								myPlayer.Health = myPlayer.PlayerRole.MaxHP;
 								return new string[] { "Changed " + myPlayer.Name + " from " + oldRole.Name + " to " + targetRole };
 							}
 							else

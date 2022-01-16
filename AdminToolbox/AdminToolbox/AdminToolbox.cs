@@ -73,7 +73,7 @@ namespace AdminToolbox
 #endif
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserId"/> as KEY
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserID"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 
@@ -180,9 +180,9 @@ namespace AdminToolbox
 
 			#region Debug
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, true, "What (int)damagetypes to debug"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_server", false, true, "Debugs damage dealt by server"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator", false, true, "Debugs damage done to/by spectators"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial", false, true, "Debugs damage done to tutorial"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_server_damage", false, true, "Debugs damage dealt by server"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator_damage", false, true, "Debugs damage done to/by spectators"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial_damage", false, true, "Debugs damage done to tutorial"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_damage", false, true, "Debugs damage to all players except teammates"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_friendly_damage", false, true, "Debugs damage to teammates"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_kill", false, true, "Debugs player kills except teamkills"));
@@ -211,7 +211,7 @@ namespace AdminToolbox
 			#endregion
 			#region Intercom
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What ServerRank can use the Intercom to your specified settings"));
-			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserId_blacklist", new string[0], true, "Blacklist of UserId's that cannot use the intercom"));
+			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserID_blacklist", new string[0], true, "Blacklist of UserID's that cannot use the intercom"));
 			this.AddConfig(new ConfigSetting("admintoolbox_intercomlock", false, true, "If set to true, locks the command for all non-whitelist players"));
 			#endregion
 

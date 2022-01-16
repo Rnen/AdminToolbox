@@ -42,15 +42,15 @@ namespace AdminToolbox
 
 			if (!string.IsNullOrEmpty(intercomReady))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Ready, intercomReady);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.READY, intercomReady);
 			}
 			if (!string.IsNullOrEmpty(intercomRestart))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Restarting, intercomRestart);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.RESTARTING, intercomRestart);
 			}
 			if (!string.IsNullOrEmpty(intercomTransmit))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.TRANSMITTING, intercomTransmit);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace AdminToolbox
 		{
 			if (AdminToolbox.lockRound)
 			{
-				ev.Status = ROUND_END_STATUS.ON_GOING;
+				ev.Status = RoundEndStatus.ON_GOING;
 			}
 		}
 

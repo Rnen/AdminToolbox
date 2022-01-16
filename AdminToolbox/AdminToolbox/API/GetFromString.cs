@@ -26,7 +26,7 @@ namespace AdminToolbox.API
 				if (byte.TryParse(arg, out byte pID))
 				{
 					foreach (Player pl in Server.GetPlayers())
-						if (pl.PlayerId == pID)
+						if (pl.PlayerID == pID)
 						{
 							playerOut = pl;
 							break;
@@ -35,7 +35,7 @@ namespace AdminToolbox.API
 				else if (long.TryParse(arg, out long ID))
 				{
 					foreach (Player pl in Server.GetPlayers())
-						if (pl.UserId.Contains(ID.ToString()))
+						if (pl.UserID.Contains(ID.ToString()))
 						{
 							playerOut = pl;
 							break;
@@ -78,7 +78,7 @@ namespace AdminToolbox.API
 				name = name.TrimStart(new char[] { '$' }).ToLower();
 			if (!string.IsNullOrEmpty(name))
 			{
-				return Server.GetPlayers().Where(n => n.TeamRole.Role.ToString().ToLower().Contains(name)).ToArray();
+				return Server.GetPlayers().Where(n => n.PlayerRole.RoleID.ToString().ToLower().Contains(name)).ToArray();
 			}
 			return null;
 		}
@@ -93,7 +93,7 @@ namespace AdminToolbox.API
 				name = name.TrimStart(new char[] { '$' }).ToLower();
 			if (!string.IsNullOrEmpty(name))
 			{
-				return Server.GetPlayers().Where(n => n.TeamRole.Team.ToString().ToLower().Contains(name)).ToArray();
+				return Server.GetPlayers().Where(n => n.PlayerRole.Team.ToString().ToLower().Contains(name)).ToArray();
 			}
 			return null;
 		}
