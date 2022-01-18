@@ -23,13 +23,13 @@ namespace AdminToolbox
 		id = "rnen.admin.toolbox",
 		version = AT_Version + "-" + AT_Revision, 
 		SmodMajor = 3,
-		SmodMinor = 9,
+		SmodMinor = 10,
 		SmodRevision = 0
 		)]
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "22";
+		internal const string AT_Revision = "23";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 

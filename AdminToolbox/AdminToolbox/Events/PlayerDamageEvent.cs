@@ -119,7 +119,7 @@ namespace AdminToolbox
 									{
 										if (attackerSetting?.instantKill ?? false) continue;
 										ev.Damage = 0f;
-										ev.DamageType = DamageType.NONE;
+										//ev.DamageType = DamageType.NONE;
 										plugin.Debug(ev.Attacker.PlayerRole.Name + " " + ev.Attacker.Name + "was blocked from attacking " + ev.Player.PlayerRole.Name + " " + ev.Player + " with " + ev.DamageType);
 										foundPlayer = true;
 										break;
@@ -158,7 +158,7 @@ RoundEnd:;
 					if ((attackerSetting?.instantKill ?? false) && Config.GetBoolValue("admintoolbox_instantkill_affects_tutorials", true))
 						goto default;
 
-					ev.DamageType = DamageType.NONE;
+					//ev.DamageType = DamageType.NONE;
 					ev.Damage = 0f;
 					break;
 				default:
