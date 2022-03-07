@@ -12,8 +12,6 @@ namespace AdminToolbox.Command
 
 	public class EmptyCommand : ICommandHandler
 	{
-		private static Map Map => PluginManager.Manager.Server.Map;
-
 		public string GetCommandDescription() => "Empties the player's inventory";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [Player] (ItemType Number / Delete) <Delete>";
 
@@ -67,7 +65,7 @@ namespace AdminToolbox.Command
 				return new string[] { "This can not be used on spectators!" };
 
 			byte itemCount = 0;
-			Vector pos = player.GetPosition(), rot = player.GetRotation();
+			//Vector pos = player.GetPosition(), rot = player.GetRotation();
 
 			if (itemFilter == Smod2.API.ItemType.NONE || !ammoFlag.HasFlag(itemFilter))
 			{

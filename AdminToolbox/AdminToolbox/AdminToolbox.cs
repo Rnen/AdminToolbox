@@ -29,7 +29,8 @@ namespace AdminToolbox
 	public class AdminToolbox : Plugin
 	{
 		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "23";
+		internal const string AT_Revision = "24";
+		internal const string SModLetter = "";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 
@@ -124,8 +125,8 @@ namespace AdminToolbox
 			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new PlayerDamageEvent(this));
 			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new PlayerDieEvent(this));
 			this.AddEventHandlers(new MyMiscEvents(this));
-			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(), Priority.Highest);
-			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
+			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(), Priority.LAST);
+			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.LAST);
 		}
 		internal void UnRegisterEvents() => EventManager.Manager.RemoveEventHandlers(this);
 		internal void RegisterCommands()

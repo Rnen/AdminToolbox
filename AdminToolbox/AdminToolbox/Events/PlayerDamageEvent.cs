@@ -186,7 +186,7 @@ RoundEnd:;
 			{
 				playerSetting.DeathPos = ev.Player.GetPosition();
 				if (playerSetting.grenadeMode)
-					ev.Player.ThrowGrenade(GrenadeType.FRAG_GRENADE, Vector.Zero, throwForce: 0f, slowThrow: true);
+					ev.Player.ThrowGrenade(GrenadeType.GRENADE_HE, Vector.Zero, slowThrow: true);
 			}
 			AdminToolbox.LogManager.WriteToLog(ev.Attacker.PlayerRole.Name + " " + ev.Attacker.Name + " attacked " + ev.Player.PlayerRole.Name + " " + ev.Player.Name + " for " + ev.Damage + " damage" + " with: " + ev.DamageType, Managers.LogManager.ServerLogType.PlayerDamage);
 		}

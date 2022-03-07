@@ -393,7 +393,7 @@ namespace AdminToolbox
 			{	
 				foreach (string url in banWebhookUrls)
 					if (!string.IsNullOrEmpty(url))
-						plugin.Debug(ATWeb.SendWebhook(Utility.BuildBanWebhook(ev.Player, ev.Duration, ev.Reason, ev.Issuer), url));
+						plugin.Debug(ATWeb.SendWebhook(Utility.BuildBanWebhook(ev.Player, (int)ev.Duration, ev.Reason, ev.Issuer), url));
 				Debug($"Player \"{ev.Player.Name}\" banned, Webhook posted.");
 			}
 
@@ -422,7 +422,7 @@ namespace AdminToolbox
 				if (ps.isJailed || ps.lockDown)
 					ev.Allow = false;
 				else if (ps.grenadeMode || ps.InfiniteItem == Smod2.API.ItemType.GRENADE_HE || ps.InfiniteItem == Smod2.API.ItemType.GRENADE_FLASH)
-					ev.RemoveItem = false; //ev.Player.GiveItem((ev.GrenadeType == GrenadeType.FRAG_GRENADE) ? Smod2.API.ItemType.FRAG_GRENADE : Smod2.API.ItemType.FLASHBANG);
+					ev.Player.GiveItem((Smod2.API.ItemType)(int)ev.GrenadeType);
 			}
 		}
 
