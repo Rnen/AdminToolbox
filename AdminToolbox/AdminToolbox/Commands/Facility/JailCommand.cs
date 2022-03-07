@@ -19,7 +19,7 @@ namespace AdminToolbox.Command
 			{
 				if (args.Length > 0)
 				{
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
 					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (args.Length > 1)
@@ -42,7 +42,7 @@ namespace AdminToolbox.Command
 					}
 					else if (args.Length == 1)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings playersetting))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings playersetting))
 							if (playersetting.isJailed)
 							{
 								JailHandler.ReturnFromJail(myPlayer);

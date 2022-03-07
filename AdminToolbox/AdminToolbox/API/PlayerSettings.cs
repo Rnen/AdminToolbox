@@ -11,9 +11,9 @@ namespace AdminToolbox.API
 		/// </summary>
 		public string LastNickname { get; internal set; } = "Unknown";
 		/// <summary>
-		/// The player's UserId
+		/// The player's UserID
 		/// </summary>
-		public string UserId { get; internal set; } = "00000000000000000";
+		public string UserID { get; internal set; } = "00000000000000000";
 
 		/// <summary>
 		/// The last known instance of the player's DNT setting
@@ -63,21 +63,20 @@ namespace AdminToolbox.API
 
 		internal float
 			previousHealth = 100;
-		internal int 
-			prevAmmo5 = 0,
-			prevAmmo7 = 0,
-			prevAmmo9 = 0;
+		internal Dictionary<AmmoType, int> Ammo = 
+			new Dictionary<AmmoType, int>() { [AmmoType.AMMO_44_CAL] = 0, [AmmoType.AMMO_12_GAUGE] = 0, 
+				[AmmoType.AMMO_556_X45] = 0, [AmmoType.AMMO_762_X39] = 0, [AmmoType.AMMO_9_X19] = 0};
 		public Vector DeathPos = Vector.Zero;
 		internal Vector originalPos = Vector.Zero;
-		internal Smod2.API.RoleType previousRole = Smod2.API.RoleType.CLASSD;
+		internal Smod2.API.RoleType previousRole = Smod2.API.RoleType.D_CLASS;
 		internal List<Smod2.API.Item> playerPrevInv = new List<Smod2.API.Item>();
 
-		internal Smod2.API.ItemType InfiniteItem = Smod2.API.ItemType.NULL;
+		internal Smod2.API.ItemType InfiniteItem = Smod2.API.ItemType.NONE;
 
 		public DateTime JailedToTime { get; internal set; } = DateTime.UtcNow;
 		public DateTime JoinTime { get; internal set; } = DateTime.UtcNow;
 
 
-		public PlayerSettings(string UserId) => this.PlayerInfo.UserId = UserId;
+		public PlayerSettings(string UserID) => this.PlayerInfo.UserID = UserID;
 	}
 }

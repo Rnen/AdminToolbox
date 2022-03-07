@@ -15,7 +15,7 @@ namespace AdminToolbox.Command
 
 		public string[] OnCall(ICommandSender sender, string[] args)
 		{
-			if (!(sender is Player p) || (p.IpAddress == Server.IpAddress))
+			if (!(sender is Player p) || (p.IPAddress == Server.IpAddress))
 			{
 				try
 				{

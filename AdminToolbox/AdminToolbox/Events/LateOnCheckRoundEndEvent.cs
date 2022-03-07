@@ -17,29 +17,29 @@ namespace AdminToolbox
 		public uint No_Victory { get; private set; }
 		public uint Forced_Round_End { get; private set; }
 
-		public void AddPoint(ROUND_END_STATUS status)
+		public void AddPoint(RoundEndStatus status)
 		{
 			switch (status)
 			{
-				case ROUND_END_STATUS.CI_VICTORY:
+				case RoundEndStatus.CI_VICTORY:
 					this.Chaos_Victory++;
 					break;
-				case ROUND_END_STATUS.SCP_CI_VICTORY:
+				case RoundEndStatus.SCP_CI_VICTORY:
 					this.SCP_Chaos_Victory++;
 					break;
-				case ROUND_END_STATUS.SCP_VICTORY:
+				case RoundEndStatus.SCP_VICTORY:
 					this.SCP_Victory++;
 					break;
-				case ROUND_END_STATUS.MTF_VICTORY:
+				case RoundEndStatus.MTF_VICTORY:
 					this.MTF_Victory++;
 					break;
-				case ROUND_END_STATUS.OTHER_VICTORY:
+				case RoundEndStatus.OTHER_VICTORY:
 					this.Other_Victory++;
 					break;
-				case ROUND_END_STATUS.NO_VICTORY:
+				case RoundEndStatus.NO_VICTORY:
 					this.No_Victory++;
 					break;
-				case ROUND_END_STATUS.FORCE_END:
+				case RoundEndStatus.FORCE_END:
 					this.Forced_Round_End++;
 					break;
 			}
@@ -60,7 +60,7 @@ namespace AdminToolbox
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
-			if (ev.Status != ROUND_END_STATUS.ON_GOING)
+			if (ev.Status != RoundEndStatus.ON_GOING)
 				if (!AdminToolbox.roundStatsRecorded && ev.Round.Duration >= 3)
 				{
 					AdminToolbox.roundStatsRecorded = true;

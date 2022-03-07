@@ -45,26 +45,26 @@ namespace AdminToolbox.Command
 					case "DESTR":
 					case "BRK":
 					case "BR":
-						closestDoor.Destroyed = true;
+						closestDoor.TriggerAction(DoorActions.DESTROYED);
 						return new string[] { "Closest door broken." };
 					case "LOCK":
 					case "L":
-						closestDoor.Locked = true;
+						closestDoor.IsLocked = true;
 						return new string[] { "Closest door locked." };
 					case "UNLOCK":
 					case "UL":
 					case "!L":
-						closestDoor.Locked = false;
+						closestDoor.IsLocked = false;
 						return new string[] { "Closest door unlocked." };
 					case "OPEN":
 					case "OP":
 					case "O":
-						closestDoor.Open = true;
+						closestDoor.IsOpen = true;
 						return new string[] { "Closest door opened." };
 					case "CLOSE":
 					case "CL":
 					case "C":
-						closestDoor.Open = false;
+						closestDoor.IsOpen = false;
 						return new string[] { "Closest door closed." };
 					default:
 						return new string[] { "Arguements: \"" + string.Join(" ", args) + "\" is not recognized" };

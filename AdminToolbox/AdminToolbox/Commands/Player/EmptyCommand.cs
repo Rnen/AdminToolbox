@@ -12,8 +12,6 @@ namespace AdminToolbox.Command
 
 	public class EmptyCommand : ICommandHandler
 	{
-		private static Map Map => PluginManager.Manager.Server.Map;
-
 		public string GetCommandDescription() => "Empties the player's inventory";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [Player] (ItemType Number / Delete) <Delete>";
 
@@ -26,18 +24,18 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Smod2.API.ItemType type = Smod2.API.ItemType.NULL;
+				Smod2.API.ItemType type = Smod2.API.ItemType.NONE;
 				Player player = null;
 				bool delete = false;
 
 				foreach (string arg in args)
 				{
-					if (player == null && GetPlayerFromString.TryGetPlayer(arg, out Player p))
+					if (player == null && GetFromString.TryGetPlayer(arg, out Player p))
 					{
 						player = p;
 						continue;
 					}
-					if (type == Smod2.API.ItemType.NULL && int.TryParse(arg, out int itemNumber))
+					if (type == Smod2.API.ItemType.NONE && int.TryParse(arg, out int itemNumber))
 					{
 						Utility.TryParseItem(itemNumber, out type);
 						continue;
@@ -55,26 +53,26 @@ namespace AdminToolbox.Command
 		}
 
 
-		private string[] DropItems(Player player, Smod2.API.ItemType itemFilter = Smod2.API.ItemType.NULL, bool delete = false)
+		private string[] DropItems(Player player, Smod2.API.ItemType itemFilter = Smod2.API.ItemType.NONE, bool delete = false)
 		{
-			Smod2.API.ItemType ammoFlag = Smod2.API.ItemType.DROPPED_5 | Smod2.API.ItemType.DROPPED_7 | Smod2.API.ItemType.DROPPED_9;
+			Smod2.API.ItemType ammoFlag = Smod2.API.ItemType.AMMO_12_GAUGE | Smod2.API.ItemType.AMMO_44_CAL | Smod2.API.ItemType.AMMO_556_X45 | Smod2.API.ItemType.AMMO_762_X39 | Smod2.API.ItemType.AMMO_9_X19;
 
 			if (player == null)
 				return new string[] { "Player not spesified!" };
-			if (player.TeamRole.Role == Smod2.API.RoleType.UNASSIGNED)
+			if (player.PlayerRole.RoleID == Smod2.API.RoleType.NONE)
 				return new string[] { "Player not properly initialized!" };
-			if (player.TeamRole.Role == Smod2.API.RoleType.SPECTATOR)
+			if (player.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR)
 				return new string[] { "This can not be used on spectators!" };
 
 			byte itemCount = 0;
-			Vector pos = player.GetPosition(), rot = player.GetRotation();
+			//Vector pos = player.GetPosition(), rot = player.GetRotation();
 
-			if (itemFilter == Smod2.API.ItemType.NULL || !ammoFlag.HasFlag(itemFilter))
+			if (itemFilter == Smod2.API.ItemType.NONE || !ammoFlag.HasFlag(itemFilter))
 			{
 				foreach (SMItem playerItem in player.GetInventory())
 				{
-					if (playerItem.ItemType != Smod2.API.ItemType.NULL)
-						if (itemFilter == Smod2.API.ItemType.NULL || playerItem.ItemType == itemFilter)
+					if (playerItem.ItemType != Smod2.API.ItemType.NONE)
+						if (itemFilter == Smod2.API.ItemType.NONE || playerItem.ItemType == itemFilter)
 						{
 							if (delete)
 								playerItem.Remove();
@@ -87,20 +85,20 @@ namespace AdminToolbox.Command
 
 			}
 
-			if (itemFilter == Smod2.API.ItemType.NULL || ammoFlag.HasFlag(itemFilter))
-			{
-				foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
-				{
-					Smod2.API.ItemType ammoItem = ammo == Smod2.API.AmmoType.DROPPED_5 ? Smod2.API.ItemType.DROPPED_5 : ammo == Smod2.API.AmmoType.DROPPED_7 ? Smod2.API.ItemType.DROPPED_7 : Smod2.API.ItemType.DROPPED_9;
+			//if (itemFilter == Smod2.API.ItemType.NONE || ammoFlag.HasFlag(itemFilter))
+			//{
+			//	foreach (AmmoType ammo in Enum.GetValues(typeof(AmmoType)))
+			//	{
+			//		Smod2.API.ItemType ammoItem = ammo == Smod2.API.AmmoType.DROPPED_5 ? Smod2.API.ItemType.DROPPED_5 : ammo == Smod2.API.AmmoType.DROPPED_7 ? Smod2.API.ItemType.DROPPED_7 : Smod2.API.ItemType.DROPPED_9;
 
-					if (itemFilter == Smod2.API.ItemType.NULL || ammoItem == itemFilter)
-					{
-						player.SetAmmo(ammo, 0);
-						if (!delete)
-							Map.SpawnItem(ammoItem, pos, rot);
-					}
-				}
-			}
+			//		if (itemFilter == Smod2.API.ItemType.NONE || ammoItem == itemFilter)
+			//		{
+			//			player.SetAmmo(ammo, 0);
+			//			if (!delete)
+			//				Map.SpawnItem(ammoItem, pos, rot);
+			//		}
+			//	}
+			//}
 			return new string[] { delete ? "Deleted " : "Dropped (" + itemCount + ") items from player " + player.Name + "'s inventory" };
 		}
 	}

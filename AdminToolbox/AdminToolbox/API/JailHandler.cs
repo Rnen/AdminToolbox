@@ -39,9 +39,9 @@ namespace AdminToolbox.API
 			Player[] jailedPlayers = Server.GetPlayers().ToArray().JailedPlayers();
 			if (jailedPlayers.Length > 0)
 				foreach (Player pl in jailedPlayers)
-					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserId))
+					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserID))
 						if (!pl.IsInsideJail()) SendToJail(pl);
-						else if (AdminToolbox.ATPlayerDict[pl.UserId].JailedToTime <= DateTime.UtcNow) 
+						else if (AdminToolbox.ATPlayerDict[pl.UserID].JailedToTime <= DateTime.UtcNow) 
 							ReturnFromJail(pl);
 		}
 
@@ -56,9 +56,9 @@ namespace AdminToolbox.API
 		/// <param name="jailedToTime">the time to jail the player. Null sets the time to remaining time, or if thats null, one year</param>
 		public static bool SendToJail(Smod2.API.Player player, DateTime? jailedToTime)
 		{
-			if (player == null || player.TeamRole.Role == Smod2.API.RoleType.SPECTATOR || player.OverwatchMode) return false;
+			if (player == null || player.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR || player.OverwatchMode) return false;
 			Debug($"Attempting to jail {player.Name}");
-			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings psetting))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings psetting))
 			{
 				if (!jailedToTime.HasValue || jailedToTime < DateTime.UtcNow)
 					Debug($"Jail time for \"{player.Name}\" not specified, jailing for a year.");
@@ -67,12 +67,13 @@ namespace AdminToolbox.API
 				psetting.originalPos = player.GetPosition();
 				if (!psetting.isJailed)
 				{
-					psetting.previousRole = player.TeamRole.Role;
+					psetting.previousRole = player.PlayerRole.RoleID;
 					psetting.playerPrevInv = player.GetInventory();
-					psetting.previousHealth = player.HP;
-					psetting.prevAmmo5 = player.GetAmmo(AmmoType.DROPPED_5);
-					psetting.prevAmmo7 = player.GetAmmo(AmmoType.DROPPED_7);
-					psetting.prevAmmo9 = player.GetAmmo(AmmoType.DROPPED_9);
+					psetting.previousHealth = player.Health;
+
+					foreach (AmmoType a in typeof(AmmoType).GetEnumValues())
+						if (a != AmmoType.NONE)
+							psetting.Ammo[a] = player.GetAmmo(a);
 				}
 				//Changes role to Tutorial, teleports to jail, removes inv.
 				Debug($"Variables stored, sending \"{player.Name}\" to jail");
@@ -96,29 +97,29 @@ namespace AdminToolbox.API
 		/// <param name="player">the player to return</param>
 		public static bool ReturnFromJail(Player player)
 		{
-			if (player == null || string.IsNullOrEmpty(player.UserId.Trim()))
+			if (player == null || string.IsNullOrEmpty(player.UserID.Trim()))
 			{
-				Debug("Return: Player or UserId null/empty");
+				Debug("Return: Player or UserID null/empty");
 				return false;
 			}
 			Debug($"Attempting to unjail \"{player.Name}\"");
-			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserId, out PlayerSettings psetting))
+			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings psetting))
 			{
 				psetting.isJailed = false;
 				psetting.JailedToTime = DateTime.UtcNow;
 				player.ChangeRole(psetting.previousRole, true, false);
 				player.Teleport(psetting.originalPos, true);
-				player.HP = psetting.previousHealth;
+				player.Health = psetting.previousHealth;
 				if (psetting.playerPrevInv != null)
 				{
 					player.ClearInventory();
 					foreach (SMItem item in psetting.playerPrevInv)
 						player.GiveItem(item.ItemType);
 				}
-				player.SetAmmo(AmmoType.DROPPED_5, psetting.prevAmmo5);
-				player.SetAmmo(AmmoType.DROPPED_7, psetting.prevAmmo7);
-				player.SetAmmo(AmmoType.DROPPED_9, psetting.prevAmmo9);
-				AdminToolbox.ATPlayerDict[player.UserId].playerPrevInv = null;
+				foreach (AmmoType a in typeof(AmmoType).GetEnumValues())
+					if (a != AmmoType.NONE)
+						player.SetAmmo(a, psetting.Ammo[a]); 
+				AdminToolbox.ATPlayerDict[player.UserID].playerPrevInv = null;
 				return true;
 			}
 			else

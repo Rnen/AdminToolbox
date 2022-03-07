@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									{
 										ps.destroyDoor = j;
 										playerNum++;
@@ -50,7 +50,7 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									ps.destroyDoor = !ps.destroyDoor;
 							}
 							return new string[] { "Toggled all players BreakDoors" };
@@ -62,7 +62,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps) && ps.destroyDoor)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps) && ps.destroyDoor)
 								myPlayerList.Add(pl.Name);
 						}
 						if (myPlayerList.Count > 0)
@@ -74,11 +74,11 @@ namespace AdminToolbox.Command
 						else str = "No players with \"BreakDoors\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null && sender is Player sendingPlayer)
 						myPlayer = sendingPlayer;
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{
 							if (args[1].ToLower() == "on" || args[1].ToLower() == "true") { psetting.destroyDoor = true; }
@@ -94,7 +94,7 @@ namespace AdminToolbox.Command
 						return new string[] { myPlayer.Name + " not in dictionary" };
 
 				}
-				else if (sender is Player p && AdminToolbox.ATPlayerDict.TryGetValue(p.UserId, out PlayerSettings ps))
+				else if (sender is Player p && AdminToolbox.ATPlayerDict.TryGetValue(p.UserID, out PlayerSettings ps))
 				{
 					ps.destroyDoor = !ps.destroyDoor;
 					return new string[] { "Toggled BreakDoors! Currently: " + ps.destroyDoor };

@@ -44,12 +44,12 @@ namespace AdminToolbox.Command
 						case "INFO":
 						case "I":
 							return new string[] { "[AdminToolbox Info]", 
-								"Your Local Version: " + plugin.Details.version, 
+								"Your Local Version: " + plugin.Details.version + (string.IsNullOrEmpty(AdminToolbox.SModLetter) ? "" : " ("+ AdminToolbox.SModLetter + ")"), 
 								"Latest GitHub Version: " + ATWeb.LatestRelease.Version, 
 								"Your SMod Version: " + PluginManager.GetSmodVersion() };
 
-						case "DOWNLOAD" when !(sender is Player) || (sender is Player p && p.IpAddress == plugin.Server.IpAddress):
-						case "DL" when !(sender is Player) || (sender is Player p2 && p2.IpAddress == plugin.Server.IpAddress):
+						case "DOWNLOAD" when !(sender is Player) || (sender is Player p && p.IPAddress == plugin.Server.IpAddress):
+						case "DL" when !(sender is Player) || (sender is Player p2 && p2.IPAddress == plugin.Server.IpAddress):
 							try
 							{
 								System.Diagnostics.Process.Start(ATWeb.LatestRelease.DownloadLink);

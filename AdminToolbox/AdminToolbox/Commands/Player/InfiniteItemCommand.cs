@@ -29,7 +29,7 @@ namespace AdminToolbox.Command
 						case "PLAYERS":
 							List<string> plNames = new List<string> { "Players with INFINITEITEM enabled:" };
 							foreach (Player p in Server.GetPlayers())
-								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserId, out PlayerSettings ps) && ps.InfiniteItem != Smod2.API.ItemType.NULL)
+								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserID, out PlayerSettings ps) && ps.InfiniteItem != Smod2.API.ItemType.NONE)
 									plNames.Add(" - " + p.Name + " -> + " + ps.InfiniteItem.ToString());
 							return plNames.ToArray();
 					}
@@ -45,22 +45,22 @@ namespace AdminToolbox.Command
 				}
 				else
 				{
-					Player p = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : sender as Player;
+					Player p = (args.Length > 0) ? GetFromString.GetPlayer(args[0]) : sender as Player;
 					if (p == null)
 						return new string[] { "Couldn't get player: " + args[0] };
 					players = new Player[] { p };
 				}
 				if (players.Length > 0)
 				{
-					Smod2.API.ItemType item = args.Length > 1 && Utility.TryParseItem(args[1], out Smod2.API.ItemType i) ? i : Smod2.API.ItemType.NULL;
+					Smod2.API.ItemType item = args.Length > 1 && Utility.TryParseItem(args[1], out Smod2.API.ItemType i) ? i : Smod2.API.ItemType.NONE;
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 						{
 							ps.InfiniteItem = item;
 						}
 					}
-					return new string[] { $"Set {players.Length.ToString()} player's INFINITEITEM to {item.ToString()}" };
+					return new string[] { $"Set {players.Length.ToString()} player's INFINITEITEM to {item}" };
 				}
 				else
 					return new string[] { GetUsage() };

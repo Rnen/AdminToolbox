@@ -18,7 +18,7 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// Safely getting a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.Role.UNASSIGNED"/></para>
+		/// <para>Invalid <see cref="int"/> parameters returns <see cref="SMRoleType"/></para>
 		/// </summary>
 		public static bool TryParseRole(int roleID, out SMRoleType role)
 		{
@@ -28,7 +28,7 @@ namespace AdminToolbox.API
 			}
 			catch
 			{
-				role = SMRoleType.UNASSIGNED;
+				role = SMRoleType.NONE;
 				return false;
 			}
 			return true;
@@ -37,7 +37,7 @@ namespace AdminToolbox.API
 		/// <summary>
 		/// Safely getting a <see cref="Smod2.API.ItemType"/> from an <see cref="int"/>. 
 		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.ItemType.NULL"/></para>
+		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.ItemType.NONE"/></para>
 		/// </summary>
 		public static bool TryParseItem(int itemID, out SMItemType itemType)
 		{
@@ -47,7 +47,7 @@ namespace AdminToolbox.API
 			}
 			catch
 			{
-				itemType = SMItemType.NULL;
+				itemType = SMItemType.NONE;
 				return false;
 			}
 			return true;
@@ -60,7 +60,7 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool TryParseItem(string item, out SMItemType itemType)
 		{
-			itemType = SMItemType.NULL;
+			itemType = SMItemType.NONE;
 
 			try
 			{
@@ -79,7 +79,7 @@ namespace AdminToolbox.API
 			}
 			catch
 			{
-				itemType = SMItemType.NULL;
+				itemType = SMItemType.NONE;
 				return false;
 			}
 		}
@@ -93,32 +93,49 @@ namespace AdminToolbox.API
 		public static readonly int[]
 			HumanDamageTypes = {
 				(int)DamageType.COM15,
-				(int)DamageType.E11_STANDARD_RIFLE,
-				(int)DamageType.P90,
-				(int)DamageType.MP7,
-				(int)DamageType.LOGICIER,
-				(int)DamageType.GRENADE, 
-				(int)DamageType.MICROHID
+				(int)DamageType.AK,
+				(int)DamageType.COM18,
+				(int)DamageType.CROSSVEC,
+				(int)DamageType.E11_SR,
+				(int)DamageType.FSP9,
+				(int)DamageType.LOGICER,
+				(int)DamageType.EXPLOSION, 
+				(int)DamageType.MICRO_HID,
+				(int)DamageType.REVOLVER,
+				(int)DamageType.UNKNOWN_FIREARM,
+				(int)DamageType.SHOTGUN
 			},
 			ScpDamagesTypes = {
 				(int)DamageType.SCP_049,
 				(int)DamageType.SCP_049_2,
 				(int)DamageType.SCP_096,
-				(int)DamageType.SCP_106,
+				//(int)DamageType.SCP_106,
 				(int)DamageType.SCP_173,
 				(int)DamageType.SCP_939
 			},
 			NineTailsTeam = {
-				(int)TeamType.NINETAILFOX,
+				(int)TeamType.MTF,
 				(int)TeamType.SCIENTIST
 			},
 			ChaosTeam = {
 				(int)TeamType.CHAOS_INSURGENCY,
-				(int)TeamType.CLASSD
+				(int)TeamType.D_CLASS
 			};
 
-		public static readonly DamageType Human = DamageType.COM15 | DamageType.E11_STANDARD_RIFLE | DamageType.P90 | DamageType.MP7 | DamageType.LOGICIER | DamageType.GRENADE | DamageType.MICROHID;
-		public static readonly DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 | DamageType.SCP_106 | DamageType.SCP_173 | DamageType.SCP_939;
+		public static readonly DamageType Human = DamageType.COM15 |
+				DamageType.COM15 |
+				DamageType.AK |
+				DamageType.COM18 |
+				DamageType.CROSSVEC |
+				DamageType.E11_SR |
+				DamageType.FSP9 |
+				DamageType.LOGICER |
+				DamageType.EXPLOSION |
+				DamageType.MICRO_HID |
+				DamageType.REVOLVER |
+				DamageType.UNKNOWN_FIREARM |
+				DamageType.SHOTGUN;
+		public static readonly DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 |/* DamageType.SCP_106 |*/ DamageType.SCP_173 | DamageType.SCP_939;
 
 
 		/// <summary>
@@ -127,11 +144,11 @@ namespace AdminToolbox.API
 		/// </summary>
 		public static bool IsTeam(Player player1, Player player2)
 		{
-			if (player1 == null || player2 == null || player1.PlayerId == player2.PlayerId)
+			if (player1 == null || player2 == null || player1.PlayerID == player2.PlayerID)
 				return false;
-			if (NineTailsTeam.Contains((int)player1.TeamRole.Team) && NineTailsTeam.Contains((int)player2.TeamRole.Team))
+			if (NineTailsTeam.Contains((int)player1.PlayerRole.Team) && NineTailsTeam.Contains((int)player2.PlayerRole.Team))
 				return true;
-			else if (ChaosTeam.Contains((int)player1.TeamRole.Team) && ChaosTeam.Contains((int)player2.TeamRole.Team))
+			else if (ChaosTeam.Contains((int)player1.PlayerRole.Team) && ChaosTeam.Contains((int)player2.PlayerRole.Team))
 				return true;
 			else
 				return false;
