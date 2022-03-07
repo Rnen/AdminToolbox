@@ -11,12 +11,8 @@ namespace AdminToolbox.Command
 
 	public class LockDoorsCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
-		private static IConfigFile Config => ConfigManager.Manager.Config;
 		private Server Server => PluginManager.Manager.Server;
 
-		public LockDoorsCommand(AdminToolbox plugin) => this.plugin = plugin;
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <Player>";
 		public string GetCommandDescription() => "Makes the user able to lock doors interacted with";
 
@@ -32,7 +28,7 @@ namespace AdminToolbox.Command
 					List<string> myPlayerList = new List<string>();
 					foreach (Player pl in Server.GetPlayers())
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings psetting) && psetting.lockDoors)
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings psetting) && psetting.lockDoors)
 							myPlayerList.Add(pl.Name);
 					}
 					if (myPlayerList.Count > 0)
@@ -45,7 +41,9 @@ namespace AdminToolbox.Command
 					return new string[] { str };
 				}
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 				Player[] players = new Player[0];
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 				bool? enabled = null;
 
 				if (args.Length > 0 && bool.TryParse(args[0], out bool b1))
@@ -61,7 +59,7 @@ namespace AdminToolbox.Command
 				}
 				else
 				{
-					Player p = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : sender as Player;
+					Player p = (args.Length > 0) ? GetFromString.GetPlayer(args[0]) : sender as Player;
 					if (p == null)
 						return new string[] { "Couldn't get player: " + args[0] };
 					players = new Player[] { p };
@@ -71,7 +69,7 @@ namespace AdminToolbox.Command
 					int pcount = 0;
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 						{
 							pcount++;
 							if (enabled.HasValue)

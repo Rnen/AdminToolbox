@@ -11,7 +11,7 @@ namespace AdminToolbox.Command
 	{
 		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Sets player HP. Use int for amount";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
+		public string GetUsage() => $"[{string.Join(" / ", CommandAliases)}] [PLAYER] (AMOUNT)";
 
 		public static readonly string[] CommandAliases = new string[] { "ATHP", "ATSETHP", "AT-HP", "AT-SETHP" };
 
@@ -25,46 +25,48 @@ namespace AdminToolbox.Command
 					{
 						if (args.Length > 1)
 						{
-							if (int.TryParse(args[1], out int j))
+							if (int.TryParse(args[1], out int amount))
 							{
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									pl.SetHealth(j);
+									pl.Health = amount;
 									playerNum++;
 								}
-								if (playerNum > 1)
-									return new string[] { "Set " + playerNum + " players HP to " + j + "HP" };
-								else
-									return new string[] { "Set " + playerNum + " players HP to " + j + "HP" };
+								return new string[] { $"Set {playerNum} player{(playerNum > 1 ? "s" : "")} HP to {amount}HP" };
 							}
 							else
 							{
-								return new string[] { "Not a valid number!" };
+								return new string[] { $"{args[1]} : Not a valid number!" };
 							}
 						}
 						else
 						{
-							foreach (Player pl in Server.GetPlayers()) { pl.SetHealth(pl.TeamRole.MaxHP); }
-							return new string[] { "Set all players to their default max HP" };
+							int count = 0;
+							foreach (Player pl in Server.GetPlayers())
+							{
+								pl.Health = pl.PlayerRole.MaxHP;
+								count++;
+							}
+							return new string[] { $"Set {count} player{(count > 1 ? "s" : "")} to their default max HP" };
 						}
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
-					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; ; }
+					if (!GetFromString.TryGetPlayer(args[0], out Player myPlayer)) 
+						return new string[] { "Couldn't get player: " + args[0] }; 
 					if (args.Length > 1)
 					{
-						if (int.TryParse(args[1], out int j))
+						if (int.TryParse(args[1], out int amount))
 						{
-							myPlayer.SetHealth(j);
-							return new string[] { "Set " + myPlayer.Name + "'s HP to " + j + "HP" };
+							myPlayer.Health = amount;
+							return new string[] { $"Set {myPlayer.Name}'s HP to {amount}HP" };
 						}
 						else
-							return new string[] { "Not a valid number!" };
+							return new string[] { $"{args[1]} : Not a valid number!" };
 					}
 					else
 					{
-						myPlayer.SetHealth(myPlayer.TeamRole.MaxHP);
-						return new string[] { "Set " + myPlayer.Name + " to default (" + myPlayer.TeamRole.MaxHP + ") HP" };
+						myPlayer.Health = myPlayer.PlayerRole.MaxHP;
+						return new string[] { $"Set {myPlayer.Name} to default ({myPlayer.PlayerRole.MaxHP }) HP" };
 					}
 				}
 				else

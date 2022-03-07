@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Smod2;
-using Newtonsoft.Json;
 
 namespace AdminToolbox.Managers
 {
@@ -16,9 +15,7 @@ namespace AdminToolbox.Managers
 	{
 		private static AdminToolbox Plugin => AdminToolbox.singleton;
 
-		private static int Port => PluginManager.Manager.Server.Port;
-
-		private static string WarpPointsFolder => ATFileManager.GetFolderPath(Folder.Warps);
+		private static string WarpPointsFolder => ATFile.GetFolderPath(Folder.Warps);
 
 		private static string WarpFilePath => WarpPointsFolder + "Global.txt";
 
@@ -83,7 +80,7 @@ namespace AdminToolbox.Managers
 		public bool WriteWarpsToFile(WarpPoint[] warpPoints = null)
 		{
 			Debug("Entered WriteToFile");
-			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", true))
 				return false;
 			try
 			{
@@ -100,7 +97,8 @@ namespace AdminToolbox.Managers
 					Debug("Attempting JSON Serialize " + warparray.Length + " array items!");
 					foreach (WarpPoint w in warparray)
 						Debug(w.Name);
-					jsonData = JsonConvert.SerializeObject(warparray, Formatting.Indented);
+					jsonData = Utf8Json.JsonSerializer.PrettyPrint(Utf8Json.JsonSerializer.Serialize(warparray)); 
+					//JsonConvert.SerializeObject(warparray, Formatting.Indented);
 					//jsonData = JsonUtility.ToJson(warparray, true);
 					Debug("Finished JSON Serialize");
 					bool b1 = File.Exists(WarpFilePath);
@@ -121,7 +119,7 @@ namespace AdminToolbox.Managers
 			catch (Exception e)
 			{
 				Plugin.Info("Failed during writing of warpfile!");
-				Debug("Error occured during writing to file: " + e.Message);
+				Debug("Error occured during writing to file: " + e);
 				return false;
 			}
 		}
@@ -132,7 +130,7 @@ namespace AdminToolbox.Managers
 		public Dictionary<string, WarpPoint> ReadWarpsFromFile()
 		{
 			Debug("Entered ReadFromFile");
-			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", false))
+			if (!ConfigManager.Manager.Config.GetBoolValue("admintoolbox_warpfiles", true))
 				return presetWarps;
 			try
 			{
@@ -156,8 +154,9 @@ namespace AdminToolbox.Managers
 					return presetWarps;
 				}
 				Debug("Converting JSON to array");
-				WarpPoint[] warpArray = JsonConvert.DeserializeObject<WarpPoint[]>(jsonData);
-				//WarpPoint[] warpArray = UnityEngine.JsonUtility.FromJson<WarpPoint[]>(jsonData);
+
+				WarpPoint[] warpArray = Utf8Json.JsonSerializer.Deserialize<WarpPoint[]>(jsonData);
+
 				if (warpArray.Length > 0)
 				{
 					Debug("Populating dict with json array");

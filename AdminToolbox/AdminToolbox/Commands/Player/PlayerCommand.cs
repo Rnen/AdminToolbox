@@ -15,7 +15,7 @@ namespace AdminToolbox.Command
 
 		private Server Server => PluginManager.Manager.Server;
 		public string GetCommandDescription() => "Gets toolbox info about spesific player";
-		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserId]";
+		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserID]";
 
 		public static readonly string[] CommandAliases = new string[] { "PLAYER", "P", "PLAYERINFO", "PINFO" };
 
@@ -40,7 +40,7 @@ namespace AdminToolbox.Command
 			{
 				if (Server.GetPlayers().Count > 0)
 				{
-					Player myPlayer = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : null;
+					Player myPlayer = (args.Length > 0) ? GetFromString.GetPlayer(args[0]) : null;
 					if (myPlayer == null && sender is Player sendingPlayer)
 						myPlayer = sendingPlayer;
 					else if (myPlayer == null)
@@ -50,29 +50,29 @@ namespace AdminToolbox.Command
 							return new string[] { GetUsage() };
 
 					//Handling player stats
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					AdminToolbox.atfileManager.PlayerStatsFileManager(myPlayer.UserId, Managers.ATFileManager.PlayerFile.Write);
-					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.UserId);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
+					AdminToolbox.FileManager.PlayerStatsFileManager(myPlayer.UserID, Managers.ATFile.PlayerFile.Write);
+					PlayerSettings playerDict = AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings ps) ? ps : new PlayerSettings(myPlayer.UserID);
 
 					//Inventory
 					string playerInv = string.Empty;
-					foreach (SMItem i in myPlayer.GetInventory().Where(i => i.ItemType != Smod2.API.ItemType.NULL))
+					foreach (SMItem i in myPlayer.GetInventory().Where(i => i.ItemType != Smod2.API.ItemType.NONE))
 						playerInv += i.ItemType + ", ";
 					if (playerInv == string.Empty) playerInv = "Empty Inventory";
 
 					//Calculating remaining jail time
-					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.Now).TotalSeconds : 0;
+					int remainingJailTime = ((int)playerDict.JailedToTime.Subtract(DateTime.UtcNow).TotalSeconds >= 0) ? (int)playerDict.JailedToTime.Subtract(DateTime.UtcNow).TotalSeconds : 0;
 
-					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : Smod2.API.RoleType.UNASSIGNED + "";
+					string _playerRole = sender.IsPlayer() ? myPlayer.ToColoredRichTextRole() : Smod2.API.RoleType.NONE + "";
 					string _roleColor = myPlayer.GetUserGroup().Color ?? "default";
 					string _serverRole = myPlayer.GetRankName() ?? "";
 
 					//Building string
 					string playerInfoString = Environment.NewLine + Environment.NewLine +
-							"Player: (" + myPlayer.PlayerId + ") " + myPlayer.Name + Environment.NewLine +
-						BuildTwoLiner(" - UserId: " + myPlayer.UserId, " - IP: " + myPlayer.IpAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
+							"Player: (" + myPlayer.PlayerID + ") " + myPlayer.Name + Environment.NewLine +
+						BuildTwoLiner(" - UserID: " + myPlayer.UserID, " - IP: " + myPlayer.IPAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
 						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
-						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.GetHealth()) + Environment.NewLine +
+						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.Health) + Environment.NewLine +
 						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
 						BuildTwoLiner("   - Godmode: " + playerDict.godMode, " - NoDmg: " + playerDict.dmgOff) + Environment.NewLine +
 						BuildTwoLiner("   - OverwatchMode: " + myPlayer.OverwatchMode, " - KeepSettings: " + playerDict.keepSettings) + Environment.NewLine +

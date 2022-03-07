@@ -10,13 +10,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class GrenadeModeCommand : ICommandHandler
 	{
-		private readonly AdminToolbox plugin;
-
-		private static IConfigFile Config => ConfigManager.Manager.Config;
-
 		private Server Server => PluginManager.Manager.Server;
-
-		public GrenadeModeCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Enableds/Disables grenademode";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
@@ -35,12 +29,14 @@ namespace AdminToolbox.Command
 						case "PLAYERS":
 							List<string> plNames = new List<string> { "Players with GRENADEMODE enabled:" };
 							foreach (Player p in Server.GetPlayers())
-								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserId, out PlayerSettings ps) && ps.grenadeMode)
+								if (AdminToolbox.ATPlayerDict.TryGetValue(p.UserID, out PlayerSettings ps) && ps.grenadeMode)
 									plNames.Add(" - " + p.Name);
 							return plNames.ToArray();
 					}
 
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
 				Player[] players = new Player[0];
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
 				if (args.Length > 0 && Utility.AllAliasWords.Contains(args[0].ToUpper()))
 				{
 					players = Server.GetPlayers().ToArray();
@@ -49,17 +45,17 @@ namespace AdminToolbox.Command
 				}
 				else
 				{
-					Player p = (args.Length > 0) ? GetPlayerFromString.GetPlayer(args[0]) : sender as Player;
+					Player p = (args.Length > 0) ? GetFromString.GetPlayer(args[0]) : sender as Player;
 					if (p == null)
 						return new string[] { "Couldn't get player: " + args[0] };
 					players = new Player[] { p };
 				}
 				if (players.Length > 0)
 				{
-					bool? s = (args.Length > 1 && bool.TryParse(args[1], out bool b) ? (bool?)b : null);
+					bool? s = (args.Length > 1 && bool.TryParse(args[1], out bool b)) ? (bool?)b : null;
 					foreach (Player pl in players)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 						{
 							ps.grenadeMode = s.HasValue ? (bool)s : !ps.grenadeMode;
 						}

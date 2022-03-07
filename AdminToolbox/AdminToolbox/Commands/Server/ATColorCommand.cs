@@ -19,7 +19,6 @@ namespace AdminToolbox.Command
 		{
 			if (sender.IsPermitted(CommandAliases, out string[] deniedReply))
 			{
-				Server server = PluginManager.Manager.Server;
 				if (args.Length >= 1)
 				{
 					if (bool.TryParse(args[0], out bool x))

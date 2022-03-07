@@ -9,10 +9,6 @@ namespace AdminToolbox.Command
 	{
 		private readonly AdminToolbox plugin;
 
-		private static IConfigFile Config => ConfigManager.Manager.Config;
-
-		private Server Server => PluginManager.Manager.Server;
-
 		public RoundLockCommand(AdminToolbox plugin) => this.plugin = plugin;
 
 		public string GetCommandDescription() => "Forces the round to never end";

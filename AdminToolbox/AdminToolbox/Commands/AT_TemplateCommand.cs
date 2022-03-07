@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 				if (targetPlayer == null) { return new string[] { "Could not find player: " + args[0] }; ; }
 
 				//Adds player(s) to the AdminToolbox player dictionary
-				AdminToolbox.AddMissingPlayerVariables(new List<Player> { targetPlayer, caller });
+				Managers.ATFile.AddMissingPlayerVariables(new List<Player> { targetPlayer, caller });
 
 				//Do whatever with the found player
 				return new string[] { "We did something to player: " + targetPlayer.Name + "!" };

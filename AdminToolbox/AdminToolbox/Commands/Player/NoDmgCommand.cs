@@ -33,8 +33,8 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									AdminToolbox.AddMissingPlayerVariables(pl);
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+									Managers.ATFile.AddMissingPlayerVariables(pl);
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									{
 										ps.dmgOff = j;
 										playerNum++;
@@ -49,8 +49,8 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								AdminToolbox.AddMissingPlayerVariables(pl);
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+								Managers.ATFile.AddMissingPlayerVariables(pl);
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									ps.dmgOff = !ps.dmgOff;
 							}
 							return new string[] { "Toggled all player's \"No Dmg\"" };
@@ -62,7 +62,7 @@ namespace AdminToolbox.Command
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings pls) && pls.dmgOff)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings pls) && pls.dmgOff)
 								myPlayerList.Add(pl.Name);
 						}
 						if (myPlayerList.Count > 0)
@@ -76,10 +76,10 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"No Dmg\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
-					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings psetting))
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
+					if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings psetting))
 						if (args.Length > 1)
 						{
 							bool changedValue = false;

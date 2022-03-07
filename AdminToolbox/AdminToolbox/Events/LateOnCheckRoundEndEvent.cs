@@ -1,67 +1,71 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
 
 namespace AdminToolbox
 {
-	internal class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
+	public struct RoundStats
 	{
-		private readonly AdminToolbox plugin;
+		public uint Chaos_Victory { get; private set; }
+		public uint SCP_Chaos_Victory { get; private set; }
+		public uint SCP_Victory { get; private set; }
+		public uint MTF_Victory { get; private set; }
+		public uint Other_Victory { get; private set; }
+		public uint No_Victory { get; private set; }
+		public uint Forced_Round_End { get; private set; }
 
-		public LateOnCheckRoundEndEvent(AdminToolbox plugin) => this.plugin = plugin;
-
-		private ATRoundStats Roundstats => AdminToolbox.roundStats;
-
-		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
-		{
-			if (ev.Status != ROUND_END_STATUS.ON_GOING)
-				if (!AdminToolbox.roundStatsRecorded && ev.Round.Duration >= 3)
-				{
-					AdminToolbox.roundStatsRecorded = true;
-					Roundstats.AddPoint(ev.Status);
-				}
-		}
-	}
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-	public class ATRoundStats
-	{
-		public uint
-			Chaos_Victory = 0,
-			SCP_Chaos_Victory = 0,
-			SCP_Victory = 0,
-			MTF_Victory = 0,
-			Other_Victory = 0,
-			No_Victory = 0,
-			Forced_Round_End = 0;
-
-		public void AddPoint(ROUND_END_STATUS status)
+		public void AddPoint(RoundEndStatus status)
 		{
 			switch (status)
 			{
-				case ROUND_END_STATUS.CI_VICTORY:
+				case RoundEndStatus.CI_VICTORY:
 					this.Chaos_Victory++;
 					break;
-				case ROUND_END_STATUS.SCP_CI_VICTORY:
+				case RoundEndStatus.SCP_CI_VICTORY:
 					this.SCP_Chaos_Victory++;
 					break;
-				case ROUND_END_STATUS.SCP_VICTORY:
+				case RoundEndStatus.SCP_VICTORY:
 					this.SCP_Victory++;
 					break;
-				case ROUND_END_STATUS.MTF_VICTORY:
+				case RoundEndStatus.MTF_VICTORY:
 					this.MTF_Victory++;
 					break;
-				case ROUND_END_STATUS.OTHER_VICTORY:
+				case RoundEndStatus.OTHER_VICTORY:
 					this.Other_Victory++;
 					break;
-				case ROUND_END_STATUS.NO_VICTORY:
+				case RoundEndStatus.NO_VICTORY:
 					this.No_Victory++;
 					break;
-				case ROUND_END_STATUS.FORCE_END:
+				case RoundEndStatus.FORCE_END:
 					this.Forced_Round_End++;
 					break;
 			}
 		}
+
+		public override string ToString()
+		{
+			string reply = Environment.NewLine + "Round Stats: ";
+			foreach (PropertyInfo property in this.GetType().GetProperties().OrderBy(s => s.Name))
+				reply += Environment.NewLine + " - " + property.Name.Replace("_", " ") + ": " + property.GetValue(this) + "";
+			return reply;
+		}
 	}
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+	internal class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
+	{
+		private RoundStats Roundstat => AdminToolbox.RoundStats;
+
+		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+		{
+			if (ev.Status != RoundEndStatus.ON_GOING)
+				if (!AdminToolbox.roundStatsRecorded && ev.Round.Duration >= 3)
+				{
+					AdminToolbox.roundStatsRecorded = true;
+					Roundstat.AddPoint(ev.Status);
+				}
+		}
+	}
 }

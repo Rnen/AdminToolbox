@@ -23,9 +23,9 @@ namespace AdminToolbox.Command
 
 				if (args.Length > 0)
 				{
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; ; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (args.Length > 1)
 					{
 						if (args.Length > 2)

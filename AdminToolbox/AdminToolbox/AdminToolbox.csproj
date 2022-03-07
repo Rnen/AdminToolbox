@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AdminToolbox</RootNamespace>
     <AssemblyName>AdminToolbox</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,19 +42,12 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Builds\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Smod2, Version=3.6.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Builds\Smod2.dll</HintPath>
+    <Reference Include="Smod2">
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\Smod2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -64,23 +57,23 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SCP_SL_SERVER\SCPSL_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -88,7 +81,7 @@
     <Compile Include="API\ATWeb.cs" />
     <Compile Include="API\DiscordWebhook.cs" />
     <Compile Include="API\ExtentionMethods.cs" />
-    <Compile Include="API\GetPlayerFromString.cs" />
+    <Compile Include="API\GetFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerSettings.cs" />
     <Compile Include="API\SetPlayerVariables.cs" />
@@ -130,7 +123,7 @@
     <Compile Include="Commands\Player\HealCommand.cs" />
     <Compile Include="Commands\Player\GodModeCommand.cs" />
     <Compile Include="Events\LateOnCheckRoundEndEvent.cs" />
-    <Compile Include="Managers\ATFileManager.cs" />
+    <Compile Include="Managers\ATFile.cs" />
     <Compile Include="API\JailHandler.cs" />
     <Compile Include="Managers\LogManager.cs" />
     <Compile Include="Events\MyMiscEvents.cs" />

@@ -37,23 +37,25 @@ namespace AdminToolbox.Command
 					{
 						int playerNum = 0;
 
-						foreach (Player p in Server.GetPlayers().Where(pl => pl.PlayerId != (caller != null ? caller.PlayerId : -1)
-						 && !pl.GetGodmode() &&
-						 (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserId) ? !AdminToolbox.ATPlayerDict[pl.UserId].godMode : true)
-						 && pl.TeamRole.Team != Smod2.API.TeamType.SPECTATOR))
+						foreach (Player p in Server.GetPlayers(pl => pl.PlayerID != (caller != null ? caller.PlayerID : -1)
+						 && !pl.GodMode &&
+						 (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings pSetting) ? !pSetting.godMode : true)
+						 && pl.PlayerRole.Team != Smod2.API.TeamType.SPECTATOR))
 						{
-							p.Kill(killType);
+							p.Kill(killType.ToString());
 							playerNum++;
 						}
-						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
+						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") 
+							plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + playerNum + " players");
 						return new string[] { playerNum + " players has been slain!" };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
-					if (myPlayer == null) { return new string[] { "Couldn't get player: " + args[0] }; }
-					if (myPlayer.TeamRole.Role != Smod2.API.RoleType.SPECTATOR)
+					if (!GetFromString.TryGetPlayer(args[0], out Player myPlayer)) 
+						return new string[] { "Couldn't get player: " + args[0] };
+					if (myPlayer.PlayerRole.RoleID != Smod2.API.RoleType.SPECTATOR)
 					{
-						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
-						myPlayer.Kill(killType);
+						if (caller != null && !string.IsNullOrEmpty(caller.Name) && caller.Name.ToLower() != "server") 
+							plugin.Info(caller.Name + " ran the \"SLAY\" command on: " + myPlayer.Name);
+						myPlayer.Kill(killType.ToString());
 						return new string[] { myPlayer.Name + " has been slain!" };
 					}
 					else

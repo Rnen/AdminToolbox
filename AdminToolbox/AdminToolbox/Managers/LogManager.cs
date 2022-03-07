@@ -32,11 +32,11 @@ namespace AdminToolbox.Managers
 		internal string _logStartTime;
 
 		private static string
-			AppFolder => ATFileManager.GetFolderPath(Folder.AppData);
+			AppFolder => ATFile.GetFolderPath(Folder.AppData);
 		private static string
-			AdminToolboxFolder => ATFileManager.AdminToolboxFolder;
+			AdminToolboxFolder => ATFile.MainPath;
 		private static string
-			AdminToolboxLogs => ATFileManager.AdminToolboxLogs;
+			AdminToolboxLogs => ATFile.LogPath;
 
 		/// <summary>
 		/// Enum used by <see cref="WriteToLog(string[], ServerLogType)"/>
@@ -102,7 +102,7 @@ namespace AdminToolbox.Managers
 			}
 		}
 
-		internal void SetLogStartTime() => _logStartTime = DateTime.Now.Year.ToString() + "-" + ((DateTime.Now.Month >= 10) ? DateTime.Now.Month.ToString() : ("0" + DateTime.Now.Month.ToString())) + "-" + ((DateTime.Now.Day >= 10) ? DateTime.Now.Day.ToString() : ("0" + DateTime.Now.Day.ToString())) + " " + ((DateTime.Now.Hour >= 10) ? DateTime.Now.Hour.ToString() : ("0" + DateTime.Now.Hour.ToString())) + "." + ((DateTime.Now.Minute >= 10) ? DateTime.Now.Minute.ToString() : ("0" + DateTime.Now.Minute.ToString())) + "." + ((DateTime.Now.Second >= 10) ? DateTime.Now.Second.ToString() : ("0" + DateTime.Now.Second.ToString()));
+		internal void SetLogStartTime() => _logStartTime = DateTime.UtcNow.Year.ToString() + "-" + ((DateTime.UtcNow.Month >= 10) ? DateTime.UtcNow.Month.ToString() : ("0" + DateTime.UtcNow.Month.ToString())) + "-" + ((DateTime.UtcNow.Day >= 10) ? DateTime.UtcNow.Day.ToString() : ("0" + DateTime.UtcNow.Day.ToString())) + " " + ((DateTime.UtcNow.Hour >= 10) ? DateTime.UtcNow.Hour.ToString() : ("0" + DateTime.UtcNow.Hour.ToString())) + "." + ((DateTime.UtcNow.Minute >= 10) ? DateTime.UtcNow.Minute.ToString() : ("0" + DateTime.UtcNow.Minute.ToString())) + "." + ((DateTime.UtcNow.Second >= 10) ? DateTime.UtcNow.Second.ToString() : ("0" + DateTime.UtcNow.Second.ToString()));
 
 		private bool CheckExistingFolders()
 		{
@@ -142,7 +142,7 @@ namespace AdminToolbox.Managers
 				if (files.Length > 0)
 					foreach (string path in files)
 					{
-						int num = (int)(DateTime.Now - File.GetCreationTime(path)).TotalHours;
+						int num = (int)(DateTime.UtcNow - new DateTime(File.GetCreationTime(path).ToFileTimeUtc())).TotalHours;
 						AdminToolbox.singleton.Debug(path + "\nHours Old: " + num);
 						if (num > configInt)
 						{

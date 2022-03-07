@@ -25,7 +25,7 @@ namespace AdminToolbox.Command
 				{
 					if (Utility.AllAliasWords.Contains(args[0].ToUpper()))
 					{
-						AdminToolbox.AddMissingPlayerVariables();
+						Managers.ATFile.AddMissingPlayerVariables();
 						if (args.Length > 1)
 						{
 							if (bool.TryParse(args[1], out bool j))
@@ -34,7 +34,7 @@ namespace AdminToolbox.Command
 								int playerNum = 0;
 								foreach (Player pl in Server.GetPlayers())
 								{
-									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings ps))
+									if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings ps))
 									{
 										ps.instantKill = j;
 										playerNum++;
@@ -52,7 +52,7 @@ namespace AdminToolbox.Command
 						{
 							foreach (Player pl in Server.GetPlayers())
 							{
-								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings psetting))
+								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings psetting))
 									psetting.instantKill = !psetting.instantKill;
 							}
 							return new string[] { "Toggled all players InstantKill" };
@@ -60,12 +60,12 @@ namespace AdminToolbox.Command
 					}
 					else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 					{
-						AdminToolbox.AddMissingPlayerVariables();
+						Managers.ATFile.AddMissingPlayerVariables();
 						string str = "\nPlayers with InstantKill enabled: \n";
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
-							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserId, out PlayerSettings psett) && psett.instantKill)
+							if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings psett) && psett.instantKill)
 							{
 								myPlayerList.Add(pl.Name);
 								//str += " - " +pl.Name + "\n";
@@ -82,26 +82,26 @@ namespace AdminToolbox.Command
 						else str = "\nNo players with \"InstantKill\" enabled!";
 						return new string[] { str };
 					}
-					Player myPlayer = GetPlayerFromString.GetPlayer(args[0]);
+					Player myPlayer = GetFromString.GetPlayer(args[0]);
 					if (myPlayer == null) { return new string[] { "Couldn't find player: " + args[0] }; }
-					AdminToolbox.AddMissingPlayerVariables(myPlayer);
+					Managers.ATFile.AddMissingPlayerVariables(myPlayer);
 					if (args.Length > 1)
 					{
-						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserId, out PlayerSettings ps))
+						if (AdminToolbox.ATPlayerDict.TryGetValue(myPlayer.UserID, out PlayerSettings ps))
 						{
-							if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill = g;
-							else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill = true; }
-							else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill = false; }
+							if (bool.TryParse(args[1], out bool g)) AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill = g;
+							else if (args[1].ToLower() == "on") { AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill = true; }
+							else if (args[1].ToLower() == "off") { AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill = false; }
 							else return new string[] { GetUsage() };
-							return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill };
+							return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill };
 						}
 						else
 							return new string[] { myPlayer.Name + " not in dictionary" };
 					}
 					else
 					{
-						AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill = !AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill;
-						return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.UserId].instantKill };
+						AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill = !AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill;
+						return new string[] { myPlayer.Name + " InstantKill: " + AdminToolbox.ATPlayerDict[myPlayer.UserID].instantKill };
 					}
 
 				}

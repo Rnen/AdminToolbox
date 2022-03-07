@@ -21,50 +21,36 @@ namespace AdminToolbox
 		name = "Admin Toolbox",
 		description = "Plugin for advanced admin tools",
 		id = "rnen.admin.toolbox",
-		version = AT_Version + "-" + AT_Revision,
+		version = AT_Version + "-" + AT_Revision, 
 		SmodMajor = 3,
-		SmodMinor = 7,
+		SmodMinor = 10,
 		SmodRevision = 0
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string AT_Version = "1.3.8";
-		internal const string AT_Revision = "14";
-
-		#region GitHub release info
-		private DateTime LastOnlineCheck = DateTime.Now;
-		private ATWeb.AT_LatestReleaseInfo LatestReleaseInfo;
+		internal const string AT_Version = "1.3.9";
+		internal const string AT_Revision = "0";
+		internal const string SModLetter = "";
 
 		internal static List<WaitForTeleport> waitForTeleports = new List<WaitForTeleport>();
 
-		internal ATWeb.AT_LatestReleaseInfo GetGitReleaseInfo()
-		{
-			if (LastOnlineCheck.AddMinutes(5) < DateTime.Now || LatestReleaseInfo == null)
-			{
-				LatestReleaseInfo = ATWeb.GetOnlineInfo(this);
-				LastOnlineCheck = DateTime.Now;
-			}
-			return LatestReleaseInfo;
-		}
-		#endregion
+		/// <summary>
+		/// The plugin's instance of <see cref="Managers.LogManager"/>
+		/// </summary>
+		public static readonly LogManager LogManager = new LogManager();
 
 		/// <summary>
-		/// The plugin's instance of <see cref="LogManager"/>
+		/// The plugin's instance instance of <see cref="Managers.WarpManager"/>
 		/// </summary>
-		public static readonly LogManager logManager = new LogManager();
+		public static readonly WarpManager WarpManager = new WarpManager();
 
 		/// <summary>
-		/// The plugin's instance instance of <see cref="WarpManager"/>
+		/// The plugin's instance instance of <see cref="Managers.ATFile"/>
 		/// </summary>
-		public static readonly WarpManager warpManager = new WarpManager();
-
-		/// <summary>
-		/// The plugin's instance instance of <see cref="ATFileManager"/>
-		/// </summary>
-		public static readonly ATFileManager atfileManager = new ATFileManager();
+		public static readonly ATFile FileManager = new ATFile();
 
 		internal static bool roundStatsRecorded = false;
-		internal static readonly ATRoundStats roundStats = new ATRoundStats();
+		internal static readonly RoundStats RoundStats = new RoundStats();
 
 		internal static bool
 			isRoundFinished = false,
@@ -88,14 +74,14 @@ namespace AdminToolbox
 #endif
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="API.PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserId"/> as KEY
+		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserID"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 
 		/// <summary>
 		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
 		/// </summary>
-		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(warpManager.presetWarps);
+		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(WarpManager.presetWarps);
 
 		/// <summary>
 		/// <see cref="AdminToolbox"/> round count
@@ -108,7 +94,11 @@ namespace AdminToolbox
 		/// Called when <see cref="AdminToolbox"/> gets disabled
 		/// </summary>
 		public override void OnDisable()
-			=> Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
+		{
+			UnRegisterCommands();
+			UnRegisterEvents();
+			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Red;Disabled@#fg=Default;" : " - Disabled"));
+		}
 
 		/// <summary>
 		/// Called when <see cref="AdminToolbox"/> gets enabled
@@ -116,7 +106,7 @@ namespace AdminToolbox
 		public override void OnEnable()
 		{
 			singleton = this;
-			ATFileManager.WriteVersionToFile();
+			ATFile.WriteVersionToFile();
 			Debug(this.Details.name + " v." + this.Details.version + (isColored ? " - @#fg=Green;Enabled@#fg=Default;" : " - Enabled"));
 		}
 
@@ -129,15 +119,14 @@ namespace AdminToolbox
 			this.RegisterCommands();
 			this.RegisterConfigs();
 		}
-
 		internal void RegisterEvents()
 		{
 			this.AddEventHandlers(new RoundEventHandler(this));
-			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new DamageDetect(this));
-			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new DieDetect(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerHurt), new PlayerDamageEvent(this));
+			this.AddEventHandler(typeof(IEventHandlerPlayerDie), new PlayerDieEvent(this));
 			this.AddEventHandlers(new MyMiscEvents(this));
-			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(this), Priority.Highest);
-			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.Highest);
+			this.AddEventHandler(typeof(IEventHandlerCheckRoundEnd), new LateOnCheckRoundEndEvent(), Priority.LAST);
+			this.AddEventHandler(typeof(IEventHandlerCheckEscape), new LateEscapeEventCheck(), Priority.LAST);
 		}
 		internal void UnRegisterEvents() => EventManager.Manager.RemoveEventHandlers(this);
 		internal void RegisterCommands()
@@ -169,15 +158,15 @@ namespace AdminToolbox
 			this.AddCommands(ATBanCommand.CommandAliases, new ATBanCommand(this));
 			this.AddCommands(KillCommand.CommandAliases, new KillCommand(this));
 			this.AddCommands(SpeakCommand.CommandAliases, new SpeakCommand());
-			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand(this));
+			this.AddCommands(GhostCommand.CommandAliases, new GhostCommand());
 			this.AddCommands(AT_HelpCommand.CommandAliases, new AT_HelpCommand());
 			this.AddCommands(ATCommand.CommandAliases, new ATCommand(this));
-			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand(this));
-			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand(this));
+			this.AddCommands(ServerStatsCommand.CommandAliases, new ServerStatsCommand());
+			this.AddCommands(LockDoorsCommand.CommandAliases, new LockDoorsCommand());
 			this.AddCommands(RespawnLockCommand.CommandAliases, new RespawnLockCommand());
-			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand(this));
-			this.AddCommands(GrenadeModeCommand.CommandAliases, new GrenadeModeCommand(this));
-			this.AddCommands(InfiniteItemCommand.CommandAliases, new InfiniteItemCommand(this));
+			this.AddCommands(ClosestDoorCommand.CommandAliases, new ClosestDoorCommand());
+			this.AddCommands(GrenadeModeCommand.CommandAliases, new GrenadeModeCommand());
+			this.AddCommands(InfiniteItemCommand.CommandAliases, new InfiniteItemCommand());
 		}
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);
 		internal void RegisterConfigs()
@@ -191,10 +180,10 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, true, "What (int)damagetypes TUTORIAL is allowed to take"));
 
 			#region Debug
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", new int[] { 5, 13, 14, 15, 16, 17 }, true, "What (int)damagetypes to debug"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_server", false, true, "Debugs damage dealt by server"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator", false, true, "Debugs damage done to/by spectators"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial", false, true, "Debugs damage done to tutorial"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, true, "What (int)damagetypes to debug"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_server_damage", false, true, "Debugs damage dealt by server"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator_damage", false, true, "Debugs damage done to/by spectators"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial_damage", false, true, "Debugs damage done to tutorial"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_damage", false, true, "Debugs damage to all players except teammates"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_friendly_damage", false, true, "Debugs damage to teammates"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_kill", false, true, "Debugs player kills except teamkills"));
@@ -211,7 +200,7 @@ namespace AdminToolbox
 			#endregion
 			#region Cards
 			this.AddConfig(new ConfigSetting("admintoolbox_custom_nuke_cards", false, true, "Enables the use of custom keycards for the activation of the nuke"));
-			this.AddConfig(new ConfigSetting("admintoolbox_nuke_card_list", new int[] { 6, 9, 11 }, true, "List of all cards that can enable the nuke"));
+			this.AddConfig(new ConfigSetting("admintoolbox_nuke_card_list", new int[] { (int)ItemType.KeycardContainmentEngineer, (int)ItemType.KeycardFacilityManager, (int)ItemType.KeycardO5 }, true, "List of all cards that can enable the nuke"));
 			#endregion
 			#region Log-Stuff
 			this.AddConfig(new ConfigSetting("admintoolbox_log_teamkills", false, true, "Writing logfiles for teamkills"));
@@ -223,56 +212,13 @@ namespace AdminToolbox
 			#endregion
 			#region Intercom
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What ServerRank can use the Intercom to your specified settings"));
-			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserId_blacklist", new string[0], true, "Blacklist of UserId's that cannot use the intercom"));
+			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserID_blacklist", new string[0], true, "Blacklist of UserID's that cannot use the intercom"));
 			this.AddConfig(new ConfigSetting("admintoolbox_intercomlock", false, true, "If set to true, locks the command for all non-whitelist players"));
 			#endregion
 
 			this.AddConfig(new ConfigSetting("admintoolbox_block_role_damage", new string[0], true, "What roles cannot attack other roles"));
 
 			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
-			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-			//this.AddConfig(new Smod2.Config.ConfigSetting("atb_timedrestart_automessages", new string[] { "" }, Smod2.Config.SettingType.LIST, true, ""));
-		}
-
-
-		internal static void AddMissingPlayerVariables()
-		{
-			if (PluginManager.Manager.Server.GetPlayers().Count == 0) return;
-			AddMissingPlayerVariables(PluginManager.Manager.Server.GetPlayers());
-		}
-		internal static void AddMissingPlayerVariables(Player player)
-			=> AddMissingPlayerVariables(new List<Player>() { player });
-		internal static void AddMissingPlayerVariables(List<Player> players)
-			=> AddMissingPlayerVariables(players.ToArray());
-		internal static void AddMissingPlayerVariables(Player[] players)
-		{
-			Player[] allPlayers = PluginManager.Manager.Server.GetPlayers().ToArray();
-			if (allPlayers.Length == 0)
-			{
-				return;
-			}
-			else if (players == null || players.Length < 1)
-			{
-				players = allPlayers;
-			}
-			if (players.Length > 0)
-			{
-				foreach (Player player in players)
-				{
-					if (player != null && !string.IsNullOrEmpty(player.UserId))
-					{
-						AddToPlayerDict(player);
-					}
-				}
-			}
-		}
-		private static void AddToPlayerDict(Player player)
-		{
-			if (player != null && player is Player p &&
-				!string.IsNullOrEmpty(p.UserId) && !ATPlayerDict.ContainsKey(p.UserId))
-			{
-				ATPlayerDict.Add(p.UserId, new PlayerSettings(p.UserId));
-			}
 		}
 
 		/// <summary>

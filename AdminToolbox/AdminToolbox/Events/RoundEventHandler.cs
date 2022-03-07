@@ -30,27 +30,27 @@ namespace AdminToolbox
 			AdminToolbox.isRoundFinished = false;
 			if (Config.GetBoolValue("admintoolbox_round_info", true, false))
 			{
-				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " started.");
+				plugin.Info("Round: " + ++AdminToolbox.RoundCount + " start");
 				plugin.Info("Players this round: " + ev.Server.NumPlayers);
 			}
-			AdminToolbox.AddMissingPlayerVariables();
-			AdminToolbox.atfileManager.PlayerStatsFileManager(Managers.ATFileManager.PlayerFile.Write);
-			AdminToolbox.logManager.SetLogStartTime();
-			AdminToolbox.warpManager.RefreshWarps();
+			Managers.ATFile.AddMissingPlayerVariables();
+			AdminToolbox.FileManager.PlayerStatsFileManager(Managers.ATFile.PlayerFile.Write);
+			AdminToolbox.LogManager.SetLogStartTime();
+			AdminToolbox.WarpManager.RefreshWarps();
 
 			AdminToolbox.roundStatsRecorded = false;
 
-			if (intercomReady != string.Empty)
+			if (!string.IsNullOrEmpty(intercomReady))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Ready, intercomReady);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.READY, intercomReady);
 			}
-			if (intercomRestart != string.Empty)
+			if (!string.IsNullOrEmpty(intercomRestart))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Restarting, intercomRestart);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.RESTARTING, intercomRestart);
 			}
-			if (intercomTransmit != string.Empty)
+			if (!string.IsNullOrEmpty(intercomTransmit))
 			{
-				ev.Server.Map.SetIntercomContent(IntercomStatus.Transmitting, intercomTransmit);
+				ev.Server.Map.SetIntercomContent(IntercomStatus.TRANSMITTING, intercomTransmit);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace AdminToolbox
 		{
 			if (AdminToolbox.lockRound)
 			{
-				ev.Status = ROUND_END_STATUS.ON_GOING;
+				ev.Status = RoundEndStatus.ON_GOING;
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace AdminToolbox
 						plugin.Info("Round lasted for: " + minutes + " min, " + (duration - (minutes * 60)) + " sec");
 				}
 
-				AdminToolbox.AddMissingPlayerVariables();
+				Managers.ATFile.AddMissingPlayerVariables();
 
 				string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
 				if (keys.Length > 0)
@@ -102,7 +102,7 @@ namespace AdminToolbox
 			AdminToolbox.lockRound = false;
 			if (AdminToolbox.ATPlayerDict.Count > 0)
 			{
-				AdminToolbox.ATPlayerDict.Keys.ResetPlayerBools();
+				AdminToolbox.ATPlayerDict.ResetPlayerBools();
 			}
 
 			string[] keys = AdminToolbox.ATPlayerDict.Keys.ToArray();
@@ -112,12 +112,12 @@ namespace AdminToolbox
 					if (AdminToolbox.ATPlayerDict.ContainsKey(key))
 					{
 						PlayerSettings ps = AdminToolbox.ATPlayerDict[key];
-						ps.PlayerStats.MinutesPlayed += DateTime.Now.Subtract(ps.JoinTime).TotalSeconds;
+						ps.PlayerStats.MinutesPlayed += DateTime.UtcNow.Subtract(ps.JoinTime).TotalSeconds;
 						AdminToolbox.ATPlayerDict[key] = ps;
 					}
 				}
 
-			AdminToolbox.atfileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFileManager.PlayerFile.Write);
+			AdminToolbox.FileManager.PlayerStatsFileManager(AdminToolbox.ATPlayerDict.Keys.ToArray(), Managers.ATFile.PlayerFile.Write);
 		}
 	}
 }

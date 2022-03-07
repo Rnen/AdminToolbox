@@ -4,6 +4,7 @@ using System.Linq;
 using Smod2;
 using Smod2.API;
 using Smod2.Commands;
+using System.Reflection;
 
 namespace AdminToolbox.API.Extentions
 {
@@ -13,29 +14,25 @@ namespace AdminToolbox.API.Extentions
 	{
 		private static Server Server => PluginManager.Manager.Server;
 
-		private static AdminToolbox Plugin => AdminToolbox.singleton;
-
 		internal static bool GetIsJailed(this Player player)
-			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserId) && AdminToolbox.ATPlayerDict[player.UserId].isJailed;
+			=> AdminToolbox.ATPlayerDict.ContainsKey(player.UserID) && AdminToolbox.ATPlayerDict[player.UserID].isJailed;
 
 		public static bool IsInsideJail(this Player player)
 		{
 			Vector
 				jail = JailHandler.JailPos,
 				playerPos = player.GetPosition();
-			float
-				x = Math.Abs(playerPos.x - jail.x),
-				y = Math.Abs(playerPos.y - jail.y),
-				z = Math.Abs(playerPos.z - jail.z);
-			return x > 7 || y > 5 || z > 7 ? false : true;
+			return Math.Abs(playerPos.x - jail.x) <= 7 
+				&& Math.Abs(playerPos.y - jail.y) <= 5 
+				&& Math.Abs(playerPos.z - jail.z) <= 7;
 		}
 
-		internal static string[] UserIdsToArray(this List<Player> players)
+		internal static string[] UserIDsToArray(this List<Player> players)
 		{
 			string[] newArray = new string[players.Count];
 			for (int i = 0; i < players.Count; i++)
 			{
-				newArray[i] = players[i].UserId;
+				newArray[i] = players[i].UserID;
 			}
 			return newArray;
 		}
@@ -49,8 +46,8 @@ namespace AdminToolbox.API.Extentions
 
 			return players.Length > 0 && Server.Round.Duration > 0
 				? players
-					.Where(p => p.TeamRole.Role != Smod2.API.RoleType.UNASSIGNED
-					&& p.TeamRole.Role != Smod2.API.RoleType.SPECTATOR
+					.Where(p => p.PlayerRole.RoleID != Smod2.API.RoleType.NONE
+					&& p.PlayerRole.RoleID != Smod2.API.RoleType.SPECTATOR
 					&& !p.OverwatchMode
 					&& p.GetIsJailed()).ToArray()
 				: (new Player[0]);
@@ -58,7 +55,7 @@ namespace AdminToolbox.API.Extentions
 
 		internal static List<Field> AddField(this List<Field> list, string title, string content, bool inline = false)
 		{
-			list.Add(new Field { name = title, value = content, inline = inline ? "true" : "false" });
+			list.Add(new Field { name = title, value = content, inline = inline });
 			return list;
 		}
 
@@ -70,13 +67,13 @@ namespace AdminToolbox.API.Extentions
 				{
 					if (string.IsNullOrEmpty(str))
 						continue;
-					if (str == player.UserId)
+					if (str == player.UserID)
 						return true;
-					else if (player.GetUserGroup().Name != null && str == player.GetUserGroup().Name.Trim().ToUpper())
+					else if (player.GetUserGroup()?.Name != null && str == player.GetUserGroup()?.Name.Trim().ToUpper())
 						return true;
-					else if (player.GetUserGroup().BadgeText != null && str == player.GetUserGroup().BadgeText.Trim().ToUpper())
+					else if (player.GetUserGroup()?.BadgeText != null && str == player.GetUserGroup()?.BadgeText.Trim().ToUpper())
 						return true;
-					else if (player.GetRankName() != null && str == player.GetRankName().Trim().ToUpper())
+					else if (player.GetRankName() != null && str == player.GetRankName()?.Trim().ToUpper())
 						return true;
 				}
 				return false;
@@ -87,60 +84,70 @@ namespace AdminToolbox.API.Extentions
 			}
 		}
 
-		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserId);
+		internal static bool IsPlayer(this ICommandSender sender) => sender is Player p && !string.IsNullOrEmpty(p.UserID);
 
-		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out string[] reply);
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey) => sender.IsPermitted(commandKey, false, out _);
 
-		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed) => sender.IsPermitted(commandKey, mustBeListed, out string[] reply);
+		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed) => sender.IsPermitted(commandKey, mustBeListed, out _);
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, out string[] denied) => sender.IsPermitted(commandKey, false, out denied);
 
 		internal static bool IsPermitted(this ICommandSender sender, string[] commandKey, bool mustBeListed, out string[] denied)
 		{
-			denied = new string[] { "Error during command whitelist calculation!" };
-			if (sender is Player pl)
+			denied = new string[0];
+			try
 			{
-				if (commandKey.Length < 1)
-					return true;
-				string[] masterWhitelist = ConfigManager.Manager.Config.GetListValue("admintoolbox_master_whitelist", new string[] { });
-				if (masterWhitelist.ContainsPlayer(pl))
-					return true;
-
-				int validConfigs = 0;
-				foreach (string command in commandKey)
+				if (sender is Player pl)
 				{
-					command.Trim();
-					if (string.IsNullOrEmpty(command)) continue;
-					//Gets a array of whitelisted users (if any)
-					string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
-					if (configList.Length > 0)
-						validConfigs++;
-					if (configList.ContainsPlayer(pl))
+					if (commandKey.Length < 1)
 						return true;
+					string[] masterWhitelist = ConfigManager.Manager.Config.GetListValue("admintoolbox_master_whitelist", new string[] { });
+					if (masterWhitelist.ContainsPlayer(pl))
+						return true;
+
+					int validConfigs = 0;
+					foreach (string command in commandKey)
+					{
+						command.Trim();
+						if (string.IsNullOrEmpty(command)) continue;
+						//Gets a array of whitelisted users (if any)
+						string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
+						if (configList.Length > 0)
+							validConfigs++;
+						if (configList.ContainsPlayer(pl))
+							return true;
+					}
+					string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
+					denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
+					return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
+						? false
+						: !(validConfigs > 0);
 				}
-				string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
-				denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
-				return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
-					? false
-					: !(validConfigs > 0);
+				else
+					return true;
 			}
-			else
-				return true;
+			catch
+			{
+				denied = new string[] { "Error during command whitelist calculation!" };
+				return false;
+			}
 		}
 
 		internal static bool ContainsPlayer(this Dictionary<string, PlayerSettings> dict, Player player)
-			=> AdminToolbox.ATPlayerDict?.ContainsKey(player?.UserId) ?? false;
+			=> dict?.ContainsKey(player?.UserID) ?? false;
 
-		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings>.KeyCollection dict)
+		internal static void ResetPlayerBools(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] keys = dict.ToArray();
+			string[] keys = dict.Keys.ToArray();
 			if (keys.Length > 0)
 			{
 				foreach (string key in keys)
 				{
 					if (AdminToolbox.ATPlayerDict.ContainsKey(key) && !AdminToolbox.ATPlayerDict[key].keepSettings)
 					{
-						SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
+						foreach (FieldInfo field in typeof(PlayerSettings).GetFields().Where(p => p.FieldType == typeof(bool)))
+							field.SetValue(AdminToolbox.ATPlayerDict[key], false);
+						//SetPlayerVariables.SetPlayerBools(key, godMode: false, dmgOff: false, destroyDoor: false, lockDown: false, instantKill: false);
 					}
 				}
 			}
@@ -163,15 +170,15 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		internal static void Cleanup(this Dictionary<string, PlayerSettings> dict)
 		{
-			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().UserIdsToArray();
+			string[] currentPlayers = PluginManager.Manager.Server.GetPlayers().UserIDsToArray();
 			Dictionary<string, PlayerSettings> newDict = new Dictionary<string, PlayerSettings>(dict);
 			if (newDict.Count > 0)
 			{
 				foreach (KeyValuePair<string, PlayerSettings> kp in newDict)
 				{
-					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.Now - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
+					if (!currentPlayers.Any(s => s == kp.Key) && !kp.Value.keepSettings && Math.Abs((DateTime.UtcNow - kp.Value.JoinTime).TotalMinutes - Server.Round.Duration) > 2)
 					{
-						AdminToolbox.atfileManager.PlayerStatsFileManager(kp.Key, Managers.ATFileManager.PlayerFile.Write);
+						AdminToolbox.FileManager.PlayerStatsFileManager(kp.Key, Managers.ATFile.PlayerFile.Write);
 						dict.Remove(kp.Key);
 					}
 				}
@@ -183,23 +190,24 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		public static string ToColoredMultiAdminTeam(this Player player)
 		{
-			if (!AdminToolbox.isColored) return player.TeamRole.Name;
-			switch ((Team)player.TeamRole.Team)
+			if (!AdminToolbox.isColored) 
+				return player.PlayerRole.Name;
+			switch ((Team)player.PlayerRole.Team)
 			{
 				case Team.SCP:
-					return "@#fg=Red;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Red;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.MTF:
-					return "@#fg=Blue;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Blue;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.CHI:
-					return "@#fg=Green;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Green;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.RSC:
-					return "@#fg=Yellow;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Yellow;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.CDP:
-					return "@#fg=Orange;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Orange;" + player.PlayerRole.Name + "@#fg=Default;";
 				case Team.TUT:
-					return "@#fg=Green;" + player.TeamRole.Name + "@#fg=Default;";
+					return "@#fg=Green;" + player.PlayerRole.Name + "@#fg=Default;";
 				default:
-					return player.TeamRole.Name;
+					return player.PlayerRole.Name;
 			}
 		}
 
@@ -208,22 +216,22 @@ namespace AdminToolbox.API.Extentions
 		/// </summary>
 		public static string ToColoredRichTextRole(this Player player)
 		{
-			switch ((Team)player.TeamRole.Team)
+			switch ((Team)player.PlayerRole.Team)
 			{
 				case Team.SCP:
-					return "<color=red>" + player.TeamRole.Name + "</color>";
+					return "<color=red>" + player.PlayerRole.Name + "</color>";
 				case Team.MTF:
-					return "<color=blue>" + player.TeamRole.Name + "</color>";
+					return "<color=blue>" + player.PlayerRole.Name + "</color>";
 				case Team.CHI:
-					return "<color=green>" + player.TeamRole.Name + "</color>";
+					return "<color=green>" + player.PlayerRole.Name + "</color>";
 				case Team.RSC:
-					return "<color=silver>" + player.TeamRole.Name + "</color>";
+					return "<color=silver>" + player.PlayerRole.Name + "</color>";
 				case Team.CDP:
-					return "<color=orange>" + player.TeamRole.Name + "</color>";
+					return "<color=orange>" + player.PlayerRole.Name + "</color>";
 				case Team.TUT:
-					return "<color=lime>" + player.TeamRole.Name + "</color>";
+					return "<color=lime>" + player.PlayerRole.Name + "</color>";
 				default:
-					return player.TeamRole.Name;
+					return player.PlayerRole.Name;
 			}
 		}
 	}
