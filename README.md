@@ -1,4 +1,4 @@
-# AdminToolbox
+# AdminToolbox [![GitHub version](https://badge.fury.io/gh/Rnen%2FAdminToolbox.svg)](https://badge.fury.io/gh/Rnen%2FAdminToolbox)
 ### This is a server plugin for the game **SCP:Secret Laboratory**. 
 **It offers multiple admin tools like** 
 * Friendly fire logs in server console & logs to file
