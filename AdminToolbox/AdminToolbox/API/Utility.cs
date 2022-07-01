@@ -159,8 +159,8 @@ namespace AdminToolbox.API
 		{
 			DiscordWebhook webH;
 			List<Field> listOfFields = new List<Field>();
-			CultureInfo timeFormat = new CultureInfo("ja-JP");
-			listOfFields.AddField("Playername: ", player?.Name ?? "TEST", true);
+			CultureInfo timeFormat = new CultureInfo("ja-JP"); //Don't ask why Japanese, I just liked the formatting.
+			listOfFields.AddField("Player-name: ", player?.Name ?? "TEST", true);
 			listOfFields.AddField("Duration: ", (duration / 60).ToString("0", CultureInfo.InvariantCulture) + " minutes", true);
 			listOfFields.AddField("Timespan: ", $"[{DateTime.UtcNow.ToString(timeFormat)}] -> [{DateTime.UtcNow.AddSeconds(duration).ToString(timeFormat)}]");
 			if (!string.IsNullOrEmpty(reason))

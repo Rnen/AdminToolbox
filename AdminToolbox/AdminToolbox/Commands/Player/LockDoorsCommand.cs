@@ -80,7 +80,7 @@ namespace AdminToolbox.Command
 					}
 					if (enabled.HasValue)
 						return new string[] { $"Set {pcount} players \"LockDoors\" state to {(bool)enabled}" };
-					else return new string[] { $"Toogled {pcount} players \"LockDoors\" state." };
+					else return new string[] { $"Toggled {pcount} players \"LockDoors\" state." };
 				}
 				else
 					return new string[] { GetUsage() };

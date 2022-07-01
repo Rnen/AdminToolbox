@@ -73,17 +73,17 @@ namespace AdminToolbox.Command
 								}
 
 								if (x.Count > 0)
-									return x.Prepend("Webhook reply: ").ToArray();
+									return x.Prepend("Web-hook reply: ").ToArray();
 								else
-									return new string[] { "Webhook sent!" };
+									return new string[] { "Web-hook sent!" };
 							}
-							return new string[] { "admintoolbox_ban_webhooks config empty!" };
+							return new string[] { "admintoolbox_ban_webhooks configuration empty!" };
 
 						case "DEBUG":
 							if (!sender.IsPermitted(new string[] { "ATDEBUG" }, true, out string[] denied))
 								return denied;
 							AdminToolbox.DebugMode = !AdminToolbox.DebugMode;
-							return new string[] { "AdminToolbox Debugmode: " + AdminToolbox.DebugMode };
+							return new string[] { "AdminToolbox Debug-mode: " + AdminToolbox.DebugMode };
 						case "ITEMS":
 							Dictionary<int, string> dict = new Dictionary<int, string>();
 							string str = "Items:";
@@ -119,7 +119,7 @@ namespace AdminToolbox.Command
 							}
 							return new string[] { res };
 						default:
-							return new string[] { args[0] + " is not a valid arguement!", GetUsage() };
+							return new string[] { args[0] + " is not a valid argument!", GetUsage() };
 					}
 				}
 				else

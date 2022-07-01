@@ -14,7 +14,7 @@ namespace AdminToolbox.Command
 
 		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription() => "Switch on/off godmode for player";
+		public string GetCommandDescription() => "Switch on/off god-mode for player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (BOOL)";
 
 		public static readonly string[] CommandAliases = new string[] { "ATGOD", "ATGODMODE", "AT-GOD", "AT-GODMODE" };
@@ -46,9 +46,9 @@ namespace AdminToolbox.Command
 										playerNum++;
 									}
 								}
-								outPut += "\nSet " + playerNum + " player's AT-Godmode to " + j;
-								if (changedState) return new string[] { "\n" + "Set " + playerNum + " player's AT-Godmode to " + j, "\n" + "NoDmg for theese " + playerNum + " players set to: " + j };
-								return new string[] { "\n" + "Set " + playerNum + " player's AT-Godmode to " + j };
+								outPut += "\nSet " + playerNum + " player's AT-God-mode to " + j;
+								if (changedState) return new string[] { "\n" + "Set " + playerNum + " player's AT-God-ode to " + j, "\n" + "NoDmg for " + playerNum + " players set to: " + j };
+								return new string[] { "\n" + "Set " + playerNum + " player's AT-God-mode to " + j };
 							}
 							else
 							{
@@ -62,12 +62,12 @@ namespace AdminToolbox.Command
 								if (AdminToolbox.ATPlayerDict.TryGetValue(pl.UserID, out PlayerSettings psetting))
 									psetting.godMode = !psetting.godMode;
 							}
-							return new string[] { "Toggled all players AT-Godmodes" };
+							return new string[] { "Toggled all players AT-God-modes" };
 						}
 					}
 					else if (args[0].ToLower() == "list" || args[0].ToLower() == "get")
 					{
-						string str = "\n" + "Players with AT-Godmode enabled: " + "\n";
+						string str = "\n" + "Players with AT-God-mode enabled: " + "\n";
 						List<string> myPlayerList = new List<string>();
 						foreach (Player pl in Server.GetPlayers())
 						{
@@ -85,7 +85,7 @@ namespace AdminToolbox.Command
 								str += "\n - " + item;
 							}
 						}
-						else str = "\n" + "No players with \"AT-Godmode\" enabled!";
+						else str = "\n" + "No players with \"AT-God-mode\" enabled!";
 						return new string[] { str };
 					}
 					Player myPlayer = GetFromString.GetPlayer(args[0]);
@@ -101,15 +101,15 @@ namespace AdminToolbox.Command
 							if (changedValue)
 							{
 								pls.dmgOff = pls.godMode;
-								return new string[] { myPlayer.Name + " AT-Godmode: " + pls.godMode, myPlayer.Name + " No Dmg: " + pls.dmgOff };
+								return new string[] { myPlayer.Name + " AT-God-mode: " + pls.godMode, myPlayer.Name + " No Dmg: " + pls.dmgOff };
 							}
 							else
-								return new string[] { myPlayer.Name + " AT-Godmode: " + pls.godMode };
+								return new string[] { myPlayer.Name + " AT-God-mode: " + pls.godMode };
 						}
 						else
 						{
 							pls.godMode = !pls.godMode;
-							return new string[] { myPlayer.Name + " AT-Godmode: " + pls.godMode };
+							return new string[] { myPlayer.Name + " AT-God-mode: " + pls.godMode };
 						}
 					}
 					else

@@ -9,7 +9,7 @@ namespace AdminToolbox.API
 	public static class SetPlayerVariables
 	{
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools by <paramref name="UserID"/>
+		/// For setting <see cref="API.PlayerSettings"/> booleans by <paramref name="UserID"/>
 		/// <para>Returns false if <paramref name="UserID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(string UserID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
@@ -30,13 +30,13 @@ namespace AdminToolbox.API
 
 		}
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools on a <see cref="Player"/>
+		/// For setting <see cref="API.PlayerSettings"/> booleans on a <see cref="Player"/>
 		/// <para>Returns false if <paramref name="player"/>'s UserID is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 			=> SetPlayerBools(player.UserID, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> bools on a list of <see cref="Player"/>s
+		/// For setting <see cref="API.PlayerSettings"/> booleans on a list of <see cref="Player"/>s
 		/// <para>Returns false if one or more of <paramref name="players"/> UserID's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
 		public static bool SetPlayerBools(List<Player> players, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)

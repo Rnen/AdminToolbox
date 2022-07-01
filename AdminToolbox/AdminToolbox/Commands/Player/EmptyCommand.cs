@@ -58,7 +58,7 @@ namespace AdminToolbox.Command
 			Smod2.API.ItemType ammoFlag = Smod2.API.ItemType.AMMO_12_GAUGE | Smod2.API.ItemType.AMMO_44_CAL | Smod2.API.ItemType.AMMO_556_X45 | Smod2.API.ItemType.AMMO_762_X39 | Smod2.API.ItemType.AMMO_9_X19;
 
 			if (player == null)
-				return new string[] { "Player not spesified!" };
+				return new string[] { "Player not specified!" };
 			if (player.PlayerRole.RoleID == Smod2.API.RoleType.NONE)
 				return new string[] { "Player not properly initialized!" };
 			if (player.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR)

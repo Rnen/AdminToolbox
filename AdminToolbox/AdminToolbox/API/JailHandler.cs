@@ -75,7 +75,7 @@ namespace AdminToolbox.API
 						if (a != AmmoType.NONE)
 							psetting.Ammo[a] = player.GetAmmo(a);
 				}
-				//Changes role to Tutorial, teleports to jail, removes inv.
+				//Changes role to Tutorial, teleport to jail, removes inventory.
 				Debug($"Variables stored, sending \"{player.Name}\" to jail");
 				player.ChangeRole(Smod2.API.RoleType.TUTORIAL, true, false);
 				player.Teleport(JailPos, true);
@@ -102,7 +102,7 @@ namespace AdminToolbox.API
 				Debug("Return: Player or UserID null/empty");
 				return false;
 			}
-			Debug($"Attempting to unjail \"{player.Name}\"");
+			Debug($"Attempting to un-jail \"{player.Name}\"");
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings psetting))
 			{
 				psetting.isJailed = false;

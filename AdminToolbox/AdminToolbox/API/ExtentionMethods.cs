@@ -110,7 +110,7 @@ namespace AdminToolbox.API.Extentions
 					{
 						command.Trim();
 						if (string.IsNullOrEmpty(command)) continue;
-						//Gets a array of whitelisted users (if any)
+						//Gets a array of white-listed users (if any)
 						string[] configList = ConfigManager.Manager.Config.GetListValue("admintoolbox_" + command.ToLower() + "_whitelist", new string[0]);
 						if (configList.Length > 0)
 							validConfigs++;
@@ -118,7 +118,7 @@ namespace AdminToolbox.API.Extentions
 							return true;
 					}
 					string reply = "You are not permitted to use the (" + string.Join(" / ", commandKey) + ")  command!";
-					denied = mustBeListed ? new string[] { reply, "You are required to be spesificly whitelisted to use this command." } : new string[] { reply };
+					denied = mustBeListed ? new string[] { reply, "You are required to be specifically white-listed to use this command." } : new string[] { reply };
 					return (mustBeListed || ConfigManager.Manager.Config.GetBoolValue("admintoolbox_whitelist_required", false)) && validConfigs < 1
 						? false
 						: !(validConfigs > 0);
@@ -128,7 +128,7 @@ namespace AdminToolbox.API.Extentions
 			}
 			catch
 			{
-				denied = new string[] { "Error during command whitelist calculation!" };
+				denied = new string[] { "Error during command white-list calculation!" };
 				return false;
 			}
 		}

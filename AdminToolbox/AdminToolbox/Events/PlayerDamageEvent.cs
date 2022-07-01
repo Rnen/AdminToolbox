@@ -127,7 +127,7 @@ namespace AdminToolbox
 								}
 								else
 								{
-									plugin.Info("Invalid config value at \"admintoolbox_block_role_damage:\"  Value: " + myStringKey[0] + ":" + myStringKey[1] + "\nSkipping entry...");
+									plugin.Info("Invalid configuration value at \"admintoolbox_block_role_damage:\"  Value: " + myStringKey[0] + ":" + myStringKey[1] + "\nSkipping entry...");
 									continue;
 								}
 							}
@@ -136,7 +136,7 @@ namespace AdminToolbox
 					}
 					else
 					{
-						plugin.Info("Not a valid config at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1] + "\nSkipping entry...");
+						plugin.Info("Not a valid configuration at \"admintoolbox_block_role_damage\"  Value: " + myStringKey[0] + ":" + myStringKey[1] + "\nSkipping entry...");
 						continue;
 					}
 				}
@@ -154,7 +154,7 @@ RoundEnd:;
 					if (allowedTutDmg.Contains((int)ev.DamageType) || allowedTutDmg.Contains(-2))
 						goto default;
 					if (DebugDmg.Contains((int)ev.DamageType) && Config.GetBoolValue("admintoolbox_debug_tutorial", false, false))
-						plugin.Info(ev.Player.PlayerRole.Name + " " + ev.Player.Name + " not allowed damagetype: " + ev.DamageType);
+						plugin.Info(ev.Player.PlayerRole.Name + " " + ev.Player.Name + " not allowed damage-type: " + ev.DamageType);
 					if ((attackerSetting?.instantKill ?? false) && Config.GetBoolValue("admintoolbox_instantkill_affects_tutorials", true))
 						goto default;
 
