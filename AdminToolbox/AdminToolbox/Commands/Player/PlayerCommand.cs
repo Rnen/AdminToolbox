@@ -14,7 +14,7 @@ namespace AdminToolbox.Command
 		private const int LeftPadding = 3;
 
 		private Server Server => PluginManager.Manager.Server;
-		public string GetCommandDescription() => "Gets toolbox info about spesific player";
+		public string GetCommandDescription() => "Gets toolbox info about specific player";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYERNAME/ID/UserID]";
 
 		public static readonly string[] CommandAliases = new string[] { "PLAYER", "P", "PLAYERINFO", "PINFO" };
@@ -73,7 +73,7 @@ namespace AdminToolbox.Command
 						BuildTwoLiner(" - UserID: " + myPlayer.UserID, " - IP: " + myPlayer.IPAddress.Replace("::ffff:", string.Empty)) + Environment.NewLine +
 						BuildTwoLiner(" - Server Rank: " + "<color=" + _roleColor + ">" + _serverRole + "</color>") + Environment.NewLine +
 						BuildTwoLiner(" - Role: " + _playerRole, " - Health: " + myPlayer.Health) + Environment.NewLine +
-						BuildTwoLiner(" - AdminToolbox Toggables: ") + Environment.NewLine +
+						BuildTwoLiner(" - AdminToolbox Toggles: ") + Environment.NewLine +
 						BuildTwoLiner("   - Godmode: " + playerDict.godMode, " - NoDmg: " + playerDict.dmgOff) + Environment.NewLine +
 						BuildTwoLiner("   - OverwatchMode: " + myPlayer.OverwatchMode, " - KeepSettings: " + playerDict.keepSettings) + Environment.NewLine +
 						BuildTwoLiner("   - BreakDoors: " + playerDict.destroyDoor, " - PlayerLockDown: " + playerDict.lockDown) + Environment.NewLine +

@@ -8,7 +8,7 @@ namespace AdminToolbox.API
 {
 	using API.Webhook;
 	/// <summary>
-	/// Static <see cref="AdminToolbox"/> class that contains all of the plugins web-based methods
+	/// Static <see cref="AdminToolbox"/> class that contains all of the plugin web-based methods
 	/// </summary>
 	public static class ATWeb
 	{

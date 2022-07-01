@@ -10,7 +10,7 @@ namespace AdminToolbox.Command
 	public class TeleportCommand : ICommandHandler
 	{
 		private Server Server => PluginManager.Manager.Server;
-		public string GetCommandDescription() => "Teleports player to player2";
+		public string GetCommandDescription() => "Teleport player to player2";
 		public string GetUsage() => "TPX [PLAYER] [PLAYER2]";
 
 		public static readonly string[] CommandAliases = new string[] { "TPX" };

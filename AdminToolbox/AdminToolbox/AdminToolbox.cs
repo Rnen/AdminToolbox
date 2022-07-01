@@ -24,11 +24,11 @@ namespace AdminToolbox
 		version = AT_Version + "-" + AT_Revision, 
 		SmodMajor = 3,
 		SmodMinor = 10,
-		SmodRevision = 0
+		SmodRevision = 2
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string AT_Version = "1.3.9";
+		internal const string AT_Version = "1.3.10";
 		internal const string AT_Revision = "0";
 		internal const string SModLetter = "";
 
@@ -40,12 +40,12 @@ namespace AdminToolbox
 		public static readonly LogManager LogManager = new LogManager();
 
 		/// <summary>
-		/// The plugin's instance instance of <see cref="Managers.WarpManager"/>
+		/// The plugin's instance of <see cref="Managers.WarpManager"/>
 		/// </summary>
 		public static readonly WarpManager WarpManager = new WarpManager();
 
 		/// <summary>
-		/// The plugin's instance instance of <see cref="Managers.ATFile"/>
+		/// The plugin's instance of <see cref="Managers.ATFile"/>
 		/// </summary>
 		public static readonly ATFile FileManager = new ATFile();
 
@@ -171,22 +171,22 @@ namespace AdminToolbox
 		internal void UnRegisterCommands() => PluginManager.CommandManager.UnregisterCommands(this);
 		internal void RegisterConfigs()
 		{
-			#region Core-configs
+			#region Core-configurations
 			this.AddConfig(new ConfigSetting("admintoolbox_enable", true, true, "Enable/Disable AdminToolbox"));
 			this.AddConfig(new ConfigSetting("admintoolbox_colors", false, true, "Enable/Disable AdminToolbox colors in server window"));
 			this.AddConfig(new ConfigSetting("admintoolbox_tracking", true, true, "Appends the AdminToolbox version to your server name, this is for tracking how many servers are running the plugin"));
 			#endregion
 
-			this.AddConfig(new ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, true, "What (int)damagetypes TUTORIAL is allowed to take"));
+			this.AddConfig(new ConfigSetting("admintoolbox_tutorial_dmg_allowed", new int[] { -1 }, true, "What (int)damage-types TUTORIAL is allowed to take"));
 
 			#region Debug
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, true, "What (int)damagetypes to debug"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_damagetypes", Utility.HumanDamageTypes, true, "What (int)damage-types to debug"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_server_damage", false, true, "Debugs damage dealt by server"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_spectator_damage", false, true, "Debugs damage done to/by spectators"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_tutorial_damage", false, true, "Debugs damage done to tutorial"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_damage", false, true, "Debugs damage to all players except teammates"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_friendly_damage", false, true, "Debugs damage to teammates"));
-			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_kill", false, true, "Debugs player kills except teamkills"));
+			this.AddConfig(new ConfigSetting("admintoolbox_debug_player_kill", false, true, "Debugs player kills except team-kills"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_friendly_kill", true, true, "Debugs team-kills"));
 			this.AddConfig(new ConfigSetting("admintoolbox_debug_scp_and_self_killed", false, true, "Debug suicides and SCP kills"));
 			#endregion
@@ -196,16 +196,16 @@ namespace AdminToolbox
 			this.AddConfig(new ConfigSetting("admintoolbox_round_damagemultiplier", 1f, true, "Damage multiplier"));
 			this.AddConfig(new ConfigSetting("admintoolbox_decontamination_damagemultiplier", 1f, true, "Damage multiplier for the decontamination of LCZ"));
 			this.AddConfig(new ConfigSetting("admintoolbox_friendlyfire_damagemultiplier", 1f, true, "Damage multiplier for friendly fire"));
-			this.AddConfig(new ConfigSetting("admintoolbox_pocketdimention_damagemultiplier", 1f, true, "Damage multiplier for pocket dimention damage"));
+			this.AddConfig(new ConfigSetting("admintoolbox_pocketdimention_damagemultiplier", 1f, true, "Damage multiplier for pocket dimension damage"));
 			#endregion
 			#region Cards
-			this.AddConfig(new ConfigSetting("admintoolbox_custom_nuke_cards", false, true, "Enables the use of custom keycards for the activation of the nuke"));
+			this.AddConfig(new ConfigSetting("admintoolbox_custom_nuke_cards", false, true, "Enables the use of custom key-cards for the activation of the nuke"));
 			this.AddConfig(new ConfigSetting("admintoolbox_nuke_card_list", new int[] { (int)ItemType.KeycardContainmentEngineer, (int)ItemType.KeycardFacilityManager, (int)ItemType.KeycardO5 }, true, "List of all cards that can enable the nuke"));
 			#endregion
 			#region Log-Stuff
-			this.AddConfig(new ConfigSetting("admintoolbox_log_teamkills", false, true, "Writing logfiles for teamkills"));
-			this.AddConfig(new ConfigSetting("admintoolbox_log_kills", false, true, "Writing logfiles for regular kills"));
-			this.AddConfig(new ConfigSetting("admintoolbox_log_commands", false, true, "Writing logfiles for all AT command usage"));
+			this.AddConfig(new ConfigSetting("admintoolbox_log_teamkills", false, true, "Writing log-files for team-kills"));
+			this.AddConfig(new ConfigSetting("admintoolbox_log_kills", false, true, "Writing log-files for regular kills"));
+			this.AddConfig(new ConfigSetting("admintoolbox_log_commands", false, true, "Writing log-files for all AT command usage"));
 
 			this.AddConfig(new ConfigSetting("admintoolbox_round_info", true, true, "Prints round count and player number on round start & end"));
 			this.AddConfig(new ConfigSetting("admintoolbox_player_join_info", true, true, "Writes player name in console on players joining"));
@@ -213,12 +213,12 @@ namespace AdminToolbox
 			#region Intercom
 			//this.AddConfig(new Smod2.Config.ConfigSetting("admintoolbox_intercom_whitelist", new string[] { string.Empty }, Smod2.Config.SettingType.LIST, true, "What ServerRank can use the Intercom to your specified settings"));
 			this.AddConfig(new ConfigSetting("admintoolbox_intercom_UserID_blacklist", new string[0], true, "Blacklist of UserID's that cannot use the intercom"));
-			this.AddConfig(new ConfigSetting("admintoolbox_intercomlock", false, true, "If set to true, locks the command for all non-whitelist players"));
+			this.AddConfig(new ConfigSetting("admintoolbox_intercomlock", false, true, "If set to true, locks the command for all non- white-list players"));
 			#endregion
 
 			this.AddConfig(new ConfigSetting("admintoolbox_block_role_damage", new string[0], true, "What roles cannot attack other roles"));
 
-			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel webhooks for bans"));
+			this.AddConfig(new ConfigSetting("admintoolbox_ban_webhooks", new string[0], true, "Links to channel web-hooks for bans"));
 		}
 
 		/// <summary>

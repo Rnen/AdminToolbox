@@ -11,7 +11,7 @@ namespace AdminToolbox.Command
 	{
 		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription() => "Heals player. Use int for spesific amount (optional)";
+		public string GetCommandDescription() => "Heals player. Use int for specific amount (optional)";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") [PLAYER] (AMOUNT)";
 
 		public static readonly string[] CommandAliases = new string[] { "ATHEAL", "AT-HEAL" };

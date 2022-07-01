@@ -38,7 +38,7 @@ namespace AdminToolbox.Command
 					"\n Server Name: " + Server.Name +
 					"\n - Server IP: " + Server.IpAddress + ":" + Server.Port +
 					"\n - PlayerCount: " + Server.NumPlayers +
-					"\n - AdminToolbox Toggables: " +
+					"\n - AdminToolbox Toggles: " +
 					"\n     - isColored: " + AdminToolbox.isColored +
 					"\n     - IntercomLock: " + AdminToolbox.intercomLock +
 					"\n     - LockRound: " + AdminToolbox.lockRound +

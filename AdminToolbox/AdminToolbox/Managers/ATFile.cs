@@ -318,7 +318,7 @@ namespace AdminToolbox.Managers
 							fileCount++;
 							string _newpath = files[i].Substring(0, files[i].Length - 4) + "@steam.txt";
 							Debug(_newpath);
-							if (File.Exists(_newpath)) //At rare occations this file already exists
+							if (File.Exists(_newpath)) //At rare occasions this file already exists
 								File.Delete(_newpath);
 							File.Move(files[i], _newpath);
 						}
@@ -362,7 +362,7 @@ namespace AdminToolbox.Managers
 			string[] statsFiles = string.IsNullOrEmpty(filePath) ? Directory.GetFiles(PlayerStatsPath) : new string[] { filePath };
 			if (statsFiles.Where(f => !File.ReadAllText(f).StartsWith("{")).Count() >= 100)
 			{
-				Info("!Warning! The plugin will be converting old playerfiles to a new format, this might take some time");
+				Info("!Warning! The plugin will be converting old player-files to a new format, this might take some time");
 			}
 			if (statsFiles.Length > 0)
 				foreach (string path in statsFiles)
@@ -393,7 +393,7 @@ namespace AdminToolbox.Managers
 					}
 					catch (Exception e)
 					{
-						Debug("Failed during convertion of: " + path + "\n" + e);
+						Debug("Failed during conversion of: " + path + "\n" + e);
 						continue;
 					}
 					// Kills + TeamKills  + Deaths  + minutesPlayed  + BanCount;
@@ -403,7 +403,7 @@ namespace AdminToolbox.Managers
 		}
 
 		/// <summary>
-		/// The class <see cref="AdminToolbox"/> uses for JSON Serialize/Deserialize operations
+		/// The class <see cref="AdminToolbox"/> uses for JSON serialize/De-serialize operations
 		/// </summary>
 		public class SerializablePlayerClass
 		{

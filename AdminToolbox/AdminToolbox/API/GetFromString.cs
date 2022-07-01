@@ -54,7 +54,7 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
 		/// </summary>
 		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
 		public static Player[] GetGroup(string name)
@@ -69,7 +69,7 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
 		/// </summary>
 		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
 		public static Player[] GetRole(string name)
@@ -84,7 +84,7 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> param
+		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
 		/// </summary>
 		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
 		public static Player[] GetTeam(string name)

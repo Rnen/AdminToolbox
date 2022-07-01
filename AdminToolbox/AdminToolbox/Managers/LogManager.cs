@@ -125,11 +125,11 @@ namespace AdminToolbox.Managers
 		}
 
 		/// <summary>
-		/// Removes <see cref ="AdminToolbox"/> logfiles older than set config time.
+		/// Removes <see cref ="AdminToolbox"/> log-files older than set configuration time.
 		/// </summary>
 		public void ManageDatedATLogs() => ManageDatedATLogs(0);
 		/// <summary>
-		/// Removes <see cref ="AdminToolbox"/> logfiles older than set time.
+		/// Removes <see cref ="AdminToolbox"/> log-files older than set time.
 		/// </summary>
 		public void ManageDatedATLogs(uint hoursOld)
 		{

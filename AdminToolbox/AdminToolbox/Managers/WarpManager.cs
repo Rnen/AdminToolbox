@@ -26,10 +26,10 @@ namespace AdminToolbox.Managers
 				{ "ci",     new WarpPoint{ Name = "ci", Description = "The Chaos Spawn", Vector = new ATVector(10,989,-60) } },
 				{ "jail",   new WarpPoint{ Name = "jail", Description = "The AdminToolbox Jail", Vector = new ATVector(53,1020,-44) } },
 				{ "flat",   new WarpPoint{ Name = "flat", Description ="Unreachable grass flatlands", Vector = new ATVector(250,980,110) } },
-				{ "heli",   new WarpPoint{ Name = "heli", Description = "MTF Heli outside map", Vector = new ATVector(293,977,-62) } },
+				{ "heli",   new WarpPoint{ Name = "heli", Description = "MTF Helicopter outside map", Vector = new ATVector(293,977,-62) } },
 				{ "car",    new WarpPoint{ Name = "car", Description = "Chaos Car outside map", Vector = new ATVector(-96,987,-59) } },
 				{ "escape", new WarpPoint{ Name = "escape", Description = "The Escape area", Vector = new ATVector(179,996,27) } },
-				{ "pocket", new WarpPoint{ Name = "pocket", Description = "The pocket dimention", Vector = new ATVector(0,-2000,0) } }
+				{ "pocket", new WarpPoint{ Name = "pocket", Description = "The pocket dimension", Vector = new ATVector(0,-2000,0) } }
 		};
 
 		private void Debug(string message) => Plugin.Debug("[WARPMANAGER]: " + message);
@@ -50,7 +50,7 @@ namespace AdminToolbox.Managers
 
 		/// <summary>
 		/// Removes any WarpPoint below surface level
-		/// <para>Does not affect pocket dimention</para>
+		/// <para>Does not affect pocket dimension</para>
 		/// </summary>
 		public void RemoveUndergroundWarps()
 		{
@@ -88,7 +88,7 @@ namespace AdminToolbox.Managers
 				WarpPoint[] warparray = (warpPoints != null && warpPoints.Length > 0) ? warpPoints : AdminToolbox.WarpVectorDict.Values.ToArray();
 				if (warparray == null || warparray.Length < 1)
 				{
-					Debug("Warparray was null or empty, returning");
+					Debug("Warp-array was null or empty, returning");
 					return false;
 				}
 				else
@@ -103,23 +103,23 @@ namespace AdminToolbox.Managers
 					Debug("Finished JSON Serialize");
 					bool b1 = File.Exists(WarpFilePath);
 					Debug("File exists: " + b1);
-					Debug("Opening streamwriter");
+					Debug("Opening stream-writer");
 					using (StreamWriter streamWriter = new StreamWriter(WarpFilePath, false))
 					{
-						Debug("Streamwriter open, writing");
+						Debug("Stream-writer open, writing");
 						streamWriter.Write(jsonData);
-						Debug("Streamwriter wrote!");
+						Debug("Stream-writer wrote!");
 					}
-					Debug("Closing streamwriter");
+					Debug("Closing stream-writer");
 					if (!b1 && File.Exists(WarpFilePath))
-						Plugin.Info("Created a Warps savefile located at: \n" + WarpFilePath);
+						Plugin.Info("Created a Warps save-file located at: \n" + WarpFilePath);
 				}
 				return File.Exists(WarpFilePath);
 			}
 			catch (Exception e)
 			{
-				Plugin.Info("Failed during writing of warpfile!");
-				Debug("Error occured during writing to file: " + e);
+				Plugin.Info("Failed during writing of warp-file!");
+				Debug("Error occurred during writing to file: " + e);
 				return false;
 			}
 		}
@@ -159,7 +159,7 @@ namespace AdminToolbox.Managers
 
 				if (warpArray.Length > 0)
 				{
-					Debug("Populating dict with json array");
+					Debug("Populating dictionary with json array");
 					foreach (WarpPoint wp in warpArray)
 						newDict.Add(wp.Name.ToLower(), wp);
 				}
@@ -185,8 +185,8 @@ namespace AdminToolbox.Managers
 			}
 			catch (Exception e)
 			{
-				Plugin.Info("Failed during reading of warpfiles!");
-				Debug("Error occured during reading of file: " + e.Message);
+				Plugin.Info("Failed during reading of warp-files!");
+				Debug("Error occurred during reading of file: " + e.Message);
 				return presetWarps;
 			}
 		}

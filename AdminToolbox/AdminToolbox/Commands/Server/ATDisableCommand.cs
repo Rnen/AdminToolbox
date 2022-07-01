@@ -9,7 +9,7 @@ namespace AdminToolbox.Command
 		private readonly AdminToolbox plugin;
 		public ATDisableCommand(AdminToolbox plugin) => this.plugin = plugin;
 
-		public string GetCommandDescription() => "Disables Admintoolbox";
+		public string GetCommandDescription() => "Disables AdminToolbox";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 
 		public static readonly string[] CommandAliases = new string[] { "ATDISABLE" };

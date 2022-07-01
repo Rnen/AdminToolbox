@@ -9,7 +9,7 @@ namespace AdminToolbox.Command
 		private readonly AdminToolbox plugin;
 
 		public IntercomLockCommand(AdminToolbox plugin) => this.plugin = plugin;
-		public string GetCommandDescription() => "Enables/Disables the intercom for non-whitelisted players";
+		public string GetCommandDescription() => "Enables/Disables the intercom for non- white-listed players";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <bool>";
 
 		public static readonly string[] CommandAliases = new string[] { "INTERCOMLOCK", "INTERLOCK", "ILOCK", "IL" };

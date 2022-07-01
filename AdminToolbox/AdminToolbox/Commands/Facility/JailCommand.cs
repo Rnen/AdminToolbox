@@ -54,7 +54,7 @@ namespace AdminToolbox.Command
 								return new string[] { "\"" + myPlayer.Name + "\" sent to jail for 1 year" };
 							}
 						else 
-							return new string[] { "Failed to jail/unjail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
+							return new string[] { "Failed to jail/un-jail " + myPlayer.Name + "!", "Error: Player not in dictionary" };
 					}
 					else
 						return new string[] { GetUsage() };

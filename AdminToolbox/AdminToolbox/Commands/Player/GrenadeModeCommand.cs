@@ -6,13 +6,13 @@ using Smod2.Commands;
 
 namespace AdminToolbox.Command
 {
-	using API; //This is for accessing AT's API namespace
+	using API;
 	using API.Extentions;
 	public class GrenadeModeCommand : ICommandHandler
 	{
 		private Server Server => PluginManager.Manager.Server;
 
-		public string GetCommandDescription() => "Enableds/Disables grenademode";
+		public string GetCommandDescription() => "Enables/Disables grenade-mode";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ")";
 		public static readonly string[] CommandAliases = new string[] { "GMODE", "GRENADEM", "GRENADEMODE", "ATGRENADE" };
 

@@ -27,7 +27,7 @@ namespace AdminToolbox.Command
 
 			if (args.Length > 0)
 			{
-				//Get player from first arguement of OnCall
+				//Get player from first argument of OnCall
 				Player targetPlayer = Server.GetPlayers(args[0]).FirstOrDefault();
 
 				//If player could not be found, return reply to command user
@@ -41,7 +41,7 @@ namespace AdminToolbox.Command
 			}
 			else if (caller != null)
 			{
-				//Do something on calling player without any arguements
+				//Do something on calling player without any arguments
 				return new string[] { "We did something to player: " + caller.Name + "!" };
 			}
 			else

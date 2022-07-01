@@ -6,7 +6,7 @@ namespace AdminToolbox.Command
 	using API.Extentions;
 	public class WarpsCommmand : ICommandHandler
 	{
-		public string GetCommandDescription() => "Returns a list of warps. Use arguement \"Refresh\" to reload warps from file";
+		public string GetCommandDescription() => "Returns a list of warps. Use argument \"Refresh\" to reload warps from file";
 		public string GetUsage() => "(" + string.Join(" / ", CommandAliases) + ") <REFRESH / R>";
 
 		public static readonly string[] CommandAliases = new string[] { "WARPS", "ATWARPS", "WARPLIST" };

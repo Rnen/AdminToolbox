@@ -89,7 +89,7 @@ namespace AdminToolbox.Command
 							if (changedValue)
 							{
 								psetting.godMode = psetting.dmgOff;
-								return new string[] { myPlayer.Name + " No Dmg: " + psetting.dmgOff, myPlayer.Name + " Godmode: " + psetting.godMode };
+								return new string[] { myPlayer.Name + " No Dmg: " + psetting.dmgOff, myPlayer.Name + " God-mode: " + psetting.godMode };
 							}
 							return new string[] { myPlayer.Name + " No Dmg: " + psetting.dmgOff };
 						}

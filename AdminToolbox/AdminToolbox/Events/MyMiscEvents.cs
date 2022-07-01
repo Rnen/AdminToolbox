@@ -80,7 +80,7 @@ namespace AdminToolbox
 								if (myKeyString.Length == 3)
 									if (float.TryParse(myKeyString[2], out float z))
 										ev.CooldownTime = z;
-									else plugin.Info(myKeyString[2] + " is not a cooldown number in: " + myKeyString[0]);
+									else plugin.Info(myKeyString[2] + " is not a cool-down number in: " + myKeyString[0]);
 								else if (myKeyString.Length > 3)
 									plugin.Error("Unknown values at \"admintoolbox_intercom_whitelist: " + item + "\", skipping...");
 							}
@@ -90,7 +90,7 @@ namespace AdminToolbox
 			}
 			catch (Exception e)
 			{
-				plugin.Info($"Exception during Intercom Whitelist: " + e);
+				plugin.Info($"Exception during Intercom White-list: " + e);
 			}
 			#endregion
 			try
@@ -135,7 +135,7 @@ namespace AdminToolbox
 
 					if (playerSetting.lockDown)
 					{
-						Debug($"Player \"{ev.Player.Name}\" lockdown active, denying door use.");
+						Debug($"Player \"{ev.Player.Name}\" lock-down active, denying door use.");
 						ev.Allow = false;
 					}
 
@@ -150,7 +150,7 @@ namespace AdminToolbox
 
 		public void OnSpawn(PlayerSpawnEvent ev)
 		{
-			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghostmode
+			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghost-mode
 
 			if (ev.Player != null && ev.Player is Player)
 			{
@@ -209,8 +209,8 @@ namespace AdminToolbox
 				checkNewVersion = 0;
 				if (ATWeb.NewerVersionAvailable())
 				{
-					plugin.Info($"\n\nNew Version of \"{AdminToolbox.singleton.Details.name}\" avaiable for download! [CURRENT:{AdminToolbox.AT_Version}][NEW:{ATWeb.LatestRelease.Version}]\n" +
-						$"Either update via \"AT_AutoUpdate.bat\" or use the commmand: \"AT DOWNLOAD\"\n\n");
+					plugin.Info($"\n\nNew Version of \"{AdminToolbox.singleton.Details.name}\" available for download! [CURRENT:{AdminToolbox.AT_Version}][NEW:{ATWeb.LatestRelease.Version}]\n" +
+						$"Either update via \"AT_AutoUpdate.bat\" or use the command: \"AT DOWNLOAD\"\n\n");
 				}
 			}
 			else
@@ -252,7 +252,7 @@ namespace AdminToolbox
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghostmode
+			ev.Player.SetGhostMode(false); //Temp fix for default *True* ghost-mode
 			if (!AdminToolbox.isStarting && ev.Player != null && ev.Player is Player player)
 			{
 				ATFile.AddMissingPlayerVariables(player);
@@ -394,7 +394,7 @@ namespace AdminToolbox
 				foreach (string url in banWebhookUrls)
 					if (!string.IsNullOrEmpty(url))
 						plugin.Debug(ATWeb.SendWebhook(Utility.BuildBanWebhook(ev.Player, (int)ev.Duration, ev.Reason, ev.Issuer), url));
-				Debug($"Player \"{ev.Player.Name}\" banned, Webhook posted.");
+				Debug($"Player \"{ev.Player.Name}\" banned, Web-hook posted.");
 			}
 
 			if (ev.Player != null && ev.Player is Player)
