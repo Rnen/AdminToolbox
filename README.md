@@ -8,10 +8,13 @@
 [![Badge Watchers]][Watchers]
 
 <br>
+<br>
 
 # Admin Toolbox
 
 *A **SMod** server plugin for **[SCP: Secret Laboratory]**.*
+
+<br>
 
 ---
 
