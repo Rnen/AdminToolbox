@@ -1,5 +1,5 @@
 
-# Join Info
+# Join Information
 
 <kbd>  admintoolbox_info_player_join  </kbd>  
 <kbd>  Boolean  ➞  True  </kbd>
@@ -19,7 +19,7 @@
 
 *No message will be shown when player joins.*
 
-```yml
+```yaml
 admintoolbox_info_player_join : false
 ```
 

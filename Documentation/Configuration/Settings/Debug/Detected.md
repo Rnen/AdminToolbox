@@ -1,1 +1,14 @@
-admintoolbox_debug_damagetypes | List | All human player damage ID's | What damage types to detect. 
+
+# Detected Damage
+
+<kbd>  admintoolbox_debug_damagetypes  </kbd>  
+<kbd>  List  ➞  All Human Player Ids  </kbd>
+
+<br>
+<br>
+
+#### Description
+
+*Controls what types of damage are detected.*
+
+<br>
