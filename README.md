@@ -23,3 +23,11 @@ If you want to follow the development, take a look at the [AdminToolbox Progress
 ### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
 
 # Thanks & Enjoy.
+
+
+
+
+## Licensing
+
+**SCP:SL** and it's development team has been <br>
+granted permission under the `CC-BY` license.
