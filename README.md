@@ -15,18 +15,17 @@
 *A **SMod** server plugin for **[SCP: Secret Laboratory]**.*
 
 <br>
-
----
+<br>
+<br>
 
 [![Button Installation]][Wiki]   
 [![Button Issues & Ideas]][Issues]   
 [![Button Documentation]][Documentation]   
 [![Button Development]][Projects]
 
----
-
 </div>
 
+<br>
 <br>
 <br>
 
