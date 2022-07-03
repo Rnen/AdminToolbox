@@ -12,17 +12,17 @@
 
 ### Description
 
-*Sets what types of damage the `TUTORIAL` role can take.*
+*Sets what types of damage the  `TUTORIAL`  role can take.*
 
 <br>
 
 ### Choices
 
-#### None  <kbd>  `-1`  </kbd>
+#### None    <kbd>  -1  </kbd>
 
 *No damage will be taken.*
 
-#### All  <kbd>  `-2`  </kbd>  <kbd>  `*`  </kbd>  <kbd>  `all`  </kbd>
+#### All    <kbd>  -2  </kbd>  <kbd>  *  </kbd>  <kbd>  all  </kbd>
 
 *Any type of damage will be taken.*
 
