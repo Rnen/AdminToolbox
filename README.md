@@ -1,5 +1,20 @@
-# AdminToolbox [![GitHub release](https://badgen.net/github/release/Rnen/AdminToolbox)](https://GitHub.com/Rnen/AdminToolbox/releases/) [![Github all releases](https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg)](https://GitHub.com/Rnen/AdminToolbox/releases/) [![GitHub latest commit](https://badgen.net/github/last-commit/Rnen/AdminToolbox)](https://GitHub.com/Rnen/AdminToolbox/commit/) [![GitHub watchers](https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/Rnen/AdminToolbox/watchers/)
-### This is a server plugin for the game **SCP:Secret Laboratory**. 
+# AdminToolbox   [![Badge Release]][Releases]
+
+*A server plugin for **[SCP:Secret Laboratory]**.*
+
+<br>
+
+<div align = center>
+
+[![Badge Downloads]][Releases]   
+[![Badge Commit]][Commit]   
+[![Badge Watchers]][Watchers]
+
+</div>
+
+<br>
+
+
 **It offers multiple admin tools like** 
 * Friendly fire logs in server console & logs to file
 * Advanced Godmode, ability to turn off damage for players, instantkill
@@ -31,3 +46,19 @@ If you want to follow the development, take a look at the [AdminToolbox Progress
 
 **SCP:SL** and it's development team has been <br>
 granted permission under the `CC-BY` license.
+
+
+
+<!----------------------------------------------------------------------------->
+
+[Badge Downloads]: https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg?style=for-the-badge&color=A9225C&logoColor=white&logo=DocuSign
+[Badge Watchers]: https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=for-the-badge&label=Watcher&maxAge=2592000&color=FC6D26&logoColor=white&logo=Git
+[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=for-the-badge
+[Badge Commit]: https://img.shields.io/github/last-commit/Rnen/AdminToolbox?style=for-the-badge&color=258AAF&logoColor=white&logo=GitHub
+
+[Releases]: https://GitHub.com/Rnen/AdminToolbox/releases/
+[Watchers]: https://GitHub.com/Rnen/AdminToolbox/watchers/
+[Commit]: https://GitHub.com/Rnen/AdminToolbox/commit/
+
+[SCP:Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
+
