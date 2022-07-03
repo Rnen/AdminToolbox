@@ -39,9 +39,7 @@
 
 You can simply run the `AutoUpdate.bat` script.
 
-<br>
-
-#### Notes
+##### Notes
 
 - Only updates if you have an older version installed.
 

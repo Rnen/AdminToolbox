@@ -3,8 +3,8 @@
 <div align = center>
 
 [![Badge Release]][Releases]   
-[![Badge Downloads]][Releases]   
 [![Badge Commit]][Commit]   
+[![Badge Downloads]][Releases]   
 [![Badge Watchers]][Watchers]
 
 <br>
@@ -119,15 +119,15 @@ server modifications for the game **SCP:Secret Laboratory**.
 
 <!--------------------------------[ Badges ]----------------------------------->
 
-[Badge Downloads]: https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg?style=for-the-badge&color=A9225C&logoColor=white&logo=DocuSign
-[Badge Watchers]: https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=for-the-badge&label=Watcher&maxAge=2592000&color=73398D&logoColor=white&logo=Git
-[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=for-the-badge&logoColor=white&logo=AzureArtifacts
-[Badge Commit]: https://img.shields.io/github/last-commit/Rnen/AdminToolbox?style=for-the-badge&color=258AAF&logoColor=white&logo=GitHub
+[Badge Downloads]: https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg?style=flat&color=A9225C&logoColor=white&logo=DocuSign
+[Badge Watchers]: https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=flat&label=Watcher&color=73398D&logoColor=white&logo=Git&maxAge=2592000
+[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=flat&color=569A31&logoColor=white&logo=AzureArtifacts
+[Badge Commit]: https://img.shields.io/github/last-commit/Rnen/AdminToolbox?style=flat&color=00A8E1&logoColor=white&logo=GitHub
 
 
 <!-------------------------------[ Buttons ]----------------------------------->
 
 [Button Issues & Ideas]: https://img.shields.io/badge/Issues_&_Ideas-00A8E1?style=for-the-badge&logoColor=white&logo=AskUbuntu
 [Button Installation]: https://img.shields.io/badge/Installation-569A31?style=for-the-badge&logoColor=white&logo=DocuSign
-[Button Documentation]: https://img.shields.io/badge/Documentation-26689A?style=for-the-badge&logoColor=white&logo=GitBook
-[Button Development]: https://img.shields.io/badge/Projects-66459B?style=for-the-badge&logoColor=white&logo=AzureArtifacts
+[Button Documentation]: https://img.shields.io/badge/Documentation-A9225C?style=for-the-badge&logoColor=white&logo=GitBook
+[Button Development]: https://img.shields.io/badge/Projects-73398D?style=for-the-badge&logoColor=white&logo=AzureArtifacts
