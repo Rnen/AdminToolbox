@@ -1,8 +1,14 @@
-***
 
-### Info Settings
+# Info Settings
 
-Config Option | Value Type | Default Value | Description
---- | :---: | :---: | ---
-admintoolbox_info_player_join | Boolean | True | Writes Playername in server console when player joins (Currently only works for players joining, not leaving)
-***
+<br>
+
+## Join Info
+
+<kbd>  admintoolbox_info_player_join  </kbd>  
+<kbd>  Boolean  ➞  True  </kbd>
+
+*If enabled, writes a players name into* <br>
+*the server console when they join.*
+
+<br>
