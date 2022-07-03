@@ -7,6 +7,8 @@
 
 ## Requirements
 
+<br>
+
 ### ServerMod
 
 *This is a server side plugin framework with* <br>
@@ -21,6 +23,8 @@
 
 ## Steps
 
+<br>
+
 ### Manual
 
 1. Download the latest `.dll` **[Release]**.
@@ -34,6 +38,8 @@
 ### Automated
 
 You can simply run the `AutoUpdate.bat` script.
+
+<br>
 
 #### Notes
 
