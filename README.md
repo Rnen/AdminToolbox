@@ -79,10 +79,11 @@ Turn off damage for players.
 
 #### Tracked
 
-- `Team Kills`
-- `Playtime`
-- `Deaths`
 - `Kills`
+- `Team Kills`
+- `Deaths`
+- `Playtime` (in minutes)
+- `Times Banned`
 
 <br>
 
