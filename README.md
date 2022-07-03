@@ -1,3 +1,6 @@
+
+<br>
+
 <div align = center>
 
 [![Badge Release]][Releases]   
@@ -5,6 +8,7 @@
 [![Badge Commit]][Commit]   
 [![Badge Watchers]][Watchers]
 
+<br>
 <br>
 
 # AdminToolbox
