@@ -120,7 +120,7 @@ server modifications for the game **SCP:Secret Laboratory**.
 
 [Badge Downloads]: https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg?style=flat&color=A9225C&logoColor=white&logo=DocuSign
 [Badge Watchers]: https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=flat&label=Watcher&color=73398D&logoColor=white&logo=Git&maxAge=2592000
-[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=flat&color=569A31&logoColor=white&logo=AzureArtifacts
+[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=flat&color=569A31&logoColor=white&logo=SCPFoundation
 [Badge Commit]: https://img.shields.io/github/last-commit/Rnen/AdminToolbox?style=flat&color=00A8E1&logoColor=white&logo=GitHub
 
 

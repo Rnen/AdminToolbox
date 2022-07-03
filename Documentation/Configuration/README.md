@@ -10,12 +10,28 @@
 [<kbd> <br> Tutorial <br> </kbd>][Damage Tutorial]
 Choose what type of damage affect players with the `TUTORIAL` role.
 
-[<kbd> <br> Global <br> </kbd>][Damage Tutorial]
+[<kbd> <br> Global <br> </kbd>][Damage Global]
 Adjust the global damage multiplier.
 
+[<kbd> <br> After Party <br> </kbd>][Damage After Party]
+Adjust the damage that is dealt after the round ends.
+
+[<kbd> <br> LCZ De-Containment <br> </kbd>][Damage LCZ]
+Adjust the LCZ De-Containment damage multiplier.
+
+[<kbd> <br> Blocked <br> </kbd>][Damage Blocked]
+Disable specific roles from damaging each other.
+
 <br>
 <br>
 
+## ![Label Info]
+
+[<kbd> <br> Join <br> </kbd>][Info Join]
+Set if player names should be shown in the server console upon joining.
+
+<br>
+<br>
 
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 
@@ -33,6 +49,13 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 
 
 
+[Damage After Party]: Settings/Damage/After%20Party.md
 [Damage Tutorial]: Settings/Damage/Tutorial.md
+[Damage Blocked]: Settings/Damage/Blocked.md
+[Damage Global]: Settings/Damage/Global.md
+[Damage LCZ]: Settings/Damage/LCZ%20De-Containment.md
+
+[Info Join]: Settings/Info/Join.md
 
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
+[Label Info]: https://img.shields.io/badge/Info-666666?style=for-the-badge&logoColor=white&logo=InternetArchive
