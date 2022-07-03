@@ -78,7 +78,7 @@
 
 ## Licensing
 
-**SCP:SL** and it's development team has been <br>
+**SCP:SL** and it's development team have been <br>
 granted permission under the `CC-BY` license.
 
 <br>
