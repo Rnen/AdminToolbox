@@ -39,4 +39,4 @@ All [bools][csharp] are optional
 
 [csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
 [player]: ../Variables.md
-[resources]: https://github.com/Rnen/AdminToolbox/wiki/Resources
+[resources]: ../Resources.md
