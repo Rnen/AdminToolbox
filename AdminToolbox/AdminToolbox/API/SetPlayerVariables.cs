@@ -9,9 +9,18 @@ namespace AdminToolbox.API
 	public static class SetPlayerVariables
 	{
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> booleans by <paramref name="UserID"/>
-		/// <para>Returns false if <paramref name="UserID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// For setting <see cref="PlayerSettings"/> booleans
 		/// </summary>
+		/// <param name="UserID">The ID to look for in the dictionary</param>
+		/// <param name="spectatorOnly"><see cref="PlayerSettings.overwatchMode"/></param>
+		/// <param name="godMode"><see cref="PlayerSettings.godMode"/></param>
+		/// <param name="dmgOff"><see cref="PlayerSettings.dmgOff"/></param>
+		/// <param name="destroyDoor"><see cref="PlayerSettings.destroyDoor"/></param>
+		/// <param name="keepSettings"><see cref="PlayerSettings.keepSettings"/></param>
+		/// <param name="lockDown"><see cref="PlayerSettings.lockDown"/></param>
+		/// <param name="instantKill"><see cref="PlayerSettings.instantKill"/></param>
+		/// <param name="isJailed"><see cref="PlayerSettings.isJailed"/></param>
+		/// <returns>Returns false if <paramref name="UserID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></returns>
 		public static bool SetPlayerBools(string UserID, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			if (AdminToolbox.ATPlayerDict.TryGetValue(UserID, out PlayerSettings setting))
@@ -27,18 +36,38 @@ namespace AdminToolbox.API
 			}
 			else
 				return false;
-
 		}
+
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> booleans on a <see cref="Player"/>
-		/// <para>Returns false if <paramref name="player"/>'s UserID is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// <inheritdoc cref="SetPlayerBools(string, bool?, bool?, bool?, bool?, bool?, bool?, bool?, bool?)"/>
 		/// </summary>
+		/// <param name="player">The <see cref="Player"/> to look for in the dictionary</param>
+		/// <param name="spectatorOnly"><see cref="PlayerSettings.overwatchMode"/></param>
+		/// <param name="godMode"><see cref="PlayerSettings.godMode"/></param>
+		/// <param name="dmgOff"><see cref="PlayerSettings.dmgOff"/></param>
+		/// <param name="destroyDoor"><see cref="PlayerSettings.destroyDoor"/></param>
+		/// <param name="keepSettings"><see cref="PlayerSettings.keepSettings"/></param>
+		/// <param name="lockDown"><see cref="PlayerSettings.lockDown"/></param>
+		/// <param name="instantKill"><see cref="PlayerSettings.instantKill"/></param>
+		/// <param name="isJailed"><see cref="PlayerSettings.isJailed"/></param>
+		/// <returns>Returns false if <paramref name="player"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></returns>
+		
 		public static bool SetPlayerBools(Player player, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 			=> SetPlayerBools(player.UserID, spectatorOnly, godMode, dmgOff, destroyDoor, keepSettings, lockDown, instantKill, isJailed);
 		/// <summary>
-		/// For setting <see cref="API.PlayerSettings"/> booleans on a list of <see cref="Player"/>s
-		/// <para>Returns false if one or more of <paramref name="players"/> UserID's is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
+		/// <inheritdoc cref="SetPlayerBools(string, bool?, bool?, bool?, bool?, bool?, bool?, bool?, bool?)"/>
 		/// </summary>
+		/// <param name="players">The list of <see cref="Player"/> to look for in the dictionary</param>
+		/// <param name="spectatorOnly"><see cref="PlayerSettings.overwatchMode"/></param>
+		/// <param name="godMode"><see cref="PlayerSettings.godMode"/></param>
+		/// <param name="dmgOff"><see cref="PlayerSettings.dmgOff"/></param>
+		/// <param name="destroyDoor"><see cref="PlayerSettings.destroyDoor"/></param>
+		/// <param name="keepSettings"><see cref="PlayerSettings.keepSettings"/></param>
+		/// <param name="lockDown"><see cref="PlayerSettings.lockDown"/></param>
+		/// <param name="instantKill"><see cref="PlayerSettings.instantKill"/></param>
+		/// <param name="isJailed"><see cref="PlayerSettings.isJailed"/></param>
+		/// <returns>Returns false if one or more <see cref="Player"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></returns>
+
 		public static bool SetPlayerBools(List<Player> players, bool? spectatorOnly = null, bool? godMode = null, bool? dmgOff = null, bool? destroyDoor = null, bool? keepSettings = null, bool? lockDown = null, bool? instantKill = null, bool? isJailed = null)
 		{
 			int failiures = 0;
@@ -47,10 +76,17 @@ namespace AdminToolbox.API
 					failiures++;
 			return !(failiures > 0);
 		}
+
 		/// <summary>
 		/// For setting <see cref="PlayerStats"/>
-		/// <para>Returns false if <paramref name="UserID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></para>
 		/// </summary>
+		/// <param name="UserID">ID of the player to look for</param>
+		/// <param name="Kills"><see cref="PlayerStats.Kills"/></param>
+		/// <param name="TeamKills"><see cref="PlayerStats.TeamKills"/></param>
+		/// <param name="Deaths"><see cref="PlayerStats.Deaths"/></param>
+		/// <param name="RoundsPlayed"><see cref="PlayerStats.RoundsPlayed"/></param>
+		/// <param name="BanCount"><see cref="PlayerStats.BanCount"/></param>
+		/// <returns>Returns false if <paramref name="UserID"/> is not in <see cref="AdminToolbox.ATPlayerDict"/></returns>
 		public static bool SetPlayerStats(string UserID, int? Kills = null, int? TeamKills = null, int? Deaths = null, int? RoundsPlayed = null, int? BanCount = null)
 		{
 			if (AdminToolbox.ATPlayerDict.TryGetValue(UserID, out PlayerSettings settings))

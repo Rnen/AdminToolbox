@@ -4,70 +4,73 @@ using Smod2.API;
 using System.Collections.Generic;
 using System.Globalization;
 
-using SMRoleType = Smod2.API.RoleType;
-using SMItemType = Smod2.API.ItemType;
-
 namespace AdminToolbox.API
 {
 	using API.Extentions;
 	using Webhook;
+	/// <summary>
+	/// The plugin's utility class, storing different tools
+	/// </summary>
 	public static class Utility
 	{
 		private static IConfigFile Config => ConfigManager.Manager.Config;
 
 		/// <summary>
-		/// Safely getting a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
-		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Invalid <see cref="int"/> parameters returns <see cref="SMRoleType"/></para>
+		/// Safely gets a <see cref="Smod2.API.Role"/> from an <see cref="int"/>. 
 		/// </summary>
-		public static bool TryParseRole(int roleID, out SMRoleType role)
+		/// <param name="roleID"></param>
+		/// <param name="role"></param>
+		/// <returns>Success. Invalid <see cref="int"/> parameter returns <see cref="Smod2.API.RoleType.NONE"/></returns>
+		public static bool TryParseRole(int roleID, out Smod2.API.RoleType role)
 		{
 			try
 			{
-				role = (SMRoleType)roleID;
+				role = (Smod2.API.RoleType)roleID;
 			}
 			catch
 			{
-				role = SMRoleType.NONE;
+				role = Smod2.API.RoleType.NONE;
 				return false;
 			}
 			return true;
 		}
 
 		/// <summary>
-		/// Safely getting a <see cref="Smod2.API.ItemType"/> from an <see cref="int"/>. 
-		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Invalid <see cref="int"/> parameters returns <see cref="Smod2.API.ItemType.NONE"/></para>
+		/// Safely gets a <see cref="Smod2.API.ItemType"/> from an <see cref="int"/>. 
 		/// </summary>
-		public static bool TryParseItem(int itemID, out SMItemType itemType)
+		/// <param name="itemID"></param>
+		/// <param name="itemType"></param>
+		/// <returns>Success. Invalid <see cref="int"/> parameter returns <see cref="Smod2.API.ItemType.NONE"/></returns>
+		public static bool TryParseItem(int itemID, out Smod2.API.ItemType itemType)
 		{
 			try
 			{
-				itemType = (SMItemType)itemID;
+				itemType = (Smod2.API.ItemType)itemID;
 			}
 			catch
 			{
-				itemType = SMItemType.NONE;
+				itemType = Smod2.API.ItemType.NONE;
 				return false;
 			}
 			return true;
 		}
 
 		/// <summary>
-		/// Safely getting a <see cref="Smod2.API.ItemType"/> from a <see cref="string"/>. 
-		/// <returns>Returns <see cref="bool"/> based on success</returns>
-		/// <para>Tries to cast to <see cref="int"/> first, then compares names</para>
+		/// Safely gets a <see cref="Smod2.API.ItemType"/> from a <see cref="string"/>. 
 		/// </summary>
-		public static bool TryParseItem(string item, out SMItemType itemType)
+		/// <remarks>Tries to cast to <see cref="int"/> first, then compares names</remarks>
+		/// <param name="item">Item either by name or <see cref="int"/> ID</param>
+		/// <param name="itemType"><see cref="Smod2.API.ItemType"/></param>
+		/// <returns>Success. Invalid <paramref name="item"/> returns <see cref="Smod2.API.ItemType.NONE"/></returns>
+		public static bool TryParseItem(string item, out Smod2.API.ItemType itemType)
 		{
-			itemType = SMItemType.NONE;
-
+			itemType = Smod2.API.ItemType.NONE;
 			try
 			{
 				if (int.TryParse(item, out int x))
 					return TryParseItem(x, out itemType);
 
-				foreach (SMItemType i in Enum.GetValues(typeof(SMItemType)))
+				foreach (Smod2.API.ItemType i in Enum.GetValues(typeof(Smod2.API.ItemType)))
 				{
 					if (i.ToString().ToUpper().Contains(item.ToUpper()))
 					{
@@ -79,17 +82,21 @@ namespace AdminToolbox.API
 			}
 			catch
 			{
-				itemType = SMItemType.NONE;
+				itemType = Smod2.API.ItemType.NONE;
 				return false;
 			}
 		}
 
 		/// <summary>
-		/// <c>*, ALL, EVERY</c>
-		/// <para>Uses all-caps</para>
+		/// Words: <c>*, ALL, EVERY</c>
+		/// <para>Used by selectors</para>
 		/// </summary>
-		public static string[] AllAliasWords = { "*", "ALL", "EVERY" };
+		/// <remarks>Strings are in all-caps</remarks>
+		public static readonly string[] AllAliasWords = { "*", "ALL", "EVERY" };
 
+		/// <summary>
+		/// <see cref="DamageType"/> grouped by Damage and Team
+		/// </summary>
 		public static readonly int[]
 			HumanDamageTypes = {
 				(int)DamageType.COM15,
@@ -122,6 +129,9 @@ namespace AdminToolbox.API
 				(int)TeamType.D_CLASS
 			};
 
+		/// <summary>
+		/// <see cref="DamageType"/> flags grouped by weapon type
+		/// </summary>
 		public static readonly DamageType Human = DamageType.COM15 |
 				DamageType.COM15 |
 				DamageType.AK |
@@ -135,13 +145,17 @@ namespace AdminToolbox.API
 				DamageType.REVOLVER |
 				DamageType.UNKNOWN_FIREARM |
 				DamageType.SHOTGUN;
+		/// <summary>
+		/// <see cref="DamageType"/> flags grouped by role type
+		/// </summary>
 		public static readonly DamageType SCP = DamageType.SCP_049 | DamageType.SCP_049_2 | DamageType.SCP_096 |/* DamageType.SCP_106 |*/ DamageType.SCP_173 | DamageType.SCP_939;
 
-
 		/// <summary>
-		/// Checks if two <see cref="Player"/>s are on the same team
-		/// <para>Returns False when both are the same player</para>
+		/// Checks if <paramref name="player1"/> and <paramref name="player2"/> are on the same team
 		/// </summary>
+		/// <param name="player1"><seealso cref="Player"/></param>
+		/// <param name="player2"><seealso cref="Player"/></param>
+		/// <returns>True if players are on the same team. False when both are the same player or one or more player is null</returns>
 		public static bool IsTeam(Player player1, Player player2)
 		{
 			if (player1 == null || player2 == null || player1.PlayerID == player2.PlayerID)

@@ -12,14 +12,15 @@ namespace AdminToolbox
 	using API;
 	using Command;
 	using Managers;
+	using Events;
 
 	/// <summary>
-	/// The <see cref="AdminToolbox"/> <see cref="Plugin"/> main class
+	/// The <see cref="AdminToolbox"/> main <seealso cref="Smod2.Plugin"/> class
 	/// </summary>
 	[PluginDetails(
 		author = "Evan (AKA Rnen)",
 		name = "Admin Toolbox",
-		description = "Plugin for advanced admin tools",
+		description = "Plugin for advanced administrator tools",
 		id = "rnen.admin.toolbox",
 		version = AT_Version + "-" + AT_Revision, 
 		SmodMajor = 3,
@@ -28,7 +29,7 @@ namespace AdminToolbox
 		)]
 	public class AdminToolbox : Plugin
 	{
-		internal const string AT_Version = "1.3.10";
+		internal const string AT_Version = "1.3.11";
 		internal const string AT_Revision = "0";
 		internal const string SModLetter = "";
 
@@ -58,6 +59,9 @@ namespace AdminToolbox
 			isColoredCommand = false,
 			intercomLockChanged = false,
 			isStarting = true;
+		/// <summary>
+		/// State used by server commands and logic
+		/// </summary>
 		public static bool
 			lockRound = false,
 			intercomLock = false,
@@ -74,12 +78,12 @@ namespace AdminToolbox
 #endif
 
 		/// <summary>
-		/// <see cref="Dictionary{TKey, TValue}"/> of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserID"/> as KEY
+		/// Dictionary of <see cref ="PlayerSettings"/> containing the plugin's settings on all players. Uses <see cref="Player.UserID"/> as KEY
 		/// </summary>
 		public static Dictionary<string, PlayerSettings> ATPlayerDict { get; internal set; } = new Dictionary<string, PlayerSettings>();
 
 		/// <summary>
-		/// <see cref ="Dictionary{TKey, TValue}"/> of all current warp vectors
+		/// Dictionary of all current warp vectors. Uses warp name as KEY
 		/// </summary>
 		public static Dictionary<string, WarpPoint> WarpVectorDict = new Dictionary<string, WarpPoint>(WarpManager.presetWarps);
 
@@ -89,6 +93,8 @@ namespace AdminToolbox
 		public static int RoundCount { get; internal set; } = 0;
 
 		internal static AdminToolbox singleton;
+
+		private AdminToolbox() { }
 
 		/// <summary>
 		/// Called when <see cref="AdminToolbox"/> gets disabled

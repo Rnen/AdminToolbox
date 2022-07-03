@@ -84,6 +84,7 @@
     <Compile Include="API\GetFromString.cs" />
     <Compile Include="API\LevenshteinDistance.cs" />
     <Compile Include="API\PlayerSettings.cs" />
+    <Compile Include="API\RoundStats.cs" />
     <Compile Include="API\SetPlayerVariables.cs" />
     <Compile Include="API\Utility.cs" />
     <Compile Include="API\WaitForTeleport.cs" />

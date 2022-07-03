@@ -1,16 +1,22 @@
-﻿using System;
+using System;
 
 namespace AdminToolbox.API
 {
+	/// <summary>
+	/// Class storing the LevenshteinDistance calculations
+	/// </summary>
 	public static class LevenshteinDistance
 	{
 		/// <summary>
-		/// Compute the distance between two <see cref="string"/>s.
+		/// Compute the distance between two strings
 		/// </summary>
-		public static int Compute(string s, string t)
+		/// <param name="first">String 1</param>
+		/// <param name="second">String 2</param>
+		/// <returns>The distance AKA. number of required changes to make the strings equal</returns>
+		public static int Compute(string first, string second)
 		{
-			int n = s.Length;
-			int m = t.Length;
+			int n = first.Length;
+			int m = second.Length;
 			int[,] d = new int[n + 1, m + 1];
 
 			// Step 1
@@ -40,7 +46,7 @@ namespace AdminToolbox.API
 				for (int j = 1; j <= m; j++)
 				{
 					// Step 5
-					int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+					int cost = (second[j - 1] == first[i - 1]) ? 0 : 1;
 
 					// Step 6
 					d[i, j] = Math.Min(

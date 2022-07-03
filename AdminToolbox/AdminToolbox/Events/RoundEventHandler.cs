@@ -5,7 +5,7 @@ using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
 
-namespace AdminToolbox
+namespace AdminToolbox.Events
 {
 	using API;
 	using API.Extentions;

@@ -13,17 +13,19 @@ namespace AdminToolbox.API
 		private static Server Server => PluginManager.Manager.Server;
 
 		/// <summary>
-		/// Returns <see cref ="Player"/> from <see cref="string"/> <paramref name="arg"/>
+		/// Returns the first found <see cref ="Player"/> from the searched string
 		/// </summary>
-		/// <returns><see cref="Player"/></returns>
-		public static Player GetPlayer(string arg)
+		/// <param name="searchString">The sting used to search. Can be name, PlayerID or SteamID</param>
+		/// <returns><see cref="Player"/> or null if player is not found.</returns>
+		/// <remarks>It is recommended to use <see cref="TryGetPlayer(string, out Player)"/> instead</remarks>
+		public static Player GetPlayer(string searchString)
 		{
 			Player playerOut = null;
-			if (string.IsNullOrEmpty(arg))
+			if (string.IsNullOrEmpty(searchString))
 				return null;
 			try
 			{
-				if (byte.TryParse(arg, out byte pID))
+				if (byte.TryParse(searchString, out byte pID))
 				{
 					foreach (Player pl in Server.GetPlayers())
 						if (pl.PlayerID == pID)
@@ -32,7 +34,7 @@ namespace AdminToolbox.API
 							break;
 						}
 				}
-				else if (long.TryParse(arg, out long ID))
+				else if (long.TryParse(searchString, out long ID))
 				{
 					foreach (Player pl in Server.GetPlayers())
 						if (pl.UserID.Contains(ID.ToString()))
@@ -43,7 +45,7 @@ namespace AdminToolbox.API
 				}
 				else
 				{
-					playerOut = Server.GetPlayers(arg.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
+					playerOut = Server.GetPlayers(searchString.ToLower()).OrderBy(s => s.Name.Length).FirstOrDefault();
 				}
 			}
 			catch (System.Exception e)
@@ -54,9 +56,22 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
+		/// Tries getting the supplied player from <see cref="GetPlayer(string)"/>. 
 		/// </summary>
-		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		/// <param name="searchString">The sting used to search. Can be name, PlayerID or SteamID</param>
+		/// <param name="player">The first <see cref="Player"/> found from the search</param>
+		/// <returns>Success</returns>
+		public static bool TryGetPlayer(string searchString, out Player player)
+		{
+			player = GetPlayer(searchString);
+			return player != null;
+		}
+
+		/// <summary>
+		/// Gets a list of players that has the supplied UserGroup, RankName or BadgeText
+		/// </summary>
+		/// <param name="name">Name of <see cref="UserGroup"/>, badge-text or rank-name</param>
+		/// <returns><see cref="Player"/>[] or null if players with supplied group could not be found.</returns>
 		public static Player[] GetGroup(string name)
 		{
 			if (!name.StartsWith("#"))
@@ -69,9 +84,10 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
+		/// Gets a list of players that has the supplied role
 		/// </summary>
-		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		/// <param name="name">Name of <see cref="RoleType"/></param>
+		/// <returns><see cref="Player"/>[] or null if players with supplied role could not be found.</returns>
 		public static Player[] GetRole(string name)
 		{
 			if (!name.StartsWith("$"))
@@ -84,9 +100,10 @@ namespace AdminToolbox.API
 		}
 
 		/// <summary>
-		/// Gets list of players from <see cref="string"/> <paramref name="name"/> parameter
+		/// Gets a list of players that are on the supplied team
 		/// </summary>
-		/// <returns><see cref="System.Array"/> of <see cref="Player"/></returns>
+		/// <param name="name">Name of <see cref="TeamType"/></param>
+		/// <returns><see cref="Player"/>[] or null if players with supplied team could not be found.</returns>
 		public static Player[] GetTeam(string name)
 		{
 			if (!name.StartsWith("$"))
@@ -98,14 +115,6 @@ namespace AdminToolbox.API
 			return null;
 		}
 
-		/// <summary>
-		/// Attempts to get player from <see cref="GetPlayer(string)"/>. 
-		/// </summary>
-		/// <returns><see cref ="bool"/> based on success</returns> 
-		public static bool TryGetPlayer(string arg, out Player player)
-		{
-			player = GetPlayer(arg);
-			return player != null;
-		}
+
 	}
 }

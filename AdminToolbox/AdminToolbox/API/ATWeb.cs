@@ -8,7 +8,45 @@ namespace AdminToolbox.API
 {
 	using API.Webhook;
 	/// <summary>
-	/// Static <see cref="AdminToolbox"/> class that contains all of the plugin web-based methods
+	/// Struct used by <see cref="ATWeb.LatestRelease"/> to store the latest GitHub release info
+	/// </summary>
+	public struct ATReleaseInfo
+	{
+		/// <summary>
+		/// Title of the release
+		/// </summary>
+		public string Title { get; }
+		/// <summary>
+		/// Version of the release
+		/// </summary>
+		public string Version { get; }
+		/// <summary>
+		/// GitHub Author of the release
+		/// </summary>
+		public string Author { get; }
+		/// <summary>
+		/// Download link for the release
+		/// </summary>
+		public string DownloadLink { get; }
+
+		/// <summary>
+		/// Constructor that takes the supplied strings from <see cref="ATWeb.GetOnlineInfo()"/>
+		/// </summary>
+		/// <param name="Title">Title of the release</param>
+		/// <param name="Version">Version of the release</param>
+		/// <param name="Author">Author of the release</param>
+		/// <param name="DownloadLink">Download link of the release</param>
+		internal ATReleaseInfo(string Title, string Version, string Author, string DownloadLink)
+		{
+			this.Title = Title;
+			this.Version = Version;
+			this.Author = Author;
+			this.DownloadLink = DownloadLink;
+		}
+	}
+
+	/// <summary>
+	/// Static <see cref="AdminToolbox"/> class that contains all of the plugin's web-based methods
 	/// </summary>
 	public static class ATWeb
 	{
@@ -19,26 +57,6 @@ namespace AdminToolbox.API
 
 		private const string ApiURL = "https://api.github.com/repos/Rnen/AdminToolbox/releases/latest";
 
-		/// <summary>
-		/// Class for storing the latest GitHub release info
-		/// </summary>
-		public struct ATReleaseInfo
-		{
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-			public string Title { get; }
-			public string Version { get; }
-			public string Author { get; }
-			public string DownloadLink { get; }
-
-			public ATReleaseInfo(string Title, string Version, string Author, string DownloadLink)
-			{
-				this.Title = Title;
-				this.Version = Version;
-				this.Author = Author;
-				this.DownloadLink = DownloadLink;
-			}
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-		}
 
 		private static DateTime _lastVersionCheck = DateTime.UtcNow;
 		private static ATReleaseInfo _latestReleaseInfo = new ATReleaseInfo();

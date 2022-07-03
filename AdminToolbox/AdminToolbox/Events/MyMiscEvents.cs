@@ -167,7 +167,7 @@ namespace AdminToolbox
 				else if (ev.Player.PlayerRole.RoleID != Smod2.API.RoleType.TUTORIAL
 					&& pSettings.isJailed && !ev.Player.IsInsideJail())
 				{
-					JailHandler.SendToJail(ev.Player, pSettings.JailedToTime);
+					JailHandler.SendToJail(ev.Player, pSettings.JailReleaseTime);
 				}
 			}
 		}
