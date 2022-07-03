@@ -20,26 +20,54 @@
 
 ---
 
-<br>
-<br>
-
 </div>
 
+<br>
+<br>
 
 ## Features
 
--   Friendly fire logs in server console & logs to file
--   Advanced Godmode, ability to turn off damage for players, instantkill
-    - "Advanced" in the sense of: 106 with ATGOD cannot be contained, amongst other things like this
--   Warp Points
--   Modifying player cordinates/position
--   Prevent the round from ending
--   Per-player stats (saved to file)
--   Breaking doors interacted with
--   Player Joined messages in server window
+-   Break doors that have <br>
+    been interacted with.
 
-and more commands, and other features that do not exist in the base game (yet).
-This plugin is also beeing constantly updated with more features, so stay tuned!
+-   Teleporting Players
+
+-   Endless Rounds
+
+-   Warp Points
+
+
+<br>
+
+### Friendly Fire
+
+*For every act of friendly fire, the server* <br>
+*console and the log files will take note.*
+
+<br>
+
+### Advanced GodMode
+
+- Turn off damage for players
+
+- Instakill
+
+*'Advanced' in the sense of `106` with ATGOD* <br>
+*cannot be contained, amongst other things.*
+
+<br>
+
+### Player Statistics
+
+*Log stats for every player to a file.*
+
+<br>
+
+### Join Message
+
+*The server window shows a message* <br>
+*for every player that joins the server.*
+
 
 <br>
 <br>
