@@ -1,0 +1,1 @@
+admintoolbox_logremover_hours_old | Int | 0 | Automaticly removes AT logs older than specified hours of age. 0 means disabled

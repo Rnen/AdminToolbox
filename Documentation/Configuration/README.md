@@ -58,4 +58,4 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 [Info Join]: Settings/Info/Join.md
 
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
-[Label Info]: https://img.shields.io/badge/Info-666666?style=for-the-badge&logoColor=white&logo=InternetArchive
+[Label Info]: https://img.shields.io/badge/Information-666666?style=for-the-badge&logoColor=white&logo=InternetArchive
