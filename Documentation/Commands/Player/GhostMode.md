@@ -38,5 +38,5 @@ All [bools][csharp] are optional
 >The SMod `sm_enable_ghostmode` config needs to be set to `true` to use GHOSTMODE
 
 [csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: https://github.com/Rnen/AdminToolbox/wiki/AdminToolbox.Commands.Variables
+[player]: ../Variables.md
 [resources]: https://github.com/Rnen/AdminToolbox/wiki/Resources
