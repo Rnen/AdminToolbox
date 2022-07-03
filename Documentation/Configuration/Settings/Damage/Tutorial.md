@@ -16,7 +16,7 @@
 
 ## Choices
 
-*Values you can set.*
+*Values you can use.*
 
 <br>
 
