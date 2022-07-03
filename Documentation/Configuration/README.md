@@ -7,10 +7,10 @@
 
 ## ![Label Damage]
 
-[<kbd> <br> Tutorial <br> </kbd>][Damage Tutorial]
+[<kbd> <br> Tutorial <br> </kbd>][Damage Tutorial]   
 Choose what type of damage affect players with the `TUTORIAL` role.
 
-[<kbd> <br> Global <br> </kbd>][Damage Tutorial]
+[<kbd> <br>   Global   <br> </kbd>][Damage Tutorial]   
 Adjust the global damage multiplier.
 
 <br>
