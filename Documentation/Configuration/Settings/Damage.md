@@ -3,7 +3,7 @@
 
 <br>
 
-## Tutorial Damage
+## Tutorial
 
 <kbd>  admintoolbox_tutorial_dmg_allowed  </kbd>  
 <kbd>  List  ➞  -1  </kbd>
@@ -35,21 +35,111 @@ admintoolbox_tutorial_dmg_allowed : all
 ```
 
 <br>
+
+<!----------------------------------------------------------------------------->
+
 <br>
 
+## Global
 
+<kbd>  admintoolbox_round_damageMultiplier  </kbd>  
+<kbd>  Float  ➞  1  </kbd>
 
-### Damage Settings
+<br>
 
-Damage Config Option | Value Type | Default Value | Description
---- | :--- | :--- | ---:
-admintoolbox_round_damageMultiplier | Float | 1 | Multiplies all damage by this number
-admintoolbox_endedRound_damageMultiplier | Float | 1 | Multiplies all damage by this number after round ends. For maximum chaos enter high number (10 or something) To turn off dmg on round end, enter `0`.
-admintoolbox_decontamination_damagemultiplier | Float | 1 | Multiplies LCZ decontaimnent damage with the specified number
-admintoolbox_block_role_damage | roleX:role1 |  |  Blocks damage between specified roles.
-***
+### Description
 
-```yaml
-#Example: Chaos cannot damage Dboys, scientists cannot harm any MTF. (But opposite is fine for both)
-admintoolbox_block_role_damage: 8:1,6:12:13:15
+*Global damage multiplier.*
+
+<br>
+
+### Example
+
+```yml
+admintoolbox_round_damageMultiplier : 6.9
 ```
+
+<br>
+
+<!----------------------------------------------------------------------------->
+
+<br>
+
+## After Party
+
+<kbd>  admintoolbox_endedRound_damageMultiplier  </kbd>  
+<kbd>  Float  ➞  1  </kbd>
+
+<br>
+
+### Description
+
+*Global damage multiplier for after the round ends.*
+
+<br>
+
+### Example
+
+```yml
+admintoolbox_endedRound_damageMultiplier :  0 # No fun
+```
+
+```yml
+admintoolbox_endedRound_damageMultiplier : 10 # Chaos
+```
+
+<br>
+
+<!----------------------------------------------------------------------------->
+
+<br>
+
+## LCZ De-Containment
+
+<kbd>  admintoolbox_decontamination_damagemultiplier  </kbd>  
+<kbd>  Float  ➞  1  </kbd>
+
+<br>
+
+### Description
+
+*LCZ de-containment damage multiplier.*
+
+<br>
+
+### Example
+
+```yml
+admintoolbox_decontamination_damagemultiplier : 4.2
+```
+
+<br>
+
+<!----------------------------------------------------------------------------->
+
+<br>
+
+## LCZ De-Containment
+
+<kbd>  admintoolbox_block_role_damage  </kbd>  
+<kbd>  RoleA:RoleB  </kbd>
+
+<br>
+
+### Description
+
+*Blocks `RoleA` from damaging `RoleB`.*
+
+<br>
+
+### Example
+
+- `Chaos` cannot damage `DBoys`
+- `Scientists` cannot harm `MTF`
+- The opposite is not blocked.
+
+```yml
+admintoolbox_block_role_damage : 8:1,6:12:13:15
+```
+
+<br>
