@@ -20,6 +20,7 @@
 
 [![Button Installation]][Wiki]   
 [![Button Issues & Ideas]][Issues]   
+[![Button Documentation]][Documentation]   
 [![Button Development]][Projects]
 
 ---
@@ -113,6 +114,8 @@ server modifications for the game **SCP:Secret Laboratory**.
 [Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
 [SCP: Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
 
+[Documentation]: Documentation
+
 
 <!--------------------------------[ Badges ]----------------------------------->
 
@@ -126,4 +129,5 @@ server modifications for the game **SCP:Secret Laboratory**.
 
 [Button Issues & Ideas]: https://img.shields.io/badge/Issues_&_Ideas-00A8E1?style=for-the-badge&logoColor=white&logo=AskUbuntu
 [Button Installation]: https://img.shields.io/badge/Installation-569A31?style=for-the-badge&logoColor=white&logo=DocuSign
+[Button Documentation]: https://img.shields.io/badge/Documentation-26689A?style=for-the-badge&logoColor=white&logo=GitBook
 [Button Development]: https://img.shields.io/badge/Projects-66459B?style=for-the-badge&logoColor=white&logo=AzureArtifacts
