@@ -29,3 +29,5 @@
 ```yaml
 admintoolbox_block_role_damage : 8:1,6:12:13:15
 ```
+
+<br>

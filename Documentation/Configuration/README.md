@@ -5,6 +5,16 @@
 
 <br>
 
+## ![Label Damage]
+
+[<kbd> <br> Tutorial <br> </kbd>][Damage Tutorial]
+Choose what type of damage affect players with the `TUTORIAL` role.
+
+[<kbd> <br> Global <br> </kbd>][Damage Tutorial]
+Adjust the global damage multiplier.
+
+<br>
+<br>
 
 
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
@@ -20,3 +30,9 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 ```
 
 >Find a complete list of DamageID's, RoleID's and more in the [RESOURCES](Resources.md) page!
+
+
+
+[Damage Tutorial]: Settings/Damage/Tutorial.md
+
+[Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph

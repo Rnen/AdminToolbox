@@ -35,3 +35,5 @@ admintoolbox_endedRound_damageMultiplier :  0
 ```yaml
 admintoolbox_endedRound_damageMultiplier : 10
 ```
+
+<br>

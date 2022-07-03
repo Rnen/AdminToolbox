@@ -21,3 +21,5 @@
 ```yml
 admintoolbox_decontamination_damagemultiplier : 4.2
 ```
+
+<br>
