@@ -97,8 +97,9 @@ Turn off damage for players.
 
 ## Licensing
 
-**SCP:SL** and it's development team have been <br>
-granted permission under the `CC-BY` license.
+**AdminToolbox** and it's team have been granted permission <br>
+by **Northwood Studios** under the `CC-BY` license to publish <br>
+server modifications for the game **SCP:Secret Laboratory**.
 
 <br>
 
