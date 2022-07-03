@@ -1,9 +1,9 @@
-# Welcome to the AdminToolbox wiki!
+# Welcome to the AdminToolbox Documentation!
 
 Pages can be found on the right of the screen
 
-### Feel free to contribute to this wiki :smile: 
-> I'm actually really terrible at updating this, so any help is greatly appriciated
+### Feel free to contribute to this :smile: 
+> I'm actually really terrible at writing documentation, so any help is greatly appriciated
 
 ***
-### Different pages can be found in the navigation menu on the right.
+### Different pages can be found in the subfolders here.

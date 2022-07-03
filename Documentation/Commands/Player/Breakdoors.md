@@ -29,5 +29,5 @@ BREAKDOORS | LIST | | Lists all players with BREAKDOORS enabled
 Additional_info
 
 [csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: https://github.com/Rnen/AdminToolbox/wiki/AdminToolbox.Commands.Variables
-[resources]: https://github.com/Rnen/AdminToolbox/wiki/Resources
+[player]: ../Variables.md
+[resources]: ../Resources.md

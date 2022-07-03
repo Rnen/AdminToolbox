@@ -29,5 +29,5 @@ OBAN | Gaben | 89.82.35.149 | 120 | Bans the IP provided for 120 minutes (2 hour
 ### Note
 
 [csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: https://github.com/Rnen/AdminToolbox/wiki/AdminToolbox.Commands.Variables
-[resources]: (./Resources)
+[player]: ../Variables.md
+[resources]: ../Resources.md
