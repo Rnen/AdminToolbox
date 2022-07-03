@@ -7,19 +7,19 @@
 
 ## ![Label Damage]
 
-[<kbd> <br> Tutorial <br> </kbd>][Damage Tutorial]   
+[<kbd> <br>          Tutorial          <br> </kbd>][Damage Tutorial]   
 Choose what type of damage affect players with the `TUTORIAL` role.
 
-[<kbd> <br>   Global   <br> </kbd>][Damage Tutorial]   
+[<kbd> <br>             Global             <br> </kbd>][Damage Tutorial]   
 Adjust the global damage multiplier.
 
-[<kbd> <br> After Party <br> </kbd>][Damage After Party]   
+[<kbd> <br>         After Party         <br> </kbd>][Damage After Party]   
 Adjust the damage that is dealt after the round ends.
 
 [<kbd> <br> LCZ De-Containment <br> </kbd>][Damage LCZ]   
 Adjust the LCZ De-Containment damage multiplier.
 
-[<kbd> <br> Blocked <br> </kbd>][Damage Blocked]   
+[<kbd> <br>           Blocked           <br> </kbd>][Damage Blocked]   
 Disable specific roles from damaging each other.
 
 <br>
