@@ -1,20 +1,30 @@
-# AdminToolbox   [![Badge Release]][Releases]
-
-*A server plugin for **[SCP:Secret Laboratory]**.*
-
-<br>
-<br>
-
 <div align = center>
 
+[![Badge Release]][Releases]   
 [![Badge Downloads]][Releases]   
 [![Badge Commit]][Commit]   
 [![Badge Watchers]][Watchers]
 
-</div>
+<br>
+
+# AdminToolbox
+*A server plugin for **[SCP:Secret Laboratory]**.*
+
+<br>
+
+---
+
+[![Button Installation]][Wiki]   
+[![Button Issues & Ideas]][Issues]   
+[![Button Development]][Projects]
+
+---
 
 <br>
 <br>
+
+</div>
+
 
 ## Features
 
@@ -30,21 +40,6 @@
 
 and more commands, and other features that do not exist in the base game (yet).
 This plugin is also beeing constantly updated with more features, so stay tuned!
-
-
-<br>
-
-<div align = center>
-
----
-
-[![Button Installation]][Wiki]   
-[![Button Issues & Ideas]][Issues]   
-[![Button Development]][Projects]
-
----
-
-</div>
 
 <br>
 <br>
