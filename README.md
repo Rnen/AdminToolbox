@@ -1,25 +1,129 @@
-# AdminToolbox [![GitHub release](https://badgen.net/github/release/Rnen/AdminToolbox)](https://GitHub.com/Rnen/AdminToolbox/releases/) [![Github all releases](https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg)](https://GitHub.com/Rnen/AdminToolbox/releases/) [![GitHub latest commit](https://badgen.net/github/last-commit/Rnen/AdminToolbox)](https://GitHub.com/Rnen/AdminToolbox/commit/) [![GitHub watchers](https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=social&label=Watch&maxAge=2592000)](https://GitHub.com/Rnen/AdminToolbox/watchers/)
-### This is a server plugin for the game **SCP:Secret Laboratory**. 
-**It offers multiple admin tools like** 
-* Friendly fire logs in server console & logs to file
-* Advanced Godmode, ability to turn off damage for players, instantkill
-  - "Advanced" in the sense of: 106 with ATGOD cannot be contained, amongst other things like this
-* Warp Points
-* Modifying player cordinates/position
-* Prevent the round from ending
-* Per-player stats (saved to file)
-* Breaking doors interacted with
-* Player Joined messages in server window
+<br>
 
-and more commands, and other features that do not exist in the base game (yet).
-This plugin is also beeing constantly updated with more features, so stay tuned!
+<div align = center>
 
-If you want to follow the development, take a look at the [AdminToolbox Progress Board!](https://github.com/Rnen/AdminToolbox/projects/1)
-***
-## Plugin Installation & Usage:
-[Visit the Wiki Pages to learn more!](https://github.com/Rnen/AdminToolbox/wiki)
-  
+[![Badge Release]][Releases]   
+[![Badge Downloads]][Releases]   
+[![Badge Commit]][Commit]   
+[![Badge Watchers]][Watchers]
 
-### Place any suggestions/problems in [issues](https://github.com/Rnen/AdminToolbox/issues)!
+<br>
+<br>
 
-# Thanks & Enjoy.
+# Admin Toolbox
+
+*A **SMod** server plugin for **[SCP: Secret Laboratory]**.*
+
+<br>
+
+---
+
+[![Button Installation]][Wiki]   
+[![Button Issues & Ideas]][Issues]   
+[![Button Development]][Projects]
+
+---
+
+</div>
+
+<br>
+<br>
+
+## Features
+
+-   Break, lock and unlock <br>
+    doors upon interaction
+    
+-   Teleporting Players
+
+-   Server Statistics
+
+-   Endless Rounds
+
+-   Jailing Players
+
+-   Infinite Items
+
+-   Warp Points
+
+-   Ghost Mode
+
+-   Instantkill
+
+
+<br>
+
+### Friendly Fire
+
+*For every act of friendly fire, the server* <br>
+*console and the log files will take note.* <br>
+
+*The Plugin also supports disabling certain* <br>
+*types of damage dealt between players.*
+
+<br>
+
+### Advanced GodMode
+
+Turn off damage for players.
+
+*'Advanced' in the sense of `106` with ATGOD* <br>
+*cannot be contained, amongst other things.*
+
+<br>
+
+### Player Statistics
+
+*Keeps track of player statistics and* <br>
+*stores them in a dedicated files.*
+
+#### Tracked
+
+- `Kills`
+- `Team Kills`
+- `Deaths`
+- `Playtime` (in minutes)
+- `Times Banned`
+
+<br>
+
+### Join Message
+
+*The server window information for* <br>
+*every player that joins the server.*
+
+<br>
+<br>
+
+## Licensing
+
+**AdminToolbox** and it's team have been granted permission <br>
+by **Northwood Studios** under the `CC-BY` license to publish <br>
+server modifications for the game **SCP:Secret Laboratory**.
+
+<br>
+
+<!----------------------------------------------------------------------------->
+
+[Releases]: https://GitHub.com/Rnen/AdminToolbox/releases/
+[Watchers]: https://GitHub.com/Rnen/AdminToolbox/watchers/
+[Projects]: https://GitHub.com/Rnen/AdminToolbox/projects/1
+[Issues]: https://GitHub.com/Rnen/AdminToolbox/issues
+[Commit]: https://GitHub.com/Rnen/AdminToolbox/commit
+[Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
+[SCP: Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
+
+
+<!--------------------------------[ Badges ]----------------------------------->
+
+[Badge Downloads]: https://img.shields.io/github/downloads/Rnen/AdminToolbox/total.svg?style=for-the-badge&color=A9225C&logoColor=white&logo=DocuSign
+[Badge Watchers]: https://img.shields.io/github/watchers/Rnen/AdminToolbox.svg?style=for-the-badge&label=Watcher&maxAge=2592000&color=73398D&logoColor=white&logo=Git
+[Badge Release]: https://img.shields.io/github/v/release/Rnen/AdminToolbox?style=for-the-badge
+[Badge Commit]: https://img.shields.io/github/last-commit/Rnen/AdminToolbox?style=for-the-badge&color=258AAF&logoColor=white&logo=GitHub
+
+
+<!-------------------------------[ Buttons ]----------------------------------->
+
+[Button Issues & Ideas]: https://img.shields.io/badge/Issues_&_Ideas-00A8E1?style=for-the-badge&logoColor=white&logo=AskUbuntu
+[Button Installation]: https://img.shields.io/badge/Installation-569A31?style=for-the-badge&logoColor=white&logo=DocuSign
+[Button Development]: https://img.shields.io/badge/Projects-66459B?style=for-the-badge&logoColor=white&logo=AzureArtifacts
