@@ -1,4 +1,3 @@
-
 <br>
 
 <div align = center>
@@ -9,12 +8,10 @@
 [![Badge Watchers]][Watchers]
 
 <br>
-<br>
 
-# AdminToolbox
-*A server plugin for **[SCP:Secret Laboratory]**.*
+# Admin Toolbox
 
-<br>
+*A **SMod** server plugin for **[SCP: Secret Laboratory]**.*
 
 ---
 
@@ -31,14 +28,24 @@
 
 ## Features
 
--   Break doors that have <br>
-    been interacted with.
-
+-   Break, lock and unlock <br>
+    doors upon interaction
+    
 -   Teleporting Players
+
+-   Server Statistics
 
 -   Endless Rounds
 
+-   Jailing Players
+
+-   Infinite Items
+
 -   Warp Points
+
+-   Ghost Mode
+
+-   Instantkill
 
 
 <br>
@@ -46,15 +53,16 @@
 ### Friendly Fire
 
 *For every act of friendly fire, the server* <br>
-*console and the log files will take note.*
+*console and the log files will take note.* <br>
+
+*The Plugin also supports disabling certain* <br>
+*types of damage dealt between players.*
 
 <br>
 
 ### Advanced GodMode
 
-- Turn off damage for players
-
-- Instakill
+Turn off damage for players.
 
 *'Advanced' in the sense of `106` with ATGOD* <br>
 *cannot be contained, amongst other things.*
@@ -63,15 +71,22 @@
 
 ### Player Statistics
 
-*Log stats for every player to a file.*
+*Keeps track of player statistics and* <br>
+*stores them in a dedicated files.*
+
+#### Tracked
+
+- `Team Kills`
+- `Playtime`
+- `Deaths`
+- `Kills`
 
 <br>
 
 ### Join Message
 
-*The server window shows a message* <br>
-*for every player that joins the server.*
-
+*The server window information for* <br>
+*every player that joins the server.*
 
 <br>
 <br>
@@ -83,7 +98,6 @@ granted permission under the `CC-BY` license.
 
 <br>
 
-
 <!----------------------------------------------------------------------------->
 
 [Releases]: https://GitHub.com/Rnen/AdminToolbox/releases/
@@ -92,8 +106,7 @@ granted permission under the `CC-BY` license.
 [Issues]: https://GitHub.com/Rnen/AdminToolbox/issues
 [Commit]: https://GitHub.com/Rnen/AdminToolbox/commit
 [Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
-
-[SCP:Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
+[SCP: Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
 
 
 <!--------------------------------[ Badges ]----------------------------------->
@@ -109,4 +122,3 @@ granted permission under the `CC-BY` license.
 [Button Issues & Ideas]: https://img.shields.io/badge/Issues_&_Ideas-00A8E1?style=for-the-badge&logoColor=white&logo=AskUbuntu
 [Button Installation]: https://img.shields.io/badge/Installation-569A31?style=for-the-badge&logoColor=white&logo=DocuSign
 [Button Development]: https://img.shields.io/badge/Projects-66459B?style=for-the-badge&logoColor=white&logo=AzureArtifacts
-
