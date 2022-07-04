@@ -7,25 +7,25 @@
 
 ## ![Label Logging]
 
-[<kbd> <br>Commands<br> </kbd>][Logging Commands]   
+[<kbd> <br>         Commands        <br> </kbd>][Logging Commands]   
 Log command usage.
 
-[<kbd> <br>Damage<br> </kbd>][Logging Damage]   
+[<kbd> <br>          Damage          <br> </kbd>][Logging Damage]   
 Log player damage.
 
-[<kbd> <br>Housekeeping<br> </kbd>][Logging Housekeeping]   
+[<kbd> <br>     Housekeeping     <br> </kbd>][Logging Housekeeping]   
 Remove logs after a duration.
 
-[<kbd> <br>Kills<br> </kbd>][Logging Kills]   
+[<kbd> <br>           Kills           <br> </kbd>][Logging Kills]   
 Remove enemy kills.
 
-[<kbd> <br>Plugin Location<br> </kbd>][Logging Location]   
+[<kbd> <br>  Plugin Location  <br> </kbd>][Logging Location]   
 Plugin folder location.
 
-[<kbd> <br>Teamkills<br> </kbd>][Logging Teamkill]   
+[<kbd> <br>        Teamkills        <br> </kbd>][Logging Teamkill]   
 Log team kills.
 
-[<kbd> <br>Unified Data<br> </kbd>][Logging Unified]   
+[<kbd> <br>     Unified Data     <br> </kbd>][Logging Unified]   
 Combine data from different servers.
 
 <br>
@@ -102,7 +102,7 @@ Disable specific roles from damaging each other.
 
 ## ![Label Info]
 
-[<kbd> <br> Join <br> </kbd>][Info Join]   
+[<kbd> <br>               Join               <br> </kbd>][Info Join]   
 Set if player names should be shown in the server console upon joining.
 
 <br>
