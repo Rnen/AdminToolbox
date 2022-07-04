@@ -45,6 +45,26 @@ Colorize the server console.
 <br>
 <br>
 
+## ![Label Game]
+
+[<kbd> <br>Round End<br> </kbd>][Game End]   
+Should round never end?
+
+[<kbd> <br>Players<br> </kbd>][Game Players]   
+List players and related info.
+
+[<kbd> <br>Keep Settings<br> </kbd>][Game Remember]   
+Should players keep their settings?
+
+[<kbd> <br>Victories<br> </kbd>][Game Victory]   
+Display the victories for each team.
+
+[<kbd> <br>Warping<br> </kbd>][Game Warp]   
+Establish warp points and teleport to them.
+
+<br>
+<br>
+
 
 >Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
 >Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
@@ -68,8 +88,15 @@ Colorize the server console.
 [Server Color]: Commands/Server/Color.md
 [Server Info]: Commands/Server/Info.md
 
+[Game Remember]: Commands/Game/Remember.md
+[Game Players]: Commands/Game/Players.md
+[Game Victory]: Commands/Game/Victory.md
+[Game Warp]: Commands/Game/Warp.md
+[Game End]: Commands/Game/End.md
+
 
 <!--------------------------------[ Labels ]----------------------------------->
 
 [Label Server]: https://img.shields.io/badge/Server-0D597F?style=for-the-badge&logoColor=white&logo=GoogleSearchConsole
-[Label Plugin]: https://img.shields.io/badge/Plugin-02303A?style=for-the-badge&logoColor=white&logo=SCPFoundation
+[Label Plugin]: https://img.shields.io/badge/Plugin-02303A?style=for-the-badge&logoColor=white&logo=Buffer
+[Label Game]: https://img.shields.io/badge/Game-569A31?style=for-the-badge&logoColor=white&logo=SCPFoundation
