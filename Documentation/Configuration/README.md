@@ -13,9 +13,13 @@ server config, not `config_remoteadmin.txt`.
 <br>
 <br>
 
+## Types & Variables
 
->Find a complete list of DamageID's, RoleID's and more in the [RESOURCES](Resources.md) page!
+Before you configure any setting, <br>
+check the **[Types]** documentation.
 
+<br>
+<br>
 
 ## ![Label General]
 
@@ -143,6 +147,10 @@ Display suicides, scp kills & grenade kills.
 Disable team kills in the server console.
 
 <br>
+
+<!----------------------------------------------------------------------------->
+
+[Types]: Types.md
 
 
 <!-------------------------------[ Settings ]---------------------------------->
