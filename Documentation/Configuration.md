@@ -150,6 +150,7 @@ Disable team kills in the server console.
 
 <br>
 
+
 <!----------------------------------------------------------------------------->
 
 [Types]: Configuration/Types.md

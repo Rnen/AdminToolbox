@@ -24,9 +24,26 @@
 *How to use the **AdminToolbox** commands.*
 
 <br>
+<br>
+
+## [![Label Resources]][Resources]
+
+*Lists of **Ids** and **Types**.*
+
+<br>
+
+## List of Server Name Variables
+
+Theese are key-words you can put in your server name config, that will be replaced with a value
+
+Variable | Description
+:--:|:--
+$atversion | Displays the current AdminToolbox version
 
 
 <!----------------------------------------------------------------------------->
+
+[Resources]: https://github.com/ServerMod/Smod2/wiki/Enum-Lists
 
 [Configuration]: Configuration.md#Top
 [Installation]: Installation.md
@@ -37,4 +54,5 @@
 
 [Label Configuration]: https://img.shields.io/badge/Configuration-1A86FD?style=for-the-badge&logoColor=white&logo=BookStack
 [Label Installation]: https://img.shields.io/badge/Installation-A9225C?style=for-the-badge&logoColor=white&logo=DocuSign
+[Label Resources]: https://img.shields.io/badge/Resources-66459B?style=for-the-badge&logoColor=white&logo=AzureArtifacts
 [Label Commands]: https://img.shields.io/badge/Commands-00B265?style=for-the-badge&logoColor=white&logo=GNUBash
