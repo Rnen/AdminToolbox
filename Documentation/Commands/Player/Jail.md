@@ -33,7 +33,7 @@ JAIL Mike
 *Jails `Mike` for `x`.*
 
 ```shell
-ATSPEAK Mike x
+JAIL Mike x
 ```
 
 <br>
