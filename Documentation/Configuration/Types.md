@@ -48,7 +48,28 @@ Key-Value pairs separated by commas.
 <br>
 <br>
 
-- **R:** If the config option has an R before it, it means that you can use a random value in it. A random value is defined by having "{}", items listed like "weight%value" where if you don't put a weight it defaults to a weight of 1, separated by "|", for example: `rlist: {1%1|2%7|6},3,6,{15%3|2|45%2}`
+## Random
+
+If a config option has an `R` before it, it <br>
+indicates you can use a random value.
+
+<br>
+
+- A random value is defined by having `{}`.
+    
+- Items are listed like `weight%value`.
+
+- Weight values default to `1`.
+
+- Pairs are separated by `|`.
+
+<br>
+
+### Example
+
+```yaml
+RandomList : {1%1|2%7|6},3,6,{15%3|2|45%2}
+```
 
 <br>
 <br>
