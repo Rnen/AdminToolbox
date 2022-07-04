@@ -57,5 +57,5 @@ You can simply run the `AutoUpdate.bat` script.
 
 <!-------------------------------[ Buttons ]----------------------------------->
 
-[Button GitHub]: https://img.shields.io/badge/GitHub-171515?style=for-the-badge&logoColor=white&logo=GitHub
 [Button Discord]: https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logoColor=white&logo=Discord
+[Button GitHub]: https://img.shields.io/badge/GitHub-171515?style=for-the-badge&logoColor=white&logo=GitHub

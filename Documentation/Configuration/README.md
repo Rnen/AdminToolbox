@@ -1,7 +1,7 @@
 
 # Configuration
 
-*Optional parameter you can pass.*
+*Optional parameters you can pass.*
 
 <br>
 
