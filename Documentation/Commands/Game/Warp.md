@@ -4,12 +4,23 @@
 <kbd>  WARP  </kbd>  
 
 <br>
+
+## Description
+
+*Command to establish location to* <br>
+*which the player can be warped.*
+
+<br>
 <br>
 
-### Teleport
+<div align = center>
+
+## Teleport
 
 <kbd>  WARP  </kbd>
 
+</div>
+  
 <br>
 
 ### Description
@@ -27,17 +38,16 @@ WARP Dave Alpha
 ```
 
 <br>
-
-<!----------------------------------------------------------------------------->
-
 <br>
 
-<br>
+<div align = center>
 
-### List
+## List
 
-<kbd>  WARP  </kbd>  <kbd>  LIST  </kbd>  
+<kbd>  WARP  </kbd>  <kbd>  LIST  </kbd>
 
+</div>
+  
 <br>
 
 ### Description
@@ -45,15 +55,16 @@ WARP Dave Alpha
 *Lists all existing warp points.*
 
 <br>
-
-<!----------------------------------------------------------------------------->
-
 <br>
 
-### Add
+<div align = center>
 
-<kbd>  WARP  </kbd>  <kbd>  ADD  </kbd>  
+## Add
 
+<kbd>  WARP  </kbd>  <kbd>  ADD  </kbd>
+
+</div>
+  
 <br>
 
 ### Description
@@ -71,15 +82,16 @@ WARP ADD Dave Alpha
 ```
 
 <br>
-
-<!----------------------------------------------------------------------------->
-
 <br>
 
-### Remove
+<div align = center>
 
-<kbd>  WARP  </kbd>  <kbd>  REMOVE  </kbd>  
+## Remove
 
+<kbd>  WARP  </kbd>  <kbd>  REMOVE  </kbd>
+
+</div>
+  
 <br>
 
 ### Description
