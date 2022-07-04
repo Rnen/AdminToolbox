@@ -1,21 +1,9 @@
 
-# Warp
-
-<kbd>  WARP  </kbd>  
-
-<br>
-
-## Description
-
-*Command to establish location to* <br>
-*which the player can be warped.*
-
-<br>
 <br>
 
 <div align = center>
 
-## Teleport
+# Teleport
 
 <kbd>  WARP  </kbd>
 
@@ -39,10 +27,11 @@ WARP Dave Alpha
 
 <br>
 <br>
+<br>
 
 <div align = center>
 
-## List
+# List
 
 <kbd>  WARP  </kbd>  <kbd>  LIST  </kbd>
 
@@ -56,10 +45,11 @@ WARP Dave Alpha
 
 <br>
 <br>
+<br>
 
 <div align = center>
 
-## Add
+# Add
 
 <kbd>  WARP  </kbd>  <kbd>  ADD  </kbd>
 
@@ -83,10 +73,11 @@ WARP ADD Dave Alpha
 
 <br>
 <br>
+<br>
 
 <div align = center>
 
-## Remove
+# Remove
 
 <kbd>  WARP  </kbd>  <kbd>  REMOVE  </kbd>
 
@@ -102,7 +93,7 @@ WARP ADD Dave Alpha
 
 ### Example
 
-*Removes the warp point`Alpha`.*
+*Removes the warp point `Alpha`.*
 
 ```shell
 WARP REMOVE Alpha
