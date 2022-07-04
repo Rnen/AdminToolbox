@@ -12,7 +12,7 @@
 
 ### Help
 
-<kbd>  AT HELP  </kbd>  
+<kbd>  AT  </kbd>  <kbd>  HELP  </kbd>  
 
 *Displays information about the `AT` command.*
 
@@ -20,7 +20,7 @@
 
 ### Info
 
-<kbd>  AT INFO  </kbd>  
+<kbd>  AT  </kbd>  <kbd>  INFO  </kbd> 
 
 *Compares the current plugin version to the latest available.*
 
@@ -28,7 +28,7 @@
 
 ### Download
 
-<kbd>  AT DOWNLOAD  </kbd>  
+<kbd>  AT  </kbd>  <kbd>  DOWNLOAD  </kbd> 
 
 *Open the download page in a new browser window.*
 
