@@ -29,4 +29,4 @@ following to allow for the use of commands:
 
 <!----------------------------------------------------------------------------->
 
-[SMod]: https://github.com/Grover-c13/Smod2
+[SMod]: https://github.com/ServerMod/Smod2
