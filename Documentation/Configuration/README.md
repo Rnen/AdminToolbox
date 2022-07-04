@@ -7,25 +7,25 @@
 
 ## ![Label General]
 
-[<kbd> <br>Colorized Console<br> </kbd>][General Color]   
+[<kbd> <br>  Colorized Console  <br> </kbd>][General Color]   
 Colorize the console output.
 
-[<kbd> <br>Enable Plugin<br> </kbd>][General Enable]   
+[<kbd> <br>      Enable Plugin      <br> </kbd>][General Enable]   
 Enable this plugin.
 
-[<kbd> <br>Join Information<br> </kbd>][General Info]   
+[<kbd> <br>   Join Information   <br> </kbd>][General Info]   
 Show extended info for joining players.
 
-[<kbd> <br>Join Name<br> </kbd>][General Name]   
+[<kbd> <br>          Join Name           <br> </kbd>][General Name]   
 Show joining players names.
 
-[<kbd> <br>Match Statistics<br> </kbd>][General Match]   
+[<kbd> <br>   Match Statistics   <br> </kbd>][General Match]   
 Display match Statistics.
 
-[<kbd> <br>Server Tracking<br> </kbd>][General Tracking]   
+[<kbd> <br>    Server Tracking    <br> </kbd>][General Tracking]   
 Add tracking in the server name.
 
-[<kbd> <br>Version Checking<br> </kbd>][General Version]   
+[<kbd> <br>   Version Checking   <br> </kbd>][General Version]   
 Check for new versions of **AdminToolbox**.
 
 <br>
