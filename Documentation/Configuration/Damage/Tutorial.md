@@ -47,3 +47,19 @@ admintoolbox_tutorial_dmg_allowed : -2
 ```
 
 <br>
+
+### Specific
+
+*Allows damage from*:
+
+- Poison ( **29** )
+
+- Tesla ( **5** )
+
+- P99 ( **13** )
+
+```yaml
+admintoolbox_tutorial_dmg_allowed : 29,13,5
+```
+
+<br>
