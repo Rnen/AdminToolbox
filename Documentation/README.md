@@ -28,9 +28,9 @@
 
 <!----------------------------------------------------------------------------->
 
-[Configuration]: Configuration#Top
+[Configuration]: Configuration/README.md#Top
 [Installation]: Installation.md
-[Commands]: Commands#Top
+[Commands]: Commands/README.md#Top
 
 
 <!--------------------------------[ Labels ]----------------------------------->

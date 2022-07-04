@@ -113,7 +113,7 @@ server modifications for the game **SCP:Secret Laboratory**.
 [Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
 [SCP: Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
 
-[Documentation]: Documentation
+[Documentation]: Documentation/README.md#Top
 
 
 <!--------------------------------[ Badges ]----------------------------------->
