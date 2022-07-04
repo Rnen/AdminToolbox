@@ -47,20 +47,20 @@ Colorize the server console.
 
 ## ![Label Game]
 
-[<kbd> <br>Round End<br> </kbd>][Game End]   
-Should round never end?
+[<kbd> <br>        Warping        <br> </kbd>][Game Warp]   
+Establish warp points and teleport to them.
 
-[<kbd> <br>Players<br> </kbd>][Game Players]   
-List players and related info.
-
-[<kbd> <br>Keep Settings<br> </kbd>][Game Remember]   
-Should players keep their settings?
-
-[<kbd> <br>Victories<br> </kbd>][Game Victory]   
+[<kbd> <br>      Victories      <br> </kbd>][Game Victory]   
 Display the victories for each team.
 
-[<kbd> <br>Warping<br> </kbd>][Game Warp]   
-Establish warp points and teleport to them.
+[<kbd> <br>  Keep Settings  <br> </kbd>][Game Remember]   
+Should players keep their settings?
+
+[<kbd> <br>        Players        <br> </kbd>][Game Players]   
+List players and related info.
+
+[<kbd> <br>      Round End      <br> </kbd>][Game End]   
+Should the round never end?
 
 <br>
 <br>
