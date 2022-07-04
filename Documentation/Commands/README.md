@@ -22,10 +22,10 @@ following to allow for the use of commands:
 
 ## ![Label Plugin]
 
-[<kbd> <br>Help<br> </kbd>][Plugin Help]   
+[<kbd> <br>     Help     <br> </kbd>][Plugin Help]   
 Open the documentation in the browser.
 
-[<kbd> <br>Version<br> </kbd>][Plugin Version]   
+[<kbd> <br>  Version  <br> </kbd>][Plugin Version]   
 Plugin version related operations.
 
 <br>
@@ -33,13 +33,13 @@ Plugin version related operations.
 
 ## ![Label Server]
 
-[<kbd> <br>Information<br> </kbd>][Server Info]   
+[<kbd> <br>  Information  <br> </kbd>][Server Info]   
 Display information about the server.
 
-[<kbd> <br>Disable<br> </kbd>][Server Disable]   
+[<kbd> <br>      Disable      <br> </kbd>][Server Disable]   
 Disable the **AdminToolbox** plugin.
 
-[<kbd> <br>Color<br> </kbd>][Server Color]   
+[<kbd> <br>        Color        <br> </kbd>][Server Color]   
 Colorize the server console.
 
 <br>
@@ -72,4 +72,4 @@ Colorize the server console.
 <!--------------------------------[ Labels ]----------------------------------->
 
 [Label Server]: https://img.shields.io/badge/Server-0D597F?style=for-the-badge&logoColor=white&logo=GoogleSearchConsole
-[Label Plugin]: https://img.shields.io/badge/Plugin-14161A?style=for-the-badge&logoColor=white&logo=SCPFoundation
+[Label Plugin]: https://img.shields.io/badge/Plugin-02303A?style=for-the-badge&logoColor=white&logo=SCPFoundation
