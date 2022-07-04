@@ -152,48 +152,48 @@ Disable team kills in the server console.
 
 <!----------------------------------------------------------------------------->
 
-[Types]: Types.md
+[Types]: Configuration/Types.md
 
 
 <!-------------------------------[ Settings ]---------------------------------->
 
-[Damage After Party]: Settings/Damage/After%20Party.md
-[Damage Tutorial]: Settings/Damage/Tutorial.md
-[Damage Blocked]: Settings/Damage/Blocked.md
-[Damage Global]: Settings/Damage/Global.md
-[Damage LCZ]: Settings/Damage/LCZ%20De-Containment.md
+[Damage After Party]: Configuration/Damage/After%20Party.md
+[Damage Tutorial]: Configuration/Damage/Tutorial.md
+[Damage Blocked]: Configuration/Damage/Blocked.md
+[Damage Global]: Configuration/Damage/Global.md
+[Damage LCZ]: Configuration/Damage/LCZ%20De-Containment.md
 
-[Info Join]: Settings/Info/Join.md
+[Info Join]: Configuration/Info/Join.md
 
-[Debug Teamkill]: Settings/Debug/Teamkill.md
-[Debug Detected]: Settings/Debug/Detected.md
-[Debug Friendly]: Settings/Debug/Friendly.md
-[Debug Special]: Settings/Debug/Special.md
-[Debug Kills]: Settings/Debug/Kills.md
-[Debug Enemy]: Settings/Debug/Enemy.md
+[Debug Teamkill]: Configuration/Debug/Teamkill.md
+[Debug Detected]: Configuration/Debug/Detected.md
+[Debug Friendly]: Configuration/Debug/Friendly.md
+[Debug Special]: Configuration/Debug/Special.md
+[Debug Kills]: Configuration/Debug/Kills.md
+[Debug Enemy]: Configuration/Debug/Enemy.md
 
-[General Tracking]: Settings/General/Tracking.md
-[General Version]: Settings/General/Version.md
-[General Enable]: Settings/General/Enable.md
-[General Color]: Settings/General/Color.md
-[General Match]: Settings/General/Match.md
-[General Name]: Settings/General/Joined.md
-[General Info]: Settings/General/Information.md
+[General Tracking]: Configuration/General/Tracking.md
+[General Version]: Configuration/General/Version.md
+[General Enable]: Configuration/General/Enable.md
+[General Color]: Configuration/General/Color.md
+[General Match]: Configuration/General/Match.md
+[General Name]: Configuration/General/Joined.md
+[General Info]: Configuration/General/Information.md
 
-[Intercom Transmission]: Settings/Intercom/Transmission.md
-[Intercom Blacklist]: Settings/Intercom/Blacklist.md
-[Intercom Whitelist]: Settings/Intercom/Whitelist.md
-[Intercom Limited]: Settings/Intercom/Limited.md
-[Intercom Restart]: Settings/Intercom/Restart.md
-[Intercom Ready]: Settings/Intercom/Ready.md
+[Intercom Transmission]: Configuration/Intercom/Transmission.md
+[Intercom Blacklist]: Configuration/Intercom/Blacklist.md
+[Intercom Whitelist]: Configuration/Intercom/Whitelist.md
+[Intercom Limited]: Configuration/Intercom/Limited.md
+[Intercom Restart]: Configuration/Intercom/Restart.md
+[Intercom Ready]: Configuration/Intercom/Ready.md
 
-[Logging Housekeeping]: Settings/Logging/Housekeeping.md
-[Logging Teamkill]: Settings/Logging/TeamKill.md
-[Logging Commands]: Settings/Logging/Commands.md
-[Logging Location]: Settings/Logging/Location.md
-[Logging Unified]: Settings/Logging/Unified.md
-[Logging Damage]: Settings/Logging/Damage.md
-[Logging Kills]: Settings/Logging/Kills.md
+[Logging Housekeeping]: Configuration/Logging/Housekeeping.md
+[Logging Teamkill]: Configuration/Logging/TeamKill.md
+[Logging Commands]: Configuration/Logging/Commands.md
+[Logging Location]: Configuration/Logging/Location.md
+[Logging Unified]: Configuration/Logging/Unified.md
+[Logging Damage]: Configuration/Logging/Damage.md
+[Logging Kills]: Configuration/Logging/Kills.md
 
 
 <!--------------------------------[ Labels ]----------------------------------->

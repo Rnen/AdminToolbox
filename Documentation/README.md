@@ -28,9 +28,9 @@
 
 <!----------------------------------------------------------------------------->
 
-[Configuration]: Configuration/#Top
+[Configuration]: Configuration.md#Top
 [Installation]: Installation.md
-[Commands]: Commands/#Top
+[Commands]: Commands.md#Top
 
 
 <!--------------------------------[ Labels ]----------------------------------->

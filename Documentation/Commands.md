@@ -128,15 +128,6 @@ Ban an offline player.
 Kill a player.
 
 <br>
-<br>
-
-
->Any `Player` variable can be switched out with `*` to target all players. Not specifying a bool toggles it.
->Using `(command) list` will list all players with the currently enabled status. (Like godmode for example)
-
-> Player input doesn't need the full name, it will grab the closest matching name containing your entry
-
-<br>
 
 
 <!----------------------------------------------------------------------------->
