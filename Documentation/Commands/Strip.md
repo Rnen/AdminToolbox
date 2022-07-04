@@ -1,3 +1,6 @@
+EMPTY | Player | ItemTypeNumber / (D, DEL,DELETE) | (D, DEL,DELETE) | Drops all items (all unless specified) from the player's inv. If used with (D, DEL or DELETE), it deletes the items instead of dropping. (The second del part is for if you use an item number)
+
+
 # Empty
 
 Empties the inventory of the spesified player. Optionally deletes the items completely.

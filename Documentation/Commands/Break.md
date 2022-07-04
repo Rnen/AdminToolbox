@@ -1,3 +1,6 @@
+BD / BREAKDOORS | Player | Boolean |  Turns on/off breaking doors for that player.
+
+
 # BREAKDOORS
 
 Makes the user able to break doors upon interaction

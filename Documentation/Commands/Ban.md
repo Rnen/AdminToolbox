@@ -1,3 +1,7 @@
+[ATBAN](Commands/Player/AtBan.md) | | | For banning offline user's IP/SteamID. See command's page for more info
+
+
+
 # ATBAN
 
 Bans IP/STEAMID for X minutes. (For banning offline users)

@@ -1,3 +1,6 @@
+PL / PLOCK / PLAYERLOCK / PLAYERLOCKDOWN | Player | Boolean |  Locks all doors for the specified player.
+
+
 # LOCKDOORS
 
 Makes the user able to lock doors upon interaction

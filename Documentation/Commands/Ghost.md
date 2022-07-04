@@ -1,3 +1,6 @@
+[GHOSTMODE](Commands/Player/GhostMode.md) | | | For becoming invisible
+
+
 # GhostMode
 
 Command to go invisible for other players.
