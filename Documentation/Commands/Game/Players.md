@@ -8,6 +8,6 @@
 
 ## Description
 
-*Lists all players, their IPs & SteamIds.*
+*Lists all **Player**s, their **IP**s & **SteamId**s.*
 
 <br>
