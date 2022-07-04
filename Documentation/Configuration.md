@@ -33,14 +33,17 @@ config to display the **AdminToolbox** version.
 
 ## ![Label General]
 
-[<kbd> <br>  Colorized Console  <br> </kbd>][General Color]   
-Colorize the console output.
-
-[<kbd> <br>      Enable Plugin      <br> </kbd>][General Enable]   
-Enable this plugin.
+[<kbd> <br>   Version Checking   <br> </kbd>][General Version]   
+Check for new versions of **AdminToolbox**.
 
 [<kbd> <br>   Join Information   <br> </kbd>][General Info]   
 Show extended info for joining players.
+
+[<kbd> <br>    Server Tracking    <br> </kbd>][General Tracking]   
+Add tracking in the server name.
+
+[<kbd> <br>  Colorized Console  <br> </kbd>][General Color]   
+Colorize the console output.
 
 [<kbd> <br>          Join Name           <br> </kbd>][General Name]   
 Show joining players names.
@@ -48,36 +51,31 @@ Show joining players names.
 [<kbd> <br>   Match Statistics   <br> </kbd>][General Match]   
 Display match Statistics.
 
-[<kbd> <br>    Server Tracking    <br> </kbd>][General Tracking]   
-Add tracking in the server name.
-
-[<kbd> <br>   Version Checking   <br> </kbd>][General Version]   
-Check for new versions of **AdminToolbox**.
+[<kbd> <br>      Enable Plugin      <br> </kbd>][General Enable]   
+Enable this plugin.
 
 <br>
 <br>
-
-
 
 ## ![Label Intercom]
 
 [<kbd> <br>            Blacklist            <br> </kbd>][Intercom Blacklist]   
 Block players from using the intercom system.
 
-[<kbd> <br>        Limited Access        <br> </kbd>][Intercom Limited]   
-Only allow whitelisted players.
-
-[<kbd> <br>         Ready Message         <br> </kbd>][Intercom Ready]   
-Message shown when intercom is ready.
+[<kbd> <br>  Transmission Message  <br> </kbd>][Intercom Transmission]   
+Message shown when intercom is transmitting.
 
 [<kbd> <br>       Restart Message       <br> </kbd>][Intercom Restart]   
 Message shown when intercom is restarting.
 
-[<kbd> <br>  Transmission Message  <br> </kbd>][Intercom Transmission]   
-Message shown when intercom is transmitting.
-
 [<kbd> <br>            Whitelist            <br> </kbd>][Intercom Whitelist]   
 Allow specific roles to use the intercom.
+
+[<kbd> <br>         Ready Message         <br> </kbd>][Intercom Ready]   
+Message shown when intercom is ready.
+
+[<kbd> <br>        Limited Access        <br> </kbd>][Intercom Limited]   
+Only allow whitelisted players.
 
 <br>
 <br>
@@ -99,7 +97,6 @@ Disable specific roles from damaging each other.
 [<kbd> <br>             Global             <br> </kbd>][Damage Tutorial]   
 Adjust the global damage multiplier.
 
-
 <br>
 <br>
 
@@ -113,37 +110,31 @@ Set if player names should be shown in the server console upon joining.
 
 ## ![Label Logging]
 
-[<kbd> <br>         Commands        <br> </kbd>][Logging Commands]   
-Log command usage.
-
-[<kbd> <br>          Damage          <br> </kbd>][Logging Damage]   
-Log player damage.
+[<kbd> <br>     Unified Data     <br> </kbd>][Logging Unified]   
+Combine data from different servers.
 
 [<kbd> <br>     Housekeeping     <br> </kbd>][Logging Housekeeping]   
 Remove logs after a duration.
 
-[<kbd> <br>           Kills           <br> </kbd>][Logging Kills]   
-Remove enemy kills.
-
 [<kbd> <br>  Plugin Location  <br> </kbd>][Logging Location]   
 Plugin folder location.
 
+[<kbd> <br>         Commands        <br> </kbd>][Logging Commands]   
+Log command usage.
+
+[<kbd> <br>           Kills           <br> </kbd>][Logging Kills]   
+Remove enemy kills.
+
+[<kbd> <br>          Damage          <br> </kbd>][Logging Damage]   
+Log player damage.
+
 [<kbd> <br>        Teamkills        <br> </kbd>][Logging Teamkill]   
 Log team kills.
-
-[<kbd> <br>     Unified Data     <br> </kbd>][Logging Unified]   
-Combine data from different servers.
 
 <br>
 <br>
 
 ## ![Label Debug]
-
-[<kbd> <br>  Damage Detection  <br> </kbd>][Debug Detected]   
-Control what damage is detected.
-
-[<kbd> <br>      Enemy Damage      <br> </kbd>][Debug Enemy]   
-Display damage done to enemy players.
 
 [<kbd> <br>   Friendly Damage   <br> </kbd>][Debug Friendly]   
 Display damage done to friendly players.
@@ -151,11 +142,17 @@ Display damage done to friendly players.
 [<kbd> <br>         Enemy Kills         <br> </kbd>][Debug Kills]   
 Display enemy kills in the server console.
 
+[<kbd> <br>      Enemy Damage      <br> </kbd>][Debug Enemy]   
+Display damage done to enemy players.
+
 [<kbd> <br>       Special Kills       <br> </kbd>][Debug Special]   
 Display suicides, scp kills & grenade kills.
 
 [<kbd> <br>          Team Kills          <br> </kbd>][Debug Teamkill]   
 Disable team kills in the server console.
+
+[<kbd> <br>  Damage Detection  <br> </kbd>][Debug Detected]   
+Control what damage is detected.
 
 <br>
 
