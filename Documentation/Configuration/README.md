@@ -33,6 +33,29 @@ Set if player names should be shown in the server console upon joining.
 <br>
 <br>
 
+## ![Label Debug]
+
+[<kbd> <br>          Damage Detection          <br> </kbd>][Debug Detected]   
+Control what damage is detected.
+
+[<kbd> <br>             Enemy Damage             <br> </kbd>][Debug Enemy]   
+Display damage done to enemy players.
+
+[<kbd> <br>        Friendly Damage         <br> </kbd>][Debug Friendly]   
+Display damage done to friendly players.
+
+[<kbd> <br> Enemy Kills <br> </kbd>][Debug Kills]   
+Display enemy kills in the server console.
+
+[<kbd> <br>           Special Kills           <br> </kbd>][Debug Special]   
+Display suicides, scp kills & grenade kills.
+
+[<kbd> <br>           Team Kills           <br> </kbd>][Debug Teamkill]   
+Disable team kills in the server console.
+
+<br>
+<br>
+
 ### *Note that all configs should go in your server config file, not config_remoteadmin.txt
 
 ### Examples
@@ -57,5 +80,14 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 
 [Info Join]: Settings/Info/Join.md
 
+[Debug Teamkill]: Settings/Debug/Teamkill.md
+[Debug Detected]: Settings/Debug/Detected.md
+[Debug Friendly]: Settings/Debug/Friendly.md
+[Debug Special]: Settings/Debug/Special.md
+[Debug Kills]: Settings/Debug/Kills.md
+[Debug Enemy]: Settings/Debug/Enemy.md
+
+
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
+[Label Debug]: https://img.shields.io/badge/Debug-009287?style=for-the-badge&logoColor=white&logo=HubSpot
 [Label Info]: https://img.shields.io/badge/Information-666666?style=for-the-badge&logoColor=white&logo=InternetArchive
