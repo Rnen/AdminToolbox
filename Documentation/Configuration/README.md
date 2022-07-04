@@ -170,20 +170,20 @@ Disable team kills in the server console.
 [General Name]: Settings/General/Joined.md
 [General Info]: Settings/General/Information.md
 
-[Intercom Transmission]: Settings/General/Transmission.md
-[Intercom Blacklist]: Settings/General/Blacklist.md
-[Intercom Whitelist]: Settings/General/Whitelist.md
-[Intercom Limited]: Settings/General/Limited.md
-[Intercom Restart]: Settings/General/Restart.md
-[Intercom Ready]: Settings/General/Ready.md
+[Intercom Transmission]: Settings/Intercom/Transmission.md
+[Intercom Blacklist]: Settings/Intercom/Blacklist.md
+[Intercom Whitelist]: Settings/Intercom/Whitelist.md
+[Intercom Limited]: Settings/Intercom/Limited.md
+[Intercom Restart]: Settings/Intercom/Restart.md
+[Intercom Ready]: Settings/Intercom/Ready.md
 
-[Logging Housekeeping]: Settings/General/Housekeeping.md
-[Logging Teamkill]: Settings/General/TeamKill.md
-[Logging Commands]: Settings/General/Commands.md
-[Logging Location]: Settings/General/Location.md
-[Logging Unified]: Settings/General/Unified.md
-[Logging Damage]: Settings/General/Damage.md
-[Logging Kills]: Settings/General/Kills.md
+[Logging Housekeeping]: Settings/Logging/Housekeeping.md
+[Logging Teamkill]: Settings/Logging/TeamKill.md
+[Logging Commands]: Settings/Logging/Commands.md
+[Logging Location]: Settings/Logging/Location.md
+[Logging Unified]: Settings/Logging/Unified.md
+[Logging Damage]: Settings/Logging/Damage.md
+[Logging Kills]: Settings/Logging/Kills.md
 
 
 <!--------------------------------[ Labels ]----------------------------------->
