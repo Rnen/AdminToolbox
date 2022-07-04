@@ -1,36 +1,48 @@
-BD / BREAKDOORS | Player | Boolean |  Turns on/off breaking doors for that player.
 
+# Break Doors
 
-# BREAKDOORS
+<kbd>  BD  </kbd>  or  <kbd>  BREAKDOOR  </kbd>  or  <kbd>  BREAKDOORS  </kbd>
 
-Makes the user able to break doors upon interaction
+<br>
+<br>
 
-## Command usage
+## Description
 
-* BREAKDOORS <[Player][player]> <[Boolean][csharp]: State>
+*Makes the given player able to break doors upon interaction.*
 
-Parameter | Description
---: | :--
-PLAYER | Self-Targeting | Unless other player is specified, targets self
-State | Toggle | Unless specified, enabled state toggles
+<br>
+<br>
 
-List of Aliases for the word `BREAKDOORS`
+## Listing
 
-* BREAKDOOR
-* BD
+To list who can break doors, pass `LIST`.
+
+<br>
+<br>
 
 ## Examples
 
-Command | [Player][player] | [Bool][csharp] (Default: True)  | Description
---- | :---: | :---: | ---
-BD | Evan | true | Enables breaking doors for specified player
-BD | Robert | | Toggles the enabled/disabled state
-BREAKDOORS | LIST | | Lists all players with BREAKDOORS enabled
+*Enabled breaking doors for `Evan`.*
 
-### Note
+```shell
+BREAKDOOR Evan true
+```
 
-Additional_info
+<br>
 
-[csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: ../Variables.md
-[resources]: ../Resources.md
+*Toggles door breaking for `Robert`.*
+
+```shell
+BREAKDOOR Robert
+```
+
+<br>
+
+*Lists **all** players that can break doors.*
+
+```shell
+BREAKDOOR LIST
+```
+
+<br>
+

@@ -1,37 +1,45 @@
-[ATBAN](Commands/Player/AtBan.md) | | | For banning offline user's IP/SteamID. See command's page for more info
+
+# Offline Ban
+
+<kbd>  OBAN  </kbd>  or  <kbd>  ATBAN  </kbd>  or  <kbd>  OFFLINEBAN  </kbd>
+
+<br>
+<br>
+
+## Description
+
+*Bans the given **IP** or **SteamID** for* <br>
+*the given amount of minutes.*
+
+*Used for banning offline players.*
+
+<br>
+<br>
+
+## Duration
+
+*Ban time defaults to `43800 Minutes` / `4 Weeks`.*
+
+<br>
+<br>
+
+## Example
+
+*Bans the **SteamId** for `60 Minutes` and labels it `Hubert`.*
+
+```shell
+ATBAN Hubert 7656119796028xxxx 60
+```
+
+<br>
+
+*Bans the **IP** for `120 Minutes` and labels it `Gaben`.*
+
+```shell
+ATBAN Gaben 89.82.35.149 120
+```
+
+<br>
 
 
 
-# ATBAN
-
-Bans IP/STEAMID for X minutes. (For banning offline users)
-
-## Command usage
-
-* ATBAN ([string][csharp]: PlayerName/Label) ([string][csharp]: IP or SteamID) <[integer][csharp]: Minutes>
-
-Parameter | Default State | Description
---: | :--: | :--
-PlayerName / Label | | What shows where Player's name usually is in the ban file. Can be anything
-IP / SteamID | | Either a steamID or a IP-adress
-Minutes | 43800 | Defaults to 4 weeks when not specified otherwise
-
-### Command Aliases
-
-List of Aliases for the word `ATBAN`
-
-* OBAN
-* OFFLINEBAN
-
-## Examples
-
-Command | Label | IP / SteamID | Duration | Description
---- | :---: | :---: | :---: | ---
-ATBAN | Hubert | 7656119796028xxxx | 60 | Bans the steamID provided for 60 minutes (1 hour)
-OBAN | Gaben | 89.82.35.149 | 120 | Bans the IP provided for 120 minutes (2 hours)
-
-### Note
-
-[csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: ../Variables.md
-[resources]: ../Resources.md

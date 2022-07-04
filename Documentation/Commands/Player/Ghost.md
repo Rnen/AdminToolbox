@@ -1,45 +1,110 @@
-[GHOSTMODE](Commands/Player/GhostMode.md) | | | For becoming invisible
-
 
 # GhostMode
 
-Command to go invisible for other players.
+<kbd>  GH  </kbd>  or  <kbd>  GHOST  </kbd>  or  <kbd>  GHOSTM  </kbd>  or  <kbd>  GHOSTMODE  </kbd>
 
-## Command usage
+<br>
+<br>
 
-* GHOSTMODE <[Player][player]> <[Boolean][csharp]: State> <[Boolean][csharp]: Visible to Spectator> <[Boolean][csharp]: Visible when speaking>
+## Description
 
-Parameter | Default State | Description
---: | :--: | :--
-PLAYER | Self-Targeting | Unless other player is specified, targets self
-State | N/A | The ON/OFF state of the command
-Visible to spectator | True | If spectator can see the user or not
-Visible while speaking | True | If other players can see the user while user is speaking
+*Makes the given player invisible to other.*
 
-> Note that "Visible while speaking" only works with a radio in the user's hand
+<br>
+<br>
 
-### Command Aliases
+## Enabling
 
-List of Aliases for the word `GHOSTMODE`
+*To use GhostMode, you will need to set the **[SMod]** <br>
+config option `sm_enable_ghostmode` to `true`.*
 
-* GH
-* GHOST
-* GHOSTM
+<br>
+<br>
+
+## Invisibility
+
+*There are multiple invisibility types.*
+
+<kbd>  State  </kbd>  <kbd>  Spectators  </kbd>  <kbd>  Speaking  </kbd>
+
+<br>
+
+### State
+
+Is GhostMode enabled?
+
+<br>
+
+### Spectators
+
+Can spectators see the ghost?
+
+*Defaults to `true`.*
+
+<br>
+
+### Speaking
+
+Can other see a talking ghost?
+
+*Requires the ghost to equip a radio.*
+
+*Defaults to `true`.*
+
+<br>
+<br>
+
+## Listing
+
+*To list all ghosts, pass `LIST` or `GET`.*
+
+<br>
+<br>
 
 ## Examples
 
-Command | [Player][player] | [Bool][csharp] (Default: Toggle) | [Bool][csharp] (Default: True) | [Bool][csharp] (Default: True) | Description
---- | :---: | :---: | :---: | :---: | ---
-GHOST | Evan | true | | | This would enable ghostmode with `visible to spectator` & `visible when speaking` to true
-GHOSTMODE | Hubert | true | false | | This would enable ghostmode without beeing visible to spectators
-GH | * | true | | | Would enable ghostmode for all players
-GHOSTM | LIST / GET | | | | Would list all players with GHOSTMODE active
+*Makes `Evan` a ghost.*
 
-### Note
+```shell
+GHOST Evan true
+```
 
-All [bools][csharp] are optional
->The SMod `sm_enable_ghostmode` config needs to be set to `true` to use GHOSTMODE
+<br>
 
-[csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/built-in-types-table
-[player]: ../Variables.md
-[resources]: ../Resources.md
+*Makes `Hubert` a ghost that spectators cannot see.*
+
+```shell
+GHOST Hubert true false
+```
+
+<br>
+
+*Makes `Mike` a ghost that cannot* <br>
+*be seen while talking on the radio.*
+
+```shell
+GHOST Mike true true false
+```
+
+<br>
+
+*Makes **everyone** a ghost.*
+
+```shell
+GHOST * true
+```
+
+<br>
+
+*List whose a ghost.*
+
+```shell
+GHOST LIST
+```
+
+<br>
+
+
+<!----------------------------------------------------------------------------->
+
+[SMod]: https://github.com/ServerMod/Smod2
