@@ -39,3 +39,13 @@ admintoolbox_intercom_whitelist : TUTORIAL:4:300
 ```
 
 <br>
+
+- `Owner` can talk for `120 Seconds` ever `10 Seconds`.
+
+- `Moderator` can talk for `90 Seconds` every `20 Seconds`.
+
+```yaml
+admintoolbox_intercom_whitelist : owner:120:10, moderator:90:20
+````
+
+<br>

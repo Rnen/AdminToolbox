@@ -5,54 +5,17 @@
 
 <br>
 
-## ![Label Logging]
+## Note
 
-[<kbd> <br>         Commands        <br> </kbd>][Logging Commands]   
-Log command usage.
-
-[<kbd> <br>          Damage          <br> </kbd>][Logging Damage]   
-Log player damage.
-
-[<kbd> <br>     Housekeeping     <br> </kbd>][Logging Housekeeping]   
-Remove logs after a duration.
-
-[<kbd> <br>           Kills           <br> </kbd>][Logging Kills]   
-Remove enemy kills.
-
-[<kbd> <br>  Plugin Location  <br> </kbd>][Logging Location]   
-Plugin folder location.
-
-[<kbd> <br>        Teamkills        <br> </kbd>][Logging Teamkill]   
-Log team kills.
-
-[<kbd> <br>     Unified Data     <br> </kbd>][Logging Unified]   
-Combine data from different servers.
+Place all the following config options in your <br>
+server config, not `config_remoteadmin.txt`.
 
 <br>
 <br>
 
-## ![Label Intercom]
 
-[<kbd> <br>            Blacklist            <br> </kbd>][Intercom Blacklist]   
-Block players from using the intercom system.
+>Find a complete list of DamageID's, RoleID's and more in the [RESOURCES](Resources.md) page!
 
-[<kbd> <br>        Limited Access        <br> </kbd>][Intercom Limited]   
-Only allow whitelisted players.
-
-[<kbd> <br>         Ready Message         <br> </kbd>][Intercom Ready]   
-Message shown when intercom is ready.
-
-[<kbd> <br>       Restart Message       <br> </kbd>][Intercom Restart]   
-Message shown when intercom is restarting.
-
-[<kbd> <br>  Transmission Message  <br> </kbd>][Intercom Transmission]   
-Message shown when intercom is transmitting.
-
-[<kbd> <br>            Whitelist            <br> </kbd>][Intercom Whitelist]   
-Allow specific roles to use the intercom.
-
-<br>
-<br>
 
 ## ![Label General]
 
@@ -76,6 +39,31 @@ Add tracking in the server name.
 
 [<kbd> <br>   Version Checking   <br> </kbd>][General Version]   
 Check for new versions of **AdminToolbox**.
+
+<br>
+<br>
+
+
+
+## ![Label Intercom]
+
+[<kbd> <br>            Blacklist            <br> </kbd>][Intercom Blacklist]   
+Block players from using the intercom system.
+
+[<kbd> <br>        Limited Access        <br> </kbd>][Intercom Limited]   
+Only allow whitelisted players.
+
+[<kbd> <br>         Ready Message         <br> </kbd>][Intercom Ready]   
+Message shown when intercom is ready.
+
+[<kbd> <br>       Restart Message       <br> </kbd>][Intercom Restart]   
+Message shown when intercom is restarting.
+
+[<kbd> <br>  Transmission Message  <br> </kbd>][Intercom Transmission]   
+Message shown when intercom is transmitting.
+
+[<kbd> <br>            Whitelist            <br> </kbd>][Intercom Whitelist]   
+Allow specific roles to use the intercom.
 
 <br>
 <br>
@@ -108,6 +96,32 @@ Set if player names should be shown in the server console upon joining.
 <br>
 <br>
 
+## ![Label Logging]
+
+[<kbd> <br>         Commands        <br> </kbd>][Logging Commands]   
+Log command usage.
+
+[<kbd> <br>          Damage          <br> </kbd>][Logging Damage]   
+Log player damage.
+
+[<kbd> <br>     Housekeeping     <br> </kbd>][Logging Housekeeping]   
+Remove logs after a duration.
+
+[<kbd> <br>           Kills           <br> </kbd>][Logging Kills]   
+Remove enemy kills.
+
+[<kbd> <br>  Plugin Location  <br> </kbd>][Logging Location]   
+Plugin folder location.
+
+[<kbd> <br>        Teamkills        <br> </kbd>][Logging Teamkill]   
+Log team kills.
+
+[<kbd> <br>     Unified Data     <br> </kbd>][Logging Unified]   
+Combine data from different servers.
+
+<br>
+<br>
+
 ## ![Label Debug]
 
 [<kbd> <br>  Damage Detection  <br> </kbd>][Debug Detected]   
@@ -129,22 +143,6 @@ Display suicides, scp kills & grenade kills.
 Disable team kills in the server console.
 
 <br>
-<br>
-
-### *Note that all configs should go in your server config file, not config_remoteadmin.txt
-
-### Examples
-
-```yaml
-#The example would make scientists (6) not able to damage any class, dboys (1) not able to attack other dboys (1))
-admintoolbox_block_role_damage: 6:0-1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17,1:1
-
-
-admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
-```
-
->Find a complete list of DamageID's, RoleID's and more in the [RESOURCES](Resources.md) page!
-
 
 
 <!-------------------------------[ Settings ]---------------------------------->
