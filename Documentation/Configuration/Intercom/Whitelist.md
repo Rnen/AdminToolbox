@@ -31,11 +31,11 @@ Time is specified in seconds.
 
 ## Example
 
-*A player with the  `TUTORIAL`  role will be able <br>
-to speak for  `4 Seconds` every  `300 Seconds`.*
+*A player with the  `admin`  role will be able to<br>
+speak for  `4 Seconds` every  `300 Seconds`.*
 
 ```yaml
-admintoolbox_intercom_whitelist : TUTORIAL:4:300
+admintoolbox_intercom_whitelist : admin:4:300
 ```
 
 <br>
