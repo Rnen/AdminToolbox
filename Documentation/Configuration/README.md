@@ -5,6 +5,29 @@
 
 <br>
 
+## ![Label Intercom]
+
+[<kbd> <br>Blacklist<br> </kbd>][Intercom Blacklist]   
+Block players from using the intercom system.
+
+[<kbd> <br>Limited Access<br> </kbd>][Intercom Limited]   
+Only allow whitelisted players.
+
+[<kbd> <br>Ready Message<br> </kbd>][Intercom Ready]   
+Message shown when intercom is ready.
+
+[<kbd> <br>Restart Message<br> </kbd>][Intercom Restart]   
+Message shown when intercom is restarting.
+
+[<kbd> <br>Transmission Message<br> </kbd>][Intercom Transmission]   
+Message shown when intercom is transmitting.
+
+[<kbd> <br>Whitelist<br> </kbd>][Intercom Whitelist]   
+Allow specific roles to use the intercom.
+
+<br>
+<br>
+
 ## ![Label General]
 
 [<kbd> <br>  Colorized Console  <br> </kbd>][General Color]   
@@ -67,8 +90,7 @@ Control what damage is detected.
 [<kbd> <br>      Enemy Damage      <br> </kbd>][Debug Enemy]   
 Display damage done to enemy players.
 
-[<kbd> <br>   Friendly Damage   <br> </kbd>][Debu[Label General]: https://img.shields.io/badge/General-#1A70B8?style=for-the-badge&logoColor=white&logo=Diaspora
-g Friendly]   
+[<kbd> <br>   Friendly Damage   <br> </kbd>][Debug Friendly]   
 Display damage done to friendly players.
 
 [<kbd> <br>         Enemy Kills         <br> </kbd>][Debug Kills]   
@@ -122,7 +144,15 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 [General Name]: Settings/General/Joined.md
 [General Info]: Settings/General/Information.md
 
+[Intercom Transmission]: Settings/General/Transmission.md
+[Intercom Blacklist]: Settings/General/Blacklist.md
+[Intercom Whitelist]: Settings/General/Whitelist.md
+[Intercom Limited]: Settings/General/Limited.md
+[Intercom Restart]: Settings/General/Restart.md
+[Intercom Ready]: Settings/General/Ready.md
 
+
+[Label Intercom]: https://img.shields.io/badge/Intercom-F47D31?style=for-the-badge&logoColor=white&logo=RSS
 [Label General]: https://img.shields.io/badge/General-1A70B8?style=for-the-badge&logoColor=white&logo=Diaspora
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
 [Label Debug]: https://img.shields.io/badge/Debug-009287?style=for-the-badge&logoColor=white&logo=HubSpot
