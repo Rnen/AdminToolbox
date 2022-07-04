@@ -35,22 +35,22 @@ Set if player names should be shown in the server console upon joining.
 
 ## ![Label Debug]
 
-[<kbd> <br>          Damage Detection          <br> </kbd>][Debug Detected]   
+[<kbd> <br>  Damage Detection  <br> </kbd>][Debug Detected]   
 Control what damage is detected.
 
-[<kbd> <br>             Enemy Damage             <br> </kbd>][Debug Enemy]   
+[<kbd> <br>      Enemy Damage      <br> </kbd>][Debug Enemy]   
 Display damage done to enemy players.
 
-[<kbd> <br>        Friendly Damage         <br> </kbd>][Debug Friendly]   
+[<kbd> <br>   Friendly Damage   <br> </kbd>][Debug Friendly]   
 Display damage done to friendly players.
 
-[<kbd> <br> Enemy Kills <br> </kbd>][Debug Kills]   
+[<kbd> <br>         Enemy Kills         <br> </kbd>][Debug Kills]   
 Display enemy kills in the server console.
 
-[<kbd> <br>           Special Kills           <br> </kbd>][Debug Special]   
+[<kbd> <br>       Special Kills       <br> </kbd>][Debug Special]   
 Display suicides, scp kills & grenade kills.
 
-[<kbd> <br>           Team Kills           <br> </kbd>][Debug Teamkill]   
+[<kbd> <br>          Team Kills          <br> </kbd>][Debug Teamkill]   
 Disable team kills in the server console.
 
 <br>
