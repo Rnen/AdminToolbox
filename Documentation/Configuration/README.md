@@ -5,6 +5,32 @@
 
 <br>
 
+## ![Label Logging]
+
+[<kbd> <br>Commands<br> </kbd>][Logging Commands]   
+Log command usage.
+
+[<kbd> <br>Damage<br> </kbd>][Logging Damage]   
+Log player damage.
+
+[<kbd> <br>Housekeeping<br> </kbd>][Logging Housekeeping]   
+Remove logs after a duration.
+
+[<kbd> <br>Kills<br> </kbd>][Logging Kills]   
+Remove enemy kills.
+
+[<kbd> <br>Plugin Location<br> </kbd>][Logging Location]   
+Plugin folder location.
+
+[<kbd> <br>Teamkills<br> </kbd>][Logging Teamkill]   
+Log team kills.
+
+[<kbd> <br>Unified Data<br> </kbd>][Logging Unified]   
+Combine data from different servers.
+
+<br>
+<br>
+
 ## ![Label Intercom]
 
 [<kbd> <br>            Blacklist            <br> </kbd>][Intercom Blacklist]   
@@ -121,6 +147,8 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 
 
 
+<!-------------------------------[ Settings ]---------------------------------->
+
 [Damage After Party]: Settings/Damage/After%20Party.md
 [Damage Tutorial]: Settings/Damage/Tutorial.md
 [Damage Blocked]: Settings/Damage/Blocked.md
@@ -151,8 +179,19 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 [Intercom Restart]: Settings/General/Restart.md
 [Intercom Ready]: Settings/General/Ready.md
 
+[Logging Housekeeping]: Settings/General/Housekeeping.md
+[Logging Teamkill]: Settings/General/TeamKill.md
+[Logging Commands]: Settings/General/Commands.md
+[Logging Location]: Settings/General/Location.md
+[Logging Unified]: Settings/General/Unified.md
+[Logging Damage]: Settings/General/Damage.md
+[Logging Kills]: Settings/General/Kills.md
+
+
+<!--------------------------------[ Labels ]----------------------------------->
 
 [Label Intercom]: https://img.shields.io/badge/Intercom-F47D31?style=for-the-badge&logoColor=white&logo=RSS
+[Label Logging]: https://img.shields.io/badge/Logging-5C1F87?style=for-the-badge&logoColor=white&logo=AzureArtifacts
 [Label General]: https://img.shields.io/badge/General-1A70B8?style=for-the-badge&logoColor=white&logo=Diaspora
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
 [Label Debug]: https://img.shields.io/badge/Debug-009287?style=for-the-badge&logoColor=white&logo=HubSpot
