@@ -23,6 +23,14 @@ check the **[Types]** documentation.
 <br>
 <br>
 
+## Server Name
+
+You can place `$atversion` in your server name <br>
+config to display the **AdminToolbox** version.
+
+<br>
+<br>
+
 ## ![Label General]
 
 [<kbd> <br>  Colorized Console  <br> </kbd>][General Color]   
