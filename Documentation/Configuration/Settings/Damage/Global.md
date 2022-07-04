@@ -7,14 +7,14 @@
 <br>
 <br>
 
-### Description
+## Description
 
 *Global damage multiplier.*
 
 <br>
 <br>
 
-### Example
+## Example
 
 *All damage will be multiplied by `6.9`.*
 

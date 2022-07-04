@@ -1,1 +1,26 @@
-admintoolbox_colors | Boolean | False | `Enable/Disable` admintoolbox colors in server console (currently bugged)
+
+# Console Color
+
+<kbd>  admintoolbox_colors  </kbd>  
+<kbd>  Boolean  ➞  False  </kbd>  
+<kbd>  ⚠ Buggy  </kbd>
+
+<br>
+<br>
+
+## Description
+
+*Colorizes the console output from this plugin.*
+
+<br>
+<br>
+
+## Example
+
+*Console messages will be colorized.*
+
+```yaml
+admintoolbox_colors : true
+```
+
+<br>

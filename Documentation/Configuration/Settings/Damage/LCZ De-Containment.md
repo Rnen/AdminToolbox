@@ -7,14 +7,14 @@
 <br>
 <br>
 
-### Description
+## Description
 
 *LCZ de-containment damage multiplier.*
 
 <br>
 <br>
 
-### Example
+## Example
 
 *The damage will be multiplied by `4.2`.*
 

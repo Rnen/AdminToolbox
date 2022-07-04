@@ -7,14 +7,14 @@
 <br>
 <br>
 
-### Description
+## Description
 
 *Blocks `RoleA` from damaging `RoleB`.*
 
 <br>
 <br>
 
-### Example
+## Example
 
 <br>
 

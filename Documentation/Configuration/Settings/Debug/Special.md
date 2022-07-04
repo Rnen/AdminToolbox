@@ -7,7 +7,7 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *The following deaths will be logged:*
 
@@ -20,7 +20,7 @@
 <br>
 <br>
 
-#### Example
+## Example
 
 *Special deaths will be logged.*
 

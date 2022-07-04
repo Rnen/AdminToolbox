@@ -7,14 +7,14 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *Logs team kills in the server console.*
 
 <br>
 <br>
 
-#### Example
+## Example
 
 *Team kills will be logged.*
 

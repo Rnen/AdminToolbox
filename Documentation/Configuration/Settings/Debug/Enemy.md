@@ -7,14 +7,14 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *Displays all damage done to enemies in the server console.*
 
 <br>
 <br>
 
-#### Example
+## Example
 
 *Damage to enemies will be logged in the server console.*
 

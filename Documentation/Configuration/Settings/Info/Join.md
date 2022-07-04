@@ -7,7 +7,7 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *If enabled, writes a players name into* <br>
 *the server console when they join.*
@@ -15,7 +15,7 @@
 <br>
 <br>
 
-#### Example
+## Example
 
 *No message will be shown when player joins.*
 

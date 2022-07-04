@@ -7,7 +7,7 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *Controls what types of damage are detected.*
 

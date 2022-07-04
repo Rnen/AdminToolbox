@@ -7,18 +7,18 @@
 <br>
 <br>
 
-### Description
+## Description
 
 *Global damage multiplier for after the round ends.*
 
 <br>
 <br>
 
-### Example
+## Example
 
 <br>
 
-## Peace
+### Peace
 
 *No damage will be dealt after the round ends.*
 
@@ -28,7 +28,7 @@ admintoolbox_endedRound_damageMultiplier :  0
 
 <br>
 
-## Chaos
+### Chaos
 
 *Hell on earth breaks loose when the round ends.*
 

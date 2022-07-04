@@ -5,6 +5,32 @@
 
 <br>
 
+## ![Label General]
+
+[<kbd> <br>Colorized Console<br> </kbd>][General Color]   
+Colorize the console output.
+
+[<kbd> <br>Enable Plugin<br> </kbd>][General Enable]   
+Enable this plugin.
+
+[<kbd> <br>Join Information<br> </kbd>][General Info]   
+Show extended info for joining players.
+
+[<kbd> <br>Join Name<br> </kbd>][General Name]   
+Show joining players names.
+
+[<kbd> <br>Match Statistics<br> </kbd>][General Match]   
+Display match Statistics.
+
+[<kbd> <br>Server Tracking<br> </kbd>][General Tracking]   
+Add tracking in the server name.
+
+[<kbd> <br>Version Checking<br> </kbd>][General Version]   
+Check for new versions of **AdminToolbox**.
+
+<br>
+<br>
+
 ## ![Label Damage]
 
 [<kbd> <br>          Tutorial          <br> </kbd>][Damage Tutorial]   
@@ -41,7 +67,8 @@ Control what damage is detected.
 [<kbd> <br>      Enemy Damage      <br> </kbd>][Debug Enemy]   
 Display damage done to enemy players.
 
-[<kbd> <br>   Friendly Damage   <br> </kbd>][Debug Friendly]   
+[<kbd> <br>   Friendly Damage   <br> </kbd>][Debu[Label General]: https://img.shields.io/badge/General-#1A70B8?style=for-the-badge&logoColor=white&logo=Diaspora
+g Friendly]   
 Display damage done to friendly players.
 
 [<kbd> <br>         Enemy Kills         <br> </kbd>][Debug Kills]   
@@ -87,7 +114,16 @@ admintoolbox_intercom_whitelist: owner:120:10, moderator:90:20
 [Debug Kills]: Settings/Debug/Kills.md
 [Debug Enemy]: Settings/Debug/Enemy.md
 
+[General Tracking]: Settings/General/Tracking.md
+[General Version]: Settings/General/Version.md
+[General Enable]: Settings/General/Enable.md
+[General Color]: Settings/General/Color.md
+[General Match]: Settings/General/Match.md
+[General Name]: Settings/General/Joined.md
+[General Info]: Settings/General/Information.md
 
+
+[Label General]: https://img.shields.io/badge/General-1A70B8?style=for-the-badge&logoColor=white&logo=Diaspora
 [Label Damage]: https://img.shields.io/badge/Damage-C9284D?style=for-the-badge&logoColor=white&logo=ActiGraph
 [Label Debug]: https://img.shields.io/badge/Debug-009287?style=for-the-badge&logoColor=white&logo=HubSpot
 [Label Info]: https://img.shields.io/badge/Information-666666?style=for-the-badge&logoColor=white&logo=InternetArchive

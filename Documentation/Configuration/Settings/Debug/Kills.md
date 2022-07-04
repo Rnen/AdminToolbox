@@ -7,14 +7,14 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *Displays all enemy kills in the server console.*
 
 <br>
 <br>
 
-#### Example
+## Example
 
 *Enemy kills will be logged in the server console.*
 

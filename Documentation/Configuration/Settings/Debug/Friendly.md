@@ -7,14 +7,14 @@
 <br>
 <br>
 
-#### Description
+## Description
 
 *Displays all team damage done in the server console.*
 
 <br>
 <br>
 
-#### Example
+## Example
 
 *Friendly fire will be logged in the server console.*
 
