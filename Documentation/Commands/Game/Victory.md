@@ -1,16 +1,13 @@
-SERVERSTATS / ROUNDSTATS | |  | Displays each type of victory since last server (re)boot
 
+# Victories
 
-# ServerStats  
+<kbd>  SERVERSTATS  </kbd>  or  <kbd>  ROUNDSTATS  </kbd>  or  <kbd>  STATS  </kbd>  or  <kbd>  ROUNDSTATS  </kbd>  or  <kbd>  RSTATS  </kbd>
 
-Command to display per-team wins since last restart
+<br>
+<br>
 
-## Command usage
+## Description
 
-```SERVERSTATS```
+*Displays per-team win since the last server restart.*
 
-List of Aliases for the word `ServerStats`
-
-* SSTATS
-* ROUNDSTATS
-* RSTATS  
+<br>
