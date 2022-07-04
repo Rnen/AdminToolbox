@@ -7,22 +7,22 @@
 
 ## ![Label Intercom]
 
-[<kbd> <br>Blacklist<br> </kbd>][Intercom Blacklist]   
+[<kbd> <br>            Blacklist            <br> </kbd>][Intercom Blacklist]   
 Block players from using the intercom system.
 
-[<kbd> <br>Limited Access<br> </kbd>][Intercom Limited]   
+[<kbd> <br>        Limited Access        <br> </kbd>][Intercom Limited]   
 Only allow whitelisted players.
 
-[<kbd> <br>Ready Message<br> </kbd>][Intercom Ready]   
+[<kbd> <br>         Ready Message         <br> </kbd>][Intercom Ready]   
 Message shown when intercom is ready.
 
-[<kbd> <br>Restart Message<br> </kbd>][Intercom Restart]   
+[<kbd> <br>       Restart Message       <br> </kbd>][Intercom Restart]   
 Message shown when intercom is restarting.
 
-[<kbd> <br>Transmission Message<br> </kbd>][Intercom Transmission]   
+[<kbd> <br>  Transmission Message  <br> </kbd>][Intercom Transmission]   
 Message shown when intercom is transmitting.
 
-[<kbd> <br>Whitelist<br> </kbd>][Intercom Whitelist]   
+[<kbd> <br>            Whitelist            <br> </kbd>][Intercom Whitelist]   
 Allow specific roles to use the intercom.
 
 <br>
