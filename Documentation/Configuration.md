@@ -87,9 +87,6 @@ Allow specific roles to use the intercom.
 [<kbd> <br>          Tutorial          <br> </kbd>][Damage Tutorial]   
 Choose what type of damage affect players with the `TUTORIAL` role.
 
-[<kbd> <br>             Global             <br> </kbd>][Damage Tutorial]   
-Adjust the global damage multiplier.
-
 [<kbd> <br>         After Party         <br> </kbd>][Damage After Party]   
 Adjust the damage that is dealt after the round ends.
 
@@ -98,6 +95,10 @@ Adjust the LCZ De-Containment damage multiplier.
 
 [<kbd> <br>           Blocked           <br> </kbd>][Damage Blocked]   
 Disable specific roles from damaging each other.
+  
+[<kbd> <br>             Global             <br> </kbd>][Damage Tutorial]   
+Adjust the global damage multiplier.
+
 
 <br>
 <br>
