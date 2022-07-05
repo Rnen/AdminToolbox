@@ -22,7 +22,7 @@
 
 ## Examples
 
-*Jails `Mike` for `1 Year`.*
+*Jails  `Mike`  for   `1 Year`.*
 
 ```shell
 JAIL Mike
@@ -30,7 +30,7 @@ JAIL Mike
 
 <br>
 
-*Jails `Mike` for `x`.*
+*Jails  `Mike`  for  `x`.*
 
 ```shell
 JAIL Mike x

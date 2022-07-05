@@ -1,7 +1,7 @@
 
 # Strip Items
 
-<kbd>  E  </kbd>  or  <kbd>  EMPTY  </kbd>
+<kbd>  E  </kbd>   or   <kbd>  EMPTY  </kbd>
 
 <br>
 <br>
@@ -33,7 +33,7 @@ will be delete instead of dropped.
 
 ## Examples
 
-*Drops all of `Evens` 05 keycards.*
+*Drops all of  `Evens`  05 keycards.*
 
 ```shell
 EMPTY Evan 11
@@ -41,7 +41,7 @@ EMPTY Evan 11
 
 <br>
 
-*Deletes `Roberts` janitor keycards.*
+*Deletes  `Roberts`  janitor keycards.*
 
 ```shell
 EMPTY Robert 0 DELETE
@@ -49,7 +49,7 @@ EMPTY Robert 0 DELETE
 
 <br>
 
-*Deletes all of `Bobs` items.*
+*Deletes all of  `Bobs`  items.*
 
 ```shell
 EMPTY Bob DELETE
@@ -57,7 +57,7 @@ EMPTY Bob DELETE
 
 <br>
 
-*Drops all of `Franks` items.*
+*Drops all of  `Franks`  items.*
 
 ```shell
 EMPTY Frank

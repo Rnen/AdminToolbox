@@ -10,7 +10,7 @@
 ## Note
 
 Place all the following config options in your <br>
-server config, not `config_remoteadmin.txt`.
+server config, not  `config_remoteadmin.txt`.
 
 <br>
 <br>
@@ -25,7 +25,7 @@ check the **[Types]** documentation.
 
 ## Server Name
 
-You can place `$atversion` in your server name <br>
+You can place  `$atversion`  in your server name <br>
 config to display the **AdminToolbox** version.
 
 <br>

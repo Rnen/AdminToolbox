@@ -9,7 +9,7 @@
 
 ## Description
 
-*Sets what types of damage the  `TUTORIAL`  role can take.*
+*Sets what types of damage the  `TUTORIAL`  role can take.*
 
 <br>
 <br>

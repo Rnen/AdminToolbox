@@ -19,7 +19,7 @@
 
 ### Example
 
-*Moves `Mike` by `5 Units` on the X-Axis.*
+*Moves  `Mike`  by  `5 Units`  on the X-Axis.*
 
 ```shell
 POS Mike ADD x=5
@@ -27,7 +27,7 @@ POS Mike ADD x=5
 
 <br>
 
-*Moves `Mike` by `2 Units` on both the Y & Z Axis.*
+*Moves  `Mike`  by  `2 Units`  on both the Y & Z Axis.*
 
 ```shell
 POS Mike ADD y=2 z=2
@@ -55,7 +55,7 @@ POS Mike ADD y=2 z=2
 
 ### Examples
 
-*Teleports `Mike` to `X:1` `Y:2` `Z:3`.*
+*Teleports  `Mike`  to  `X:1`  `Y:2`  `Z:3`.*
 
 ```shell
 POS Mike SET x=1 y=2 z=3
@@ -83,7 +83,7 @@ POS Mike SET x=1 y=2 z=3
 
 ### Example
 
-*Returns the position of `Mike`.*
+*Returns the position of  `Mike`.*
 
 ```shell
 POS GET Mike

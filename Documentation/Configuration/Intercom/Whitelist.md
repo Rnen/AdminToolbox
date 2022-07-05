@@ -32,7 +32,7 @@ Time is specified in seconds.
 ## Example
 
 *A player with the  `admin`  role will be able to<br>
-speak for  `4 Seconds` every  `300 Seconds`.*
+speak for  `4 Seconds`  every  `300 Seconds`.*
 
 ```yaml
 admintoolbox_intercom_whitelist : admin:4:300

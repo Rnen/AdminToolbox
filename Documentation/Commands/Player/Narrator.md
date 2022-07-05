@@ -1,7 +1,7 @@
 
 # Narrator
 
-<kbd>  ATSPEAK  </kbd>  or  <kbd>  ATINTERCOM  </kbd>  or  <kbd>  AT-SPEAK  </kbd>
+<kbd>  ATSPEAK  </kbd>   or   <kbd>  ATINTERCOM  </kbd>   or   <kbd>  AT-SPEAK  </kbd>
 
 <br>
 <br>
@@ -22,7 +22,7 @@
 
 ## Examples
 
-*Makes `Mike` the narrator.*
+*Makes  `Mike`  the narrator.*
 
 ```shell
 ATSPEAK Mike

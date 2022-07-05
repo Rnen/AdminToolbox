@@ -16,7 +16,7 @@
 
 ## Example
 
-*All damage will be multiplied by `6.9`.*
+*All damage will be multiplied by  `6.9`.*
 
 ```yaml
 admintoolbox_round_damageMultiplier : 6.9

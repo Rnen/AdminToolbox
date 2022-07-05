@@ -1,7 +1,7 @@
 
 # GhostMode
 
-<kbd>  GH  </kbd>  or  <kbd>  GHOST  </kbd>  or  <kbd>  GHOSTM  </kbd>  or  <kbd>  GHOSTMODE  </kbd>
+<kbd>  GH  </kbd>   or   <kbd>  GHOST  </kbd>   or   <kbd>  GHOSTM  </kbd>   or   <kbd>  GHOSTMODE  </kbd>
 
 <br>
 <br>
@@ -16,7 +16,7 @@
 ## Enabling
 
 *To use GhostMode, you will need to set the **[SMod]** <br>
-config option `sm_enable_ghostmode` to `true`.*
+config option  `sm_enable_ghostmode`  to  `true`.*
 
 <br>
 <br>
@@ -39,7 +39,7 @@ Is GhostMode enabled?
 
 Can spectators see the ghost?
 
-*Defaults to `true`.*
+*Defaults to  `true`.*
 
 <br>
 
@@ -49,21 +49,21 @@ Can other see a talking ghost?
 
 *Requires the ghost to equip a radio.*
 
-*Defaults to `true`.*
+*Defaults to  `true`.*
 
 <br>
 <br>
 
 ## Listing
 
-*To list all ghosts, pass `LIST` or `GET`.*
+*To list all ghosts, pass  `LIST`  or  `GET`.*
 
 <br>
 <br>
 
 ## Examples
 
-*Makes `Evan` a ghost.*
+*Makes  `Evan`  a ghost.*
 
 ```shell
 GHOST Evan true
@@ -71,7 +71,7 @@ GHOST Evan true
 
 <br>
 
-*Makes `Hubert` a ghost that spectators cannot see.*
+*Makes  `Hubert`  a ghost that spectators cannot see.*
 
 ```shell
 GHOST Hubert true false
@@ -79,7 +79,7 @@ GHOST Hubert true false
 
 <br>
 
-*Makes `Mike` a ghost that cannot* <br>
+*Makes  `Mike`  a ghost that cannot* <br>
 *be seen while talking on the radio.*
 
 ```shell

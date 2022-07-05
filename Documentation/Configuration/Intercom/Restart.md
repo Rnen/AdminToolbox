@@ -16,7 +16,7 @@
 
 ## Example
 
-*Shows the message `Getting Ready~` while the intercom counts down.*
+*Shows the message  `Getting Ready~`  while the intercom counts down.*
 
 ```yaml
 admintoolbox_intercomrestart_text : Getting Ready~

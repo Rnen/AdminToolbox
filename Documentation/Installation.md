@@ -27,17 +27,17 @@
 
 ### Manual
 
-1. Download the latest `.dll` **[Release]**.
+1. Download the latest  `.dll`  **[Release]**.
 
 2. Navigate to your **SCP:SL** server folder.
 
-3. Place the file in the `sm_plugins` folder.
+3. Place the file in the  `sm_plugins`  folder.
 
 <br>
 
 ### Automated
 
-You can simply run the `AutoUpdate.bat` script.
+You can simply run the  `AutoUpdate.bat`  script.
 
 ##### Notes
 

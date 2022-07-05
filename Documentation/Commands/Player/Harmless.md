@@ -15,7 +15,7 @@
 
 ## Examples
 
-*Stops `Mike` from doing any damage.*
+*Stops  `Mike`  from doing any damage.*
 
 ```shell
 NODMG Mike true

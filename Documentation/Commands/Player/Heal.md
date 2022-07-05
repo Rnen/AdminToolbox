@@ -15,7 +15,7 @@
 
 ## Examples
 
-*Heals `Mike` by `20 Hp`.*
+*Heals  `Mike`  by  `20 Hp`.*
 
 ```shell
 ATHEAL Mike 20
@@ -23,7 +23,7 @@ ATHEAL Mike 20
 
 <br>
 
-*Heals `Mike` completely.*
+*Heals  `Mike`  completely.*
 
 ```shell
 ATHEAL Mike

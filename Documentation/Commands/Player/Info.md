@@ -1,7 +1,7 @@
 
 # Player Info
 
-<kbd>  P  </kbd>  or  <kbd>  PLAYER  </kbd>
+<kbd>  P  </kbd>   or   <kbd>  PLAYER  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Displays all of `Mike`'s information.*
+*Displays all of  `Mike`'s information.*
 
 ```shell
 PLAYER Mike

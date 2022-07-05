@@ -24,7 +24,7 @@
 
 ## Example
 
-*Gives `Mike` the `SCIENTIST` role.*
+*Gives  `Mike`  the  `SCIENTIST`  role.*
 
 ```shell
 ROLE Mike 6

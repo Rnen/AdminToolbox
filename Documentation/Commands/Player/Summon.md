@@ -17,7 +17,7 @@
 
 ## Example
 
-*Teleports `Dave` to `Mike`.*
+*Teleports  `Dave`  to  `Mike`.*
 
 ```shell
 TPX Dave Mike

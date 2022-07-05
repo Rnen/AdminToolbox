@@ -16,7 +16,7 @@
 
 ## Example
 
-*Shows the message `Hello World` once the intercom is ready.*
+*Shows the message  `Hello World`  once the intercom is ready.*
 
 ```yaml
 admintoolbox_intercomready_text : Hello World

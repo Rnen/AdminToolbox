@@ -1,7 +1,7 @@
 
 # Remember Settings
 
-<kbd>  KEEP  </kbd>  or  <kbd>  KEEPSETTINGS  </kbd>
+<kbd>  KEEP  </kbd>   or   <kbd>  KEEPSETTINGS  </kbd>
 
 <br>
 <br>
@@ -24,7 +24,7 @@ KEEPSETTINGS * false
 
 <br>
 
-*`Gaben` will keep their settings.*
+*`Gaben`  will keep their settings.*
 
 ```shell
 KEEPSETTINGS Gaben true

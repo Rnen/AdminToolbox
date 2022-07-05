@@ -13,8 +13,8 @@
 
 <br>
 
-*Ignored if  `admintoolbox_player_` <br>
-`join_info_extended`  is enabled.*
+*Ignored if  `admintoolbox_player_` <br>
+`join_info_extended`  is enabled.*
 
 <br>
 <br>

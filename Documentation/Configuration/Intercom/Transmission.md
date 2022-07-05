@@ -30,7 +30,7 @@ admintoolbox_intercomtransmit_text :
 
 ### Custom
 
-*Shows `You are finally awake!` while transmitting.*
+*Shows  `You are finally awake!`  while transmitting.*
 
 ```yaml
 admintoolbox_intercomtransmit_text : You are finally awake!

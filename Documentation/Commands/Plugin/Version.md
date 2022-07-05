@@ -14,7 +14,7 @@
 
 <kbd>  AT  </kbd>  <kbd>  HELP  </kbd>  
 
-*Displays information about the `AT` command.*
+*Displays information about the  `AT`  command.*
 
 <br>
 

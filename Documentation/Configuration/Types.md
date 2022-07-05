@@ -7,7 +7,7 @@
 
 ## Boolean
 
-Either `true` or `false`.
+Either  `true`  or  `false`.
 
 <br>
 <br>
@@ -16,7 +16,7 @@ Either `true` or `false`.
 
 Any whole number / non-decimal.
 
-`1` , `2` , `69` , `621`
+`1`  ,  `2`  ,  `69`  ,  `621`
 
 <br>
 <br>
@@ -25,7 +25,7 @@ Any whole number / non-decimal.
 
 A decimal number.
 
-`0.9` , `22.2222`
+`0.9`  ,  `22.2222`
 
 <br>
 <br>
@@ -43,25 +43,25 @@ A list of items, separated by a comma.
 
 Key-Value pairs separated by commas.
 
-`1:2` , `1:2,2:3,40:1`
+`1:2`  ,  `1:2,2:3,40:1`
 
 <br>
 <br>
 
 ## Random
 
-If a config option has an `R` before it, it <br>
+If a config option has an  `R`  before it, it <br>
 indicates you can use a random value.
 
 <br>
 
-- A random value is defined by having `{}`.
+- A random value is defined by having  `{}`.
     
-- Items are listed like `weight%value`.
+- Items are listed like  `weight%value`.
 
-- Weight values default to `1`.
+- Weight values default to  `1`.
 
-- Pairs are separated by `|`.
+- Pairs are separated by  `|`.
 
 <br>
 
@@ -85,7 +85,7 @@ A steam **[Profile Id]**.
 
 The following variables can be used in intercom messages:
 
-- `$playerhp` | `$playerhealth`
+- `$playerhp`  |  `$playerhealth`
 
 - `$playerrole`
 

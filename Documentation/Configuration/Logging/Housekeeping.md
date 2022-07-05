@@ -16,7 +16,7 @@
 
 ## Format
 
-The duration is specified in `hours`.
+The duration is specified in  `hours`.
 
 <br>
 <br>

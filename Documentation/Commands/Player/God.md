@@ -15,14 +15,14 @@
 
 ## No Damage
 
-Append `nodmg` to simultaneously activate it.
+Append  `nodmg`  to simultaneously activate it.
 
 <br>
 <br>
 
 ## Examples
 
-*Makes `Mike` a god with NoDmg.*
+*Makes  `Mike`  a god with NoDmg.*
 
 ```shell
 ATGOD Mike true nodmg
@@ -30,7 +30,7 @@ ATGOD Mike true nodmg
 
 <br>
 
-*Toggles whether or not `Mike` is a god.*
+*Toggles whether or not  `Mike`  is a god.*
 
 ```shell
 ATGOD Mike

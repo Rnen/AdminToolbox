@@ -1,7 +1,7 @@
 
 # Kill
 
-<kbd>  KILL  </kbd>  or  <kbd>  SLAY  </kbd>
+<kbd>  KILL  </kbd>   or   <kbd>  SLAY  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Kills `Mike`.*
+*Kills  `Mike`.*
 
 ```shell
 KILL Mike

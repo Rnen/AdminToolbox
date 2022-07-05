@@ -1,7 +1,7 @@
 
 # HitPoints
 
-<kbd>  ATHP  </kbd>  or  <kbd>  ATSETHP  </kbd>
+<kbd>  ATHP  </kbd>   or   <kbd>  ATSETHP  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Sets `Mike`'s HP to `40 HitPoints`.*
+*Sets  `Mike`'s HP to  `40 HitPoints`.*
 
 ```shell
 ATHP Mike 40

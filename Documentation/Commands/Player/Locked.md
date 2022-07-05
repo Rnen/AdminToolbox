@@ -1,7 +1,7 @@
 
 # Lock Doors
 
-<kbd>  PL  </kbd>  or  <kbd>  PLOCK  </kbd>  or  <kbd>  PLAYERLOCK  </kbd>  or  <kbd>  PLAYERLOCKDOWN  </kbd>
+<kbd>  PL  </kbd>   or   <kbd>  PLOCK  </kbd>   or   <kbd>  PLAYERLOCK  </kbd>   or   <kbd>  PLAYERLOCKDOWN  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Locks all doors for `Mike`.*
+*Locks all doors for  `Mike`.*
 
 ```shell
 PLAYERLOCK Mike true

@@ -1,7 +1,7 @@
 
 # Break Doors
 
-<kbd>  BD  </kbd>  or  <kbd>  BREAKDOOR  </kbd>  or  <kbd>  BREAKDOORS  </kbd>
+<kbd>  BD  </kbd>   or   <kbd>  BREAKDOOR  </kbd>   or   <kbd>  BREAKDOORS  </kbd>
 
 <br>
 <br>
@@ -15,14 +15,14 @@
 
 ## Listing
 
-To list who can break doors, pass `LIST`.
+To list who can break doors, pass  `LIST`.
 
 <br>
 <br>
 
 ## Examples
 
-*Enabled breaking doors for `Evan`.*
+*Enabled breaking doors for  `Evan`.*
 
 ```shell
 BREAKDOOR Evan true
@@ -30,7 +30,7 @@ BREAKDOOR Evan true
 
 <br>
 
-*Toggles door breaking for `Robert`.*
+*Toggles door breaking for  `Robert`.*
 
 ```shell
 BREAKDOOR Robert

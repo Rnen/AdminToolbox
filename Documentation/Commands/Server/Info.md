@@ -1,7 +1,7 @@
 
 # Information
 
-<kbd>  S  </kbd>  or  <kbd>  SERVERINFO  </kbd>
+<kbd>  S  </kbd>   or   <kbd>  SERVERINFO  </kbd>
 
 <br>
 <br>

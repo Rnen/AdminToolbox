@@ -16,7 +16,7 @@
 
 ## Example
 
-*The damage will be multiplied by `4.2`.*
+*The damage will be multiplied by  `4.2`.*
 
 ```yml
 admintoolbox_decontamination_damagemultiplier : 4.2

@@ -1,7 +1,7 @@
 
 # Round End
 
-<kbd>  RLOCK  </kbd>  or  <kbd>  ROUNDLOCK  </kbd>
+<kbd>  RLOCK  </kbd>   or   <kbd>  ROUNDLOCK  </kbd>
 
 <br>
 <br>

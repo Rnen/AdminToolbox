@@ -1,7 +1,7 @@
 
 # InstaKill
 
-<kbd>  IK  </kbd>  or  <kbd>  INSTAKILL  </kbd>  or  <kbd>  INSTANTKILL  </kbd>
+<kbd>  IK  </kbd>   or   <kbd>  INSTAKILL  </kbd>   or   <kbd>  INSTANTKILL  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Gives `Mike` the instakill ability.*
+*Gives  `Mike`  the instakill ability.*
 
 ```shell
 INSTAKILL Mike

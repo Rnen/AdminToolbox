@@ -1,7 +1,7 @@
 
 # Spectator Mode
 
-<kbd>  SPEC  </kbd>  or  <kbd>  SPECTATOR  </kbd>
+<kbd>  SPEC  </kbd>   or   <kbd>  SPECTATOR  </kbd>
 
 <br>
 <br>
@@ -15,7 +15,7 @@
 
 ## Example
 
-*Puts `Mike` into spectator mode.*
+*Puts  `Mike`  into spectator mode.*
 
 ```shell
 SPECTATOR Mike true

@@ -13,7 +13,7 @@
 **AdminToolbox** uses **[SMod]** which requires the <br>
 following to allow for the use of commands:
 
-- Enable `enable_ra_server_commands` in `config_gameplay.txt`
+- Enable  `enable_ra_server_commands`  in  `config_gameplay.txt`
 
 - Whitelist your **SteamId** / **Server Role**
 

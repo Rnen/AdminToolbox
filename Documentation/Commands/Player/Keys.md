@@ -1,7 +1,7 @@
 
 # Lock Doors
 
-<kbd>  ATDL  </kbd>  or  <kbd>  ATLD  </kbd>  or  <kbd>  ATLOCK  </kbd>  or  <kbd>  DOORLOCK  </kbd>  or  <kbd>  LOCKDOORS  </kbd>
+<kbd>  ATDL  </kbd>   or   <kbd>  ATLD  </kbd>   or   <kbd>  ATLOCK  </kbd>   or   <kbd>  DOORLOCK  </kbd>   or   <kbd>  LOCKDOORS  </kbd>
 
 <br>
 <br>
@@ -17,7 +17,7 @@
 ## Listing
 
 *To list all players that* <br>
-*have keys, pass `LIST`.*
+*have keys, pass  `LIST`.*
 
 <br>
 <br>
@@ -40,7 +40,7 @@ LOCKDOOR true
 
 <br>
 
-*Takes keys from `Hubert`*
+*Takes keys from  `Hubert`*
 
 ```shell
 LOCKDOOR Hubert false

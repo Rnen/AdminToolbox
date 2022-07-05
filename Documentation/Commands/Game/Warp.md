@@ -19,7 +19,7 @@
 
 ### Example
 
-*Teleports `Dave` to `Alpha`.*
+*Teleports  `Dave`  to  `Alpha`.*
 
 ```shell
 WARP Dave Alpha
@@ -65,7 +65,7 @@ WARP Dave Alpha
 
 ### Example
 
-*Adds warp point `Alpha` at `Daves` position.*
+*Adds warp point  `Alpha`  at  `Daves`  position.*
 
 ```shell
 WARP ADD Dave Alpha
@@ -93,7 +93,7 @@ WARP ADD Dave Alpha
 
 ### Example
 
-*Removes the warp point `Alpha`.*
+*Removes the warp point  `Alpha`.*
 
 ```shell
 WARP REMOVE Alpha
