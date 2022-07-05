@@ -12,7 +12,7 @@
 
 # Admin Toolbox
 
-*A **SMod** server plugin for **[SCP: Secret Laboratory]**.*
+*A **SMod** server plugin for **[SCP:Secret Laboratory]**.*
 
 <br>
 <br>
@@ -111,7 +111,7 @@ server modifications for the game **SCP:Secret Laboratory**.
 [Issues]: https://GitHub.com/Rnen/AdminToolbox/issues
 [Commit]: https://GitHub.com/Rnen/AdminToolbox/commit
 [Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
-[SCP: Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
+[SCP:Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
 
 [Documentation]: Documentation/#Top
 
