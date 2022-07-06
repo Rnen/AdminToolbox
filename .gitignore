@@ -13,7 +13,7 @@
 *.userprefs
 
 # Build results
-# [Dd]ebug/
+[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -22,7 +22,7 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
-# [Ll]og/
+[Ll]og/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -330,3 +330,5 @@ Builds/
 obj/
 AdminToolbox/Checklist.txt
 AdminToolbox/Checklist.txt
+
+!Documentation/**
