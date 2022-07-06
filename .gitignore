@@ -330,3 +330,5 @@ Builds/
 obj/
 AdminToolbox/Checklist.txt
 AdminToolbox/Checklist.txt
+
+!Documentation/**
