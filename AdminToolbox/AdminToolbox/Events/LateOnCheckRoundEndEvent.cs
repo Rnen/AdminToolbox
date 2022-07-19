@@ -1,63 +1,22 @@
-using System;
-using System.Linq;
-using System.Reflection;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
 
-namespace AdminToolbox
+namespace AdminToolbox.Events
 {
-	public struct RoundStats
+	using API;
+	/// <summary>
+	/// <seealso cref="IEventHandlerCheckRoundEnd"/>
+	/// </summary>
+	public class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
 	{
-		public uint Chaos_Victory { get; private set; }
-		public uint SCP_Chaos_Victory { get; private set; }
-		public uint SCP_Victory { get; private set; }
-		public uint MTF_Victory { get; private set; }
-		public uint Other_Victory { get; private set; }
-		public uint No_Victory { get; private set; }
-		public uint Forced_Round_End { get; private set; }
+		private RoundStats Roundstat => new RoundStats();
 
-		public void AddPoint(RoundEndStatus status)
-		{
-			switch (status)
-			{
-				case RoundEndStatus.CI_VICTORY:
-					this.Chaos_Victory++;
-					break;
-				case RoundEndStatus.SCP_CI_VICTORY:
-					this.SCP_Chaos_Victory++;
-					break;
-				case RoundEndStatus.SCP_VICTORY:
-					this.SCP_Victory++;
-					break;
-				case RoundEndStatus.MTF_VICTORY:
-					this.MTF_Victory++;
-					break;
-				case RoundEndStatus.OTHER_VICTORY:
-					this.Other_Victory++;
-					break;
-				case RoundEndStatus.NO_VICTORY:
-					this.No_Victory++;
-					break;
-				case RoundEndStatus.FORCE_END:
-					this.Forced_Round_End++;
-					break;
-			}
-		}
-
-		public override string ToString()
-		{
-			string reply = Environment.NewLine + "Round Stats: ";
-			foreach (PropertyInfo property in this.GetType().GetProperties().OrderBy(s => s.Name))
-				reply += Environment.NewLine + " - " + property.Name.Replace("_", " ") + ": " + property.GetValue(this) + "";
-			return reply;
-		}
-	}
-
-	internal class LateOnCheckRoundEndEvent : IEventHandlerCheckRoundEnd
-	{
-		private RoundStats Roundstat => AdminToolbox.RoundStats;
-
+		internal LateOnCheckRoundEndEvent() { }
+		/// <summary>
+		/// Does logic for the recording of winning teams to <see cref="RoundStats"/>. Also see <seealso cref="IEventHandlerCheckRoundEnd"/>
+		/// </summary>
+		/// <param name="ev"><seealso cref="CheckRoundEndEvent"/></param>
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
 			if (ev.Status != RoundEndStatus.ON_GOING)

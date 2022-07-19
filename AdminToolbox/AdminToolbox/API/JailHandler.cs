@@ -12,7 +12,7 @@ namespace AdminToolbox.API
 	public class JailHandler
 	{
 		/// <summary>
-		/// <see cref ="AdminToolbox"/> jail <see cref="Vector"/> position
+		/// Jail <see cref="Vector"/> position
 		/// </summary>
 		public static Vector JailPos
 		{
@@ -25,6 +25,8 @@ namespace AdminToolbox.API
 			}
 		}
 
+		private JailHandler() { }
+
 		private static Server Server => PluginManager.Manager.Server;
 
 		private static void Debug(string message) => AdminToolbox.singleton.Debug("[JailHandler]: " + message);
@@ -32,7 +34,7 @@ namespace AdminToolbox.API
 
 		/// <summary>
 		/// Checks the players marked as "Jailed" to see if they are at where they're supposed to be
-		/// <para> Gets run in the <see cref="MyMiscEvents"/>.cs Update event</para>
+		/// <para> Gets run in the <see cref="MyMiscEvents"/> update event on a timer</para>
 		/// </summary>
 		internal static void CheckJailedPlayers()
 		{
@@ -41,28 +43,31 @@ namespace AdminToolbox.API
 				foreach (Player pl in jailedPlayers)
 					if (AdminToolbox.ATPlayerDict.ContainsKey(pl.UserID))
 						if (!pl.IsInsideJail()) SendToJail(pl);
-						else if (AdminToolbox.ATPlayerDict[pl.UserID].JailedToTime <= DateTime.UtcNow) 
+						else if (AdminToolbox.ATPlayerDict[pl.UserID].JailReleaseTime <= DateTime.UtcNow) 
 							ReturnFromJail(pl);
 		}
 
 		/// <summary>
-		/// Sends <see cref="Player"/> to jail
+		/// Sends <see cref="Player"/> to Jail for the remaining previous time, or if that's null, one year
 		/// </summary>
+		/// <param name="player">The <see cref="Player"/> to put in Jail</param>
+		/// <returns>Operation success</returns>
 		public static bool SendToJail(Player player) => SendToJail(player, null);
 		/// <summary>
-		/// Sends <see cref="Player"/> to jail, with time overload. <returns> Returns bool of operation success </returns>
+		/// Puts <see cref="Player"/> in Jail
 		/// </summary>
-		/// <param name="player">the <see cref="Player"/> to send into jail</param>
-		/// <param name="jailedToTime">the time to jail the player. Null sets the time to remaining time, or if thats null, one year</param>
-		public static bool SendToJail(Smod2.API.Player player, DateTime? jailedToTime)
+		/// <param name="player">The <see cref="Player"/> to put in Jail</param>
+		/// <param name="releaseTime">The release-time of the player. Null sets the time to remaining previous time, or if that's null, one year</param>
+		/// <returns>Operation success</returns>
+		public static bool SendToJail(Player player, DateTime? releaseTime)
 		{
 			if (player == null || player.PlayerRole.RoleID == Smod2.API.RoleType.SPECTATOR || player.OverwatchMode) return false;
 			Debug($"Attempting to jail {player.Name}");
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings psetting))
 			{
-				if (!jailedToTime.HasValue || jailedToTime < DateTime.UtcNow)
+				if (!releaseTime.HasValue || releaseTime < DateTime.UtcNow)
 					Debug($"Jail time for \"{player.Name}\" not specified, jailing for a year.");
-				psetting.JailedToTime = jailedToTime ?? ((psetting.JailedToTime > DateTime.UtcNow) ? psetting.JailedToTime : DateTime.UtcNow.AddYears(1));
+				psetting.JailReleaseTime = releaseTime ?? ((psetting.JailReleaseTime > DateTime.UtcNow) ? psetting.JailReleaseTime : DateTime.UtcNow.AddYears(1));
 				//Saves original variables
 				psetting.originalPos = player.GetPosition();
 				if (!psetting.isJailed)
@@ -92,9 +97,9 @@ namespace AdminToolbox.API
 
 		/// <summary>
 		/// Removes <see cref="Player"/> from jail and restored original values/position. 
-		/// <returns> Returns bool of operation success </returns>
 		/// </summary>
-		/// <param name="player">the player to return</param>
+		/// <param name="player"> The <see cref="Player"/> to remove from Jail</param>
+		/// <returns>Operation success</returns>
 		public static bool ReturnFromJail(Player player)
 		{
 			if (player == null || string.IsNullOrEmpty(player.UserID.Trim()))
@@ -106,7 +111,7 @@ namespace AdminToolbox.API
 			if (AdminToolbox.ATPlayerDict.TryGetValue(player.UserID, out PlayerSettings psetting))
 			{
 				psetting.isJailed = false;
-				psetting.JailedToTime = DateTime.UtcNow;
+				psetting.JailReleaseTime = DateTime.UtcNow;
 				player.ChangeRole(psetting.previousRole, true, false);
 				player.Teleport(psetting.originalPos, true);
 				player.Health = psetting.previousHealth;

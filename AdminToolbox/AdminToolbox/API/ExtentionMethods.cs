@@ -10,6 +10,9 @@ namespace AdminToolbox.API.Extentions
 {
 	using API.Webhook;
 
+	/// <summary>
+	/// Class storing all of the plugin's extensions
+	/// </summary>
 	public static class ExtentionMethods
 	{
 		private static Server Server => PluginManager.Manager.Server;
@@ -188,6 +191,8 @@ namespace AdminToolbox.API.Extentions
 		/// <summary>
 		/// Colors the team for the MultiAdmin console window
 		/// </summary>
+		/// <param name="player">Player to get the team-color from</param>
+		/// <returns>Color-formatted team name for use with MultiAdmin</returns>
 		public static string ToColoredMultiAdminTeam(this Player player)
 		{
 			if (!AdminToolbox.isColored) 
@@ -214,6 +219,8 @@ namespace AdminToolbox.API.Extentions
 		/// <summary>
 		/// Colors the team for the rich text game windows
 		/// </summary>
+		/// <param name="player">Player to get the team-color from</param>
+		/// <returns>Color-formatted team name for in-game use</returns>
 		public static string ToColoredRichTextRole(this Player player)
 		{
 			switch ((Team)player.PlayerRole.Team)
