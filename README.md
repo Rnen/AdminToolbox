@@ -18,7 +18,7 @@
 <br>
 <br>
 
-[![Button Installation]][Wiki]   
+[![Button Installation]][Install]   
 [![Button Issues & Ideas]][Issues]   
 [![Button Documentation]][Documentation]   
 [![Button Development]][Projects]
@@ -110,7 +110,7 @@ server modifications for the game **SCP:Secret Laboratory**.
 [Projects]: https://GitHub.com/Rnen/AdminToolbox/projects/1
 [Issues]: https://GitHub.com/Rnen/AdminToolbox/issues
 [Commit]: https://GitHub.com/Rnen/AdminToolbox/commit
-[Wiki]: https://GitHub.com/Rnen/AdminToolbox/wiki
+[Install]: Documentation/Installation.md#Top
 [SCP:Secret Laboratory]: https://store.steampowered.com/app/700330/SCP_Secret_Laboratory/
 
 [Documentation]: Documentation/#Top
